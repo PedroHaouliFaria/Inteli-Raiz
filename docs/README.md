@@ -7,6 +7,7 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 | # | Documento | Conteúdo |
 |---|---|---|
 | 01 | [Análise Exploratória](01_analise_exploratoria.md) | Linha de raciocínio, decisões e insights sobre os dados de transações |
+| 02 | [Base Balanceada e Modelo](02_base_balanceada_e_modelo.md) | Construção das bases de treino/teste, features criadas, modelo Random Forest e análise crítica dos resultados |
 
 ## Estrutura do repositório
 
