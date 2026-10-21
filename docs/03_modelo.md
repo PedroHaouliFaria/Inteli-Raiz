@@ -138,21 +138,3 @@ Essas colunas vieram prontas no dataset. Na base sintética, o gerador provavelm
 ### O que as features da equipe valem?
 
 As 7 features criadas (`madrugada`, `cnp_credito`, `valor_vs_media_cartao`, `valor_vs_limite`, `primeira_compra_cartao`, `hora`, `dia_semana`) respondem por apenas **~11% da importância** — não porque sejam fracas, mas porque as features de velocidade dominam antes delas ter chance. Para medir o poder real dessas features, o próximo passo é rodar o modelo sem as 4 pré-calculadas.
-
-### Implicação para a proposta agêntica
-
-O resultado reforça o argumento central da EDA: **detectar a fraude nesta base já é um problema quase resolvido**. O valor diferencial está no depois do alerta:
-
-| Etapa | O que o agente faz | O que sustenta |
-|---|---|---|
-| Avaliar | Calcula o score da transação com o modelo | PR-AUC e limiar F2 |
-| Explicar | "Compra de R$ 800 às 3h, 4× acima do seu padrão, em loja online de alto risco" | Features `madrugada`, `valor_vs_media_cartao`, `acceptor_risk` |
-| Decidir | Bloquear, pedir confirmação ao associado ou liberar | Score + limiar + regras de negócio |
-| Comunicar | Alerta em tempo real para o associado validar | Insight 5 da EDA: agir na 1ª transação |
-
-**Limitações e próximos passos:**
-- [ ] Rodar o modelo **sem as 4 features de velocidade** para avaliar o poder real das features construídas.
-- [ ] Obter a base completa (900 mil linhas) e repetir treino e avaliação.
-- [ ] Calibrar as probabilidades (Platt / Isotonic) para que o score seja uma probabilidade real.
-- [ ] Definir o custo em R$ de fraude perdida vs. falso alarme e recalcular o limiar.
-- [ ] Empacotar o modelo como função que o agente chama em tempo real.
