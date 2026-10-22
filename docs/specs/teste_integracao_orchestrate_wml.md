@@ -19,6 +19,7 @@ Se o item 1 ou 2 falhar e não houver correção até 24/10, ativar o plano B.
 
 **Do Pedro R. (modelo):**
 
+- [ ] Ler os CSVs com as 9 categóricas como texto: `pd.read_csv(..., dtype={c: str for c in FEATURES_CAT})`. Hoje o `mcc` tem 1 vazio no treino, o pandas lê a coluna como `float` e o encoder aprende `"5411.0"`. A ferramenta manda `"5411"`, que cairia como categoria desconhecida (`-1`) sem nenhum erro.
 - [ ] Retreinar o pipeline do `notebooks/03_modelo.ipynb` com `scikit-learn==1.6.*` em Python 3.12.
 - [ ] **Remover o `FunctionTransformer(lambda X: X.astype(str))`** do `pipe_cat`. Lambda não é serializável, e o `store_model` vai falhar. Em vez disso, converter as categóricas para `str` no pandas **antes** do `fit`:
   `X_treino[FEATURES_CAT] = X_treino[FEATURES_CAT].astype(str)`. O resultado é idêntico ao atual: o `astype(str)` já transformava `NaN` em `"nan"`.
