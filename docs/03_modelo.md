@@ -136,24 +136,55 @@ Usamos o **F2-score** (recall pesa 2× mais que precisão) como critério, porqu
 
 ## 7. Análise crítica
 
-### PR-AUC = 1,0 é um sinal de alerta
+Para responder se o PR-AUC = 1,000 é real ou artefato, re-treinamos o modelo **sem as 4 features de velocidade pré-calculadas** e comparamos tudo: métricas, distribuição de scores, importância e separação das classes.
 
-Em produção real, fraudes e compras legítimas sempre se sobrepõem. Uma separação perfeita indica que o modelo encontrou um atalho — e encontrou.
+### Comparação de métricas
 
-![Importância das features](assets/feature_importance.png)
+| Modelo | PR-AUC | ROC-AUC |
+|---|---|---|
+| **Com velocidade** | **1,000** | **1,000** |
+| **Sem velocidade** | **0,144** | 0,994 |
+| `fraud_score` (baseline) | 1,000 | 1,000 |
+| `visa_fraud_score` | 0,956 | 0,968 |
+| `mc_fraud_score` | 0,882 | 0,903 |
 
-As **4 features de velocidade pré-calculadas** dominam o modelo:
+**O PR-AUC caiu de 1,000 para 0,144** ao remover as 4 colunas de velocidade. Isso confirma: as features de velocidade eram um atalho — o modelo as usava para "ler" a fraude diretamente, não para generalizar um padrão.
 
-| Feature | Importância |
-|---|---|
-| `cp_card_term_vel_1h` | 25,4% |
-| `digitalwallettoken_count_3m` | 20,0% |
-| `cardid_count_1m` | 14,1% |
-| `cp_card_prev_term_dist_1h` | 9,3% |
-| **Total velocidade** | **68,8%** |
+O ROC-AUC permaneceu em 0,994 porque essa métrica é menos sensível ao desbalanceamento; o PR-AUC é a métrica correta aqui.
 
-Essas colunas vieram prontas no dataset. Na base sintética, o gerador provavelmente as construiu com acesso à label ou as exagerou para facilitar o exercício. O efeito é que elas **denunciam a fraude diretamente** — e qualquer modelo que as use vai parecer perfeito, inclusive o baseline `fraud_score` (PR-AUC = 1,000).
+### Distribuição de scores e curvas PR
+
+![Análise crítica: com vs sem velocidade](assets/analise_critica.png)
+
+| | COM velocidade | SEM velocidade |
+|---|---|---|
+| Score médio — legítimas | 0,022 | 0,101 |
+| Score médio — fraudes | 0,967 | 0,866 |
+| Score mínimo — fraudes | 0,817 | 0,344 |
+| Score máximo — legítimas | 0,573 | **0,990** |
+| Sobreposição entre classes | **Não** | **Sim** |
+
+Sem velocidade, legítimas e fraudes se misturam: o score máximo de uma legítima (0,990) ultrapassa o score mínimo de uma fraude (0,344). O modelo está em dúvida em boa parte das predições.
+
+### Importância das features: o que sobe quando a velocidade sai
+
+![Importância comparativa](assets/feature_importance_comparacao.png)
+
+Sem as 4 colunas de velocidade, as features construídas pela equipe assumem o comando — `hora`, `madrugada`, `acceptor_risk`, `amount` e `valor_vs_media_cartao` passam a dominar. Isso mostra que **elas têm sinal real**, mas esse sinal sozinho não é suficiente para separar as classes com perfeição nesta base sintética.
 
 ### O que as features da equipe valem?
 
-As 7 features criadas (`madrugada`, `cnp_credito`, `valor_vs_media_cartao`, `valor_vs_limite`, `primeira_compra_cartao`, `hora`, `dia_semana`) respondem por apenas **~11% da importância** — não porque sejam fracas, mas porque as features de velocidade dominam antes delas ter chance. Para medir o poder real dessas features, o próximo passo é rodar o modelo sem as 4 pré-calculadas.
+As 7 features criadas (`madrugada`, `cnp_credito`, `valor_vs_media_cartao`, `valor_vs_limite`, `primeira_compra_cartao`, `hora`, `dia_semana`) respondem por **~11% da importância no modelo com velocidade** — não porque sejam fracas, mas porque a velocidade domina antes delas ter chance. Sem a velocidade, essas features sobem para o topo e mostram que os insights da EDA foram corretamente traduzidos em sinais preditivos.
+
+O PR-AUC de 0,144 sem velocidade indica, porém, que **sozinhas elas não são suficientes** nesta base sintética. O caminho para um modelo robusto é obter a base completa (900k linhas) e aplicar feature engineering mais rico — mais histórico por cartão, mais variação nos padrões de fraude.
+
+### Implicação para a proposta agêntica
+
+O experimento reforça o argumento central da EDA: **detectar a fraude nesta base já é um problema quase resolvido pelas features prontas**. O diferencial da solução não está no classificador em si, mas no que acontece depois do alerta — explicar o motivo ao associado, pedir confirmação e tomar a decisão de bloquear ou liberar. É aí que a IA agêntica agrega valor real.
+
+**Limitações e próximos passos:**
+- [ ] Obter a base completa (900 mil linhas) e repetir treino e avaliação.
+- [ ] Testar sem as features de velocidade na base completa — com mais histórico, `valor_vs_media_cartao` e `hora` devem ganhar mais poder.
+- [ ] Calibrar as probabilidades (Platt / Isotonic) para que o score seja uma probabilidade real.
+- [ ] Definir o custo em R$ de fraude perdida vs. falso alarme e recalcular o limiar.
+- [ ] Empacotar o modelo como função que o agente chama em tempo real.
