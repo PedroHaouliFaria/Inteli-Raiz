@@ -8,8 +8,9 @@
 2. [Linha de raciocínio](#2-linha-de-raciocínio)
 3. [O modelo](#3-o-modelo)
 4. [Avaliação e comparação com o baseline](#4-avaliação-e-comparação-com-o-baseline)
-5. [Limiar de decisão](#5-limiar-de-decisão)
-6. [Análise crítica](#6-análise-crítica)
+5. [Distribuição dos scores: o modelo está decidido?](#5-distribuição-dos-scores-o-modelo-está-decidido)
+6. [Limiar de decisão](#6-limiar-de-decisão)
+7. [Análise crítica](#7-análise-crítica)
 
 ---
 
@@ -96,7 +97,25 @@ Antes de entrar no modelo, cada grupo de colunas passa por uma transformação:
 
 ---
 
-## 5. Limiar de decisão
+## 5. Distribuição dos scores: o modelo está decidido?
+
+Um bom classificador não é só aquele que acerta — é aquele que **sabe quando está certo**. Se as probabilidades se concentrarem perto de 0 e de 1, o modelo está decidido: separa as classes com confiança. Se ficarem empilhadas no meio (~0,5), ele está em dúvida.
+
+![Distribuição dos scores por classe](assets/distribuicao_scores.png)
+
+O painel da esquerda mostra os histogramas em escala logarítmica (necessário porque há 31.971 legítimas e apenas 29 fraudes). O painel da direita é um zoom nas legítimas com score ≤ 0,10 para mostrar onde elas se concentram.
+
+| Medida | Legítimas | Fraudes |
+|---|---|---|
+| Score médio | 0,022 | 0,967 |
+| Score mínimo | 0,000 | **0,817** |
+| Score máximo | 0,573 | 1,000 |
+
+**O modelo está completamente decidido:** todas as legítimas ficam abaixo de 0,58 e todas as fraudes acima de 0,82 — sem nenhuma sobreposição. Isso confirma o PR-AUC = 1,000 e, ao mesmo tempo, reforça a suspeita de que as features de velocidade pré-calculadas estão "entregando" a resposta diretamente (ver seção 6).
+
+---
+
+## 6. Limiar de decisão
 
 O modelo retorna uma probabilidade entre 0 e 1. O **limiar** define a partir de qual valor a transação é bloqueada. Escolher esse ponto é uma decisão de negócio:
 
@@ -115,7 +134,7 @@ Usamos o **F2-score** (recall pesa 2× mais que precisão) como critério, porqu
 
 ---
 
-## 6. Análise crítica
+## 7. Análise crítica
 
 ### PR-AUC = 1,0 é um sinal de alerta
 
