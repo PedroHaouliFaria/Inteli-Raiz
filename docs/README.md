@@ -10,6 +10,13 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 | 02 | [Base Balanceada](02_base_balanceada.md) | Construção das bases de treino/teste e as 7 features criadas a partir dos insights |
 | 03 | [Modelo](03_modelo.md) | Pipeline de pré-processamento, Random Forest, avaliação por PR-AUC e análise crítica dos resultados |
 
+## Plano de implementação proposto
+
+- [Plano revisado: confirmação de compras pelo associado](plano_implementacao.md).
+- [Versão em PDF](plano_implementacao.pdf).
+
+O sistema avalia a compra e decide o tratamento inicial; o associado autoriza, recusa ou informa dúvida, e o analista trata exceções. Ações financeiras são simuladas no MVP. A proposta inclui regras, arquitetura, requisitos, backlog e testes; não representa implementação concluída.
+
 ## Estrutura do repositório
 
 ```
