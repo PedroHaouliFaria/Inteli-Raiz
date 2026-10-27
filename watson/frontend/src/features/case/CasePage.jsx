@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import {
   Breadcrumb, BreadcrumbItem, Tag, Tile, Button, Modal, TextArea, ProgressBar,
-  AILabel, AILabelContent, InlineNotification,
+  AILabel, AILabelContent, InlineNotification, Layer,
 } from '@carbon/react';
 import { STATUS_LABELS, riskLevel, formatBRL } from '../../mocks/cases';
 import { useWatson } from '../../state/store';
@@ -104,7 +104,11 @@ export default function CasePage({ phoneSlot }) {
               <AILabelContent><p>Texto redigido pelo Watson. Edite antes de registrar.</p></AILabelContent>
             </AILabel>
           </div>
-          <TextArea labelText="Justificativa" value={justification} onChange={(e) => setJustification(e.target.value)} rows={3} disabled={resolved} />
+          {/* Layer: dentro do Tile o campo usa o fundo de field da camada seguinte, para ler como caixa de texto. */}
+          <Layer>
+            <TextArea id="decision-justification" labelText="Justificativa" helperText="Escrita pelo Watson a partir dos sinais. Revise e edite antes de registrar a decisão."
+              value={justification} onChange={(e) => setJustification(e.target.value)} rows={4} enableCounter maxCount={500} disabled={resolved} />
+          </Layer>
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <Button kind="ghost" disabled={resolved} onClick={() => decide('escalated')}>Escalar</Button>
             <Button kind="tertiary" disabled={resolved} onClick={() => decide('released')}>Liberar</Button>

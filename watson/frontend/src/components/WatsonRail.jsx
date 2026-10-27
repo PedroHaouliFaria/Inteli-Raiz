@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AILabel, AILabelContent, Button, IconButton, Tile, Tag } from '@carbon/react';
 import { AiLaunch, Close } from '@carbon/icons-react';
 import Term from './Term';
@@ -30,17 +30,26 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
   const [accepted, setAccepted] = useState(false);
   const answer = question && ANSWERS[question];
   const { collapsed, toggle } = useRail();
+  const launcherRef = useRef(null);
+  const closeRef = useRef(null);
+  const toggled = useRef(false);
 
-  if (collapsed) {
-    return (
-      <Button className="watson-rail-launcher" renderIcon={AiLaunch} onClick={toggle}>
-        Pergunte ao Watson
-      </Button>
-    );
-  }
+  // Painel e botão ficam sempre montados para a transição de abrir e fechar (index.scss).
+  // O foco acompanha: abre → botão de fechar; fecha → botão flutuante.
+  useEffect(() => {
+    if (!toggled.current) return;
+    (collapsed ? launcherRef : closeRef).current?.focus();
+  }, [collapsed]);
+  const onToggle = () => { toggled.current = true; toggle(); };
 
   return (
-    <aside className="watson-rail watson-rail--overlay" aria-label="Pergunte ao Watson">
+    <>
+    <Button ref={launcherRef} className={`watson-rail-launcher${collapsed ? '' : ' watson-rail-launcher--hidden'}`}
+      renderIcon={AiLaunch} onClick={onToggle} aria-expanded={!collapsed} tabIndex={collapsed ? 0 : -1} aria-hidden={!collapsed}>
+      Pergunte ao Watson
+    </Button>
+    <aside className={`watson-rail watson-rail--overlay${collapsed ? '' : ' watson-rail--open'}`} aria-label="Pergunte ao Watson"
+      aria-hidden={collapsed} inert={collapsed ? '' : undefined}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <h2 className="cds--type-heading-02" style={{ flexGrow: 1 }}>Pergunte ao Watson</h2>
         <AILabel size="xs" aria-label="Conteúdo gerado por IA">
@@ -48,7 +57,7 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
             <p>Sugestões geradas pelo agente a partir dos sinais. A decisão final é sempre da analista.</p>
           </AILabelContent>
         </AILabel>
-        <IconButton kind="ghost" size="sm" label="Fechar o painel do Watson" align="bottom-right" onClick={toggle}>
+        <IconButton kind="ghost" size="sm" ref={closeRef} label="Fechar o painel do Watson" align="bottom-right" onClick={onToggle}>
           <Close />
         </IconButton>
       </div>
@@ -89,5 +98,6 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
         </Tile>
       )}
     </aside>
+    </>
   );
 }
