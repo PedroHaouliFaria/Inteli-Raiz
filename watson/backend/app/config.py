@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     notice_medium_threshold: float = 0.60
     notice_high_threshold: float = 0.80
     notice_auto_close_on_it_was_me: bool = True
-    notice_response_timeout_minutes: int = 30
+    notice_response_timeout_minutes: int = 10
 
 
 @lru_cache

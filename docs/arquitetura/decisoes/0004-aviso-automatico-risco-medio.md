@@ -23,7 +23,7 @@ Nos casos de risco médio, o agente envia o aviso de compra ao associado sem esp
 | Ponto | Backend (`.env`) | Frontend | Padrão |
 |---|---|---|---|
 | "Fui eu" fecha o caso sozinho? | `NOTICE_AUTO_CLOSE_ON_IT_WAS_ME` | `VITE_NOTICE_AUTO_CLOSE_ON_IT_WAS_ME` | `true` |
-| Prazo de resposta do associado | `NOTICE_RESPONSE_TIMEOUT_MINUTES` | `VITE_NOTICE_RESPONSE_TIMEOUT_MINUTES` | 30 min |
+| Prazo de resposta do associado | `NOTICE_RESPONSE_TIMEOUT_MINUTES` | `VITE_NOTICE_RESPONSE_TIMEOUT_MINUTES` | 10 min (hipótese: as compras do cartão ficam pausadas enquanto se espera) |
 | Limiares médio / alto | `NOTICE_MEDIUM_THRESHOLD`, `NOTICE_HIGH_THRESHOLD` | fixos em `noticePolicy.js` | 0,60 / 0,80 (provisórios) |
 
 ## Em aberto

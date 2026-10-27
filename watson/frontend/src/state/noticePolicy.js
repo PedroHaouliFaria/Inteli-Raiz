@@ -6,7 +6,7 @@ export const NOTICE_POLICY = {
   mediumThreshold: 0.6,
   highThreshold: 0.8,
   autoCloseOnItWasMe: (env.VITE_NOTICE_AUTO_CLOSE_ON_IT_WAS_ME ?? 'true') === 'true',
-  responseTimeoutMinutes: Number(env.VITE_NOTICE_RESPONSE_TIMEOUT_MINUTES ?? 30),
+  responseTimeoutMinutes: Number(env.VITE_NOTICE_RESPONSE_TIMEOUT_MINUTES ?? 10),
 };
 
 // Risco médio: o Watson envia o aviso sozinho. Risco alto: vai direto para a analista.

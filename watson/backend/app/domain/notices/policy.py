@@ -41,7 +41,7 @@ class NoticePolicy:
     medium_threshold: float = 0.60
     high_threshold: float = 0.80
     auto_close_on_it_was_me: bool = True
-    response_timeout_minutes: int = 30
+    response_timeout_minutes: int = 10
 
 
 DEFAULT_POLICY = NoticePolicy()
