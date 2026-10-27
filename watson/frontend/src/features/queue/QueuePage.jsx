@@ -5,6 +5,7 @@ import {
 } from '@carbon/react';
 import { STATUS_LABELS, ESCALATION_LABELS, riskLevel, formatBRL } from '../../mocks/cases';
 import { useWatson } from '../../state/store';
+import { analystQueue, isWithWatson } from '../../state/queue';
 import Term from '../../components/Term';
 import WatsonRail from '../../components/WatsonRail';
 
@@ -25,8 +26,8 @@ export default function QueuePage({ phoneSlot }) {
   const navigate = useNavigate();
   const { state } = useWatson();
   // Casos de risco médio aguardando o associado ficam com o Watson; a fila mostra só o que precisa da analista.
-  const withWatson = state.cases.filter((c) => c.autoNotice && c.status === 'awaiting_member');
-  const open = state.cases.filter((c) => c.status !== 'resolved' && !withWatson.includes(c)).sort((a, b) => b.score * b.amount - a.score * a.amount);
+  const withWatson = state.cases.filter(isWithWatson);
+  const open = analystQueue(state.cases);
   const resolvedCount = state.cases.filter((c) => c.status === 'resolved').length;
   const rows = open.map((c) => ({ ...c, amount: formatBRL(c.amount), score: c.score.toFixed(2).replace('.', ','), risk: c.score, status: STATUS_LABELS[c.status], escalation: ESCALATION_LABELS[c.escalationReason] ?? '—' }));
   const kpis = [

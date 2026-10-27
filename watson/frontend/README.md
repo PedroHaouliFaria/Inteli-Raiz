@@ -24,6 +24,8 @@ Rotas: `/` (fila), `/board` (quadro do processo), `/cases/:id` (caso), `/soon/:s
 
 Navegação lateral esquerda: trilho de ícones do Carbon (`SideNav isRail`), como no mockup 3; o botão de menu do cabeçalho abre e recolhe os nomes.
 
+Tela do caso: a fila fica à esquerda (master-detail, como no wireframe B), ordenada por risco × valor e recolhível; em telas estreitas ela some e a fila continua no menu.
+
 Painel "Pergunte ao Watson": fechado, vira um botão flutuante no canto inferior direito; aberto, fica por cima do conteúdo, à direita. Começa fechado e a preferência fica salva no navegador.
 
 Para publicar uma versão estática sem servidor: `VITE_ROUTER=memory npx vite build --base ./`.

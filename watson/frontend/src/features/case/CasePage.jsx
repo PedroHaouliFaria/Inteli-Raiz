@@ -9,6 +9,7 @@ import { useWatson } from '../../state/store';
 import { NOTICE_POLICY } from '../../state/noticePolicy';
 import Term from '../../components/Term';
 import WatsonRail from '../../components/WatsonRail';
+import CaseQueue from './CaseQueue';
 
 const WATSON_JUSTIFICATION =
   'Bloqueio preventivo: rajada de 3 compras em 7 min, a 640 km da região habitual, valor 6,2× a média e dispositivo novo.';
@@ -19,8 +20,13 @@ const DECISION_TAG = {
   escalated: { type: 'purple', label: 'Escalado' },
 };
 
+// Trocar de caso pela fila lateral recria a tela, para a justificativa e os modais não passarem de um caso para o outro.
 export default function CasePage({ phoneSlot }) {
   const { id } = useParams();
+  return <CaseView key={id} id={id} phoneSlot={phoneSlot} />;
+}
+
+function CaseView({ id, phoneSlot }) {
   const { state, dispatch } = useWatson();
   const fraudCase = state.cases.find((c) => c.id === id) ?? state.cases[0];
   const events = state.events[fraudCase.id] ?? [];
@@ -34,6 +40,7 @@ export default function CasePage({ phoneSlot }) {
 
   return (
     <div className="watson-layout">
+      <CaseQueue currentId={fraudCase.id} />
       <main className="watson-main" id="main-content">
         <Breadcrumb noTrailingSlash>
           <BreadcrumbItem><RouterLink to="/">Fila</RouterLink></BreadcrumbItem>
