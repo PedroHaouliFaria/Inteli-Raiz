@@ -12,3 +12,21 @@ Antes de desenhar telas: quem são as pessoas, o que vivem hoje e para onde quer
 | [premissas-e-perguntas.md](premissas-e-perguntas.md) | Assumptions and Questions, Sponsor Users, roteiros de entrevista |
 
 Versão visual: página **00 Descoberta** do canvas de design.
+
+## Imagens
+
+### Proto-personas
+
+![Proto-personas Camila Rocha e Valdir Bortolini](imagens/personas.png)
+
+### Anti-persona
+
+![Anti-persona O Impostor](imagens/anti-persona.png)
+
+### Mapas de empatia
+
+![Mapas de empatia da Camila e do Valdir](imagens/empathy-maps.png)
+
+### Cenário as-is, POV e Hills
+
+![Cenário as-is, POV e Hills](imagens/as-is-pov-hills.png)

@@ -19,3 +19,38 @@
 | **3 · Agente sempre presente** | Trilho "Pergunte ao Watson" em todas as telas, mudando de contexto (ordem de ataque na fila, gargalos no quadro, recomendação no caso), com aceitar/editar/reverter | Mostrar IA agêntica na banca do desafio |
 
 Fontes das telas: [canvas/](canvas/). Canvas visual: página **02 Mockup (3 versões)**.
+
+## Imagens
+
+Escolhida: versão 3 com o tema da 1.
+
+### Versão 1
+
+![Mockup 1, fila](imagens/mockup-1-queue.png)
+
+![Mockup 1, quadro do processo](imagens/mockup-1-process-board.png)
+
+![Mockup 1, caso](imagens/mockup-1-case.png)
+
+![Mockup 1, app do associado](imagens/mockup-1-member-app.png)
+
+### Versão 2
+
+![Mockup 2, fila](imagens/mockup-2-queue.png)
+
+![Mockup 2, quadro do processo](imagens/mockup-2-process-board.png)
+
+![Mockup 2, caso](imagens/mockup-2-case.png)
+
+![Mockup 2, app do associado](imagens/mockup-2-member-app.png)
+
+### Versão 3
+
+![Mockup 3, fila](imagens/mockup-3-queue.png)
+
+![Mockup 3, quadro do processo](imagens/mockup-3-process-board.png)
+
+![Mockup 3, caso](imagens/mockup-3-case.png)
+
+![Mockup 3, app do associado](imagens/mockup-3-member-app.png)
+

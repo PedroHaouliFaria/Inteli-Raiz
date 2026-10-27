@@ -27,3 +27,26 @@
 | **C · Quadro de risco** | Kanban por estado, agente agrupa alertas, painel lateral | Alerta com contexto e mini mapa | Volume: triagem de muitos alertas e rajadas de uma vez |
 
 Ver o canvas, página **01 Wireframe (3 versões)**.
+
+## Imagens
+
+Escolhida: B com a fila da A e o quadro da C.
+
+### Versão A
+
+![Wireframe A, console](imagens/wireframe-a-console.png)
+
+![Wireframe A, app do associado](imagens/wireframe-a-member-app.png)
+
+### Versão B
+
+![Wireframe B, console](imagens/wireframe-b-console.png)
+
+![Wireframe B, app do associado](imagens/wireframe-b-member-app.png)
+
+### Versão C
+
+![Wireframe C, console](imagens/wireframe-c-console.png)
+
+![Wireframe C, app do associado](imagens/wireframe-c-member-app.png)
+

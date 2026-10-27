@@ -30,3 +30,20 @@ Para cada passo de cada tarefa, responder: (1) a pessoa vai tentar o resultado c
 | | | | |
 
 Canvas: página **03 Protótipo (3 versões)**, botão Play em cada quadro.
+
+## Imagens
+
+Tela inicial de cada protótipo. Escolhido: 3 com os chips da 2.
+
+### Protótipo 1
+
+![Protótipo 1, tela inicial](imagens/prototype-1-flow.png)
+
+### Protótipo 2
+
+![Protótipo 2, tela inicial](imagens/prototype-2-flow.png)
+
+### Protótipo 3
+
+![Protótipo 3, tela inicial](imagens/prototype-3-flow.png)
+
