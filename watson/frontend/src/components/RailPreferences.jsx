@@ -1,18 +1,18 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-// Estado do painel "Pergunte ao Watson": aberto ou encolhido numa faixa estreita no lugar
-// (versão A, escolhida pelo Leo em 27/10/2026). A preferência fica salva no navegador.
+// Estado do painel "Pergunte ao Watson": fechado, ele vira um botão flutuante; aberto, fica por cima
+// do conteúdo (versão C, escolhida pelo Leo em 27/10/2026). Começa fechado; a preferência fica salva no navegador.
 const RailContext = createContext(null);
 
 function readCollapsed() {
-  try { return localStorage.getItem('watson-rail-collapsed') === '1'; } catch { return false; }
+  try { return localStorage.getItem('watson-rail-open') !== '1'; } catch { return true; }
 }
 
 export function RailProvider({ children }) {
   const [collapsed, setCollapsed] = useState(readCollapsed);
 
   useEffect(() => {
-    try { localStorage.setItem('watson-rail-collapsed', collapsed ? '1' : '0'); } catch { /* sem armazenamento */ }
+    try { localStorage.setItem('watson-rail-open', collapsed ? '0' : '1'); } catch { /* sem armazenamento */ }
   }, [collapsed]);
 
   const toggle = () => setCollapsed((v) => !v);

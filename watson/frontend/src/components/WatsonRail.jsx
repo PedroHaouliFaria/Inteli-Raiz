@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AILabel, AILabelContent, Button, IconButton, Tile, Tag } from '@carbon/react';
-import { SidePanelClose, SidePanelOpen } from '@carbon/icons-react';
+import { AiLaunch, Close } from '@carbon/icons-react';
 import Term from './Term';
 import { useRail } from './RailPreferences';
 
@@ -33,17 +33,14 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
 
   if (collapsed) {
     return (
-      <aside className="watson-rail watson-rail--strip" aria-label="Pergunte ao Watson (recolhido)">
-        <IconButton kind="ghost" size="md" label="Expandir o painel do Watson" align="left" onClick={toggle}>
-          <SidePanelOpen />
-        </IconButton>
-        <span className="watson-rail__vertical-label">Pergunte ao Watson</span>
-      </aside>
+      <Button className="watson-rail-launcher" renderIcon={AiLaunch} onClick={toggle}>
+        Pergunte ao Watson
+      </Button>
     );
   }
 
   return (
-    <aside className="watson-rail" aria-label="Pergunte ao Watson">
+    <aside className="watson-rail watson-rail--overlay" aria-label="Pergunte ao Watson">
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <h2 className="cds--type-heading-02" style={{ flexGrow: 1 }}>Pergunte ao Watson</h2>
         <AILabel size="xs" aria-label="Conteúdo gerado por IA">
@@ -51,8 +48,8 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
             <p>Sugestões geradas pelo agente a partir dos sinais. A decisão final é sempre da analista.</p>
           </AILabelContent>
         </AILabel>
-        <IconButton kind="ghost" size="sm" label="Encolher o painel do Watson" align="bottom-right" onClick={toggle}>
-          <SidePanelClose />
+        <IconButton kind="ghost" size="sm" label="Fechar o painel do Watson" align="bottom-right" onClick={toggle}>
+          <Close />
         </IconButton>
       </div>
       {suggestion && (
