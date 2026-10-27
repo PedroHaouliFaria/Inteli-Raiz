@@ -1,5 +1,7 @@
 # Spec: teste de integração Orchestrate → watsonx.ai
 
+> **Encerrada em 27/10/2026.** O orientador revogou a obrigatoriedade do IBM Cloud porque o Orchestrate não está funcionando para muitos grupos. O agente e o modelo passam para o nosso backend (ver §4 do [`plano_implementacao.md`](../plano_implementacao.md)). Esta spec fica como evidência: o teste 7.1 contra o watsonx.ai passou, e os passos do Orchestrate não rodaram. O `agente/agents/agente_teste.yaml` é histórico.
+
 > **Prazo:** 24/10/2026. **Responsável:** Lucas (ferramenta e agente), Pedro R. (modelo implantado).
 > **Pergunta que o teste responde:** uma ferramenta Python rodando no watsonx Orchestrate (Tóquio) consegue pegar um token IAM e receber um score do modelo implantado no watsonx.ai Runtime (Dallas)?
 > Se sim, seguimos com o modelo no watsonx.ai. Se não, ativamos o plano B (score por regras dentro da ferramenta).
@@ -252,4 +254,4 @@ Os scores são idênticos aos do modelo local. As latências medidas vão do com
 - O `store_model` do `ibm-watsonx-ai` 1.8.1 sobe o conteúdo com `httpx.put` sem timeout, e o padrão de 5 s do httpx estoura. O script aumenta esse timeout para 300 s.
 - O deploy exigiu uma task credential (`missing_user_task_credential`). O script cria uma com a API key atual quando não existe nenhuma.
 
-**Proposta de decisão (a confirmar com o grupo):** o watsonx.ai segue como a fonte do score. O plano B só entra se o Orchestrate não voltar. Nesse caso, a parte que fica sem prova é a chamada de dentro do Orchestrate, não o modelo.
+**Decisão (27/10, depois da mensagem do orientador):** o Orchestrate sai do escopo e o modelo passa a rodar no backend a partir do `joblib`. O deploy no watsonx.ai fica como evidência e como `score_source=watsonx` opcional.
