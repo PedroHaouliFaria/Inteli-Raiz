@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { AILabel, AILabelContent, Button, Tile, Tag } from '@carbon/react';
+import { AILabel, AILabelContent, Button, IconButton, Tile, Tag } from '@carbon/react';
+import { AiLaunch, SidePanelClose, SidePanelOpen } from '@carbon/icons-react';
 import Term from './Term';
+import { useRail } from './RailPreferences';
 
 // Trilho "Pergunte ao Watson": sugestão de contexto (protótipo 3) + perguntas por chips (protótipo 2).
 const ANSWERS = {
@@ -27,8 +29,29 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
   const [question, setQuestion] = useState(null);
   const [accepted, setAccepted] = useState(false);
   const answer = question && ANSWERS[question];
+  const { variant, collapsed, toggle } = useRail();
+
+  if (collapsed && variant === 'header') return null;
+  if (collapsed && variant === 'overlay') {
+    return (
+      <Button className="watson-rail-launcher" renderIcon={AiLaunch} onClick={toggle}>
+        Pergunte ao Watson
+      </Button>
+    );
+  }
+  if (collapsed) {
+    return (
+      <aside className="watson-rail watson-rail--strip" aria-label="Pergunte ao Watson (recolhido)">
+        <IconButton kind="ghost" size="md" label="Expandir o painel do Watson" align="left" onClick={toggle}>
+          <SidePanelOpen />
+        </IconButton>
+        <span className="watson-rail__vertical-label">Pergunte ao Watson</span>
+      </aside>
+    );
+  }
+
   return (
-    <aside className="watson-rail" aria-label="Pergunte ao Watson">
+    <aside className={`watson-rail${variant === 'overlay' ? ' watson-rail--overlay' : ''}`} aria-label="Pergunte ao Watson">
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <h2 className="cds--type-heading-02" style={{ flexGrow: 1 }}>Pergunte ao Watson</h2>
         <AILabel size="xs" aria-label="Conteúdo gerado por IA">
@@ -36,6 +59,9 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
             <p>Sugestões geradas pelo agente a partir dos sinais. A decisão final é sempre da analista.</p>
           </AILabelContent>
         </AILabel>
+        <IconButton kind="ghost" size="sm" label={variant === 'overlay' ? 'Fechar o painel do Watson' : 'Encolher o painel do Watson'} align="bottom-right" onClick={toggle}>
+          <SidePanelClose />
+        </IconButton>
       </div>
       {suggestion && (
         <Tile>

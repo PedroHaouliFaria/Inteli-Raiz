@@ -16,6 +16,11 @@ body {
   color-scheme: light;
 }
 
+// O trilho da navegação lateral (3rem) aparece a partir do breakpoint lg do Carbon.
+@media (min-width: 66rem) {
+  .watson-content { margin-left: 3rem; }
+}
+
 .watson-layout {
   display: flex;
   flex-wrap: wrap;
@@ -41,6 +46,40 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.watson-rail--strip {
+  flex: 0 0 3rem;
+  max-width: 3rem;
+  padding: 0.5rem 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.watson-rail__vertical-label {
+  writing-mode: vertical-rl;
+  @include type.type-style('label-01');
+  color: var(--cds-text-secondary);
+}
+
+.watson-rail--overlay {
+  position: fixed;
+  top: 3rem;
+  right: 0;
+  bottom: 0;
+  width: min(400px, 100vw);
+  max-width: none;
+  overflow-y: auto;
+  z-index: 7000;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.watson-rail-launcher {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 7000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .watson-kpis {
