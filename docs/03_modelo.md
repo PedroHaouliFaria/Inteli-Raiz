@@ -58,7 +58,7 @@ Antes de entrar no modelo, cada grupo de colunas passa por uma transformação:
 | Grupo | Colunas | Transformação | Motivo |
 |---|---|---|---|
 | **Numéricas** | 16 | Imputa com a mediana | Robusto a outliers de valor e renda |
-| **Categóricas** | 9 | Converte para `str` → imputa `"desconhecido"` → OrdinalEncoder | Colunas com nulos lidos do CSV ficam com tipos mistos (`float` + `str`); a conversão resolve antes do encoder |
+| **Categóricas** | 9 | Lidas do CSV como texto; nulos viram `"nan"` → OrdinalEncoder | Sem isso o `mcc` (com um vazio no treino) seria lido como `float` e o encoder aprenderia `"5411.0"`, enquanto a ferramenta do agente manda `"5411"` |
 | **Binárias** | 3 | Imputa com `0` | Ausência do sinal = 0 é semanticamente correto |
 
 ### Hiperparâmetros
@@ -70,6 +70,8 @@ Antes de entrar no modelo, cada grupo de colunas passa por uma transformação:
 | `min_samples_leaf` | 2 | Idem |
 | `class_weight` | `balanced` | Reforça a minoria mesmo com treino já 1:1 |
 | `random_state` | 42 | Reprodutibilidade |
+
+O pipeline completo é treinado em Python 3.12 com scikit-learn 1.6 e salvo em `outputs/modelo_rf.joblib` (seção 11 do notebook), pronto para o deploy online no watsonx.ai Runtime com model type `scikit-learn_1.6` e software spec `runtime-25.1-py3.12`.
 
 ---
 
@@ -107,9 +109,9 @@ O painel da esquerda mostra os histogramas em escala logarítmica (necessário p
 
 | Medida | Legítimas | Fraudes |
 |---|---|---|
-| Score médio | 0,022 | 0,967 |
+| Score médio | 0,023 | 0,967 |
 | Score mínimo | 0,000 | **0,817** |
-| Score máximo | 0,573 | 1,000 |
+| Score máximo | 0,576 | 1,000 |
 
 **O modelo está completamente decidido:** todas as legítimas ficam abaixo de 0,58 e todas as fraudes acima de 0,82 — sem nenhuma sobreposição. Isso confirma o PR-AUC = 1,000 e, ao mesmo tempo, reforça a suspeita de que as features de velocidade pré-calculadas estão "entregando" a resposta diretamente (ver seção 6).
 
@@ -143,12 +145,12 @@ Para responder se o PR-AUC = 1,000 é real ou artefato, re-treinamos o modelo **
 | Modelo | PR-AUC | ROC-AUC |
 |---|---|---|
 | **Com velocidade** | **1,000** | **1,000** |
-| **Sem velocidade** | **0,144** | 0,994 |
+| **Sem velocidade** | **0,146** | 0,994 |
 | `fraud_score` (baseline) | 1,000 | 1,000 |
 | `visa_fraud_score` | 0,956 | 0,968 |
 | `mc_fraud_score` | 0,882 | 0,903 |
 
-**O PR-AUC caiu de 1,000 para 0,144** ao remover as 4 colunas de velocidade. Isso confirma: as features de velocidade eram um atalho — o modelo as usava para "ler" a fraude diretamente, não para generalizar um padrão.
+**O PR-AUC caiu de 1,000 para 0,146** ao remover as 4 colunas de velocidade. Isso confirma: as features de velocidade eram um atalho — o modelo as usava para "ler" a fraude diretamente, não para generalizar um padrão.
 
 O ROC-AUC permaneceu em 0,994 porque essa métrica é menos sensível ao desbalanceamento; o PR-AUC é a métrica correta aqui.
 
@@ -158,13 +160,13 @@ O ROC-AUC permaneceu em 0,994 porque essa métrica é menos sensível ao desbala
 
 | | COM velocidade | SEM velocidade |
 |---|---|---|
-| Score médio — legítimas | 0,022 | 0,101 |
-| Score médio — fraudes | 0,967 | 0,866 |
-| Score mínimo — fraudes | 0,817 | 0,344 |
-| Score máximo — legítimas | 0,573 | **0,990** |
+| Score médio — legítimas | 0,023 | 0,101 |
+| Score médio — fraudes | 0,967 | 0,867 |
+| Score mínimo — fraudes | 0,817 | 0,341 |
+| Score máximo — legítimas | 0,576 | **0,991** |
 | Sobreposição entre classes | **Não** | **Sim** |
 
-Sem velocidade, legítimas e fraudes se misturam: o score máximo de uma legítima (0,990) ultrapassa o score mínimo de uma fraude (0,344). O modelo está em dúvida em boa parte das predições.
+Sem velocidade, legítimas e fraudes se misturam: o score máximo de uma legítima (0,991) ultrapassa o score mínimo de uma fraude (0,341). O modelo está em dúvida em boa parte das predições.
 
 ### Importância das features: o que sobe quando a velocidade sai
 
