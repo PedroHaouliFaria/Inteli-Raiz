@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mockup 3 · Fila com agente sempre presente</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wt{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-hover-01:#e8e8e8;--layer-selected-01:#e0e0e0;--layer-selected-inverse:#161616;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-strong-01:#8d8d8d;--border-inverse:#161616;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--link-primary:#0f62fe;--icon-primary:#161616;--icon-secondary:#525252;--interactive:#0f62fe;--focus:#0f62fe;--button-primary:#0f62fe;--button-tertiary:#0f62fe;--button-danger:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-warning-edge:#8e6a00;--support-info:#0043ce;--notification-info-bg:#edf5ff;--notification-warning-bg:#fcf4d6;--tag-red-bg:#ffd7d9;--tag-red-text:#a2191f;--tag-gray-bg:#e0e0e0;--tag-gray-text:#161616;--tag-blue-bg:#d0e2ff;--tag-blue-text:#0043ce;--tag-green-bg:#a7f0ba;--tag-green-text:#0e6027;--tag-warm-bg:#e5e0df;--tag-warm-text:#3c3838;--tag-cool-bg:#dde1e6;--tag-cool-text:#343a3f;--ai-border-strong:#4589ff;--ai-border-subtle:#a6c8ff;--ai-aura-start:rgba(69,137,255,0.10);--ai-aura-end:rgba(255,255,255,0);position:relative;box-sizing:border-box;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt ol,.wt dl,.wt dd{margin:0}
+.wt ul,.wt ol{padding:0;list-style:none}
+.wt a{color:var(--link-primary)}
+.wt button{font-family:'IBM Plex Sans',Arial,sans-serif;letter-spacing:0.16px}
+.wt :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.wt input::placeholder,.wt textarea::placeholder{color:var(--text-helper)}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.skip{position:absolute;left:-9999px;top:8px;z-index:10;background:var(--layer-01);padding:12px 16px;color:var(--link-primary);border:2px solid var(--focus)}
+.skip:focus{left:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* UI shell */
+.shell{height:48px;flex-shrink:0;display:flex;align-items:center;background:var(--layer-01);border-bottom:1px solid var(--border-subtle-01)}
+.hbtn{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;padding:0;color:var(--icon-primary);cursor:pointer;flex-shrink:0;text-decoration:none}
+.hbtn:hover{background:var(--layer-hover-01)}
+.brand{display:flex;align-items:center;height:48px;padding:0 32px 0 8px;font-size:14px;color:var(--text-primary);text-decoration:none;white-space:nowrap}
+.brand b{font-weight:600;margin-right:4px}
+.shell-sp{flex-grow:1}
+.body-row{display:flex;flex-wrap:wrap;flex-grow:1;align-items:stretch}
+.snav{flex:0 0 48px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);display:flex;flex-direction:column;padding-top:8px}
+.snav a{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--icon-secondary);border-left:3px solid transparent;text-decoration:none}
+.snav a:hover{background:var(--layer-hover-01)}
+.snav a.on{background:var(--layer-selected-01);border-left-color:var(--interactive);color:var(--icon-primary)}
+.main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px;padding:24px 24px 32px}
+
+/* page header + content switcher */
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.phead-t{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.sub{font-size:14px;color:var(--text-secondary)}
+.cs{display:inline-flex;height:40px}
+.cs a{display:inline-flex;align-items:center;gap:8px;min-width:128px;padding:0 16px;border:1px solid var(--border-inverse);color:var(--text-secondary);text-decoration:none;font-size:14px;background:transparent}
+.cs a+a{border-left:0}
+.cs a:first-child{border-radius:4px 0 0 4px}
+.cs a:last-child{border-radius:0 4px 4px 0}
+.cs a.on{background:var(--layer-selected-inverse);color:var(--text-on-color)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;padding:0 16px;font-size:14px;line-height:18px;border:1px solid transparent;border-radius:0;text-decoration:none;cursor:pointer;white-space:nowrap;background:transparent}
+.btn-lg{min-height:48px}
+.btn-sm{min-height:32px;padding:0 12px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-danger{background:var(--button-danger);color:var(--text-on-color)}
+.btn-tertiary{border-color:var(--button-tertiary);color:var(--button-tertiary)}
+.btn-ghost{color:var(--link-primary);padding:0 12px;justify-content:flex-start;gap:8px}
+.btn-ghost-n{color:var(--text-primary);padding:0 12px;justify-content:flex-start;gap:8px}
+.ibtn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer;flex-shrink:0;text-decoration:none}
+.ibtn:hover{background:var(--layer-hover-01)}
+.ibtn-sm{width:32px;height:32px}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag-red{background:var(--tag-red-bg);color:var(--tag-red-text)}
+.tag-gray{background:var(--tag-gray-bg);color:var(--tag-gray-text)}
+.tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue-text)}
+.tag-green{background:var(--tag-green-bg);color:var(--tag-green-text)}
+.tag-warm{background:var(--tag-warm-bg);color:var(--tag-warm-text)}
+.tag-cool{background:var(--tag-cool-bg);color:var(--tag-cool-text)}
+.tag-outline{background:var(--layer-01);color:var(--text-primary);border:1px solid var(--border-strong-01)}
+
+/* Carbon for AI: só identifica conteúdo gerado pelo agente */
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--ai-border-strong);border-radius:4px;background:linear-gradient(to top,var(--ai-aura-start),var(--layer-01));color:var(--text-primary);font-size:12px;line-height:1;font-weight:600;cursor:pointer;flex-shrink:0;letter-spacing:0}
+.ai-box{background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.revert{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer}
+
+/* status */
+.st{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.st svg{flex-shrink:0}
+
+/* tiles */
+.tile{background:var(--layer-01);padding:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.kpi{display:flex;flex-direction:column;gap:8px}
+.kpi-l{font-size:14px;color:var(--text-secondary)}
+.kpi-v{font-size:32px;line-height:40px;font-weight:300}
+.kpi-n{font-size:12px;line-height:16px;color:var(--text-secondary);display:flex;align-items:center;gap:4px}
+
+/* agent rail: Pergunte ao Watson, presente em todas as telas */
+.agent{flex:1 1 360px;min-width:0;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column}
+.ag-head{display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 8px 8px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.ag-title{display:flex;align-items:center;gap:8px;flex-grow:1;min-width:0}
+.ag-title h2{font-size:16px;line-height:22px;font-weight:600}
+.ag-ctx{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:var(--layer-02);border-bottom:1px solid var(--border-subtle-01)}
+.ag-ctx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ag-ctx-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-ctx p.d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-body{flex-grow:1;display:flex;flex-direction:column;gap:16px;padding:16px}
+.msg{display:flex;flex-direction:column;gap:12px;padding:16px}
+.msg-head{display:flex;align-items:center;gap:8px}
+.msg-who{font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.msg-when{font-size:12px;line-height:16px;color:var(--text-secondary);margin-left:auto}
+.msg-t{font-size:16px;line-height:22px;font-weight:600}
+.msg p.tx{font-size:14px;line-height:20px}
+.why{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border-subtle-01);padding-top:8px}
+.why-btn{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0;border:0;background:transparent;color:var(--link-primary);font-size:14px;cursor:pointer;align-self:flex-start}
+.why-body{display:flex;flex-direction:column;gap:8px;padding-left:24px;font-size:14px;line-height:20px;color:var(--text-secondary)}
+.why-body ul{display:flex;flex-direction:column;gap:4px}
+.why-body li{display:flex;gap:8px}
+.why-body li::before{content:'';width:4px;height:4px;background:var(--text-secondary);margin-top:8px;flex-shrink:0}
+.msg-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.done{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-primary)}
+.fb{display:flex;align-items:center;gap:0;margin-left:-8px}
+.fb-l{font-size:12px;color:var(--text-secondary);padding:0 8px}
+.umsg{align-self:flex-end;max-width:85%;background:var(--layer-accent-01);padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.umsg .who{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-foot{display:flex;flex-direction:column;gap:12px;padding:16px;border-top:1px solid var(--border-subtle-01)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--layer-01);color:var(--text-primary);font-size:14px;cursor:pointer;text-decoration:none}
+.ask{display:flex;align-items:stretch}
+.ask input{flex-grow:1;min-width:0;height:48px;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:0 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.ask .ibtn{width:48px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--link-primary)}
+.disc{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.cb{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01);color:var(--layer-01);flex-shrink:0}
+.cb.on{background:var(--icon-primary);color:var(--text-on-color)}
+.ai-inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 8px 8px 16px}
+.dt-box{background:var(--layer-01);display:flex;flex-direction:column}
+.dt-head{display:flex;flex-direction:column;gap:4px;padding:16px 16px 16px}
+.dt-head h2{font-size:20px;line-height:28px;font-weight:400}
+.dt-head p{font-size:14px;color:var(--text-secondary)}
+.dt-tb{display:flex;align-items:stretch;flex-wrap:wrap;min-height:48px;background:var(--layer-01)}
+.dt-search{flex:1 1 280px;min-width:0;display:flex;align-items:center;gap:8px;padding:0 16px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--icon-secondary)}
+.dt-search input{flex-grow:1;min-width:0;height:46px;border:0;background:transparent;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.dt-tb .ibtn{width:48px;height:48px}
+.dt-tb .btn{min-height:48px}
+.dt-ord{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 8px 8px 16px;background:var(--layer-01);border-top:1px solid var(--border-subtle-01)}
+.dt-ord .lab{font-size:14px;color:var(--text-primary)}
+.dt-ord .sp{flex-grow:1}
+.ftag{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 4px 0 8px;border-radius:12px;font-size:12px;background:var(--tag-gray-bg);color:var(--tag-gray-text)}
+.ftag button{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;border-radius:12px;background:transparent;color:inherit;padding:0;cursor:pointer}
+.dt-wrap{overflow-x:auto;background:var(--layer-01)}
+.dt{width:100%;min-width:960px;border-collapse:collapse;font-size:14px;line-height:18px}
+.dt th{height:40px;background:var(--layer-accent-01);text-align:left;font-weight:600;padding:0;color:var(--text-primary);white-space:nowrap}
+.dt th .thb{display:flex;align-items:center;gap:8px;width:100%;height:40px;padding:0 16px;border:0;background:transparent;font-size:14px;font-weight:600;color:var(--text-primary);cursor:pointer;text-align:left}
+.dt th.r .thb{justify-content:flex-end}
+.dt th .thb svg{color:var(--icon-secondary)}
+.dt th.cbc,.dt td.cbc{width:48px;padding:0 0 0 16px}
+.dt td{height:40px;padding:0 16px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);color:var(--text-secondary);white-space:nowrap}
+.dt td.r{text-align:right}
+.dt td.pri{color:var(--text-primary)}
+.dt tr.sel td{background:var(--layer-selected-01);color:var(--text-primary)}
+.dt tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--interactive)}
+.dt tr.sel td a{color:#0043ce}
+.dt td a{text-decoration:none}
+.cid{display:inline-flex;align-items:center;gap:8px}
+.pg{display:flex;flex-wrap:wrap;align-items:center;min-height:40px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);font-size:14px;color:var(--text-secondary)}
+.pg-c{display:flex;align-items:center;gap:8px;padding:0 16px;height:40px;border-right:1px solid var(--border-subtle-01)}
+.pg-sel{display:inline-flex;align-items:center;gap:8px;color:var(--text-primary);height:40px;padding:0 8px;border:0;background:transparent;font-size:14px;cursor:pointer}
+.pg .sp{flex-grow:1}
+.pg .ibtn{border-left:1px solid var(--border-subtle-01)}
+.rank{display:flex;flex-direction:column;border-top:1px solid var(--border-subtle-01)}
+.rank li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-subtle-01)}
+.rank-n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:12px;background:var(--layer-accent-01);font-size:12px;font-weight:600;flex-shrink:0}
+.rank-b{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rank-b .t{font-size:14px;color:var(--text-primary)}
+.rank-b .t a{text-decoration:none}
+.rank-b .d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+</style>
+</helmet>
+<div class="wt" style="width: 100%; min-height: 960px">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="shell">
+    <button class="hbtn" type="button" aria-label="Abrir menu de navegação">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+    </button>
+    <a class="brand" href="#"><b>Watson</b> · Prevenção a fraudes</a>
+    <div class="shell-sp"></div>
+    <button class="hbtn" type="button" aria-label="Buscar associado, cartão ou caso">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l4.5 4.5"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Notificações">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 1.5h-13z"></path><path d="M8 17.5h4"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Perfil de Camila Rocha">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h3v3H3zM8.5 3h3v3h-3zM14 3h3v3h-3zM3 8.5h3v3H3zM8.5 8.5h3v3h-3zM14 8.5h3v3h-3zM3 14h3v3H3zM8.5 14h3v3h-3zM14 14h3v3h-3z"></path></svg>
+    </button>
+  </header>
+  <div class="body-row">
+    <nav class="snav" aria-label="Navegação lateral recolhida">
+      <a class="on" href="#" aria-label="Alertas (página atual)" aria-current="page" title="Alertas">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h2M8 5h9M3 10h2M8 10h9M3 15h2M8 15h9"></path></svg>
+      </a>
+      <a href="#" aria-label="Casos encerrados" title="Casos encerrados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 5.5h5l1.5 2h8.5v9h-15z"></path></svg>
+      </a>
+      <a href="#" aria-label="Associados" title="Associados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="2.5"></circle><path d="M2.5 16c0.5-2.7 2.2-4 4.5-4s4 1.3 4.5 4"></path><circle cx="14" cy="7.5" r="2"></circle><path d="M13 12c2.2 0 3.7 1.2 4.3 3.5"></path></svg>
+      </a>
+      <a href="#" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 17h14M4.5 13l3.5-4 3 2.5 5-6"></path></svg>
+      </a>
+      <a href="#" aria-label="Relatórios" title="Relatórios">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 2.5h7l3 3v12H5z"></path><path d="M8 9h4M8 12h4"></path></svg>
+      </a>
+    </nav>
+    <main id="conteudo" class="main">
+      <div class="phead">
+        <div class="phead-t">
+          <p class="eyebrow">Alertas de fraude · turno da manhã</p>
+          <h1 class="h1">Fila de alertas</h1>
+          <p class="sub">128 casos abertos · atualizado às 09:14</p>
+        </div>
+        <div class="cs" role="tablist" aria-label="Modo de visualização dos alertas">
+          <a class="on" href="#" role="tab" aria-selected="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"></path></svg>
+            Fila
+          </a>
+          <a href="#" role="tab" aria-selected="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+            Quadro
+          </a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+          <div class="tile kpi">
+            <p class="kpi-l">{{k.l}}</p>
+            <p class="kpi-v">{{k.v}}</p>
+            <p class="kpi-n">
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k.ic1}}" fill="{{k.f1}}" stroke="{{k.s1}}" stroke-width="1"></path><path d="{{k.ic2}}" fill="none" stroke="{{k.s2}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              {{k.n}}
+            </p>
+          </div>
+        </sc-for>
+      </div>
+
+      <section class="dt-box" aria-labelledby="dt-t">
+        <div class="dt-head">
+          <h2 id="dt-t">Casos abertos</h2>
+          <p>Risco alto e médio, de todos os canais. Clique no número do caso para abrir.</p>
+        </div>
+        <div class="dt-tb" role="toolbar" aria-label="Ferramentas da tabela">
+          <label class="dt-search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5l3.5 3.5"></path></svg>
+            <span class="sr">Buscar na fila</span>
+            <input type="search" placeholder="Buscar caso, associado ou cartão">
+          </label>
+          <button class="ibtn" type="button" aria-label="Filtros, 2 ativos">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14l-5.5 6.5v5l-3 1.5v-6.5z"></path></svg>
+          </button>
+          <button class="ibtn" type="button" aria-label="Exportar fila">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 3v10M6 9l4 4 4-4M3.5 16.5h13"></path></svg>
+          </button>
+          <button class="ibtn" type="button" aria-label="Configurar colunas">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h10M16 15h1"></path><circle cx="12.5" cy="5" r="1.5"></circle><circle cx="7.5" cy="10" r="1.5"></circle><circle cx="14.5" cy="15" r="1.5"></circle></svg>
+          </button>
+          <a class="btn btn-primary" href="#">
+            Abrir caso #4821
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+          </a>
+        </div>
+        <div class="dt-ord">
+          <span class="ftag">Risco: alto e médio <button type="button" aria-label="Remover filtro risco alto e médio"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l6 6M11 5l-6 6"></path></svg></button></span>
+          <span class="ftag">Estado: aberto <button type="button" aria-label="Remover filtro estado aberto"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l6 6M11 5l-6 6"></path></svg></button></span>
+          <span class="sp"></span>
+          <span class="st lab">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 3v10M2.5 10.5L5 13l2.5-2.5M11 13V3M8.5 5.5L11 3l2.5 2.5"></path></svg>
+            Ordem sugerida pelo Watson
+          </span>
+          <button class="ai" type="button" aria-label="IA: por que esta ordem foi sugerida">IA</button>
+          <button class="btn btn-ghost btn-sm" type="button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+            Reverter para risco × valor
+          </button>
+        </div>
+        <div class="dt-wrap">
+          <table class="dt">
+            <thead>
+              <tr>
+                <th class="cbc" scope="col"><span class="cb" role="checkbox" aria-checked="false" aria-label="Selecionar todos os casos da página"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"></path></svg></span></th>
+                <sc-for list="{{cols}}" as="c" hint-placeholder-count="9">
+                  <th scope="col" class="{{c.cls}}" aria-sort="{{c.sort}}">
+                    <button class="thb" type="button">{{c.t}}
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 3v10M2.5 10.5L5 13l2.5-2.5M11 13V3M8.5 5.5L11 3l2.5 2.5"></path></svg>
+                    </button>
+                  </th>
+                </sc-for>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="11">
+                <tr class="{{r.cls}}">
+                  <td class="cbc"><span class="{{r.cbCls}}" role="checkbox" aria-checked="{{r.chk}}" aria-label="{{r.cbLabel}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"></path></svg></span></td>
+                  <td class="pri">
+                    <span class="cid">
+                      <a class="mono" href="#">{{r.id}}</a>
+                      <sc-if value="{{r.grp}}" hint-placeholder-val="{{ true }}">
+                        <span class="tag tag-cool">3 alertas</span>
+                        <button class="ai" type="button" aria-label="IA: o Watson agrupou 3 alertas do mesmo cartão">IA</button>
+                      </sc-if>
+                    </span>
+                  </td>
+                  <td class="pri">{{r.assoc}}</td>
+                  <td class="r pri mono">{{r.valor}}</td>
+                  <td>{{r.estab}}</td>
+                  <td>{{r.canal}}</td>
+                  <td class="r mono pri">{{r.score}}</td>
+                  <td>
+                    <span class="{{r.tagCls}}">
+                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.ri1}}" fill="{{r.rf}}" stroke="{{r.rs}}" stroke-width="1"></path><path d="{{r.ri2}}" fill="none" stroke="{{r.rm}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                      {{r.risco}}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="st">
+                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.ei}}" fill="{{r.ef}}" stroke="{{r.es}}" stroke-width="1.5"></path></svg>
+                      {{r.estado}}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="st mono">
+                      <sc-if value="{{r.late}}" hint-placeholder-val="{{ false }}">
+                        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="#f1c21b" stroke="#8e6a00" stroke-width="1"></path><path d="M8 6v3.5M8 11.2v0.3" fill="none" stroke="#161616" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                      </sc-if>
+                      {{r.fila}}
+                    </span>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div class="pg">
+          <div class="pg-c">Itens por página:
+            <button class="pg-sel" type="button" aria-label="Itens por página, 25">25
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+            </button>
+          </div>
+          <div class="pg-c" style="border-right: 0">1–25 de 128 itens</div>
+          <span class="sp"></span>
+          <div class="pg-c" style="border-left: 1px solid var(--border-subtle-01); border-right: 0">
+            <button class="pg-sel" type="button" aria-label="Página 1 de 6">1
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+            </button>
+            de 6 páginas
+          </div>
+          <button class="ibtn" type="button" aria-label="Página anterior">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8d8d8d" stroke-width="1.5" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"></path></svg>
+          </button>
+          <button class="ibtn" type="button" aria-label="Próxima página">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"></path></svg>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <aside class="agent" aria-labelledby="ag-t">
+      <div class="ag-head">
+        <div class="ag-title">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14v10H9l-4 3v-3H3z"></path><path d="M7 9h0.01M10 9h0.01M13 9h0.01"></path></svg>
+          <h2 id="ag-t">Pergunte ao Watson</h2>
+          <button class="ai" type="button" aria-label="IA: o que é o Watson e como ele usa os dados desta tela">IA</button>
+        </div>
+        <button class="ibtn" type="button" aria-label="Histórico de conversas">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"></path><path d="M3 3v3.5h3.5"></path><path d="M10 6.5V10l2.5 1.5"></path></svg>
+        </button>
+        <button class="ibtn" type="button" aria-label="Recolher painel do Watson">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13"></rect><path d="M12.5 3.5v13M6.5 8l2 2-2 2"></path></svg>
+        </button>
+      </div>
+      <div class="ag-ctx">
+        <div class="ag-ctx-row">
+          <span class="ag-ctx-l">Contexto</span>
+          <span class="tag tag-cool">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"></path><circle cx="8" cy="8" r="2"></circle></svg>
+            {{ctxTela}}
+          </span>
+        </div>
+        <p class="d">{{ctxDesc}}</p>
+      </div>
+      <div class="ag-body">
+        <article class="ai-box msg" aria-label="Sugestão do Watson: ordem de ataque">
+          <div class="msg-head">
+            <span class="msg-who">Watson</span>
+            <button class="ai" type="button" aria-label="IA: sugestão gerada pelo Watson">IA</button>
+            <span class="msg-when">09:12</span>
+          </div>
+          <h3 class="msg-t">Comece pelo #4821: R$ 2.349,90, rajada</h3>
+          <p class="tx">5 tentativas online em 7 min, às 03:14, a 760 km de onde o associado costuma comprar. É o maior valor em risco entre os casos novos.</p>
+          <ol class="rank" aria-label="Ordem sugerida">
+            <sc-for list="{{rank}}" as="k" hint-placeholder-count="3">
+              <li>
+                <span class="rank-n">{{k.n}}</span>
+                <div class="rank-b">
+                  <p class="t"><a class="mono" href="#">{{k.id}}</a> · {{k.v}}</p>
+                  <p class="d">{{k.d}}</p>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+          <div class="why">
+            <button class="why-btn" type="button" aria-expanded="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+              Por que estou sugerindo isso
+            </button>
+            <div class="why-body">
+              <p>Ordenei por valor em risco × score × tempo na fila.</p>
+              <ul>
+                <li>Rajadas sobem: novas tentativas podem chegar a qualquer minuto.</li>
+                <li>Casos com associado sem resposta há mais de 20 min passam do prazo de atendimento.</li>
+                <li>Não considerei casos já atribuídos a outras analistas.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="done">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>
+            Aplicada à fila por você às 09:12
+          </p>
+          <div class="msg-act">
+            <button class="btn btn-ghost btn-sm" type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 13l0.5-2.5L11 3l2 2-7.5 7.5zM9.5 4.5l2 2"></path></svg>
+              Editar ordem
+            </button>
+            <button class="btn btn-ghost btn-sm" type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+              Reverter
+            </button>
+          </div>
+        </article>
+
+        <article class="ai-box msg" aria-label="Sugestão do Watson: reenviar alerta">
+          <div class="msg-head">
+            <span class="msg-who">Watson</span>
+            <button class="ai" type="button" aria-label="IA: sugestão gerada pelo Watson">IA</button>
+            <span class="msg-when">09:13</span>
+          </div>
+          <h3 class="msg-t">O associado do #4790 não respondeu há 24 min</h3>
+          <p class="tx">A compra de R$ 860,00 segue pausada. Sugiro reenviar o alerta no app antes de decidir.</p>
+          <div class="why">
+            <button class="why-btn" type="button" aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"></path></svg>
+              Por que estou sugerindo isso
+            </button>
+          </div>
+          <div class="msg-act">
+            <button class="btn btn-tertiary btn-sm" type="button">Reenviar alerta</button>
+            <button class="btn btn-ghost btn-sm" type="button">Editar mensagem</button>
+            <button class="btn btn-ghost btn-sm" type="button">Ignorar</button>
+          </div>
+          <div class="fb">
+            <span class="fb-l">Esta sugestão ajudou?</span>
+            <button class="ibtn ibtn-sm" type="button" aria-label="Sugestão útil">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></svg>
+            </button>
+            <button class="ibtn ibtn-sm" type="button" aria-label="Sugestão não útil">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><g transform="rotate(180 8 8)"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></g></svg>
+            </button>
+          </div>
+        </article>
+      </div>
+      <div class="ag-foot">
+        <p class="ag-ctx-l">Perguntas sugeridas para esta tela</p>
+        <div class="chips">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <button class="chip" type="button">{{c}}</button>
+          </sc-for>
+        </div>
+        <div class="ask">
+          <input type="text" placeholder="{{askPh}}" aria-label="Escreva uma pergunta para o Watson">
+          <button class="ibtn" type="button" aria-label="Enviar pergunta">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 10l14-6.5L12 17l-2.5-5.5z"></path><path d="M9.5 11.5L17 3.5"></path></svg>
+          </button>
+        </div>
+        <p class="disc">O Watson sugere e explica; ele pode errar. Nada é bloqueado, liberado ou enviado sem a sua confirmação.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const RISK = {
+      alto: { tag: 'tag tag-red', t: 'Alto', i1: 'M8 1.5l6.5 6.5L8 14.5 1.5 8z', f: '#da1e28', s: '#da1e28', i2: 'M8 4.8v3.6M8 10.8v0.4', m: '#ffffff' },
+      medio: { tag: 'tag tag-warm', t: 'Médio', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+      baixo: { tag: 'tag tag-green', t: 'Baixo', i1: 'M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', f: '#24a148', s: '#24a148', i2: 'M5 8.2l2 2 4-4.2', m: '#ffffff' }
+    };
+    const EST = {
+      novo: { t: 'Novo', i: 'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z', f: '#0f62fe', s: '#0f62fe' },
+      aguard: { t: 'Aguardando associado', i: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12zM8 5v3.2l2.2 1.4', f: 'none', s: '#525252' },
+      analise: { t: 'Em análise', i: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12zM8 2v12', f: 'none', s: '#0f62fe' }
+    };
+    const row = (id, assoc, valor, estab, canal, score, r, e, quem, fila, extra) => {
+      const R = RISK[r], E = EST[e];
+      return Object.assign({
+        id, assoc, valor, estab, canal, score, fila,
+        risco: R.t, tagCls: R.tag, ri1: R.i1, rf: R.f, rs: R.s, ri2: R.i2, rm: R.m,
+        estado: quem ? E.t + ' · ' + quem : E.t, ei: E.i, ef: E.f, es: E.s,
+        late: false, grp: false, chk: 'false', cls: '', cbCls: 'cb', cbLabel: 'Selecionar caso ' + id
+      }, extra || {});
+    };
+    return {
+      ctxTela: 'Fila de alertas',
+      ctxDesc: 'Leio os 128 casos abertos, os filtros ativos e a linha que você selecionou. Ao trocar de tela, mudo de contexto.',
+      askPh: 'Pergunte sobre a fila',
+      chips: ['Quais casos passam do prazo em 10 min?', 'Mostre só rajadas', 'Resuma o meu turno'],
+      kpis: [
+        { l: 'Alertas abertos', v: '128', n: '14 a mais na última hora', ic1: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z', f1: 'none', s1: '#525252', ic2: 'M8 5v3.5L10 10', s2: '#525252' },
+        { l: 'Risco alto', v: '23', n: '9 de cartão não presente', ic1: 'M8 1.5l6.5 6.5L8 14.5 1.5 8z', f1: '#da1e28', s1: '#da1e28', ic2: 'M8 4.8v3.6M8 10.8v0.4', s2: '#ffffff' },
+        { l: 'Aguardando associado', v: '7', n: '5 sem resposta há mais de 20 min', ic1: 'M8 1.8l6.6 11.7H1.4z', f1: '#f1c21b', s1: '#8e6a00', ic2: 'M8 6v3.5M8 11.2v0.3', s2: '#161616' },
+        { l: 'Tempo médio de decisão', v: '1 min 48 s', n: 'Dentro da meta de 2 min', ic1: 'M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', f1: '#24a148', s1: '#24a148', ic2: 'M5 8.2l2 2 4-4.2', s2: '#ffffff' }
+      ],
+      cols: [
+        { t: 'Caso', cls: '', sort: 'none' },
+        { t: 'Associado', cls: '', sort: 'none' },
+        { t: 'Valor', cls: 'r', sort: 'none' },
+        { t: 'Estabelecimento', cls: '', sort: 'none' },
+        { t: 'Canal', cls: '', sort: 'none' },
+        { t: 'Score', cls: 'r', sort: 'none' },
+        { t: 'Risco', cls: '', sort: 'none' },
+        { t: 'Estado', cls: '', sort: 'none' },
+        { t: 'Na fila', cls: '', sort: 'none' }
+      ],
+      rows: [
+        row('#4821', 'Valdir B.', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos', 'Online', '0,92', 'alto', 'novo', '', '3 min',
+          { chk: 'true', cls: 'sel', cbCls: 'cb on' }),
+        row('#5107', 'Rosa M.', 'R$ 1.980,00', 'Loja Exemplo Games', 'Online', '0,94', 'alto', 'novo', '', '4 min', { grp: true }),
+        row('#4790', 'Ivo T.', 'R$ 860,00', 'Farmácia Modelo', 'Online', '0,76', 'alto', 'aguard', '', '24 min', { late: true }),
+        row('#4835', 'Joana P.', 'R$ 2.450,00', 'Agropecuária Modelo', 'Presencial', '0,81', 'alto', 'novo', '', '9 min'),
+        row('#4842', 'Caio R.', 'R$ 389,90', 'Viagens Fictícias', 'Online', '0,78', 'alto', 'novo', '', '12 min'),
+        row('#4851', 'Ana C.', 'R$ 74,50', 'Posto Exemplo', 'Presencial', '0,72', 'alto', 'novo', '', '15 min'),
+        row('#4812', 'Pedro A.', 'R$ 3.200,00', 'Máquinas Exemplo', 'Online', '0,68', 'medio', 'aguard', '', '22 min', { late: true }),
+        row('#4860', 'Sônia L.', 'R$ 45,00', 'Streaming Demo', 'Online', '0,61', 'medio', 'aguard', '', '27 min', { late: true }),
+        row('#4799', 'Lúcia F.', 'R$ 5.400,00', 'Concessionária Fictícia', 'Presencial', '0,83', 'alto', 'analise', 'Camila', '11 min'),
+        row('#4808', 'Nilo G.', 'R$ 610,00', 'Loja Teste Online', 'Online', '0,64', 'medio', 'analise', 'Bruna', '33 min'),
+        row('#4866', 'Rui D.', 'R$ 129,90', 'Mercado Modelo', 'Aproximação', '0,38', 'baixo', 'novo', '', '2 min')
+      ],
+      rank: [
+        { n: '1', id: '#4821', v: 'R$ 2.349,90', d: 'Rajada de 5 tentativas em 7 min, longe de casa' },
+        { n: '2', id: '#5107', v: 'R$ 1.980,00', d: '3 alertas do mesmo cartão, já agrupados' },
+        { n: '3', id: '#4790', v: 'R$ 860,00', d: 'Associado sem resposta há 24 min' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

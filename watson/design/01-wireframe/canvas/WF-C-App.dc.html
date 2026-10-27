@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Wireframe C · Alerta com mapa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#393939}a:hover{color:#161616}
+.b{border:1px solid #8d8d8d;background:#fff;box-sizing:border-box}
+.ph{background:#e0e0e0}
+.l{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#525252;margin:0}
+.ann{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#161616;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.btn{border:1px solid #393939;background:#fff;font:inherit;font-size:13px;padding:10px 16px;min-height:44px}
+.btn.p{background:#393939;color:#fff}
+.big{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;box-sizing:border-box;font-size:18px;font-weight:600;text-decoration:none;width:100%}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; overflow: hidden; box-sizing: border-box; background: #f4f4f4; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; display: flex; flex-direction: column">
+  <header class="b" style="height: 56px; flex-shrink: 0; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-width: 0 0 1px 0">
+    <a href="#" aria-label="Voltar" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -12px">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#161616" stroke-width="1.75"><path d="M12.5 4l-6 6 6 6"></path></svg>
+    </a>
+    <p style="margin: 0; font-size: 17px; font-weight: 600; flex-grow: 1">Alerta de segurança</p>
+    <div class="ph" style="width: 56px; height: 18px"></div>
+  </header>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 14px; min-height: 0; overflow-y: auto">
+
+    <section class="b" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; border-top: 4px solid #161616">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="ann">1</span>
+        <p style="margin: 0; font-size: 15px; color: #393939">Você fez esta compra? · cartão final 4417</p>
+      </div>
+      <p style="margin: 0; font-size: 34px; font-weight: 600; line-height: 1.1">R$ 1.249,90</p>
+      <p style="margin: 0; font-size: 17px; font-weight: 600">Loja Exemplo Eletrônicos</p>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <sc-for list="{{info}}" as="i" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <div class="ph" style="width: 16px; height: 16px; border-radius: 50%"></div>
+            <p style="margin: 0; font-size: 16px; color: #393939">{{i}}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section class="b" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="ann">2</span>
+        <p style="margin: 0; font-size: 15px; font-weight: 600; flex-grow: 1">Longe de onde você costuma comprar</p>
+      </div>
+      <div class="ph" style="height: 88px; position: relative; overflow: hidden">
+        <svg width="100%" height="88" viewBox="0 0 356 112" fill="none" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0">
+          <path d="M0 80 C 60 60, 120 95, 200 70 S 320 40, 356 55" stroke="#c6c6c6" stroke-width="1.5"></path>
+          <path d="M0 30 C 80 45, 160 20, 240 35 S 330 20, 356 25" stroke="#c6c6c6" stroke-width="1.5"></path>
+          <path d="M66 78 L 286 34" stroke="#393939" stroke-width="1.5" stroke-dasharray="5 4"></path>
+          <circle cx="66" cy="78" r="18" stroke="#393939" stroke-width="1.5" stroke-dasharray="3 3"></circle>
+          <circle cx="66" cy="78" r="5" stroke="#393939" stroke-width="2" fill="#ffffff"></circle>
+          <path d="M286 18 c -7 0 -11 5 -11 10 c 0 8 11 18 11 18 s 11 -10 11 -18 c 0 -5 -4 -10 -11 -10 z" stroke="#161616" stroke-width="2" fill="#ffffff"></path>
+          <circle cx="286" cy="28" r="3" stroke="#161616" stroke-width="1.5"></circle>
+        </svg>
+        <p class="l" style="position: absolute; left: 140px; top: 34px; background: #fff; padding: 2px 6px; color: #161616">~640 KM</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <div style="display: flex; gap: 6px; align-items: flex-start">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#393939" stroke-width="1.5" style="flex-shrink: 0; margin-top: 3px"><circle cx="7" cy="7" r="5.5" stroke-dasharray="2 2"></circle></svg>
+          <p style="margin: 0; font-size: 14px; color: #393939">Onde você costuma comprar: <strong>Chapecó, SC</strong></p>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: flex-start">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#161616" stroke-width="1.5" style="flex-shrink: 0; margin-top: 3px"><path d="M7 1.5c-2.5 0-4 1.8-4 3.8C3 8.300 7 12.5 7 12.5s4-4.200 4-7.200c0-2-1.500-3.800-4-3.800z"></path></svg>
+          <p style="margin: 0; font-size: 14px; color: #393939">Onde a compra aconteceu: <strong>São Paulo, SP</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 10px">
+      <a class="btn big" href="#" style="min-height: 60px; position: relative">
+        <span class="ann" style="position: absolute; left: 10px; top: 10px">3</span>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#161616" stroke-width="2"><path d="M4 11.5l4.5 4.5L18 6.5"></path></svg>
+        Fui eu
+      </a>
+      <a class="btn p big" href="#" style="min-height: 60px">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#ffffff" stroke-width="2"><rect x="5" y="10" width="12" height="9" rx="1.5"></rect><path d="M8 10V7a3 3 0 0 1 6 0v3"></path></svg>
+        Não fui eu — bloquear cartão
+      </a>
+    </section>
+
+    <section class="b" style="padding: 10px 16px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="ann">4</span>
+        <p style="margin: 0; font-size: 15px; font-weight: 600">O que acontece depois do toque</p>
+      </div>
+      <sc-for list="{{passos}}" as="p" hint-placeholder-count="3">
+        <div style="display: flex; gap: 10px; align-items: flex-start">
+          <p class="l" style="width: 18px; height: 18px; border: 1px solid #525252; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px">{{p.n}}</p>
+          <p style="margin: 0; font-size: 14px; color: #393939; line-height: 1.35">{{p.t}}</p>
+        </div>
+      </sc-for>
+    </section>
+
+    <section style="margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px dashed #525252; background: #fff">
+      <span class="ann">5</span>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#161616" stroke-width="1.75" style="flex-shrink: 0"><path d="M11 2.5l7 3v5c0 4.500-3 7.500-7 9-4-1.500-7-4.500-7-9v-5z"></path><path d="M8 11l2.200 2.200L14.500 9"></path></svg>
+      <p style="margin: 0; font-size: 14px; line-height: 1.35"><strong>Nunca pedimos senha ou código por telefone.</strong> Na dúvida, responda só por aqui.</p>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      info: [
+        'Compra pela internet · São Paulo, SP',
+        'Hoje, às 03:12 da madrugada'
+      ],
+      passos: [
+        { n: '1', t: 'Você confirma com a digital do celular.' },
+        { n: '2', t: 'Fui eu: compra liberada na hora.' },
+        { n: '3', t: 'Não fui eu: cartão bloqueado, nada é cobrado e um novo vai para sua casa.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

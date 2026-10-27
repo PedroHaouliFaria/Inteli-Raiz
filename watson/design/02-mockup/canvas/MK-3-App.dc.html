@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mockup 3 · Alerta em conversa com selo de assistente automático</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wa{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-strong-01:#8d8d8d;--text-primary:#161616;--text-secondary:#525252;--text-on-color:#ffffff;--link-primary:#0f62fe;--focus:#0f62fe;--icon-primary:#161616;--support-info:#0043ce;--notification-info-bg:#edf5ff;--ai-border-strong:#4589ff;--ai-border-subtle:#a6c8ff;--ai-aura-start:rgba(69,137,255,0.10);--ai-aura-end:rgba(255,255,255,0);position:relative;box-sizing:border-box;overflow:hidden;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:16px;line-height:24px;letter-spacing:0;display:flex;flex-direction:column}
+.wa *{box-sizing:border-box}
+.wa p,.wa h1,.wa dl,.wa dd{margin:0}
+.wa :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.ab{height:64px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 16px 0 0;background:var(--layer-01);border-bottom:1px solid var(--border-subtle-01)}
+.back{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;color:var(--icon-primary);flex-shrink:0;margin-left:4px}
+.av{width:40px;height:40px;border-radius:20px;background:var(--layer-02);border:1px solid var(--border-subtle-01);display:flex;align-items:center;justify-content:center;color:var(--support-info);flex-shrink:0}
+.ab-t{display:flex;flex-direction:column;min-width:0}
+.ab-t h1{font-size:18px;line-height:24px;font-weight:600}
+.ab-t p{display:flex;align-items:center;gap:4px;font-size:16px;line-height:20px;color:var(--text-secondary)}
+.callout{flex-shrink:0;display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--notification-info-bg);border-left:3px solid var(--support-info)}
+.callout svg{flex-shrink:0;margin-top:2px;color:var(--support-info)}
+.callout p{font-size:16px;line-height:22px;font-weight:600}
+.chat{flex-grow:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:16px}
+.selo{display:flex;align-items:flex-start;gap:8px;font-size:16px;line-height:24px;color:var(--text-secondary)}
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--ai-border-strong);border-radius:4px;background:linear-gradient(to top,var(--ai-aura-start),var(--layer-01));color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:16px;line-height:1;font-weight:600;cursor:pointer;flex-shrink:0}
+.selo .who{color:var(--text-primary);font-weight:600}
+.selo .sp{flex-grow:1}
+.bub{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:4px 16px 16px 16px;background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.bub .hi{font-size:18px;line-height:26px}
+.det{display:flex;flex-direction:column;background:var(--layer-02);border:1px solid var(--border-subtle-01)}
+.det div{display:flex;align-items:baseline;gap:12px;padding:8px 12px;border-top:1px solid var(--border-subtle-01)}
+.det div:first-child{border-top:0}
+.det dt{width:72px;flex-shrink:0;font-size:16px;color:var(--text-secondary)}
+.det dd{font-size:18px;line-height:24px;font-weight:600;min-width:0}
+.det dd.big{font-size:24px;line-height:32px}
+.q{font-size:22px;line-height:28px;font-weight:600}
+.pause{display:flex;gap:8px;align-items:flex-start;font-size:16px;line-height:22px;color:var(--text-primary);padding:0 4px}
+.pause svg{flex-shrink:0;margin-top:3px}
+.acts{flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding:16px 16px 12px;background:var(--layer-01);border-top:1px solid var(--border-subtle-01)}
+.choice{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:0 16px;border:1px solid var(--border-strong-01);background:var(--layer-01);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:18px;line-height:24px;font-weight:600;text-align:left;cursor:pointer}
+.choice svg{flex-shrink:0}
+.human{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;color:var(--link-primary);font-size:16px;text-decoration:none}
+</style>
+</helmet>
+<div class="wa" style="width: 390px; height: 844px">
+  <header class="ab">
+    <a class="back" href="#" aria-label="Voltar para o início">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <div class="av" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+    </div>
+    <div class="ab-t">
+      <h1>Cartões da cooperativa</h1>
+      <p>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg>
+        Conversa segura no seu app
+      </p>
+    </div>
+  </header>
+
+  <div class="callout" role="note">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M10 9v5M10 6.2v0.3"></path></svg>
+    <p>Nunca pedimos senha ou código por telefone.</p>
+  </div>
+
+  <main class="chat">
+    <p class="selo">
+      <button class="ai" type="button" aria-label="IA: o que é o assistente automático">IA</button>
+      <span class="who">Assistente automático da cooperativa</span>
+    </p>
+    <article class="bub" aria-label="Mensagem do assistente automático da cooperativa">
+      <p class="hi">Olá, Valdir. Vimos uma compra no seu cartão de crédito final 4821:</p>
+      <dl class="det">
+        <sc-for list="{{det}}" as="d" hint-placeholder-count="4">
+          <div><dt>{{d.k}}</dt><dd class="{{d.cls}}">{{d.v}}</dd></div>
+        </sc-for>
+      </dl>
+      <p class="q">Foi você?</p>
+    </article>
+    <p class="pause">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="9" r="7.5"></circle><path d="M7 6v6M11 6v6"></path></svg>
+      Enquanto você não responde, a compra fica pausada. Nada foi cobrado.
+    </p>
+  </main>
+
+  <div class="acts">
+    <button class="choice" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#24a148"></path><path d="M7.5 12.3l3 3 6-6.3" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+      Sim, fui eu
+    </button>
+    <button class="choice" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#da1e28"></path><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+      Não reconheço
+    </button>
+    <a class="human" href="#">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+      Prefiro falar com uma pessoa
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      det: [
+        { k: 'Valor', v: 'R$ 2.349,90', cls: 'big' },
+        { k: 'Loja', v: 'Loja Exemplo Eletrônicos (internet)', cls: '' },
+        { k: 'Cidade', v: 'São Paulo (SP)', cls: '' },
+        { k: 'Horário', v: 'Hoje, 03:14', cls: '' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

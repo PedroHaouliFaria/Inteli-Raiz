@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Wireframe B · Caso com agente lateral</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#393939}a:hover{color:#161616}
+.b{border:1px solid #8d8d8d;background:#fff;box-sizing:border-box}
+.ph{background:#e0e0e0}
+.l{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#525252;margin:0}
+.ann{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#161616;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.btn{border:1px solid #393939;background:#fff;font:inherit;font-size:13px;padding:10px 16px;min-height:44px}
+.btn.p{background:#393939;color:#fff}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 960px; box-sizing: border-box; background: #f4f4f4; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; display: flex; flex-direction: column">
+  <header class="b" style="height: 48px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-width: 0 0 1px 0; flex-shrink: 0">
+    <div class="ph" style="width: 96px; height: 20px"></div>
+    <p class="l">WATSON · PREVENÇÃO</p>
+    <div style="flex-grow: 1"></div>
+    <div class="b" style="width: 280px; height: 32px; display: flex; align-items: center; padding: 0 10px"><p class="l">Buscar associado, cartão, caso</p></div>
+    <div class="ph" style="width: 32px; height: 32px; border-radius: 50%"></div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex-grow: 1">
+    <nav class="b" style="flex: 0 0 96px; border-width: 0 1px 0 0; display: flex; flex-direction: column; padding: 8px 0">
+      <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; text-decoration: none; color: #161616; border-left: 3px solid #161616; background: #e0e0e0">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#161616" stroke-width="1.5"><path d="M4 6h12M4 10h12M4 14h8"></path></svg>
+        <span style="font-size: 12px; font-weight: 600; text-align: center">Fila</span>
+        <span class="l" style="color: #393939">128</span>
+      </a>
+      <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; text-decoration: none; color: #393939; border-left: 3px solid transparent">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#393939" stroke-width="1.5"><path d="M3 6h5l2 2h7v8H3z"></path></svg>
+        <span style="font-size: 12px; text-align: center">Casos</span>
+      </a>
+      <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; text-decoration: none; color: #393939; border-left: 3px solid transparent">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#393939" stroke-width="1.5"><path d="M3 16h14M4 13l4-4 3 3 5-6"></path></svg>
+        <span style="font-size: 12px; text-align: center; line-height: 1.3">Monitoramento do modelo</span>
+      </a>
+    </nav>
+
+    <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 16px 24px 24px">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+        <span class="ann">1</span>
+        <a href="#" style="font-size: 13px">Fila</a>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#525252" stroke-width="1.5"><path d="M6 4l4 4-4 4"></path></svg>
+        <span style="font-size: 13px; font-weight: 600">Caso #4821</span>
+        <div style="flex-grow: 1"></div>
+        <a href="#" style="font-size: 13px">Caso anterior</a>
+        <span class="l">·</span>
+        <a href="#" style="font-size: 13px">Próximo da fila</a>
+      </div>
+
+      <section class="b" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap">
+          <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 320px; min-width: 0">
+            <p class="l">CASO #4821 · CRÉDITO · CARTÃO NÃO PRESENTE · ABERTO HÁ 3 MIN</p>
+            <p style="margin: 0; font-size: 22px">R$ 2.349,90 · Loja Exemplo Eletrônicos (online)</p>
+            <p style="margin: 0; font-size: 13px; color: #393939">Associado fictício V. B. · cartão final 4821 · associado desde 2006</p>
+          </div>
+          <div class="b" style="width: 132px; height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 2px solid #161616">
+            <p class="l">SCORE</p>
+            <p style="margin: 0; font-size: 24px; font-weight: 600">0,92</p>
+            <p class="l" style="color: #161616">RISCO ALTO</p>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid #c6c6c6; padding-top: 8px">
+              <p class="l">{{m.k}}</p>
+              <p style="margin: 0; font-size: 14px">{{m.v}}</p>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; flex-grow: 1">
+        <section class="b" style="flex: 1 1 340px; min-width: 0; padding: 14px 16px; display: flex; flex-direction: column">
+          <div style="display: flex; gap: 8px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #8d8d8d">
+            <span class="ann">2</span>
+            <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Por que é suspeito</p>
+            <p class="l">PESO NO SCORE</p>
+          </div>
+          <sc-for list="{{factors}}" as="f" hint-placeholder-count="5">
+            <div style="display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e0e0e0">
+              <p class="l" style="width: 14px; padding-top: 2px">{{f.n}}</p>
+              <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <p style="margin: 0; font-size: 14px; font-weight: 600">{{f.t}}</p>
+                <p style="margin: 0; font-size: 13px; color: #393939">{{f.d}}</p>
+                <div style="height: 6px; background: #e0e0e0"><div style="height: 6px; width: {{f.w}}; background: #525252"></div></div>
+              </div>
+              <p class="l" style="width: 40px; text-align: right; color: #161616; padding-top: 2px">{{f.p}}</p>
+            </div>
+          </sc-for>
+          <div style="display: flex; gap: 12px; padding: 10px 0">
+            <p class="l" style="width: 14px">−</p>
+            <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <p style="margin: 0; font-size: 14px; font-weight: 600">Reduz o risco: já comprou online antes</p>
+              <p style="margin: 0; font-size: 13px; color: #393939">2 compras online legítimas em 2026</p>
+            </div>
+            <p class="l" style="width: 40px; text-align: right; color: #161616">−0,03</p>
+          </div>
+        </section>
+
+        <section class="b" style="flex: 1 1 300px; min-width: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; gap: 8px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #8d8d8d">
+            <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Linha do tempo do cartão</p>
+            <a href="#" style="font-size: 13px">Ver 12 meses</a>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{timeline}}" as="t" hint-placeholder-count="7">
+              <div style="display: flex; gap: 12px">
+                <div style="width: 16px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0">
+                  <div style="width: {{t.size}}; height: {{t.size}}; border-radius: 50%; border: 2px solid #161616; background: {{t.dot}}; box-sizing: border-box; margin-top: 4px; flex-shrink: 0"></div>
+                  <div style="width: 2px; flex-grow: 1; background: #c6c6c6"></div>
+                </div>
+                <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 4px 8px 12px; background: {{t.bg}}">
+                  <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+                    <p style="margin: 0; font-size: 14px; font-weight: {{t.fw}}">{{t.linha}}</p>
+                    <span class="l" style="border: 1px solid {{t.tagb}}; padding: 2px 6px; white-space: nowrap">{{t.tag}}</span>
+                  </div>
+                  <p class="l">{{t.loja}}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="b" style="flex: 1 1 400px; min-width: 0; max-height: 912px; position: sticky; top: 0; border-width: 0 0 0 1px; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #8d8d8d">
+        <span class="ann">3</span>
+        <div class="ph" style="width: 28px; height: 28px; border-radius: 50%"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1">
+          <p style="margin: 0; font-weight: 600; font-size: 14px">Pergunte ao Watson</p>
+          <p class="l">AGENTE SUGERE · VOCÊ DECIDE</p>
+        </div>
+        <a href="#" aria-label="Recolher painel" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#393939" stroke-width="1.5"><path d="M6 4l4 4-4 4"></path></svg>
+        </a>
+      </div>
+
+      <div style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px; overflow: auto">
+        <div style="display: flex; flex-direction: column; gap: 8px; background: #f4f4f4; border: 1px solid #c6c6c6; padding: 12px">
+          <p class="l">WATSON · RESUMO DO CASO</p>
+          <p style="margin: 0; font-size: 14px; line-height: 1.5">Parece fraude com cartão não presente: 5 tentativas em 7 min, de madrugada, a 760 km de onde o associado comprou ontem. Lembra 38 fraudes confirmadas em 90 dias.</p>
+          <div class="b" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; border-color: #393939">
+            <p class="l">RECOMENDAÇÃO</p>
+            <p style="margin: 0; font-size: 14px; font-weight: 600">Bloquear o cartão e avisar o associado no app.</p>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <p class="l" style="color: #161616">CONFIANÇA ALTA</p>
+              <div style="display: flex; gap: 3px">
+                <div style="width: 14px; height: 8px; background: #393939"></div>
+                <div style="width: 14px; height: 8px; background: #393939"></div>
+                <div style="width: 14px; height: 8px; background: #393939"></div>
+                <div style="width: 14px; height: 8px; background: #393939"></div>
+                <div style="width: 14px; height: 8px; border: 1px solid #393939; box-sizing: border-box"></div>
+              </div>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: #393939">Baseado nos fatores 1 a 3. Ainda não sei: o associado não foi contatado.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span class="ann">4</span>
+            <p class="l">SUGESTÕES DE AÇÃO · NADA ACONTECE SEM SUA CONFIRMAÇÃO</p>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <a class="btn p" href="#" style="text-align: center">Bloquear cartão</a>
+            <a class="btn" href="#" style="text-align: center">Perguntar ao associado</a>
+            <a class="btn" href="#" style="text-align: center">Liberar</a>
+            <a class="btn" href="#" style="text-align: center">Escalar</a>
+          </div>
+        </div>
+
+        <div style="align-self: flex-end; max-width: 80%; background: #e0e0e0; padding: 8px 12px">
+          <p class="l">CAMILA · ANALISTA</p>
+          <p style="margin: 0; font-size: 14px">Bloquear cartão</p>
+        </div>
+
+        <div class="b" style="padding: 12px; display: flex; flex-direction: column; gap: 8px; border: 2px solid #161616">
+          <p style="margin: 0; font-size: 14px; font-weight: 600">Confirme o bloqueio</p>
+          <p style="margin: 0; font-size: 13px; color: #393939; line-height: 1.5">Cartão final 4821 bloqueado, 4 tentativas retidas recusadas e aviso no app do associado.</p>
+          <p class="l">JUSTIFICATIVA GERADA · EDITÁVEL · VAI PARA A AUDITORIA</p>
+          <div class="b" style="padding: 8px 10px">
+            <p style="margin: 0; font-size: 13px; line-height: 1.5">Rajada de 5 tentativas online em 7 min, a 760 km da última compra, às 03:14. Recomendação do agente aceita.</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <a class="btn p" href="#">Confirmar bloqueio</a>
+            <a class="btn" href="#">Cancelar</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #8d8d8d; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <a href="#" style="display: inline-flex; align-items: center; min-height: 32px; box-sizing: border-box; border: 1px solid #393939; border-radius: 16px; padding: 4px 12px; font-size: 13px; color: #161616; text-decoration: none; background: #fff">{{c}}</a>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: stretch">
+          <div class="b" style="flex-grow: 1; min-height: 44px; display: flex; align-items: center; padding: 0 12px"><p style="margin: 0; font-size: 14px; color: #525252">Pergunte sobre este caso…</p></div>
+          <a class="btn p" href="#" aria-label="Enviar pergunta" style="display: flex; align-items: center; justify-content: center; padding: 0 14px">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#ffffff" stroke-width="1.5"><path d="M3 10h13M11 5l5 5-5 5"></path></svg>
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tl = [
+      { h: '03:21', v: 'R$ 1.190,00', loja: 'LOJA EXEMPLO GAMES · ONLINE · SÃO PAULO (SP)', tag: 'RETIDA', s: true },
+      { h: '03:19', v: 'R$ 312,50', loja: 'LOJA EXEMPLO MODA · ONLINE · SÃO PAULO (SP)', tag: 'RETIDA', s: true },
+      { h: '03:18', v: 'R$ 640,00', loja: 'LOJA EXEMPLO GAMES · ONLINE · SÃO PAULO (SP)', tag: 'RETIDA', s: true },
+      { h: '03:16', v: 'R$ 899,00', loja: 'LOJA EXEMPLO CELULARES · ONLINE · SÃO PAULO (SP)', tag: 'RETIDA', s: true },
+      { h: '03:14', v: 'R$ 2.349,90', loja: 'LOJA EXEMPLO ELETRÔNICOS · ONLINE · ESTE CASO', tag: 'EM ANÁLISE', s: true, cur: true },
+      { h: 'ONTEM 17:40', v: 'R$ 4.210,00', loja: 'AGROPECUÁRIA EXEMPLO · PRESENCIAL · CHAPECÓ (SC)', tag: 'NORMAL', s: false },
+      { h: '22/10 08:12', v: 'R$ 186,30', loja: 'POSTO EXEMPLO · PRESENCIAL · CHAPECÓ (SC)', tag: 'NORMAL', s: false }
+    ];
+    return {
+      meta: [
+        { k: 'HORÁRIO', v: 'Hoje, 03:14' },
+        { k: 'ONDE', v: 'São Paulo (SP), online' },
+        { k: 'COSTUMA COMPRAR', v: 'Chapecó (SC)' },
+        { k: 'STATUS', v: 'Aguardando decisão' }
+      ],
+      factors: [
+        { n: '1', t: 'Rajada: 5 tentativas em 7 minutos', d: 'O associado faz em média 1 compra por dia', w: '92%', p: '+0,31' },
+        { n: '2', t: 'Longe de casa: 760 km da última compra', d: 'Comprou presencialmente em Chapecó (SC) há 9 h', w: '78%', p: '+0,24' },
+        { n: '3', t: 'Valor 6× acima da média online', d: 'Média de compras online: R$ 380,00', w: '64%', p: '+0,17' },
+        { n: '4', t: 'Horário atípico: 03:14', d: 'Nenhuma compra de madrugada em 12 meses', w: '40%', p: '+0,11' },
+        { n: '5', t: 'Dispositivo nunca visto', d: 'Primeiro uso deste navegador no cartão', w: '28%', p: '+0,06' }
+      ],
+      timeline: tl.map(t => ({
+        linha: t.h + ' · ' + t.v,
+        loja: t.loja,
+        tag: t.tag,
+        tagb: t.s ? '#161616' : '#8d8d8d',
+        dot: t.s ? '#161616' : '#ffffff',
+        size: t.cur ? '16px' : '12px',
+        bg: t.cur ? '#e0e0e0' : 'transparent',
+        fw: t.cur ? '600' : '400'
+      })),
+      chips: ['Por que 0,92?', 'Compare com o histórico', 'Redija a justificativa']
+    };
+  }
+}
+</script>
+</body>
+</html>

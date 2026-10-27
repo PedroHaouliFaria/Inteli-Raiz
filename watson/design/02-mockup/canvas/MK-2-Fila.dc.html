@@ -1,0 +1,364 @@
+<!doctype html>
+<!--
+  Watson · Mockup Versão 2 · "Central de operações g100" · Fila
+  Tema Carbon g100 (escuro) para os turnos longos e a madrugada da Camila: fundo #161616 reduz o brilho
+  da tela na central com pouca luz. Densidade compacta (linhas de 32 px, tamanho "sm" do data table Carbon)
+  para mais casos por tela; navegação lateral em trilho (rail) de 48 px pelo mesmo motivo.
+  Faixa de KPIs com sparklines neutras (cinza; cor de suporte só quando há status de SLA).
+  Coluna SLA com status por cor + ícone + texto. SLA fica "Pausado" enquanto o caso aguarda o associado.
+  Dados fictícios.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Versão 2 · Central de operações g100 · Fila</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#161616}
+.g100{--cds-background:#161616;--cds-layer-01:#262626;--cds-layer-02:#393939;--cds-layer-selected-01:#393939;--cds-layer-accent-01:#393939;--cds-field-01:#262626;--cds-field-02:#393939;--cds-border-subtle-00:#393939;--cds-border-subtle-01:#525252;--cds-border-strong-01:#6f6f6f;--cds-border-interactive:#4589ff;--cds-text-primary:#f4f4f4;--cds-text-secondary:#c6c6c6;--cds-text-helper:#a8a8a8;--cds-text-on-color:#ffffff;--cds-text-inverse:#161616;--cds-text-error:#ff8389;--cds-link-primary:#78a9ff;--cds-interactive:#4589ff;--cds-focus:#ffffff;--cds-icon-primary:#f4f4f4;--cds-icon-secondary:#c6c6c6;--cds-icon-inverse:#161616;--cds-button-primary:#0f62fe;--cds-button-danger-primary:#da1e28;--cds-button-tertiary:#ffffff;--cds-support-error:#fa4d56;--cds-support-success:#42be65;--cds-support-warning:#f1c21b;--cds-support-info:#4589ff;--cds-layer-selected-inverse:#f4f4f4;--cds-tag-bg-red:#a2191f;--cds-tag-text-red:#ffd7d9;--cds-tag-bg-gray:#525252;--cds-tag-text-gray:#e0e0e0;--cds-tag-bg-green:#0e6027;--cds-tag-text-green:#a7f0ba;--cds-tag-bg-blue:#0043ce;--cds-tag-text-blue:#d0e2ff}
+.g100 *{box-sizing:border-box}
+.g100 p,.g100 h1,.g100 h2,.g100 h3{margin:0}
+.g100 a{color:var(--cds-link-primary)}
+.g100 :focus-visible{outline:2px solid var(--cds-focus);outline-offset:-2px}
+.skip{position:absolute;left:-10000px;top:0;background:var(--cds-button-primary);color:var(--cds-text-on-color);padding:8px 16px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.num{font-variant-numeric:tabular-nums}
+.ib{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border:0;background:transparent;color:var(--cds-icon-secondary);padding:0;font:inherit}
+.rail a{display:flex;align-items:center;justify-content:center;width:48px;height:40px;color:var(--cds-icon-secondary);text-decoration:none;position:relative}
+.rail a.on{background:var(--cds-layer-selected-01);color:var(--cds-icon-primary);box-shadow:inset 3px 0 0 var(--cds-border-interactive)}
+.sw{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;font-size:14px;text-decoration:none;color:var(--cds-text-secondary);border:1px solid var(--cds-border-strong-01)}
+.sw.on{background:var(--cds-layer-selected-inverse);color:var(--cds-text-inverse);border-color:var(--cds-layer-selected-inverse)}
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--cds-border-strong-01);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cds-text-primary)}
+.kpi{background:var(--cds-layer-01);padding:8px 16px;display:flex;align-items:flex-end;gap:12px;min-width:0}
+.tag{display:inline-flex;align-items:center;gap:4px;height:18px;padding:0 8px;border-radius:9px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag-red{background:var(--cds-tag-bg-red);color:var(--cds-tag-text-red)}
+.tag-gray{background:var(--cds-tag-bg-gray);color:var(--cds-tag-text-gray)}
+.tag-green{background:var(--cds-tag-bg-green);color:var(--cds-tag-text-green)}
+.tag-blue{background:var(--cds-tag-bg-blue);color:var(--cds-tag-text-blue)}
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;height:40px;padding:0 16px;font:inherit;font-size:14px;text-decoration:none;border:1px solid transparent;white-space:nowrap}
+.btn-primary{background:var(--cds-button-primary);color:var(--cds-text-on-color)}
+.btn-ghost{background:transparent;color:var(--cds-text-primary)}
+.tr{display:grid;grid-template-columns:40px 120px minmax(112px,1fr) 112px minmax(160px,1.4fr) 104px 88px 104px 176px 152px 80px 40px;min-width:1288px}
+.th{height:32px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;font-weight:600;color:var(--cds-text-primary);background:var(--cds-layer-accent-01);white-space:nowrap}
+.td{height:32px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;color:var(--cds-text-primary);border-bottom:1px solid var(--cds-border-subtle-00);white-space:nowrap;overflow:hidden;min-width:0}
+.ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.s-err{fill:var(--cds-support-error)}
+.s-warn{fill:var(--cds-support-warning)}
+.s-ok{fill:var(--cds-support-success)}
+.s-ink{stroke:var(--cds-icon-inverse);fill:none}
+.s-inkf{fill:var(--cds-icon-inverse)}
+.s-info{stroke:var(--cds-support-info);fill:none}
+</style>
+</helmet>
+<div class="g100" style="width: 100%; min-height: 960px; position: relative; background: var(--cds-background); color: var(--cds-text-primary); font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; display: flex; flex-direction: column">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header aria-label="Watson · Prevenção a fraudes" style="height: 48px; flex-shrink: 0; display: flex; align-items: center; background: var(--cds-background); border-bottom: 1px solid var(--cds-border-subtle-00)">
+    <button class="ib" type="button" aria-label="Expandir menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+    </button>
+    <a href="#" style="display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 32px 0 8px; font-size: 14px; color: var(--cds-text-primary); text-decoration: none">Watson <span style="font-weight: 600">Prevenção a fraudes</span></a>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 48px; border-left: 1px solid var(--cds-border-subtle-00)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"></path></svg>
+      <p style="font-size: 14px; color: var(--cds-text-secondary)">Turno da madrugada · 00:00 às 08:00</p>
+      <p class="mono" style="font-size: 14px; color: var(--cds-text-primary)">03:22</p>
+    </div>
+    <button class="ib" type="button" aria-label="Buscar">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l5 5"></path></svg>
+    </button>
+    <button class="ib" type="button" aria-label="Notificações, 2 novas" style="position: relative">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 2h-13z"></path><path d="M8 18h4"></path></svg>
+      <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--cds-support-error)"></span>
+    </button>
+    <button class="ib" type="button" aria-label="Perfil: Camila Rocha">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cds-layer-02); color: var(--cds-text-primary); font-size: 12px; font-weight: 600">CR</span>
+    </button>
+    <button class="ib" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="3" height="3"></rect><rect x="8.5" y="3" width="3" height="3"></rect><rect x="14" y="3" width="3" height="3"></rect><rect x="3" y="8.5" width="3" height="3"></rect><rect x="8.5" y="8.5" width="3" height="3"></rect><rect x="14" y="8.5" width="3" height="3"></rect><rect x="3" y="14" width="3" height="3"></rect><rect x="8.5" y="14" width="3" height="3"></rect><rect x="14" y="14" width="3" height="3"></rect></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex-grow: 1">
+    <nav class="rail" aria-label="Navegação principal" style="flex: 0 0 48px; display: flex; flex-direction: column; padding-top: 8px; background: var(--cds-background); border-right: 1px solid var(--cds-border-subtle-00)">
+      <a href="#" class="on" aria-label="Fila e quadro, 128 abertos" aria-current="page" title="Fila e quadro">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h9"></path></svg>
+      </a>
+      <a href="#" aria-label="Meus casos, 7" title="Meus casos">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h5l2 2h7v8H3z"></path></svg>
+      </a>
+      <a href="#" aria-label="Rajadas agrupadas" title="Rajadas agrupadas">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="11" height="9"></rect><path d="M6 4h11v9"></path></svg>
+      </a>
+      <a href="#" aria-label="Associados" title="Associados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17a6.5 6.5 0 0 1 13 0"></path></svg>
+      </a>
+      <a href="#" aria-label="Relatórios do turno" title="Relatórios do turno">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 17h14M5 14V9M9 14V5M13 14v-3"></path></svg>
+      </a>
+      <a href="#" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16l4-5 3 3 6-8"></path></svg>
+      </a>
+      <div style="flex-grow: 1"></div>
+      <a href="#" aria-label="Configurações" title="Configurações" style="margin-bottom: 8px">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="2.5"></circle><path d="M10 2.5v2.5M10 15v2.5M2.5 10H5M15 10h2.5M4.7 4.7l1.8 1.8M13.5 13.5l1.8 1.8M4.7 15.3l1.8-1.8M13.5 6.5l1.8-1.8"></path></svg>
+      </a>
+    </nav>
+
+    <main id="conteudo" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 16px 24px 8px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; min-height: 32px">
+        <h1 style="font-size: 20px; font-weight: 400; line-height: 28px">Fila de alertas</h1>
+        <div role="tablist" aria-label="Modo de visualização" style="display: inline-flex">
+          <a href="#" class="sw on" role="tab" aria-selected="true">Fila <span class="num" style="font-size: 12px">128</span></a>
+          <a href="#" class="sw" role="tab" aria-selected="false" style="border-left-width: 0">Quadro do processo</a>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <p style="font-size: 12px; color: var(--cds-text-helper)">Atualizado há 10 s</p>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--cds-text-secondary)">
+          <span class="kbd">J</span><span class="kbd">K</span><span>mover</span>
+          <span class="kbd" style="margin-left: 8px">Enter</span><span>abrir caso</span>
+          <span class="kbd" style="margin-left: 8px">?</span><span>atalhos</span>
+        </div>
+      </div>
+
+      <section aria-label="Indicadores do turno" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: 1px; background: var(--cds-border-subtle-00); border: 1px solid var(--cds-border-subtle-00)">
+        <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+          <div class="kpi">
+            <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+              <p class="ell" style="font-size: 12px; line-height: 16px; color: var(--cds-text-secondary)">{{k.label}}</p>
+              <div style="display: flex; align-items: center; gap: 8px; height: 28px">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{k.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{k.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                <p class="num" style="font-size: 24px; font-weight: 300; line-height: 28px; white-space: nowrap">{{k.value}}</p>
+              </div>
+              <p class="ell" style="font-size: 12px; line-height: 16px; color: {{k.deltaColor}}">{{k.delta}}</p>
+            </div>
+            <svg width="64" height="32" viewBox="0 0 64 32" aria-label="{{k.sparkLabel}}" role="img" style="flex-shrink: 0">
+              <polyline points="{{k.pts}}" fill="none" stroke="#a8a8a8" stroke-width="1.5" stroke-linejoin="round" style="stroke: var(--cds-text-helper)"></polyline>
+              <circle cx="{{k.lx}}" cy="{{k.ly}}" r="2.5" style="fill: var(--cds-text-primary)"></circle>
+            </svg>
+          </div>
+        </sc-for>
+      </section>
+
+      <section aria-label="Alertas abertos" style="display: flex; flex-direction: column; background: var(--cds-layer-01); border: 1px solid var(--cds-border-subtle-00)">
+        <div role="toolbar" aria-label="Ferramentas da tabela" style="display: flex; flex-wrap: wrap; align-items: center; min-height: 40px">
+          <div style="display: flex; align-items: center; gap: 8px; flex: 0 1 304px; min-width: 200px; height: 40px; padding: 0 16px; background: var(--cds-field-01); border-bottom: 1px solid var(--cds-border-strong-01)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary); flex-shrink: 0"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+            <p style="font-size: 14px; color: var(--cds-text-helper)">Buscar caso, associado, cartão ou loja</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 4px 16px; flex: 1 1 320px; min-width: 0">
+            <sc-for list="{{filtros}}" as="f" hint-placeholder-count="3">
+              <span class="tag tag-gray" style="height: 24px; border-radius: 12px; padding: 0 4px 0 8px">{{f}}
+                <button type="button" aria-label="Remover filtro" style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border: 0; padding: 0; background: transparent; color: var(--cds-tag-text-gray)">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"></path></svg>
+                </button>
+              </span>
+            </sc-for>
+            <a href="#" style="font-size: 14px">Limpar filtros</a>
+          </div>
+          <div style="display: flex; align-items: center">
+            <button class="btn btn-ghost" type="button" style="justify-content: center; gap: 8px">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 3h12l-4.5 5.5V13l-3 1.5V8.5z"></path></svg>
+              Filtros
+            </button>
+            <button class="ib" type="button" style="width: 40px; height: 40px" aria-label="Densidade da tabela: compacta">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 3h12M2 6.5h12M2 10h12M2 13.5h12"></path></svg>
+            </button>
+            <button class="ib" type="button" style="width: 40px; height: 40px" aria-label="Configurar colunas">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2.5" width="12" height="11"></rect><path d="M6 2.5v11M10 2.5v11"></path></svg>
+            </button>
+            <button class="ib" type="button" style="width: 40px; height: 40px" aria-label="Exportar a fila">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M2.5 13.5h11"></path></svg>
+            </button>
+            <a href="#" class="btn btn-primary" style="min-width: 176px">
+              Abrir caso #4821
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto">
+          <div role="table" aria-label="Alertas abertos, ordenados por score do maior para o menor" aria-rowcount="129">
+            <div role="row" class="tr">
+              <div role="columnheader" class="th"><span style="position: absolute; left: -10000px">Seleção</span></div>
+              <div role="columnheader" class="th">Caso</div>
+              <div role="columnheader" class="th">Associado</div>
+              <div role="columnheader" class="th" style="justify-content: flex-end">Valor</div>
+              <div role="columnheader" class="th">Estabelecimento</div>
+              <div role="columnheader" class="th">Canal</div>
+              <div role="columnheader" class="th" aria-sort="descending" style="justify-content: flex-end">Score
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"></path></svg>
+              </div>
+              <div role="columnheader" class="th">Risco</div>
+              <div role="columnheader" class="th">Estado</div>
+              <div role="columnheader" class="th">SLA</div>
+              <div role="columnheader" class="th" style="justify-content: flex-end">Na fila</div>
+              <div role="columnheader" class="th"><span style="position: absolute; left: -10000px">Ações</span></div>
+            </div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="20">
+              <div role="row" class="tr" aria-selected="{{r.sel}}" style="background: {{r.bg}}; box-shadow: {{r.shadow}}">
+                <div role="cell" class="td">
+                  <span role="radio" aria-checked="{{r.sel}}" aria-label="{{r.selLabel}}" style="display: inline-flex">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="#f4f4f4" stroke-width="1" style="stroke: var(--cds-icon-primary)"></circle><circle cx="8" cy="8" r="3.5" style="fill: var(--cds-icon-primary); display: {{r.dotD}}"></circle></svg>
+                  </span>
+                </div>
+                <div role="cell" class="td">
+                  <a href="#" class="mono" style="font-size: 14px">{{r.id}}</a>
+                  <span title="{{r.rajLabel}}" style="display: {{r.rajD}}; align-items: center; gap: 2px; color: var(--cds-text-secondary); font-size: 12px">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="1.5" y="5" width="9" height="9"></rect><path d="M4.5 2h10v10"></path></svg>
+                    <span aria-label="{{r.rajLabel}}">{{r.raj}}</span>
+                  </span>
+                </div>
+                <div role="cell" class="td"><span class="ell">{{r.assoc}}</span></div>
+                <div role="cell" class="td num" style="justify-content: flex-end">{{r.valor}}</div>
+                <div role="cell" class="td"><span class="ell">{{r.estab}}</span></div>
+                <div role="cell" class="td" style="color: var(--cds-text-secondary)">{{r.canal}}</div>
+                <div role="cell" class="td mono" style="justify-content: flex-end; font-weight: {{r.scoreW}}">{{r.score}}</div>
+                <div role="cell" class="td">
+                  <span class="tag {{r.tagClass}}">
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.tAltoD}}"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.5v4.5" stroke="currentColor" stroke-width="1.75"></path><circle cx="8" cy="11.5" r="1" fill="currentColor"></circle></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.tMedioD}}"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.75" d="M8 6v4"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{r.tBaixoD}}"><path d="M3.5 8.5l3 3 6-7"></path></svg>
+                    {{r.risco}}
+                  </span>
+                </div>
+                <div role="cell" class="td"><span class="ell" style="color: {{r.estadoColor}}">{{r.estado}}</span></div>
+                <div role="cell" class="td">
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.okD}}; flex-shrink: 0"><circle class="s-ok" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M4.8 8.2l2.2 2.2 4.2-4.6"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{r.pauseD}}; flex-shrink: 0"><circle class="s-info" stroke-width="1.5" cx="8" cy="8" r="6.5"></circle><path class="s-info" stroke-width="1.5" d="M6.5 5.5v5M9.5 5.5v5"></path></svg>
+                  <span class="ell" style="color: {{r.slaColor}}">{{r.sla}}</span>
+                </div>
+                <div role="cell" class="td num" style="justify-content: flex-end; color: var(--cds-text-secondary)">{{r.fila}}</div>
+                <div role="cell" class="td" style="padding: 0">
+                  <button type="button" aria-label="{{r.menuLabel}}" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 31px; border: 0; background: transparent; color: var(--cds-icon-secondary); padding: 0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="8" cy="3.5" r="1.2"></circle><circle cx="8" cy="8" r="1.2"></circle><circle cx="8" cy="12.5" r="1.2"></circle></svg>
+                  </button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <nav aria-label="Paginação" style="display: flex; flex-wrap: wrap; align-items: center; min-height: 40px; font-size: 14px; color: var(--cds-text-secondary); border-top: 1px solid var(--cds-border-subtle-01)">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 40px; border-right: 1px solid var(--cds-border-subtle-01)">
+            <span>Itens por página:</span>
+            <span style="display: inline-flex; align-items: center; gap: 8px; color: var(--cds-text-primary)">20
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+            </span>
+          </div>
+          <p style="padding: 0 16px">1–20 de 128 itens</p>
+          <p style="flex-grow: 1; padding: 0 16px; font-size: 12px; color: var(--cds-text-helper)">O SLA pausa enquanto o caso aguarda o associado · dados fictícios</p>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 40px; border-left: 1px solid var(--cds-border-subtle-01)">
+            <span style="display: inline-flex; align-items: center; gap: 8px; color: var(--cds-text-primary)">1
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+            </span>
+            <span>de 7 páginas</span>
+          </div>
+          <button type="button" aria-label="Página anterior" disabled="disabled" style="width: 40px; height: 40px; border: 0; border-left: 1px solid var(--cds-border-subtle-01); background: transparent; color: var(--cds-text-helper); display: inline-flex; align-items: center; justify-content: center">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4l-4 4 4 4"></path></svg>
+          </button>
+          <button type="button" aria-label="Próxima página" style="width: 40px; height: 40px; border: 0; border-left: 1px solid var(--cds-border-subtle-01); background: transparent; color: var(--cds-icon-primary); display: inline-flex; align-items: center; justify-content: center">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg>
+          </button>
+        </nav>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const spark = (vals) => {
+      const w = 64, h = 32, p = 4;
+      const mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+      const pts = vals.map((v, i) => [(p + i * ((w - 2 * p) / (vals.length - 1))).toFixed(1), (h - p - ((v - mn) / ((mx - mn) || 1)) * (h - 2 * p)).toFixed(1)]);
+      return { pts: pts.map(q => q.join(',')).join(' '), lx: pts[pts.length - 1][0], ly: pts[pts.length - 1][1] };
+    };
+    const kpi = (label, value, delta, vals, status, trend) => Object.assign({
+      label, value, delta,
+      errD: status === 'err' ? 'inline-block' : 'none',
+      warnD: status === 'warn' ? 'inline-block' : 'none',
+      deltaColor: status === 'err' ? 'var(--cds-text-error)' : status === 'warn' ? 'var(--cds-support-warning)' : 'var(--cds-text-helper)',
+      sparkLabel: label + ': tendência das últimas 4 horas, ' + trend
+    }, spark(vals));
+
+    const st = (t) => ({
+      errD: t === 'err' ? 'inline-block' : 'none',
+      warnD: t === 'warn' ? 'inline-block' : 'none',
+      okD: t === 'ok' ? 'inline-block' : 'none',
+      pauseD: t === 'pause' ? 'inline-block' : 'none',
+      slaColor: t === 'err' ? 'var(--cds-text-error)' : t === 'warn' ? 'var(--cds-support-warning)' : t === 'ok' ? 'var(--cds-support-success)' : 'var(--cds-text-secondary)'
+    });
+    const risk = {
+      alto: { risco: 'Alto', tagClass: 'tag-red', tAltoD: 'inline-block', tMedioD: 'none', tBaixoD: 'none', scoreW: '600' },
+      medio: { risco: 'Médio', tagClass: 'tag-gray', tAltoD: 'none', tMedioD: 'inline-block', tBaixoD: 'none', scoreW: '400' },
+      baixo: { risco: 'Baixo', tagClass: 'tag-green', tAltoD: 'none', tMedioD: 'none', tBaixoD: 'inline-block', scoreW: '400' }
+    };
+    const data = [
+      ['#4833', 3, 'Marta S.', 'R$ 1.980,00', 'Loja Exemplo Games', 'Online', '0,94', 'alto', 'Novo', 'warn', 'Vence em 4 min', '6 min'],
+      ['#4821', 5, 'Valdir B.', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos', 'Online', '0,92', 'alto', 'Em análise · você', 'warn', 'Vence em 3 min', '7 min'],
+      ['#4790', 0, 'João P.', 'R$ 5.400,00', 'Concessionária Fictícia', 'Online', '0,89', 'alto', 'Novo', 'err', 'Estourado há 2 min', '12 min'],
+      ['#4826', 0, 'Lúcia F.', 'R$ 2.450,00', 'Agropecuária Modelo', 'Presencial', '0,81', 'alto', 'Novo', 'ok', 'Vence em 7 min', '3 min'],
+      ['#4829', 0, 'Ricardo T.', 'R$ 389,90', 'Viagens Fictícias S.A.', 'Internacional', '0,78', 'alto', 'Aguardando associado', 'pause', 'Pausado', '15 min'],
+      ['#4812', 0, 'Ana C.', 'R$ 860,00', 'Farmácia Modelo', 'Online', '0,76', 'alto', 'Aguardando associado', 'pause', 'Pausado', '22 min'],
+      ['#4830', 2, 'Paulo M.', 'R$ 74,50', 'Posto Exemplo BR-000', 'Presencial', '0,72', 'alto', 'Novo', 'ok', 'Vence em 8 min', '2 min'],
+      ['#4831', 0, 'Helena R.', 'R$ 1.120,00', 'Marketplace Demo', 'Online', '0,70', 'alto', 'Em análise · Rafael', 'ok', 'Vence em 6 min', '4 min'],
+      ['#4805', 0, 'Sérgio L.', 'R$ 3.200,00', 'Máquinas Exemplo Ltda.', 'Presencial', '0,68', 'medio', 'Aguardando associado', 'pause', 'Pausado', '31 min'],
+      ['#4834', 0, 'Rosa D.', 'R$ 610,00', 'Loja Teste Online', 'Online', '0,64', 'medio', 'Em análise · Rafael', 'ok', 'Vence em 21 min', '9 min'],
+      ['#4810', 0, 'Tiago N.', 'R$ 45,00', 'Streaming Demo', 'Online', '0,61', 'medio', 'Aguardando associado', 'pause', 'Pausado', '34 min'],
+      ['#4835', 0, 'Irene K.', 'R$ 1.249,90', 'Eletro Demo Online', 'Online', '0,58', 'medio', 'Novo', 'ok', 'Vence em 25 min', '5 min'],
+      ['#4836', 0, 'Bruno A.', 'R$ 920,00', 'Ótica Modelo', 'Presencial', '0,55', 'medio', 'Novo', 'ok', 'Vence em 24 min', '6 min'],
+      ['#4837', 0, 'Célia V.', 'R$ 150,00', 'Transporte Demo', 'Online', '0,52', 'medio', 'Novo', 'ok', 'Vence em 22 min', '8 min'],
+      ['#4838', 0, 'Davi O.', 'R$ 2.100,00', 'Materiais Exemplo', 'Presencial', '0,49', 'medio', 'Novo', 'ok', 'Vence em 22 min', '8 min'],
+      ['#4839', 0, 'Elisa G.', 'R$ 39,90', 'Assinatura Demo', 'Internacional', '0,44', 'medio', 'Novo', 'ok', 'Vence em 21 min', '9 min'],
+      ['#4840', 0, 'Fábio H.', 'R$ 480,00', 'Restaurante Modelo', 'Presencial', '0,38', 'baixo', 'Novo', 'ok', 'Vence em 50 min', '10 min'],
+      ['#4841', 0, 'Glória I.', 'R$ 230,00', 'Mercado Modelo', 'Presencial', '0,33', 'baixo', 'Novo', 'ok', 'Vence em 49 min', '11 min'],
+      ['#4842', 0, 'Hugo E.', 'R$ 99,00', 'Farmácia Exemplo', 'Online', '0,29', 'baixo', 'Novo', 'ok', 'Vence em 48 min', '12 min'],
+      ['#4843', 0, 'Inês M.', 'R$ 1.800,00', 'Agropecuária Exemplo', 'Presencial', '0,24', 'baixo', 'Novo', 'ok', 'Vence em 46 min', '14 min']
+    ];
+    const rows = data.map(d => {
+      const sel = d[0] === '#4821';
+      return Object.assign({
+        id: d[0],
+        raj: d[1] ? d[1] + '×' : '',
+        rajD: d[1] ? 'inline-flex' : 'none',
+        rajLabel: d[1] ? 'Rajada: ' + d[1] + ' alertas do mesmo cartão agrupados' : '',
+        assoc: d[2], valor: d[3], estab: d[4], canal: d[5], score: d[6],
+        estado: d[8],
+        estadoColor: d[8].indexOf('você') > -1 ? 'var(--cds-text-primary)' : 'var(--cds-text-secondary)',
+        sla: d[10], fila: d[11],
+        sel: sel ? 'true' : 'false',
+        dotD: sel ? 'inline' : 'none',
+        selLabel: 'Selecionar caso ' + d[0],
+        menuLabel: 'Mais ações para o caso ' + d[0],
+        bg: sel ? 'var(--cds-layer-selected-01)' : 'transparent',
+        shadow: sel ? 'inset 3px 0 0 var(--cds-border-interactive)' : 'none'
+      }, risk[d[7]], st(d[9]));
+    });
+
+    return {
+      kpis: [
+        kpi('Na fila agora', '128', '+14 na última hora', [96, 101, 99, 108, 112, 114, 121, 128], '', 'em alta'),
+        kpi('Alto risco', '23', '+5 na última hora', [12, 14, 13, 15, 18, 17, 21, 23], '', 'em alta'),
+        kpi('SLA em risco', '4', 'Vencem em até 5 min', [1, 0, 2, 1, 3, 2, 3, 4], 'warn', 'em alta'),
+        kpi('SLA estourado', '1', 'Caso #4790, há 2 min', [0, 0, 1, 0, 0, 0, 0, 1], 'err', 'estável'),
+        kpi('Tempo médio de decisão', '1 min 48 s', '12 s mais rápido que o turno anterior', [140, 132, 128, 121, 118, 112, 110, 108], '', 'em queda'),
+        kpi('Perda evitada no turno', 'R$ 18.430', '9 bloqueios confirmados', [2100, 4300, 6100, 8800, 11200, 13900, 16500, 18430], '', 'em alta')
+      ],
+      filtros: ['Estado: aberto', 'Rajadas agrupadas', 'Risco: todos'],
+      rows
+    };
+  }
+}
+</script>
+</body>
+</html>

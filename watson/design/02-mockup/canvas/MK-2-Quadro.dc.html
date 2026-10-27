@@ -1,0 +1,488 @@
+<!doctype html>
+<!--
+  Watson · Mockup Versão 2 · "Central de operações g100" · Quadro do processo
+  Tema Carbon g100 (escuro) para os turnos longos e a madrugada da Camila: fundo #161616 reduz o brilho
+  da tela na central com pouca luz. Densidade compacta (linhas de 32 px, tamanho "sm" do data table Carbon)
+  para mais casos por tela; navegação lateral em trilho (rail) de 48 px pelo mesmo motivo.
+  Faixa de KPIs com sparklines neutras (cinza; cor de suporte só quando há status de SLA).
+  Quadro kanban por estado do processo com limite de WIP por coluna (medidor + texto; amarelo + ícone
+  quando o limite é atingido). Cartões com contador de SLA (cor + ícone + texto). Resumo do agente com AI label;
+  agrupamento de rajadas feito pelo agente pode ser desfeito pela analista (reversão da sugestão de IA).
+  Movimento por arrastar com alternativa de teclado (M).
+  Dados fictícios.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Versão 2 · Central de operações g100 · Quadro do processo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#161616}
+.g100{--cds-background:#161616;--cds-layer-01:#262626;--cds-layer-02:#393939;--cds-layer-selected-01:#393939;--cds-layer-accent-01:#393939;--cds-field-01:#262626;--cds-field-02:#393939;--cds-border-subtle-00:#393939;--cds-border-subtle-01:#525252;--cds-border-strong-01:#6f6f6f;--cds-border-interactive:#4589ff;--cds-text-primary:#f4f4f4;--cds-text-secondary:#c6c6c6;--cds-text-helper:#a8a8a8;--cds-text-on-color:#ffffff;--cds-text-inverse:#161616;--cds-text-error:#ff8389;--cds-link-primary:#78a9ff;--cds-interactive:#4589ff;--cds-focus:#ffffff;--cds-icon-primary:#f4f4f4;--cds-icon-secondary:#c6c6c6;--cds-icon-inverse:#161616;--cds-button-primary:#0f62fe;--cds-button-danger-primary:#da1e28;--cds-button-tertiary:#ffffff;--cds-support-error:#fa4d56;--cds-support-success:#42be65;--cds-support-warning:#f1c21b;--cds-support-info:#4589ff;--cds-layer-selected-inverse:#f4f4f4;--cds-tag-bg-red:#a2191f;--cds-tag-text-red:#ffd7d9;--cds-tag-bg-gray:#525252;--cds-tag-text-gray:#e0e0e0;--cds-tag-bg-green:#0e6027;--cds-tag-text-green:#a7f0ba;--cds-tag-bg-blue:#0043ce;--cds-tag-text-blue:#d0e2ff}
+.g100 *{box-sizing:border-box}
+.g100 p,.g100 h1,.g100 h2,.g100 h3{margin:0}
+.g100 a{color:var(--cds-link-primary)}
+.g100 :focus-visible{outline:2px solid var(--cds-focus);outline-offset:-2px}
+.skip{position:absolute;left:-10000px;top:0;background:var(--cds-button-primary);color:var(--cds-text-on-color);padding:8px 16px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.num{font-variant-numeric:tabular-nums}
+.ib{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border:0;background:transparent;color:var(--cds-icon-secondary);padding:0;font:inherit}
+.rail a{display:flex;align-items:center;justify-content:center;width:48px;height:40px;color:var(--cds-icon-secondary);text-decoration:none;position:relative}
+.rail a.on{background:var(--cds-layer-selected-01);color:var(--cds-icon-primary);box-shadow:inset 3px 0 0 var(--cds-border-interactive)}
+.sw{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;font-size:14px;text-decoration:none;color:var(--cds-text-secondary);border:1px solid var(--cds-border-strong-01)}
+.sw.on{background:var(--cds-layer-selected-inverse);color:var(--cds-text-inverse);border-color:var(--cds-layer-selected-inverse)}
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--cds-border-strong-01);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cds-text-primary)}
+.kpi{background:var(--cds-layer-01);padding:8px 16px;display:flex;align-items:flex-end;gap:12px;min-width:0}
+.tag{display:inline-flex;align-items:center;gap:4px;height:18px;padding:0 8px;border-radius:9px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag-red{background:var(--cds-tag-bg-red);color:var(--cds-tag-text-red)}
+.tag-gray{background:var(--cds-tag-bg-gray);color:var(--cds-tag-text-gray)}
+.tag-green{background:var(--cds-tag-bg-green);color:var(--cds-tag-text-green)}
+.tag-blue{background:var(--cds-tag-bg-blue);color:var(--cds-tag-text-blue)}
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;height:40px;padding:0 16px;font:inherit;font-size:14px;text-decoration:none;border:1px solid transparent;white-space:nowrap}
+.btn-primary{background:var(--cds-button-primary);color:var(--cds-text-on-color)}
+.btn-ghost{background:transparent;color:var(--cds-link-primary)}
+.tr{display:grid;grid-template-columns:40px 120px minmax(112px,1fr) 112px minmax(160px,1.4fr) 104px 88px 104px 176px 152px 80px 40px;min-width:1288px}
+.th{height:32px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;font-weight:600;color:var(--cds-text-primary);background:var(--cds-layer-accent-01);white-space:nowrap}
+.td{height:32px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;color:var(--cds-text-primary);border-bottom:1px solid var(--cds-border-subtle-00);white-space:nowrap;overflow:hidden;min-width:0}
+.ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.s-err{fill:var(--cds-support-error)}
+.s-warn{fill:var(--cds-support-warning)}
+.s-ok{fill:var(--cds-support-success)}
+.s-ink{stroke:var(--cds-icon-inverse);fill:none}
+.s-inkf{fill:var(--cds-icon-inverse)}
+.s-info{stroke:var(--cds-support-info);fill:none}
+.g100{--cds-border-strong-02:#8d8d8d;--cds-ai-aura-start:rgba(69,137,255,0.16);--cds-ai-aura-end:rgba(38,38,38,0);--cds-ai-border:rgba(120,169,255,0.5)}
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--cds-interactive);border-radius:4px;background:transparent;color:var(--cds-text-primary);font:inherit;font-size:12px;font-weight:600;line-height:16px;flex-shrink:0}
+.ai-surface{background:linear-gradient(90deg,var(--cds-ai-aura-start) 0%,var(--cds-ai-aura-end) 60%),var(--cds-layer-01);border:1px solid var(--cds-ai-border)}
+.btn-tertiary{background:transparent;color:var(--cds-button-tertiary);border-color:var(--cds-button-tertiary)}
+.col{background:var(--cds-layer-01);border:1px solid var(--cds-border-subtle-00);display:flex;flex-direction:column;gap:8px;padding:8px;min-width:0}
+.card{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--cds-layer-02);color:var(--cds-text-primary);text-decoration:none;min-width:0}
+.chip{display:inline-flex;align-items:center;height:18px;padding:0 8px;border:1px solid var(--cds-border-strong-02);border-radius:9px;font-size:12px;line-height:16px;color:var(--cds-text-secondary);white-space:nowrap}
+.meter{height:4px;background:var(--cds-layer-02)}
+.helper{font-size:12px;line-height:16px;color:var(--cds-text-helper)}
+</style>
+</helmet>
+<div class="g100" style="width: 100%; min-height: 960px; position: relative; background: var(--cds-background); color: var(--cds-text-primary); font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; display: flex; flex-direction: column">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header aria-label="Watson · Prevenção a fraudes" style="height: 48px; flex-shrink: 0; display: flex; align-items: center; background: var(--cds-background); border-bottom: 1px solid var(--cds-border-subtle-00)">
+    <button class="ib" type="button" aria-label="Expandir menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+    </button>
+    <a href="#" style="display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 32px 0 8px; font-size: 14px; color: var(--cds-text-primary); text-decoration: none">Watson <span style="font-weight: 600">Prevenção a fraudes</span></a>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 48px; border-left: 1px solid var(--cds-border-subtle-00)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z"></path></svg>
+      <p style="font-size: 14px; color: var(--cds-text-secondary)">Turno da madrugada · 00:00 às 08:00</p>
+      <p class="mono" style="font-size: 14px; color: var(--cds-text-primary)">03:22</p>
+    </div>
+    <button class="ib" type="button" aria-label="Buscar">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l5 5"></path></svg>
+    </button>
+    <button class="ib" type="button" aria-label="Notificações, 2 novas" style="position: relative">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 2h-13z"></path><path d="M8 18h4"></path></svg>
+      <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--cds-support-error)"></span>
+    </button>
+    <button class="ib" type="button" aria-label="Perfil: Camila Rocha">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cds-layer-02); color: var(--cds-text-primary); font-size: 12px; font-weight: 600">CR</span>
+    </button>
+    <button class="ib" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="3" height="3"></rect><rect x="8.5" y="3" width="3" height="3"></rect><rect x="14" y="3" width="3" height="3"></rect><rect x="3" y="8.5" width="3" height="3"></rect><rect x="8.5" y="8.5" width="3" height="3"></rect><rect x="14" y="8.5" width="3" height="3"></rect><rect x="3" y="14" width="3" height="3"></rect><rect x="8.5" y="14" width="3" height="3"></rect><rect x="14" y="14" width="3" height="3"></rect></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex-grow: 1">
+    <nav class="rail" aria-label="Navegação principal" style="flex: 0 0 48px; display: flex; flex-direction: column; padding-top: 8px; background: var(--cds-background); border-right: 1px solid var(--cds-border-subtle-00)">
+      <a href="#" class="on" aria-label="Fila e quadro, 128 abertos" aria-current="page" title="Fila e quadro">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h9"></path></svg>
+      </a>
+      <a href="#" aria-label="Meus casos, 7" title="Meus casos">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h5l2 2h7v8H3z"></path></svg>
+      </a>
+      <a href="#" aria-label="Rajadas agrupadas" title="Rajadas agrupadas">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="11" height="9"></rect><path d="M6 4h11v9"></path></svg>
+      </a>
+      <a href="#" aria-label="Associados" title="Associados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17a6.5 6.5 0 0 1 13 0"></path></svg>
+      </a>
+      <a href="#" aria-label="Relatórios do turno" title="Relatórios do turno">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 17h14M5 14V9M9 14V5M13 14v-3"></path></svg>
+      </a>
+      <a href="#" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16l4-5 3 3 6-8"></path></svg>
+      </a>
+      <div style="flex-grow: 1"></div>
+      <a href="#" aria-label="Configurações" title="Configurações" style="margin-bottom: 8px">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="2.5"></circle><path d="M10 2.5v2.5M10 15v2.5M2.5 10H5M15 10h2.5M4.7 4.7l1.8 1.8M13.5 13.5l1.8 1.8M4.7 15.3l1.8-1.8M13.5 6.5l1.8-1.8"></path></svg>
+      </a>
+    </nav>
+
+    <main id="conteudo" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 16px 24px 8px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; min-height: 32px">
+        <h1 style="font-size: 20px; font-weight: 400; line-height: 28px">Quadro do processo</h1>
+        <div role="tablist" aria-label="Modo de visualização" style="display: inline-flex">
+          <a href="#" class="sw" role="tab" aria-selected="false" style="border-right-width: 0">Fila <span class="num" style="font-size: 12px">128</span></a>
+          <a href="#" class="sw on" role="tab" aria-selected="true">Quadro do processo</a>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <p style="font-size: 12px; color: var(--cds-text-helper)">Atualizado há 10 s</p>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--cds-text-secondary)">
+          <span class="kbd">H</span><span class="kbd">L</span><span>trocar coluna</span>
+          <span class="kbd" style="margin-left: 8px">Enter</span><span>abrir caso</span>
+          <span class="kbd" style="margin-left: 8px">?</span><span>atalhos</span>
+        </div>
+      </div>
+
+      <section aria-label="Indicadores do turno" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: 1px; background: var(--cds-border-subtle-00); border: 1px solid var(--cds-border-subtle-00)">
+        <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+          <div class="kpi">
+            <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+              <p class="ell" style="font-size: 12px; line-height: 16px; color: var(--cds-text-secondary)">{{k.label}}</p>
+              <div style="display: flex; align-items: center; gap: 8px; height: 28px">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{k.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{k.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                <p class="num" style="font-size: 24px; font-weight: 300; line-height: 28px; white-space: nowrap">{{k.value}}</p>
+              </div>
+              <p class="ell" style="font-size: 12px; line-height: 16px; color: {{k.deltaColor}}">{{k.delta}}</p>
+            </div>
+            <svg width="64" height="32" viewBox="0 0 64 32" aria-label="{{k.sparkLabel}}" role="img" style="flex-shrink: 0">
+              <polyline points="{{k.pts}}" fill="none" stroke="#a8a8a8" stroke-width="1.5" stroke-linejoin="round" style="stroke: var(--cds-text-helper)"></polyline>
+              <circle cx="{{k.lx}}" cy="{{k.ly}}" r="2.5" style="fill: var(--cds-text-primary)"></circle>
+            </svg>
+          </div>
+        </sc-for>
+      </section>
+
+
+      <section aria-label="Resumo do Watson" class="ai-surface" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 16px">
+        <div style="display: flex; gap: 12px; align-items: flex-start; flex: 1 1 560px; min-width: 0">
+          <button class="ai" type="button" aria-label="IA: conteúdo gerado pelo Watson. Ver como foi gerado">IA</button>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <p style="font-size: 12px; line-height: 16px; color: var(--cds-text-secondary)">Resumo do Watson · atualizado às 03:21</p>
+            <p style="font-size: 14px; line-height: 20px"><span style="font-weight: 600">12 casos novos; 3 alertas são a mesma rajada.</span> Agrupei os alertas do cartão final 4417 no caso #4833 (R$ 1.980,00 em 7 min). “Em análise” está no limite (4 de 4): conclua o #4821, que vence em 3 min, antes de puxar o próximo. O #4790 estourou o SLA há 2 min.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <a href="#" class="btn btn-ghost" style="color: var(--cds-link-primary)">Por que agrupei?</a>
+          <a href="#" class="btn btn-tertiary">Abrir o grupo #4833
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+          </a>
+        </div>
+      </section>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-height: 32px">
+        <span class="tag tag-gray" style="height: 24px; border-radius: 12px; padding: 0 4px 0 8px">Turno atual
+          <button type="button" aria-label="Remover filtro Turno atual" style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border: 0; padding: 0; background: transparent; color: var(--cds-tag-text-gray)">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"></path></svg>
+          </button>
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--cds-text-secondary)">
+          <span role="switch" aria-checked="true" aria-label="Agrupar rajadas do mesmo cartão" style="display: inline-flex; align-items: center; width: 32px; height: 16px; border-radius: 8px; background: var(--cds-support-success); padding: 0 3px; justify-content: flex-end">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cds-icon-inverse)"></span>
+          </span>
+          Agrupar rajadas do mesmo cartão
+        </span>
+        <div style="flex-grow: 1"></div>
+        <p class="helper">Arraste os cartões entre colunas ou use</p>
+        <span class="kbd">M</span>
+        <p class="helper">para mover pelo teclado</p>
+      </div>
+
+      <div style="overflow-x: auto; flex-grow: 1">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(288px, 1fr)); gap: 8px; min-width: 1176px; align-items: start">
+
+          <section class="col" aria-label="Novo · alto risco: 12 casos, limite 15">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 4px 4px 0">
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <h2 style="font-size: 14px; font-weight: 600; line-height: 18px; flex-grow: 1">Novo · alto risco</h2>
+                <p class="num" style="font-size: 14px">12 <span class="helper">de 15</span></p>
+              </div>
+              <div class="meter" role="meter" aria-label="Uso do limite: 12 de 15" aria-valuenow="12" aria-valuemin="0" aria-valuemax="15"><div style="height: 4px; width: 80%; background: var(--cds-text-secondary)"></div></div>
+              <p class="helper">Limite de WIP: 15 · entram por ordem de score</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column">
+              <a href="#" class="card" aria-label="Grupo de 3 alertas do mesmo cartão final 4417, caso #4833" style="box-shadow: inset 3px 0 0 var(--cds-border-interactive)">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="1.5" y="5" width="9" height="9"></rect><path d="M4.5 2h10v10"></path></svg>
+                  <p style="font-size: 14px; font-weight: 600; flex-grow: 1">3 alertas do mesmo cartão</p>
+                  <p class="mono helper">•••• 4417</p>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="num" style="font-size: 16px; font-weight: 600; flex-grow: 1">R$ 1.980,00 <span style="font-size: 12px; font-weight: 400; color: var(--cds-text-secondary)">em 7 min</span></p>
+                  <p class="mono" style="font-size: 14px; font-weight: 600">0,94</p>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="ell" style="font-size: 14px; color: var(--cds-text-secondary); flex-grow: 1">Loja Exemplo Games · online</p>
+                  <p class="mono helper">#4833</p>
+                </div>
+                <div style="display: flex; flex-direction: column; border-top: 1px solid var(--cds-border-subtle-01)">
+                  <sc-for list="{{grupo}}" as="g" hint-placeholder-count="3">
+                    <div style="display: flex; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--cds-border-subtle-01); font-size: 12px; line-height: 16px">
+                      <span class="mono" style="color: var(--cds-text-secondary); width: 40px">{{g.h}}</span>
+                      <span style="flex-grow: 1; color: var(--cds-text-secondary)">{{g.t}}</span>
+                      <span class="num">{{g.v}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                  <span class="tag tag-red"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.5v4.5" stroke="currentColor" stroke-width="1.75"></path><circle cx="8" cy="11.5" r="1" fill="currentColor"></circle></svg>Alto</span>
+                  <span class="chip">Rajada</span>
+                  <span class="chip">Longe de casa</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 4v4l3 2"></path></svg>
+                  <p class="helper" style="flex-grow: 1">6 min na fila</p>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                  <p style="font-size: 12px; line-height: 16px; color: var(--cds-support-warning)">Vence em 4 min</p>
+                </div>
+              </a>
+              <div aria-hidden="true" style="height: 4px; margin: 0 8px; background: var(--cds-border-subtle-01)"></div>
+              <div aria-hidden="true" style="height: 4px; margin: 0 16px; background: var(--cds-border-subtle-00)"></div>
+              <div style="display: flex; gap: 16px; padding: 4px 4px 0">
+                <a href="#" style="font-size: 12px; line-height: 24px">Ver os 3 alertas</a>
+                <a href="#" style="font-size: 12px; line-height: 24px">Desfazer agrupamento</a>
+              </div>
+            </div>
+
+            <sc-for list="{{novo}}" as="c" hint-placeholder-count="1">
+              <a href="#" class="card" aria-label="{{c.aria}}">
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="num" style="font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                  <p class="mono" style="font-size: 14px; font-weight: 600">{{c.score}}</p>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="ell" style="font-size: 14px; color: var(--cds-text-secondary); flex-grow: 1">{{c.estab}}</p>
+                  <p class="mono helper">{{c.id}}</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                  <span class="tag {{c.tagClass}}">
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tAltoD}}"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.5v4.5" stroke="currentColor" stroke-width="1.75"></path><circle cx="8" cy="11.5" r="1" fill="currentColor"></circle></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tMedioD}}"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.75" d="M8 6v4"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{c.tBaixoD}}"><path d="M3.5 8.5l3 3 6-7"></path></svg>
+                    {{c.risco}}
+                  </span>
+                  <span class="chip">{{c.s1}}</span>
+                  <span class="chip">{{c.s2}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 4v4l3 2"></path></svg>
+                  <p class="helper ell" style="flex-grow: 1">{{c.tempo}}</p>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.okD}}; flex-shrink: 0"><circle class="s-ok" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M4.8 8.2l2.2 2.2 4.2-4.6"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.pauseD}}; flex-shrink: 0"><circle class="s-info" stroke-width="1.5" cx="8" cy="8" r="6.5"></circle><path class="s-info" stroke-width="1.5" d="M6.5 5.5v5M9.5 5.5v5"></path></svg>
+                  <p style="font-size: 12px; line-height: 16px; white-space: nowrap; color: {{c.slaColor}}">{{c.sla}}</p>
+                </div>
+              </a>
+            </sc-for>
+            <a href="#" style="font-size: 14px; padding: 4px">Ver mais 10 casos</a>
+          </section>
+
+          <section class="col" aria-label="Aguardando associado: 6 casos, limite 10">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 4px 4px 0">
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <h2 style="font-size: 14px; font-weight: 600; line-height: 18px; flex-grow: 1">Aguardando associado</h2>
+                <p class="num" style="font-size: 14px">6 <span class="helper">de 10</span></p>
+              </div>
+              <div class="meter" role="meter" aria-label="Uso do limite: 6 de 10" aria-valuenow="6" aria-valuemin="0" aria-valuemax="10"><div style="height: 4px; width: 60%; background: var(--cds-text-secondary)"></div></div>
+              <p class="helper">Limite de WIP: 10 · SLA pausado até a resposta</p>
+            </div>
+            <sc-for list="{{aguardando}}" as="c" hint-placeholder-count="3">
+              <a href="#" class="card" aria-label="{{c.aria}}">
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="num" style="font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                  <p class="mono" style="font-size: 14px; font-weight: 600">{{c.score}}</p>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="ell" style="font-size: 14px; color: var(--cds-text-secondary); flex-grow: 1">{{c.estab}}</p>
+                  <p class="mono helper">{{c.id}}</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                  <span class="tag {{c.tagClass}}">
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tAltoD}}"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.5v4.5" stroke="currentColor" stroke-width="1.75"></path><circle cx="8" cy="11.5" r="1" fill="currentColor"></circle></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tMedioD}}"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.75" d="M8 6v4"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{c.tBaixoD}}"><path d="M3.5 8.5l3 3 6-7"></path></svg>
+                    {{c.risco}}
+                  </span>
+                  <span class="chip">{{c.s1}}</span>
+                  <span class="chip">{{c.s2}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 4v4l3 2"></path></svg>
+                  <p class="helper ell" style="flex-grow: 1">{{c.tempo}}</p>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.okD}}; flex-shrink: 0"><circle class="s-ok" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M4.8 8.2l2.2 2.2 4.2-4.6"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.pauseD}}; flex-shrink: 0"><circle class="s-info" stroke-width="1.5" cx="8" cy="8" r="6.5"></circle><path class="s-info" stroke-width="1.5" d="M6.5 5.5v5M9.5 5.5v5"></path></svg>
+                  <p style="font-size: 12px; line-height: 16px; white-space: nowrap; color: {{c.slaColor}}">{{c.sla}}</p>
+                </div>
+              </a>
+            </sc-for>
+            <a href="#" style="font-size: 14px; padding: 4px">Ver mais 3 casos</a>
+          </section>
+
+          <section class="col" aria-label="Em análise: 4 casos, limite 4 atingido">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 4px 4px 0">
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <h2 style="font-size: 14px; font-weight: 600; line-height: 18px; flex-grow: 1">Em análise</h2>
+                <p class="num" style="font-size: 14px">4 <span class="helper">de 4</span></p>
+              </div>
+              <div class="meter" role="meter" aria-label="Uso do limite: 4 de 4" aria-valuenow="4" aria-valuemin="0" aria-valuemax="4"><div style="height: 4px; width: 100%; background: var(--cds-support-warning)"></div></div>
+              <div role="status" style="display: flex; gap: 8px; align-items: center; padding: 4px 8px; background: var(--cds-layer-02); box-shadow: inset 3px 0 0 var(--cds-support-warning)">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                <p style="font-size: 12px; line-height: 16px"><span style="font-weight: 600">Limite atingido:</span> conclua antes de puxar</p>
+              </div>
+            </div>
+            <sc-for list="{{analise}}" as="c" hint-placeholder-count="4">
+              <a href="#" class="card" aria-label="{{c.aria}}">
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="num" style="font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                  <p class="mono" style="font-size: 14px; font-weight: 600">{{c.score}}</p>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="ell" style="font-size: 14px; color: var(--cds-text-secondary); flex-grow: 1">{{c.estab}}</p>
+                  <p class="mono helper">{{c.id}}</p>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                  <span class="tag {{c.tagClass}}">
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tAltoD}}"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.75"></circle><path d="M8 4.5v4.5" stroke="currentColor" stroke-width="1.75"></path><circle cx="8" cy="11.5" r="1" fill="currentColor"></circle></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.tMedioD}}"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.75" d="M8 6v4"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{c.tBaixoD}}"><path d="M3.5 8.5l3 3 6-7"></path></svg>
+                    {{c.risco}}
+                  </span>
+                  <span class="chip">{{c.s1}}</span>
+                  <span class="chip">{{c.s2}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color: var(--cds-icon-secondary)"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 4v4l3 2"></path></svg>
+                  <p class="helper ell" style="flex-grow: 1">{{c.tempo}}</p>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.errD}}; flex-shrink: 0"><circle class="s-err" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M5.5 5.5l5 5M10.5 5.5l-5 5"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.warnD}}; flex-shrink: 0"><path class="s-warn" d="M8 1.5l7 13H1z"></path><path class="s-ink" stroke-width="1.5" d="M8 6v4"></path><circle class="s-inkf" cx="8" cy="12.2" r="0.9"></circle></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.okD}}; flex-shrink: 0"><circle class="s-ok" cx="8" cy="8" r="7"></circle><path class="s-ink" stroke-width="1.5" d="M4.8 8.2l2.2 2.2 4.2-4.6"></path></svg>
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="display: {{c.pauseD}}; flex-shrink: 0"><circle class="s-info" stroke-width="1.5" cx="8" cy="8" r="6.5"></circle><path class="s-info" stroke-width="1.5" d="M6.5 5.5v5M9.5 5.5v5"></path></svg>
+                  <p style="font-size: 12px; line-height: 16px; white-space: nowrap; color: {{c.slaColor}}">{{c.sla}}</p>
+                </div>
+              </a>
+            </sc-for>
+          </section>
+
+          <section class="col" aria-label="Resolvido hoje: 31 casos, sem limite">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 4px 4px 0">
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <h2 style="font-size: 14px; font-weight: 600; line-height: 18px; flex-grow: 1">Resolvido hoje</h2>
+                <p class="num" style="font-size: 14px">31</p>
+              </div>
+              <div class="meter" aria-hidden="true"></div>
+              <p class="helper">Sem limite · 9 bloqueados, 22 liberados</p>
+            </div>
+            <sc-for list="{{resolvido}}" as="c" hint-placeholder-count="4">
+              <a href="#" class="card" aria-label="{{c.aria}}">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <p class="num" style="font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                  <span class="tag {{c.tagClass}}">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{c.lockD}}"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display: {{c.checkD}}"><path d="M3.5 8.5l3 3 6-7"></path></svg>
+                    {{c.desfecho}}
+                  </span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px">
+                  <p class="ell" style="font-size: 14px; color: var(--cds-text-secondary); flex-grow: 1">{{c.estab}}</p>
+                  <p class="mono helper">{{c.id}}</p>
+                </div>
+                <p class="helper">{{c.tempo}}</p>
+              </a>
+            </sc-for>
+            <a href="#" style="font-size: 14px; padding: 4px">Ver todos os 31</a>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const spark = (vals) => {
+      const w = 64, h = 32, p = 4;
+      const mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+      const pts = vals.map((v, i) => [(p + i * ((w - 2 * p) / (vals.length - 1))).toFixed(1), (h - p - ((v - mn) / ((mx - mn) || 1)) * (h - 2 * p)).toFixed(1)]);
+      return { pts: pts.map(q => q.join(',')).join(' '), lx: pts[pts.length - 1][0], ly: pts[pts.length - 1][1] };
+    };
+    const kpi = (label, value, delta, vals, status, trend) => Object.assign({
+      label, value, delta,
+      errD: status === 'err' ? 'inline-block' : 'none',
+      warnD: status === 'warn' ? 'inline-block' : 'none',
+      deltaColor: status === 'err' ? 'var(--cds-text-error)' : status === 'warn' ? 'var(--cds-support-warning)' : 'var(--cds-text-helper)',
+      sparkLabel: label + ': tendência das últimas 4 horas, ' + trend
+    }, spark(vals));
+    const st = (t) => ({
+      errD: t === 'err' ? 'inline-block' : 'none',
+      warnD: t === 'warn' ? 'inline-block' : 'none',
+      okD: t === 'ok' ? 'inline-block' : 'none',
+      pauseD: t === 'pause' ? 'inline-block' : 'none',
+      slaColor: t === 'err' ? 'var(--cds-text-error)' : t === 'warn' ? 'var(--cds-support-warning)' : t === 'ok' ? 'var(--cds-support-success)' : 'var(--cds-text-secondary)'
+    });
+    const risk = {
+      alto: { risco: 'Alto', tagClass: 'tag-red', tAltoD: 'inline-block', tMedioD: 'none', tBaixoD: 'none' },
+      medio: { risco: 'Médio', tagClass: 'tag-gray', tAltoD: 'none', tMedioD: 'inline-block', tBaixoD: 'none' },
+      baixo: { risco: 'Baixo', tagClass: 'tag-green', tAltoD: 'none', tMedioD: 'none', tBaixoD: 'inline-block' }
+    };
+    const card = (id, valor, estab, score, r, s1, s2, tempo, slaT, sla) => Object.assign({
+      id, valor, estab, score, s1, s2, tempo, sla,
+      aria: 'Caso ' + id + ', ' + valor + ', ' + estab + ', score ' + score + ', SLA: ' + sla
+    }, risk[r], st(slaT));
+    const res = (id, valor, estab, desf, tempo) => ({
+      id, valor, estab, desfecho: desf, tempo,
+      tagClass: desf === 'Bloqueado' ? 'tag-red' : 'tag-green',
+      lockD: desf === 'Bloqueado' ? 'inline-block' : 'none',
+      checkD: desf === 'Bloqueado' ? 'none' : 'inline-block',
+      aria: 'Caso ' + id + ', ' + valor + ', ' + desf
+    });
+    return {
+      kpis: [
+        kpi('Na fila agora', '128', '+14 na última hora', [96, 101, 99, 108, 112, 114, 121, 128], '', 'em alta'),
+        kpi('Alto risco', '23', '+5 na última hora', [12, 14, 13, 15, 18, 17, 21, 23], '', 'em alta'),
+        kpi('SLA em risco', '4', 'Vencem em até 5 min', [1, 0, 2, 1, 3, 2, 3, 4], 'warn', 'em alta'),
+        kpi('SLA estourado', '1', 'Caso #4790, há 2 min', [0, 0, 1, 0, 0, 0, 0, 1], 'err', 'estável'),
+        kpi('Tempo médio de decisão', '1 min 48 s', '12 s mais rápido que o turno anterior', [140, 132, 128, 121, 118, 112, 110, 108], '', 'em queda'),
+        kpi('Perda evitada no turno', 'R$ 18.430', '9 bloqueios confirmados', [2100, 4300, 6100, 8800, 11200, 13900, 16500, 18430], '', 'em alta')
+      ],
+      grupo: [
+        { h: '03:05', t: 'Online · São Paulo (SP)', v: 'R$ 590,00' },
+        { h: '03:08', t: 'Online · São Paulo (SP)', v: 'R$ 640,00' },
+        { h: '03:12', t: 'Online · São Paulo (SP)', v: 'R$ 750,00' }
+      ],
+      novo: [
+        card('#4790', 'R$ 5.400,00', 'Concessionária Fictícia · online', '0,89', 'alto', 'Valor 9× a média', 'Dispositivo novo', '12 min na fila', 'err', 'Estourado há 2 min')
+      ],
+      aguardando: [
+        card('#4829', 'R$ 389,90', 'Viagens Fictícias S.A. · internacional', '0,78', 'alto', 'Internacional', 'Dispositivo novo', 'Alerta no app há 6 min · visto', 'pause', 'Pausado'),
+        card('#4812', 'R$ 860,00', 'Farmácia Modelo · online', '0,76', 'alto', 'Horário atípico', 'Longe de casa', 'Alerta no app há 18 min · não visto', 'pause', 'Pausado'),
+        card('#4805', 'R$ 3.200,00', 'Máquinas Exemplo Ltda. · presencial', '0,68', 'medio', 'Valor alto', 'Loja nova', 'Alerta no app há 27 min · visto', 'pause', 'Pausado')
+      ],
+      analise: [
+        card('#4821', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos · online', '0,92', 'alto', 'Rajada', 'Longe de casa', 'Com você · 7 min', 'warn', 'Vence em 3 min'),
+        card('#4831', 'R$ 1.120,00', 'Marketplace Demo · online', '0,70', 'alto', 'Longe de casa', 'Horário atípico', 'Com Rafael · 4 min', 'ok', 'Vence em 6 min'),
+        card('#4834', 'R$ 610,00', 'Loja Teste Online · online', '0,64', 'medio', 'Rajada', 'Loja nova', 'Com Rafael · 9 min', 'ok', 'Vence em 21 min'),
+        card('#4819', 'R$ 129,00', 'Assinatura Exemplo · internacional', '0,21', 'baixo', 'Internacional', 'Valor baixo', 'Com Rafael · 2 min', 'ok', 'Vence em 58 min')
+      ],
+      resolvido: [
+        res('#4802', 'R$ 1.249,90', 'Eletro Demo Online', 'Bloqueado', '03:02 · associado negou no app'),
+        res('#4799', 'R$ 230,00', 'Mercado Modelo', 'Liberado', '02:48 · associado confirmou no app'),
+        res('#4795', 'R$ 980,00', 'Agropecuária Exemplo', 'Liberado', '02:31 · você liberou'),
+        res('#4791', 'R$ 3.050,00', 'Loja Exemplo Celulares', 'Bloqueado', '02:10 · Rafael bloqueou')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
