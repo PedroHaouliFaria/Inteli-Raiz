@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     notice_auto_close_on_it_was_me: bool = True
     notice_response_timeout_minutes: int = 10
 
+    # Tentativas simuladas de rajada (docs/dados/modelo-de-dados.md). Valores iniciais, ajustáveis pelo time.
+    burst_velocity_threshold: int = 10
+    burst_max_attempts: int = 5
+    burst_window_minutes: int = 15
+    burst_seed: int = 42
+
 
 @lru_cache
 def get_settings() -> Settings:
@@ -37,4 +43,16 @@ def get_notice_policy():
         high_threshold=s.notice_high_threshold,
         auto_close_on_it_was_me=s.notice_auto_close_on_it_was_me,
         response_timeout_minutes=s.notice_response_timeout_minutes,
+    )
+
+
+def get_burst_simulation_config():
+    from app.simulation.burst import BurstSimulationConfig
+
+    s = get_settings()
+    return BurstSimulationConfig(
+        velocity_threshold=s.burst_velocity_threshold,
+        max_attempts=s.burst_max_attempts,
+        window_minutes=s.burst_window_minutes,
+        seed=s.burst_seed,
     )

@@ -7,7 +7,7 @@ import { useRail } from './RailPreferences';
 // Trilho "Pergunte ao Watson": sugestão de contexto (protótipo 3) + perguntas por chips (protótipo 2).
 const ANSWERS = {
   'Por que 0,92?': {
-    text: 'Quatro sinais fortes concordam: rajada de 3 compras em 7 min, 640 km da região habitual, valor 6,2× a média e dispositivo novo. Sozinho, nenhum passaria de 0,40.',
+    text: 'Quatro sinais fortes concordam: 47 tentativas do cartão no terminal na última hora, 640 km da região habitual, valor 6,2× a média e dispositivo novo. Sozinho, nenhum passaria de 0,40.',
     source: 'Fatores do modelo para o caso #4821',
   },
   'Compare com o histórico': {
@@ -15,7 +15,7 @@ const ANSWERS = {
     source: 'Histórico de transações do cartão •••• 4821',
   },
   'Redija a justificativa': {
-    text: 'Bloqueio preventivo: rajada de 3 compras em 7 min, a 640 km da região habitual, valor 6,2× a média e dispositivo novo.',
+    text: 'Bloqueio preventivo: 47 tentativas do cartão no terminal na última hora, a 640 km da região habitual, valor 6,2× a média e dispositivo novo.',
     source: 'Gerado a partir dos fatores do caso',
     insertable: true,
   },

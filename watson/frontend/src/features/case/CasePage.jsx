@@ -10,9 +10,10 @@ import { NOTICE_POLICY } from '../../state/noticePolicy';
 import Term from '../../components/Term';
 import WatsonRail from '../../components/WatsonRail';
 import CaseQueue from './CaseQueue';
+import CardTimeline, { BurstIndicator } from './CardTimeline';
 
 const WATSON_JUSTIFICATION =
-  'Bloqueio preventivo: rajada de 3 compras em 7 min, a 640 km da região habitual, valor 6,2× a média e dispositivo novo.';
+  'Bloqueio preventivo: 47 tentativas do cartão no terminal na última hora, a 640 km da região habitual, valor 6,2× a média e dispositivo novo.';
 
 const DECISION_TAG = {
   blocked: { type: 'red', label: 'Cartão bloqueado' },
@@ -85,6 +86,9 @@ function CaseView({ id, phoneSlot }) {
           </Tile>
           <Tile>
             <h2 className="cds--type-heading-02" style={{ marginBottom: '1rem' }}>Linha do tempo</h2>
+            <BurstIndicator velocity1h={fraudCase.velocity1h} />
+            <CardTimeline history={fraudCase.cardHistory} />
+            <h3 className="cds--type-heading-compact-01" style={{ margin: '1rem 0 0.5rem' }}>Eventos do caso</h3>
             <ol className="watson-timeline">
               <li>
                 <span className="watson-timeline__time">03:14</span>

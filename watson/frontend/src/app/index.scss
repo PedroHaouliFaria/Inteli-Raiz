@@ -250,6 +250,48 @@ body {
   }
 }
 
+.watson-timeline__item--simulated {
+  border-left-style: dashed !important;
+  border-left-color: var(--cds-border-strong-01) !important;
+  opacity: 0.85;
+}
+
+.watson-timeline__item--current {
+  border-left-width: 4px !important;
+}
+
+.watson-timeline__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.watson-card-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Indicador de rajada: número grande + texto, acima da linha do tempo.
+.watson-burst {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--cds-layer-02);
+  border-left: 4px solid var(--cds-border-strong-01);
+
+  code { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+}
+
+.watson-burst--strong { border-left-color: var(--cds-support-error); }
+
+.watson-burst__value {
+  @include type.type-style('heading-05');
+}
+
 .watson-timeline__time {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.75rem;

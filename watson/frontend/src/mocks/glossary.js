@@ -30,6 +30,16 @@ export const GLOSSARY = {
     definition: 'Quanto o Watson confia na recomendação, com base na força e na concordância dos sinais. A decisão final é sempre da analista.',
     where: 'Painel do Watson',
   },
+  burst: {
+    term: 'Rajada',
+    definition: 'Muitas tentativas do mesmo cartão em pouco tempo. No case ela vem como contador pronto (tentativas no terminal na última hora), não como compras separadas.',
+    where: 'Caso',
+  },
+  simulatedAttempt: {
+    term: 'Tentativa simulada',
+    definition: 'Gerada pela simulação do Watson para a demonstração, coerente com o contador de rajada do case. Não vem do case, não recebe score, não vira alerta e não conta nas métricas.',
+    where: 'Caso',
+  },
   purchaseNotice: {
     term: 'Aviso de compra',
     definition: 'Mensagem no app pedindo ao associado que confirme uma compra diferente do costume.',

@@ -1,11 +1,14 @@
 # Watson · Dados
 
-Quais dados o Watson precisa guardar e como organizá-los num banco. Tudo aqui é **proposta para discussão** (v0.3, 27/10/2026: nomes de tabelas e colunas em inglês, com tabela de correspondência para o glossário).
+Quais dados o Watson precisa guardar e como organizá-los num banco. Tudo aqui é **proposta para discussão** (v0.5, 27/10/2026: nomes em inglês; aviso automático no risco médio; rajada como indicador, com tentativas simuladas marcadas).
 
 | Arquivo | O que tem | Status |
 |---|---|---|
 | [levantamento-de-dados.md](levantamento-de-dados.md) | Cada dado ligado à necessidade de uma persona ou tela, e o que aproveitamos (ou descartamos) das 297 colunas do case | pronto para revisão |
 | [modelo-de-dados.md](modelo-de-dados.md) | Modelo relacional inicial: diagrama, entidades, atributos, relações, regras e decisões em aberto | pronto para revisão |
+| [como-os-dados-ja-foram-usados.md](como-os-dados-ja-foram-usados.md) | O que o time já fez com o case na branch `develop`: EDA, base balanceada, modelo Random Forest e integração com o watsonx | pronto para revisão |
+| [linha-do-tempo.md](linha-do-tempo.md) | Se o case permite montar a linha do tempo de um cartão: colunas, transações por cartão e o problema das rajadas | pronto para revisão |
+| [uso-dos-dados-na-aplicacao.md](uso-dos-dados-na-aplicacao.md) | Caminho do CSV do case até a tela: carga, recorte, score, simulação, API e frontend | pronto para revisão |
 
 ## Resumo em uma linha
 Três blocos: **Origem** (associado, conta, cartão, estabelecimento, dispositivo, transação; só leitura), **Risco** (versão do modelo, score, fatores explicáveis) e **Análise** (alerta, caso, recomendação do agente, eventos do caso, decisão da analista, aviso de compra ao associado, desfecho e auditoria). Termos alinhados ao [glossário](../design/glossario.md).
