@@ -3,12 +3,12 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   Header, HeaderName, HeaderMenuButton, HeaderGlobalBar, HeaderGlobalAction, SkipToContent,
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
-  Theme, Toggle, Button, ToastNotification, ProgressIndicator, ProgressStep, IconButton, Select, SelectItem,
+  Theme, Toggle, Button, ToastNotification, ProgressIndicator, ProgressStep, IconButton,
 } from '@carbon/react';
-import { Help, Renew, Mobile, Close, WatsonxAi, List, Column, Archive, UserMultiple, ChartLineData, Report } from '@carbon/icons-react';
+import { Help, Renew, Mobile, Close, List, Column, Archive, UserMultiple, ChartLineData, Report } from '@carbon/icons-react';
 import { GlossaryProvider, GlossaryPanel, useGlossary } from '../components/Glossary';
 import { WatsonProvider, useWatson } from '../state/store';
-import { RailProvider, useRail, RAIL_VARIANTS } from '../components/RailPreferences';
+import { RailProvider } from '../components/RailPreferences';
 import MemberPhone from '../features/member-app/MemberPhone';
 import QueuePage from '../features/queue/QueuePage';
 import BoardPage from '../features/board/BoardPage';
@@ -48,7 +48,6 @@ function Shell() {
   const { pathname } = useLocation();
   const { isOpen: glossaryOpen, toggle: toggleGlossary } = useGlossary();
   const { state, dispatch } = useWatson();
-  const rail = useRail();
   const [presentation, setPresentation] = useState(readPresentationMode);
   const [phoneOpen, setPhoneOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -70,11 +69,6 @@ function Shell() {
           <HeaderMenuButton isCollapsible aria-label={navOpen ? 'Recolher o menu' : 'Abrir o menu'} isActive={navOpen} onClick={() => setNavOpen((v) => !v)} />
           <HeaderName href="/" prefix="Watson" onClick={go('/')}>Prevenção a fraudes</HeaderName>
           <HeaderGlobalBar>
-            {rail.variant === 'header' && (
-              <HeaderGlobalAction aria-label={rail.collapsed ? 'Mostrar o painel do Watson' : 'Esconder o painel do Watson'} isActive={!rail.collapsed} onClick={rail.toggle}>
-                <WatsonxAi size={20} />
-              </HeaderGlobalAction>
-            )}
             {!presentation && (
               <HeaderGlobalAction aria-label="Celular do associado" isActive={phoneOpen} onClick={() => setPhoneOpen((v) => !v)}>
                 <Mobile size={20} />
@@ -108,10 +102,6 @@ function Shell() {
             toggled={presentation} onToggle={setPresentation} />
           <Toggle id="device-changed" size="sm" labelText="Cenário" labelA="Aparelho conhecido" labelB="Aparelho trocado há 2 dias"
             toggled={state.deviceChanged} onToggle={(v) => reset(v)} />
-          <Select id="rail-variant" size="sm" inline labelText="Painel do Watson" value={rail.variant}
-            onChange={(e) => { rail.setVariant(e.target.value); rail.setCollapsed(true); }}>
-            {Object.entries(RAIL_VARIANTS).map(([value, text]) => <SelectItem key={value} value={value} text={text} />)}
-          </Select>
           <Button size="sm" kind="ghost" renderIcon={Renew} onClick={() => reset(state.deviceChanged)}>Reiniciar</Button>
         </div>
 
