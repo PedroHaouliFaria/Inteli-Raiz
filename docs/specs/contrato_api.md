@@ -246,6 +246,8 @@ Regras dos campos:
 - `merchant_name` é sempre `null` na base sintética, que não tem nome de estabelecimento. `merchant_display` usa a categoria do MCC. O agente não inventa um nome (§9 do plano).
 - `occurred_at` é sintético: a base só tem `hora` e `dia_semana`, então a fixture monta uma data coerente com eles.
 - `card.last4` sai dos 4 últimos dígitos do `card_id` sintético.
+- Se nenhuma regra disparar, `signals` vem vazio e `headline` diz: "Pedimos sua confirmação por precaução. Esta compra não tem um sinal de alerta específico." A tela não inventa um motivo.
+- Na lista (`GET /api/purchases`), `expires_at` só vem preenchido enquanto o status é `AGUARDANDO_ASSOCIADO`.
 - `signals` vêm de **regras** sobre os dados da compra (`source: "regra"`). O conjunto de regras é do dono dos sinais (Pedro R. na recomendação); este contrato fixa só o formato. Só vira sinal a feature com significado documentado: as de velocidade e distância (`cp_card_term_vel_1h` etc.) não têm definição na base e ficam de fora até alguém documentá-las.
 - **O score do modelo não aparece para o associado.** Ele não é probabilidade calibrada (§7 do plano), e "99% de chance de fraude" na tela induziria a decisão. O score fica na análise (§10), visível ao agente e à analista.
 - Nunca aparecem: `feedback_label`, `customer_id`, `card_id` completo, renda, saldo ou limite.
@@ -572,7 +574,7 @@ As fixtures iniciais (carregadas no início e no `reset`) usam linhas reais de `
 |---|---|---|---|---|
 | `fraude_supermercado_madrugada` | `EVT_SYN_000094500` | Ana | confirmação | autorizar ou recusar (vídeo 0:25–1:10) |
 | `legitima_farmacia` | `EVT_SYN_000043320` | Ana | confirmação na política conservadora | dúvida contextual (vídeo 1:10–1:50) |
-| `compra_do_bruno` | a escolher | Bruno | confirmação | teste de acesso cruzado |
+| `compra_do_bruno` | `EVT_SYN_000072693` (restaurante, R$ 131,44) | Bruno | confirmação | teste de acesso cruzado |
 | `falha_modelo` | qualquer, com feature crítica ausente | Ana | revisão `FALHA_AVALIACAO` | erro seguro (R09) |
 
 A política conservadora do §3 do plano manda **todo** caso avaliado para confirmação até haver evidência para liberar automaticamente. A liberação direta (`LIBERADA_SIMULACAO` sem `confirmation`) fica no contrato para quando o grupo validar um critério. O dono dos casos de demo (Pedro R. na recomendação) completa os 10 a 15 casos com o mesmo formato.
