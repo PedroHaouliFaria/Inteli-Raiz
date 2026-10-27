@@ -1,7 +1,7 @@
-pandas>=2.2
+pandas==2.2.*  # o pandas 3 mantém nulos como NaN no astype(str), e o treino espera "nan"
 numpy
 scipy
-scikit-learn
+scikit-learn==1.6.*  # mesma versão do deploy no watsonx.ai (scikit-learn_1.6)
 matplotlib
 seaborn
 openpyxl
