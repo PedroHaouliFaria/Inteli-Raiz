@@ -1,0 +1,193 @@
+@use '@carbon/react/scss/config' with ($css--font-face: false);
+@use '@carbon/react/scss/themes';
+@use '@carbon/react/scss/theme' with ($theme: themes.$g10);
+@use '@carbon/react';
+@use '@carbon/react/scss/type';
+
+@include type.type-classes();
+
+:root {
+  @include theme.theme();
+}
+
+body {
+  margin: 0;
+  background: var(--cds-background);
+  color-scheme: light;
+}
+
+.watson-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  min-height: calc(100vh - 3rem);
+}
+
+.watson-main {
+  flex: 999 1 560px;
+  min-width: 0;
+  padding: 1.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watson-rail {
+  flex: 1 1 340px;
+  max-width: 400px;
+  background: var(--cds-layer-01);
+  border-left: 1px solid var(--cds-border-subtle-01);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watson-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.watson-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.watson-glossary dt {
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.watson-glossary dd {
+  margin: 0.25rem 0 0;
+  color: var(--cds-text-secondary);
+}
+
+.watson-kpi {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  white-space: nowrap;
+  line-height: 2.5rem;
+  font-weight: 300;
+  margin: 0.25rem 0;
+}
+
+.watson-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.watson-column {
+  flex: 1 1 260px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cds--progress-bar + .cds--progress-bar,
+.cds--progress-bar { margin-bottom: 0.75rem; }
+
+.watson-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--cds-border-interactive);
+  }
+}
+
+.watson-timeline__time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+// Celular do associado (simulado)
+.watson-phone {
+  flex: 0 0 340px;
+  padding: 1.5rem 1rem;
+  background: var(--cds-layer-accent-01);
+}
+
+.watson-phone__screen {
+  width: 300px;
+  min-height: 560px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  background: var(--cds-background);
+  border: 8px solid #161616;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .cds--inline-notification { min-width: 0; max-width: 100%; }
+  .cds--btn { max-width: 100%; width: 100%; }
+}
+
+.watson-phone__empty {
+  color: var(--cds-text-secondary);
+  font-size: 0.875rem;
+}
+
+// Barra de controle do protótipo (não faz parte do produto)
+.watson-demo-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  padding: 0.5rem 2rem;
+  background: var(--cds-layer-accent-01);
+  border-bottom: 1px dashed var(--cds-border-strong-01);
+}
+
+.watson-narration {
+  padding: 1rem 2rem;
+  min-width: 0;
+
+  .cds--progress { overflow-x: auto; padding-bottom: 0.25rem; }
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.watson-floating {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 8000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
+  .watson-phone { padding-top: 2rem; }
+}
+
+.watson-floating__close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}
+
+.watson-toast {
+  position: fixed;
+  top: 3.5rem;
+  right: 1rem;
+  z-index: 9000;
+}
+
+.watson-main .cds--data-table-content {
+  overflow-x: auto;
+}

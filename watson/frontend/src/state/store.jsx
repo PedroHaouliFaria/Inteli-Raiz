@@ -1,100 +1,100 @@
 import { createContext, useContext, useReducer } from 'react';
-import { CASOS } from '../data/casos';
+import { CASES } from '../mocks/cases';
 
 // Estado compartilhado entre o console da analista e o app do associado (protótipo 3, Playback 3).
 // O agente coordena: envia o aviso de compra, recebe a resposta e aplica a regra combinada com a analista.
 
-const hora = (m) => `03:${String(m).padStart(2, '0')}`;
+const clock = (m) => `03:${String(m).padStart(2, '0')}`;
 
-const inicial = (aparelhoTrocado = false) => ({
-  minuto: 16,
-  aparelhoTrocado,
-  casos: CASOS.map((c) => ({ ...c, grupoDesfeito: false })),
-  eventos: { 4821: [] },
-  celular: { tela: 'bloqueado', notificacoes: [] },
+const initialState = (deviceChanged = false) => ({
+  minute: 16,
+  deviceChanged,
+  cases: CASES.map((c) => ({ ...c, ungrouped: false })),
+  events: { 4821: [] },
+  phone: { screen: 'locked', notifications: [] },
   toast: null,
 });
 
-function evento(state, casoId, tipo, titulo, detalhe, ia = false) {
-  const lista = state.eventos[casoId] ?? [];
-  return { ...state.eventos, [casoId]: [...lista, { hora: hora(state.minuto), tipo, titulo, detalhe, ia }] };
+function addEvent(state, caseId, type, title, detail, ai = false) {
+  const list = state.events[caseId] ?? [];
+  return { ...state.events, [caseId]: [...list, { time: clock(state.minute), type, title, detail, ai }] };
 }
 
-function mudarEstado(state, casoId, estado, extra = {}) {
-  return state.casos.map((c) => (c.id === casoId ? { ...c, estado, ...extra } : c));
+function setStatus(state, caseId, status, extra = {}) {
+  return state.cases.map((c) => (c.id === caseId ? { ...c, status, ...extra } : c));
 }
 
-function reducer(state, acao) {
-  switch (acao.tipo) {
-    case 'reiniciar':
-      return inicial(acao.aparelhoTrocado ?? state.aparelhoTrocado);
-    case 'enviarAviso': {
-      const s = { ...state, minuto: state.minuto + 1 };
+function reducer(state, action) {
+  switch (action.type) {
+    case 'reset':
+      return initialState(action.deviceChanged ?? state.deviceChanged);
+    case 'sendNotice': {
+      const s = { ...state, minute: state.minute + 1 };
       return {
         ...s,
-        casos: mudarEstado(s, acao.casoId, 'aguardando', { decisao: null }),
-        eventos: evento(s, acao.casoId, 'enviado', 'Aviso de compra enviado ao associado', 'Pedido pela analista, texto do Watson. Se ele não reconhecer, o Watson bloqueia.', true),
-        celular: { tela: 'bloqueado', notificacoes: [{ titulo: 'Aviso de compra no seu cartão', corpo: 'R$ 2.349,90 na Loja Exemplo Eletrônicos. Foi você?' }] },
-        toast: { tipo: 'info', titulo: 'Aviso de compra enviado', sub: 'Caso aguardando o associado.' },
+        cases: setStatus(s, action.caseId, 'awaiting_member', { decision: null }),
+        events: addEvent(s, action.caseId, 'sent', 'Aviso de compra enviado ao associado', 'Pedido pela analista, texto do Watson. Se ele não reconhecer, o Watson bloqueia.', true),
+        phone: { screen: 'locked', notifications: [{ title: 'Aviso de compra no seu cartão', body: 'R$ 2.349,90 na Loja Exemplo Eletrônicos. Foi você?' }] },
+        toast: { kind: 'info', title: 'Aviso de compra enviado', subtitle: 'Caso aguardando o associado.' },
       };
     }
-    case 'abrirAviso':
-      return { ...state, celular: { ...state.celular, tela: 'aviso' } };
-    case 'naoReconheco': {
-      const s = { ...state, minuto: state.minuto + 1 };
-      let eventos = evento(s, acao.casoId, 'resposta', 'Associado respondeu: não reconheço', 'Resposta pelo app autenticado.');
-      eventos = evento({ ...s, eventos }, acao.casoId, 'bloqueio', 'Cartão bloqueado pelo Watson', 'Regra combinada com a analista: não reconhecida = bloquear. Pode ser revertido.', true);
+    case 'openNotice':
+      return { ...state, phone: { ...state.phone, screen: 'notice' } };
+    case 'notMe': {
+      const s = { ...state, minute: state.minute + 1 };
+      let events = addEvent(s, action.caseId, 'response', 'Associado respondeu: não reconheço', 'Resposta pelo app autenticado.');
+      events = addEvent({ ...s, events }, action.caseId, 'block', 'Cartão bloqueado pelo Watson', 'Regra combinada com a analista: não reconhecida = bloquear. Pode ser revertido.', true);
       return {
-        ...s, eventos,
-        casos: mudarEstado(s, acao.casoId, 'resolvido', { decisao: 'bloqueado', por: 'Watson' }),
-        celular: { tela: 'protegido', notificacoes: [] },
-        toast: { tipo: 'success', titulo: 'Cartão •••• 4821 bloqueado pelo Watson', sub: 'O associado não reconheceu a compra.' },
+        ...s, events,
+        cases: setStatus(s, action.caseId, 'resolved', { decision: 'blocked', by: 'Watson' }),
+        phone: { screen: 'protected', notifications: [] },
+        toast: { kind: 'success', title: 'Cartão •••• 4821 bloqueado pelo Watson', subtitle: 'O associado não reconheceu a compra.' },
       };
     }
-    case 'fuiEu':
-      return { ...state, celular: { ...state.celular, tela: 'biometria' } };
-    case 'biometria': {
-      const s = { ...state, minuto: state.minuto + 1 };
-      const eventos = evento(s, acao.casoId, 'resposta', 'Associado confirmou: fui eu (com biometria)', 'Resposta pelo app autenticado.');
-      if (state.aparelhoTrocado) {
+    case 'itWasMe':
+      return { ...state, phone: { ...state.phone, screen: 'biometrics' } };
+    case 'biometrics': {
+      const s = { ...state, minute: state.minute + 1 };
+      const events = addEvent(s, action.caseId, 'response', 'Associado confirmou: fui eu (com biometria)', 'Resposta pelo app autenticado.');
+      if (state.deviceChanged) {
         return {
           ...s,
-          eventos: evento({ ...s, eventos }, acao.casoId, 'alerta', 'Voltou para você: aparelho trocado há 2 dias', 'Contramedida da anti-persona: o Watson não libera sozinho quando o aparelho é novo.', true),
-          casos: mudarEstado(s, acao.casoId, 'analise', { decisao: null }),
-          celular: { tela: 'conferindo', notificacoes: [] },
-          toast: { tipo: 'warning', titulo: 'Caso #4821 voltou para você', sub: 'Confirmação veio de um aparelho trocado há 2 dias.' },
+          events: addEvent({ ...s, events }, action.caseId, 'alert', 'Voltou para você: aparelho trocado há 2 dias', 'Contramedida da anti-persona: o Watson não libera sozinho quando o aparelho é novo.', true),
+          cases: setStatus(s, action.caseId, 'in_review', { decision: null }),
+          phone: { screen: 'reviewing', notifications: [] },
+          toast: { kind: 'warning', title: 'Caso #4821 voltou para você', subtitle: 'Confirmação veio de um aparelho trocado há 2 dias.' },
         };
       }
       return {
         ...s,
-        eventos: evento({ ...s, eventos }, acao.casoId, 'liberado', 'Compra liberada pelo Watson', 'Regra combinada: confirmada com biometria em aparelho conhecido = liberar.', true),
-        casos: mudarEstado(s, acao.casoId, 'resolvido', { decisao: 'liberado', por: 'Watson' }),
-        celular: { tela: 'liberado', notificacoes: [] },
-        toast: { tipo: 'success', titulo: 'Compra liberada', sub: 'O associado confirmou com biometria.' },
+        events: addEvent({ ...s, events }, action.caseId, 'released', 'Compra liberada pelo Watson', 'Regra combinada: confirmada com biometria em aparelho conhecido = liberar.', true),
+        cases: setStatus(s, action.caseId, 'resolved', { decision: 'released', by: 'Watson' }),
+        phone: { screen: 'released', notifications: [] },
+        toast: { kind: 'success', title: 'Compra liberada', subtitle: 'O associado confirmou com biometria.' },
       };
     }
-    case 'decidir': {
-      const s = { ...state, minuto: state.minuto + 1 };
-      const titulos = { bloqueado: 'Cartão bloqueado pela analista', liberado: 'Compra liberada pela analista', escalado: 'Caso escalado' };
+    case 'decide': {
+      const s = { ...state, minute: state.minute + 1 };
+      const titles = { blocked: 'Cartão bloqueado pela analista', released: 'Compra liberada pela analista', escalated: 'Caso escalado' };
       return {
         ...s,
-        eventos: evento(s, acao.casoId, acao.decisao, titulos[acao.decisao], acao.justificativa),
-        casos: mudarEstado(s, acao.casoId, acao.decisao === 'escalado' ? 'analise' : 'resolvido', { decisao: acao.decisao, por: 'Analista' }),
-        celular: acao.decisao === 'bloqueado' ? { tela: 'protegido', notificacoes: [{ titulo: 'Bloqueamos seu cartão final 4821', corpo: 'Por segurança. Nada foi cobrado.' }] } : state.celular,
-        toast: { tipo: 'success', titulo: titulos[acao.decisao], sub: 'Decisão registrada com justificativa.' },
+        events: addEvent(s, action.caseId, action.decision, titles[action.decision], action.justification),
+        cases: setStatus(s, action.caseId, action.decision === 'escalated' ? 'in_review' : 'resolved', { decision: action.decision, by: 'Analista' }),
+        phone: action.decision === 'blocked' ? { screen: 'protected', notifications: [{ title: 'Bloqueamos seu cartão final 4821', body: 'Por segurança. Nada foi cobrado.' }] } : state.phone,
+        toast: { kind: 'success', title: titles[action.decision], subtitle: 'Decisão registrada com justificativa.' },
       };
     }
-    case 'reenviarAvisos': {
-      const s = { ...state, minuto: state.minuto + 1 };
-      return { ...s, toast: { tipo: 'info', titulo: `Aviso reenviado a ${acao.ids.length} associados`, sub: acao.ids.map((i) => `#${i}`).join(', ') } };
+    case 'resendNotices': {
+      const s = { ...state, minute: state.minute + 1 };
+      return { ...s, toast: { kind: 'info', title: `Aviso reenviado a ${action.ids.length} associados`, subtitle: action.ids.map((i) => `#${i}`).join(', ') } };
     }
-    case 'desagrupar':
+    case 'ungroup':
       return {
         ...state,
-        casos: state.casos.map((c) => (c.id === acao.casoId ? { ...c, alertas: 2, grupoDesfeito: true } : c)),
-        toast: { tipo: 'info', titulo: `Agrupamento do caso #${acao.casoId} desfeito`, sub: 'A compra presencial virou um caso separado.' },
+        cases: state.cases.map((c) => (c.id === action.caseId ? { ...c, alertCount: 2, ungrouped: true } : c)),
+        toast: { kind: 'info', title: `Agrupamento do caso #${action.caseId} desfeito`, subtitle: 'A compra presencial virou um caso separado.' },
       };
-    case 'fecharToast':
+    case 'closeToast':
       return { ...state, toast: null };
     default:
       return state;
@@ -104,7 +104,7 @@ function reducer(state, acao) {
 const Ctx = createContext(null);
 
 export function WatsonProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, undefined, () => inicial());
+  const [state, dispatch] = useReducer(reducer, undefined, () => initialState());
   return <Ctx.Provider value={{ state, dispatch }}>{children}</Ctx.Provider>;
 }
 

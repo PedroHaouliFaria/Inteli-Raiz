@@ -1,0 +1,34 @@
+# Sobe banco + backend + frontend locais. Rodar a partir de watson/:
+#   docker compose -f infra/docker-compose.yml up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: watson
+      POSTGRES_PASSWORD: watson
+      POSTGRES_DB: watson
+    ports: ["5432:5432"]
+    volumes: [db-data:/var/lib/postgresql/data]
+
+  backend:
+    build:
+      context: ..
+      dockerfile: infra/docker/backend.Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://watson:watson@db:5432/watson
+      AGENT_PROVIDER: simulated
+      FRONTEND_ORIGIN: http://localhost:8080
+    ports: ["8000:8000"]
+    depends_on: [db]
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: infra/docker/frontend.Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+    ports: ["8080:80"]
+    depends_on: [backend]
+
+volumes:
+  db-data:
