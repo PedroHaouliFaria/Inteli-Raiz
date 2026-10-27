@@ -1,1 +1,9 @@
-/data/case_transacoes_cartoes_sintetico_900k.csv
+# Dados brutos e caches (grandes / não versionar)
+/data/*.csv
+/data/*.csv.gz
+/data/*.pkl
+/data/*.parquet
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
