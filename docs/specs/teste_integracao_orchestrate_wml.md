@@ -17,20 +17,20 @@ Se o item 1 ou 2 falhar e não houver correção até 24/10, ativar o plano B.
 
 ## 2. Pré-requisitos
 
-**Do Pedro R. (modelo):**
+**Do Pedro R. (modelo):** feito no PR #6, já na `develop`.
 
-- [ ] Ler os CSVs com as 9 categóricas como texto: `pd.read_csv(..., dtype={c: str for c in FEATURES_CAT})`. Hoje o `mcc` tem 1 vazio no treino, o pandas lê a coluna como `float` e o encoder aprende `"5411.0"`. A ferramenta manda `"5411"`, que cairia como categoria desconhecida (`-1`) sem nenhum erro.
-- [ ] Retreinar o pipeline do `notebooks/03_modelo.ipynb` com `scikit-learn==1.6.*` em Python 3.12.
-- [ ] **Remover o `FunctionTransformer(lambda X: X.astype(str))`** do `pipe_cat`. Lambda não é serializável, e o `store_model` vai falhar. Em vez disso, converter as categóricas para `str` no pandas **antes** do `fit`:
+- [x] Ler os CSVs com as 9 categóricas como texto: `pd.read_csv(..., dtype={c: str for c in FEATURES_CAT})`. Hoje o `mcc` tem 1 vazio no treino, o pandas lê a coluna como `float` e o encoder aprende `"5411.0"`. A ferramenta manda `"5411"`, que cairia como categoria desconhecida (`-1`) sem nenhum erro.
+- [x] Retreinar o pipeline do `notebooks/03_modelo.ipynb` com `scikit-learn==1.6.*` em Python 3.12.
+- [x] **Remover o `FunctionTransformer(lambda X: X.astype(str))`** do `pipe_cat`. Lambda não é serializável, e o `store_model` vai falhar. Em vez disso, converter as categóricas para `str` no pandas **antes** do `fit`:
   `X_treino[FEATURES_CAT] = X_treino[FEATURES_CAT].astype(str)`. O resultado é idêntico ao atual: o `astype(str)` já transformava `NaN` em `"nan"`.
-- [ ] Implantar no deployment space com model type `scikit-learn_1.6` e software spec `runtime-25.1-py3.12`, como deploy **online**.
-- [ ] Passar ao Lucas: `deployment_id` e a ordem exata das colunas (`TODAS_FEATURES`, seção 4).
+- [x] Implantar no deployment space com model type `scikit-learn_1.6` e software spec `runtime-25.1-py3.12`, como deploy **online**. Feito com `scripts/deploy_watsonx.py`.
+- [x] Passar ao Lucas: `deployment_id` e a ordem exata das colunas (`TODAS_FEATURES`, seção 4). `deployment_id` = `01a17dba-b0c2-7778-b2ca-fa8e3ad07593`; a ordem bate com a seção 4.
 
 **Do Lucas:**
 
-- [ ] Uma **API key da IBM Cloud** (IBM Cloud → Manage → Access (IAM) → API keys) de um usuário que seja membro do deployment space. Essa chave **não é** a do Orchestrate.
-- [ ] A **service instance URL** e a **API key do Orchestrate**: na instância do Orchestrate, ícone do usuário → Settings → aba **API details** → Generate API key.
-- [ ] Python 3.12 em um venv com:
+- [x] Uma **API key da IBM Cloud** (IBM Cloud → Manage → Access (IAM) → API keys) de um usuário que seja membro do deployment space. Essa chave **não é** a do Orchestrate.
+- [ ] A **service instance URL** e a **API key do Orchestrate**: na instância do Orchestrate, ícone do usuário → Settings → aba **API details** → Generate API key. Bloqueado: o trial expirou em 27/10.
+- [x] Python 3.12 em um venv com:
   ```bash
   pip install ibm-watsonx-orchestrate==2.19.0 requests==2.32.4
   ```
