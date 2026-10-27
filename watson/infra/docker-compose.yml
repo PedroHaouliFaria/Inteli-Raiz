@@ -18,6 +18,12 @@ services:
       DATABASE_URL: postgresql+psycopg://watson:watson@db:5432/watson
       AGENT_PROVIDER: simulated
       FRONTEND_ORIGIN: http://localhost:8080
+      RISK_MODEL_PATH: /risk/outputs/modelo_rf.joblib
+      RISK_DATA_DIR: /risk/data/processed
+    volumes:
+      # Modelo e bases ficam na raiz do repositório, fora do contexto do build.
+      - ../../outputs:/risk/outputs:ro
+      - ../../data/processed:/risk/data/processed:ro
     ports: ["8000:8000"]
     depends_on: [db]
 

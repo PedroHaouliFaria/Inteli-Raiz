@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Versão A · Bancada do modelo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wt{--bg:#f4f4f4;--l1:#ffffff;--l2:#f4f4f4;--bd:#e0e0e0;--bds:#8d8d8d;--tp:#161616;--ts:#525252;--th:#6f6f6f;--blue:#0f62fe;--red:#da1e28;box-sizing:border-box;background:var(--bg);color:var(--tp);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt dl,.wt dd{margin:0}
+.wt ul{padding:0;list-style:none}
+.wt a{color:var(--blue)}
+.wt button{font-family:inherit;letter-spacing:0.16px}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.hdr{height:48px;display:flex;align-items:center;background:#161616;color:#f4f4f4;border-bottom:1px solid #393939}
+.hdr .brand{padding:0 32px 0 16px;color:#f4f4f4;text-decoration:none}
+.hdr .brand b{font-weight:600;margin-right:4px}
+.hdr .sp{flex-grow:1}
+.hdr button{width:48px;height:48px;background:transparent;border:0;color:#f4f4f4;display:inline-flex;align-items:center;justify-content:center}
+.row{display:flex;flex-grow:1}
+.rail{flex:0 0 48px;background:var(--l1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding-top:8px}
+.rail a{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--ts);border-left:3px solid transparent}
+.rail a.on{border-left-color:var(--blue);background:#e0e0e0;color:var(--tp)}
+.rail hr{border:0;border-top:1px solid var(--bd);margin:8px 8px;width:32px}
+.main{flex-grow:1;padding:24px 32px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.crumb{font-size:12px;color:var(--ts)}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.lead{color:var(--ts);max-width:760px}
+.exp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border-radius:12px;background:#e8daff;color:#491d8b;font-size:12px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 480px;gap:16px;align-items:start}
+.tile{background:var(--l1);padding:16px}
+.lbl{font-size:12px;line-height:16px;color:var(--ts);display:block;margin-bottom:8px}
+.field{height:40px;background:var(--l2);border:0;border-bottom:1px solid var(--bds);padding:0 16px;font:inherit;color:var(--tp);width:100%;display:flex;align-items:center;justify-content:space-between}
+.tabs{display:flex;border-bottom:2px solid var(--bd);margin-bottom:16px}
+.tabs button{height:40px;padding:0 16px;background:transparent;border:0;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--ts);font-size:14px}
+.tabs button.on{border-bottom-color:var(--blue);color:var(--tp);font-weight:600}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{height:32px;padding:0 12px;border:1px solid var(--bds);background:var(--l1);font-size:12px;color:var(--tp)}
+.acc{border-top:1px solid var(--bd)}
+.acc-h{height:48px;display:flex;align-items:center;justify-content:space-between;width:100%;background:transparent;border:0;padding:0 16px;font-size:14px;color:var(--tp)}
+.acc-h span.n{color:var(--th);font-size:12px}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:0 16px 16px 16px}
+.fgrid .field{height:40px}
+.changed{box-shadow:inset 3px 0 0 var(--blue)}
+.actions{display:flex;gap:1px;margin-top:16px}
+.btn{height:48px;padding:0 64px 0 16px;border:0;font-size:14px;text-align:left}
+.btn.p{background:var(--blue);color:#fff}
+.btn.s{background:#393939;color:#fff}
+.btn.g{background:transparent;color:var(--blue);padding:0 16px}
+.score{display:flex;align-items:baseline;gap:12px}
+.score b{font-size:54px;line-height:64px;font-weight:300}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:12px;font-size:12px}
+.t-high{background:#ffd7d9;color:#a2191f}
+.t-med{background:#fcf4d6;color:#684e00}
+.t-low{background:#a7f0ba;color:#0e6027}
+.t-gray{background:#e0e0e0;color:#161616}
+.bar{position:relative;height:12px;display:flex;margin:24px 0 8px 0}
+.bar .z1{width:60%;background:#a7f0ba}
+.bar .z2{width:20%;background:#f1c21b}
+.bar .z3{width:20%;background:#da1e28}
+.bar .thr{position:absolute;top:-6px;bottom:-6px;left:81.7%;border-left:2px dashed #161616}
+.bar .dot{position:absolute;top:-8px;width:4px;height:28px;background:#161616}
+.scale{position:relative;height:16px;font-size:12px;line-height:16px;color:var(--ts)}
+.scale span{position:absolute;top:0;white-space:nowrap}
+.facts{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.fact{display:grid;grid-template-columns:minmax(0,1fr) 120px 52px;gap:12px;align-items:center}
+.fact .nm{font-size:14px}
+.fact .vl{font-size:12px;color:var(--ts)}
+.fact .track{height:8px;background:#e0e0e0;position:relative}
+.fact .track i{position:absolute;left:0;top:0;bottom:0;background:#a2191f}
+.fact .dl{text-align:right;font-size:12px}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;border-top:1px solid var(--bd);padding-top:16px}
+.meta dt{font-size:12px;color:var(--ts)}
+.note{background:#edf5ff;border-left:3px solid #0043ce;padding:12px 16px;font-size:12px;line-height:16px;color:var(--tp)}
+.tt{display:inline-flex;width:16px;height:16px;border-radius:8px;border:1px solid var(--ts);font-size:10px;align-items:center;justify-content:center;color:var(--ts);background:transparent;padding:0}
+</style>
+</helmet>
+<div class="wt" style="width: 1440px; height: 1024px">
+  <header class="hdr">
+    <a class="brand" href="#top"><b>Watson</b>Prevenção a fraudes</a>
+    <span class="sp"></span>
+    <button type="button" aria-label="Dicionário do Watson"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M8 8a2 2 0 1 1 3 1.7c-.6.4-1 .8-1 1.5V12"></path><circle cx="10" cy="14.5" r=".6"></circle></svg></button>
+  </header>
+  <div class="row">
+    <nav class="rail" aria-label="Navegação principal">
+      <a href="#fila" aria-label="Fila"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h12"></path></svg></a>
+      <a href="#quadro" aria-label="Quadro do processo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="4" height="12"></rect><rect x="8" y="4" width="4" height="8"></rect><rect x="13" y="4" width="4" height="10"></rect></svg></a>
+      <hr>
+      <a class="on" href="#lab" aria-label="Laboratório do modelo" aria-current="page"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3h4M9 3v5l-5 8a1 1 0 0 0 1 1.5h10a1 1 0 0 0 1-1.5l-5-8V3"></path><path d="M6.5 12.5h7"></path></svg></a>
+      <a href="#monitor" aria-label="Monitoramento do modelo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16l4-6 4 3 6-8"></path></svg></a>
+    </nav>
+    <main class="main">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <h1 class="h1">Laboratório do modelo</h1>
+        <span class="exp">Ambiente experimental · não gera alerta nem caso</span>
+      </div>
+      <p class="lead">Envie uma transação para o modelo de risco e veja o score, a faixa e os sinais que mais pesaram. Escolha uma do conjunto de teste ou ajuste os campos à mão.</p>
+
+      <div class="grid">
+        <section class="tile" aria-label="Transação enviada">
+          <div class="tabs" role="tablist">
+            <button type="button" class="on" role="tab" aria-selected="true">Do conjunto de teste</button>
+            <button type="button" role="tab" aria-selected="false">De um caso da fila</button>
+            <button type="button" role="tab" aria-selected="false">Em branco</button>
+          </div>
+          <label class="lbl" for="busca">Transação (32.000 no conjunto de teste, 29 fraudes)</label>
+          <div class="field" id="busca"><span class="mono">EVT_SYN_000094500 · R$ 149,58 · mercado (5411) · 03h</span><span class="tag t-high">Rótulo real: fraude</span></div>
+          <div class="presets">
+            <button type="button" class="chip">Fraude aleatória</button>
+            <button type="button" class="chip">Legítima aleatória</button>
+            <button type="button" class="chip">Legítima com maior score (0,58)</button>
+            <button type="button" class="chip">Fraude com menor score (0,82)</button>
+          </div>
+
+          <div style="margin-top: 24px">
+            <div class="acc">
+              <button type="button" class="acc-h" aria-expanded="true"><span>Velocidade e distância <span class="n">· 4 campos · pré-calculados</span></span><span>−</span></button>
+              <div class="fgrid">
+                <div><span class="lbl">Uso cartão × terminal (1h)</span><div class="field changed"><span class="mono">70</span></div></div>
+                <div><span class="lbl">Contagem do cartão (1m)</span><div class="field"><span class="mono">30</span></div></div>
+                <div><span class="lbl">Distância do terminal anterior (1h)</span><div class="field"><span class="mono">102,13</span></div></div>
+                <div><span class="lbl">Tokens de carteira digital (3m)</span><div class="field"><span class="mono">80</span></div></div>
+              </div>
+            </div>
+            <div class="acc">
+              <button type="button" class="acc-h" aria-expanded="true"><span>Contexto da compra <span class="n">· 6 campos</span></span><span>−</span></button>
+              <div class="fgrid">
+                <div><span class="lbl">Tipo</span><div class="field"><span>Crédito</span><span>⌄</span></div></div>
+                <div><span class="lbl">Modalidade</span><div class="field"><span>Cartão não presente</span><span>⌄</span></div></div>
+                <div><span class="lbl">MCC</span><div class="field"><span class="mono">5411 · mercado</span><span>⌄</span></div></div>
+                <div><span class="lbl">Hora</span><div class="field"><span class="mono">3</span></div></div>
+                <div><span class="lbl">Dia da semana</span><div class="field"><span>Domingo</span><span>⌄</span></div></div>
+                <div><span class="lbl">Valor da compra (R$)</span><div class="field"><span class="mono">149,58</span></div></div>
+              </div>
+            </div>
+            <div class="acc"><button type="button" class="acc-h" aria-expanded="false"><span>Estabelecimento <span class="n">· 2 campos</span></span><span>+</span></button></div>
+            <div class="acc"><button type="button" class="acc-h" aria-expanded="false"><span>Associado e conta <span class="n">· 7 campos</span></span><span>+</span></button></div>
+            <div class="acc"><button type="button" class="acc-h" aria-expanded="false"><span>Sinais criados pela equipe <span class="n">· 9 campos</span></span><span>+</span></button></div>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn s">Restaurar original</button>
+            <button type="button" class="btn p">Enviar ao modelo</button>
+          </div>
+        </section>
+
+        <section class="tile" aria-label="O que o modelo inferiu" style="display: flex; flex-direction: column; gap: 16px">
+          <h2 style="font-size: 20px; line-height: 28px; font-weight: 400">O que o modelo inferiu</h2>
+          <div class="score"><b>0,99</b><span class="tag t-high">Alto risco</span><span class="tag t-gray">Acertou</span></div>
+          <div>
+            <div class="bar" role="img" aria-label="Score 0,99 na faixa alta; limiar do modelo em 0,817">
+              <span class="z1"></span><span class="z2"></span><span class="z3"></span>
+              <span class="thr"></span>
+              <span class="dot" style="left: 98.6%"></span>
+            </div>
+            <div class="scale"><span style="left: 0">0 · baixo</span><span style="left: 52%">0,60 · médio</span><span style="left: 80.5%">0,80 · alto</span><span style="right: 0">1</span></div>
+            <p style="font-size: 12px; color: #525252; margin-top: 8px">Tracejado: limiar F2 do modelo (0,817). Acima dele, a transação vira alerta no Watson.</p>
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px"><h3 style="font-size: 14px; font-weight: 600">Sinais que mais pesaram</h3><button type="button" class="tt" aria-label="Como medimos">i</button></div>
+            <ul class="facts">
+              <li class="fact"><div><p class="nm">Uso cartão × terminal (1h)</p><p class="vl">70 · típico 2</p></div><div class="track"><i style="width: 100%"></i></div><span class="dl mono">+0,30</span></li>
+              <li class="fact"><div><p class="nm">Tokens de carteira digital (3m)</p><p class="vl">80 · típico 7</p></div><div class="track"><i style="width: 84%"></i></div><span class="dl mono">+0,25</span></li>
+              <li class="fact"><div><p class="nm">Contagem do cartão (1m)</p><p class="vl">30 · típico 1</p></div><div class="track"><i style="width: 67%"></i></div><span class="dl mono">+0,20</span></li>
+              <li class="fact"><div><p class="nm">Hora</p><p class="vl">3h · típico 10h</p></div><div class="track"><i style="width: 57%"></i></div><span class="dl mono">+0,17</span></li>
+              <li class="fact"><div><p class="nm">Madrugada</p><p class="vl">Sim · típico não</p></div><div class="track"><i style="width: 53%"></i></div><span class="dl mono">+0,16</span></li>
+              <li class="fact"><div><p class="nm">Risco do estabelecimento</p><p class="vl">70 · típico 19,5</p></div><div class="track"><i style="width: 31%"></i></div><span class="dl mono">+0,09</span></li>
+            </ul>
+          </div>
+          <p class="note">Cada barra mostra quanto o score cai se só aquele campo voltar ao valor típico de uma compra legítima. Os 3 primeiros sinais são contadores prontos da base; sem eles o modelo acerta bem menos (PR-AUC 0,15).</p>
+          <dl class="meta">
+            <div><dt>Modelo</dt><dd>Random Forest · 28 sinais</dd></div>
+            <div><dt>Onde rodou</dt><dd>Local (cópia do watsonx.ai)</dd></div>
+            <div><dt>Versão</dt><dd class="mono">rf_fraude_sicredi · sklearn 1.6</dd></div>
+            <div><dt>Tempo de resposta</dt><dd class="mono">38 ms</dd></div>
+          </dl>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1024}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -16,3 +16,11 @@ export async function request(path, { method = 'GET', body, headers } = {}) {
 }
 
 export const getHealth = () => request('/health');
+
+// Laboratório do modelo (ambiente experimental do modelo de risco)
+export const getModelLabInfo = () => request('/model-lab/info');
+export const searchModelLabSamples = (q, label) =>
+  request(`/model-lab/samples?${new URLSearchParams({ q, limit: 20, ...(label ? { label } : {}) })}`);
+export const getModelLabSample = (id) => request(`/model-lab/samples/${encodeURIComponent(id)}`);
+export const getRandomModelLabSample = (label) => request(`/model-lab/samples/random?label=${label}`);
+export const scoreTransaction = (features) => request('/model-lab/score', { method: 'POST', body: { features } });

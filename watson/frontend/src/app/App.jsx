@@ -5,7 +5,7 @@ import {
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
   Theme, Toggle, Button, ToastNotification, ProgressIndicator, ProgressStep, IconButton,
 } from '@carbon/react';
-import { Help, Renew, Mobile, Close, WatsonxAi, List, Column, Archive, UserMultiple, ChartLineData, Report } from '@carbon/icons-react';
+import { Help, Renew, Mobile, Close, WatsonxAi, List, Column, Archive, UserMultiple, ChartLineData, Report, Chemistry } from '@carbon/icons-react';
 import { GlossaryProvider, GlossaryPanel, useGlossary } from '../components/Glossary';
 import { WatsonProvider, useWatson } from '../state/store';
 import { RailProvider, useRail } from '../components/RailPreferences';
@@ -15,6 +15,7 @@ import QueuePage from '../features/queue/QueuePage';
 import BoardPage from '../features/board/BoardPage';
 import CasePage from '../features/case/CasePage';
 import ComingSoonPage from '../features/coming-soon/ComingSoonPage';
+import ModelLabPage from '../features/model-lab/ModelLabPage';
 
 // Alta fidelidade do protótipo 3 (ponta a ponta) com os chips do protótipo 2. Escolha do Leo (26/10/2026):
 // produto: o celular do associado abre num painel quando o Watson envia um aviso (variação 2);
@@ -99,6 +100,7 @@ function Shell() {
           <SideNavDivider />
           <SideNavLink renderIcon={Archive} href="/soon/closed-cases" isActive={pathname === '/soon/closed-cases'} onClick={go('/soon/closed-cases')}>Casos encerrados</SideNavLink>
           <SideNavLink renderIcon={UserMultiple} href="/soon/members" isActive={pathname === '/soon/members'} onClick={go('/soon/members')}>Associados</SideNavLink>
+          <SideNavLink renderIcon={Chemistry} href="/model-lab" isActive={pathname === '/model-lab'} onClick={go('/model-lab')}>Laboratório do modelo</SideNavLink>
           <SideNavLink renderIcon={ChartLineData} href="/soon/model-monitoring" isActive={pathname === '/soon/model-monitoring'} onClick={go('/soon/model-monitoring')}>Monitoramento do modelo</SideNavLink>
           <SideNavLink renderIcon={Report} href="/soon/reports" isActive={pathname === '/soon/reports'} onClick={go('/soon/reports')}>Relatórios</SideNavLink>
         </SideNavItems>
@@ -130,6 +132,7 @@ function Shell() {
           <Route path="/" element={<QueuePage phoneSlot={phoneSlot} />} />
           <Route path="/board" element={<BoardPage phoneSlot={phoneSlot} />} />
           <Route path="/cases/:id" element={<CasePage phoneSlot={phoneSlot} />} />
+          <Route path="/model-lab" element={<ModelLabPage />} />
           <Route path="/soon/:section" element={<ComingSoonPage />} />
         </Routes>
       </div>

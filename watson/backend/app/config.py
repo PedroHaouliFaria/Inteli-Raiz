@@ -1,6 +1,11 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+# Raiz do repositório: o modelo fica em outputs/ e as bases em data/processed/, como no notebook 03.
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 class Settings(BaseSettings):
@@ -27,6 +32,14 @@ class Settings(BaseSettings):
     burst_max_attempts: int = 5
     burst_window_minutes: int = 15
     burst_seed: int = 42
+
+    # Modelo de risco: "local" lê o .joblib; "watsonx" chama o deployment online no watsonx.ai Runtime.
+    risk_model_provider: str = "local"
+    risk_model_path: str = str(REPO_ROOT / "outputs" / "modelo_rf.joblib")
+    risk_data_dir: str = str(REPO_ROOT / "data" / "processed")
+    risk_watsonx_deployment_id: str = ""
+    # Limiar F2 do notebook 03: a partir dele o modelo considera a transação fraude.
+    risk_decision_threshold: float = 0.817
 
 
 @lru_cache

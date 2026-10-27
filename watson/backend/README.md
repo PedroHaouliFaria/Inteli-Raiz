@@ -5,7 +5,7 @@ API do Watson em Python + FastAPI: regras de negócio, agentes (watsonx.ai) e ac
 ```bash
 cd watson/backend
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev,postgres]"     # use ".[dev,db2]" para Db2 e ".[watsonx]" para o agente real
+pip install -e ".[dev,postgres,risk]" # use ".[dev,db2]" para Db2, ".[watsonx]" para o agente real; "risk" roda o modelo de risco local
 cp .env.example .env                  # sem .env, usa SQLite local e o agente simulado
 uvicorn app.main:app --reload         # http://localhost:8000/docs
 pytest
@@ -30,3 +30,10 @@ pytest
 - Código, rotas, tabelas e colunas em inglês; textos para o usuário em português.
 - O banco muda só pela `DATABASE_URL`. Use tipos portáveis: enums como texto e JSON pelo `PortableJSON`.
 - Migrações: `alembic revision --autogenerate -m "..."` e `alembic upgrade head`.
+
+## Modelo de risco e Laboratório do modelo
+
+- `RISK_MODEL_PROVIDER=local` (padrão) lê `outputs/modelo_rf.joblib` na raiz do repositório, o mesmo arquivo publicado no watsonx.ai. Precisa do extra `risk` (scikit-learn 1.6.1, a versão do treino).
+- `RISK_MODEL_PROVIDER=watsonx` chama o deployment online: defina `WATSONX_API_KEY` e `RISK_WATSONX_DEPLOYMENT_ID` (saída de `scripts/deploy_watsonx.py`).
+- As rotas `/model-lab/*` alimentam a aba Laboratório do modelo: `info` (campos, faixas, limiares), `samples` (busca e sorteio no conjunto de teste de `data/processed/`) e `score` (score, faixa e fatores).
+- Fatores: quanto o score cai se só aquele campo volta ao valor típico das compras legítimas do treino (mediana ou moda). É uma conta nossa, não do Random Forest.

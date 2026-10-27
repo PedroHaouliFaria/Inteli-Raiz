@@ -9,12 +9,15 @@ dependencies = [
     "pydantic-settings>=2.4",
     "sqlalchemy>=2.0",
     "alembic>=1.13",
+    "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
 postgres = ["psycopg[binary]>=3.2"]
 db2 = ["ibm-db>=3.2", "ibm-db-sa>=0.4"]
 watsonx = ["ibm-watsonx-ai>=1.1"]
+# Modelo de risco local: a versão do scikit-learn tem de ser a do treino (notebook 03).
+risk = ["scikit-learn==1.6.1", "pandas>=2.2", "joblib>=1.4"]
 dev = ["pytest>=8", "httpx>=0.27"]
 
 [build-system]

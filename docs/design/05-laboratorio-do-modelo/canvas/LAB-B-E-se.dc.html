@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Versão B · E se? Original e editado</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wt{--bg:#f4f4f4;--l1:#ffffff;--l2:#f4f4f4;--bd:#e0e0e0;--bds:#8d8d8d;--tp:#161616;--ts:#525252;--th:#6f6f6f;--blue:#0f62fe;box-sizing:border-box;background:var(--bg);color:var(--tp);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt dl,.wt dd{margin:0}
+.wt ul{padding:0;list-style:none}
+.wt button{font-family:inherit;letter-spacing:0.16px}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.hdr{height:48px;display:flex;align-items:center;background:#161616;color:#f4f4f4;border-bottom:1px solid #393939}
+.hdr .brand{padding:0 32px 0 16px;color:#f4f4f4;text-decoration:none}
+.hdr .brand b{font-weight:600;margin-right:4px}
+.hdr .sp{flex-grow:1}
+.hdr button{width:48px;height:48px;background:transparent;border:0;color:#f4f4f4;display:inline-flex;align-items:center;justify-content:center}
+.row{display:flex;flex-grow:1}
+.rail{flex:0 0 48px;background:var(--l1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding-top:8px}
+.rail a{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--ts);border-left:3px solid transparent}
+.rail a.on{border-left-color:var(--blue);background:#e0e0e0;color:var(--tp)}
+.rail hr{border:0;border-top:1px solid var(--bd);margin:8px 8px;width:32px}
+.main{flex-grow:1;padding:24px 32px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.lead{color:var(--ts);max-width:760px}
+.exp{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border-radius:12px;background:#e8daff;color:#491d8b;font-size:12px}
+.tile{background:var(--l1);padding:16px}
+.lbl{font-size:12px;line-height:16px;color:var(--ts);display:block;margin-bottom:8px}
+.field{height:40px;background:var(--l2);border:0;border-bottom:1px solid var(--bds);padding:0 16px;font:inherit;color:var(--tp);width:100%;display:flex;align-items:center;justify-content:space-between}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:12px;font-size:12px}
+.t-high{background:#ffd7d9;color:#a2191f}
+.t-med{background:#fcf4d6;color:#684e00}
+.t-low{background:#a7f0ba;color:#0e6027}
+.t-gray{background:#e0e0e0;color:#161616}
+.t-blue{background:#d0e2ff;color:#0043ce}
+.btn{height:48px;padding:0 64px 0 16px;border:0;font-size:14px;text-align:left}
+.btn.p{background:#0f62fe;color:#fff}
+.btn.s{background:#393939;color:#fff}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--bd)}
+.side{background:var(--l1);padding:16px 24px;display:flex;flex-direction:column;gap:12px}
+.side .big{font-size:54px;line-height:64px;font-weight:300}
+.bar{position:relative;height:10px;display:flex;margin:12px 0 4px 0}
+.bar .z1{width:60%;background:#a7f0ba}
+.bar .z2{width:20%;background:#f1c21b}
+.bar .z3{width:20%;background:#da1e28}
+.bar .thr{position:absolute;top:-5px;bottom:-5px;left:81.7%;border-left:2px dashed #161616}
+.bar .dot{position:absolute;top:-7px;width:4px;height:24px;background:#161616}
+.delta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ts)}
+table{border-collapse:collapse;width:100%}
+th{text-align:left;font-size:12px;font-weight:600;color:var(--tp);background:#e0e0e0;height:40px;padding:0 16px}
+td{height:40px;padding:0 16px;border-bottom:1px solid var(--bd);font-size:14px}
+tr.ch td{background:#edf5ff}
+tr.ch td:first-child{box-shadow:inset 3px 0 0 #0f62fe}
+td.inp{padding:0}
+td.inp span{display:flex;align-items:center;height:39px;padding:0 16px;border-bottom:1px solid var(--bds);background:var(--l2)}
+tr.ch td.inp span{background:#ffffff;border-bottom:2px solid #0f62fe}
+.filters{display:flex;gap:8px;align-items:center;padding:12px 16px;background:var(--l1);border-bottom:1px solid var(--bd)}
+.chip{height:32px;padding:0 12px;border:1px solid var(--bds);background:var(--l1);font-size:12px;color:var(--tp)}
+.chip.on{background:#161616;color:#fff;border-color:#161616}
+.hist{display:flex;flex-direction:column}
+.hist li{display:grid;grid-template-columns:56px minmax(0,1fr) 64px 100px;gap:8px;align-items:center;height:48px;border-bottom:1px solid var(--bd);padding:0 16px;font-size:12px}
+</style>
+</helmet>
+<div class="wt" style="width: 1440px; height: 1024px">
+  <header class="hdr">
+    <a class="brand" href="#top"><b>Watson</b>Prevenção a fraudes</a>
+    <span class="sp"></span>
+    <button type="button" aria-label="Dicionário do Watson"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M8 8a2 2 0 1 1 3 1.7c-.6.4-1 .8-1 1.5V12"></path><circle cx="10" cy="14.5" r=".6"></circle></svg></button>
+  </header>
+  <div class="row">
+    <nav class="rail" aria-label="Navegação principal">
+      <a href="#fila" aria-label="Fila"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h12"></path></svg></a>
+      <a href="#quadro" aria-label="Quadro do processo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="4" height="12"></rect><rect x="8" y="4" width="4" height="8"></rect><rect x="13" y="4" width="4" height="10"></rect></svg></a>
+      <hr>
+      <a class="on" href="#lab" aria-label="Laboratório do modelo" aria-current="page"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3h4M9 3v5l-5 8a1 1 0 0 0 1 1.5h10a1 1 0 0 0 1-1.5l-5-8V3"></path><path d="M6.5 12.5h7"></path></svg></a>
+      <a href="#monitor" aria-label="Monitoramento do modelo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16l4-6 4 3 6-8"></path></svg></a>
+    </nav>
+    <main class="main">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <h1 class="h1">Laboratório do modelo</h1>
+        <span class="exp">Ambiente experimental · não gera alerta nem caso</span>
+      </div>
+      <div class="top">
+        <div>
+          <label class="lbl" for="base">Transação de partida · conjunto de teste, alerta da fila ou em branco</label>
+          <div class="field" id="base"><span class="mono">EVT_SYN_000094500 · R$ 149,58 · mercado (5411) · 03h</span><span class="tag t-high">Rótulo real: fraude</span></div>
+        </div>
+        <div style="display: flex; gap: 1px">
+          <button type="button" class="btn s">Sortear outra</button>
+          <button type="button" class="btn p">Enviar edição ao modelo</button>
+        </div>
+      </div>
+
+      <div class="duo" aria-label="Resultado: original e editado">
+        <section class="side">
+          <p class="lbl" style="margin: 0">Original</p>
+          <div style="display: flex; align-items: baseline; gap: 12px"><span class="big">0,99</span><span class="tag t-high">Alto risco</span></div>
+          <div class="bar" role="img" aria-label="Score original 0,99, faixa alta"><span class="z1"></span><span class="z2"></span><span class="z3"></span><span class="thr"></span><span class="dot" style="left: 98.6%"></span></div>
+          <p style="font-size: 12px; color: #525252">Mais pesou: uso cartão × terminal (1h) +0,30 · tokens de carteira (3m) +0,25 · contagem do cartão (1m) +0,20</p>
+        </section>
+        <section class="side">
+          <p class="lbl" style="margin: 0">Editado · 1 campo alterado</p>
+          <div style="display: flex; align-items: baseline; gap: 12px"><span class="big">0,69</span><span class="tag t-med">Médio risco</span><span class="delta"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"></path></svg>−0,30 · saiu do alto e caiu no médio: o Watson mandaria o aviso sozinho</span></div>
+          <div class="bar" role="img" aria-label="Score editado 0,69, faixa média"><span class="z1"></span><span class="z2"></span><span class="z3"></span><span class="thr"></span><span class="dot" style="left: 69.3%"></span></div>
+          <p style="font-size: 12px; color: #525252">Mais pesou: tokens de carteira (3m) +0,27 · contagem do cartão (1m) +0,22 · hora 3h +0,11</p>
+        </section>
+      </div>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start">
+        <section class="tile" style="padding: 0" aria-label="Campos da transação">
+          <div class="filters">
+            <span class="lbl" style="margin: 0 8px 0 0">Mostrar</span>
+            <button type="button" class="chip on">Os 10 que mais pesam</button>
+            <button type="button" class="chip">Só os alterados (1)</button>
+            <button type="button" class="chip">Todos os 28</button>
+          </div>
+          <table>
+            <thead><tr><th scope="col">Campo</th><th scope="col">Original</th><th scope="col">Editado</th><th scope="col">Peso no original</th></tr></thead>
+            <tbody>
+              <tr class="ch"><td>Uso cartão × terminal (1h)</td><td class="mono">70</td><td class="inp"><span class="mono">2</span></td><td class="mono">+0,30</td></tr>
+              <tr><td>Tokens de carteira digital (3m)</td><td class="mono">80</td><td class="inp"><span class="mono">80</span></td><td class="mono">+0,25</td></tr>
+              <tr><td>Contagem do cartão (1m)</td><td class="mono">30</td><td class="inp"><span class="mono">30</span></td><td class="mono">+0,20</td></tr>
+              <tr><td>Hora</td><td class="mono">3</td><td class="inp"><span class="mono">3</span></td><td class="mono">+0,17</td></tr>
+              <tr><td>Madrugada</td><td>Sim</td><td class="inp"><span>Sim</span></td><td class="mono">+0,16</td></tr>
+              <tr><td>Risco do estabelecimento</td><td class="mono">70</td><td class="inp"><span class="mono">70</span></td><td class="mono">+0,09</td></tr>
+              <tr><td>Distância do terminal anterior (1h)</td><td class="mono">102,13</td><td class="inp"><span class="mono">102,13</span></td><td class="mono">+0,04</td></tr>
+              <tr><td>Valor ÷ média do cartão</td><td>vazio</td><td class="inp"><span>vazio</span></td><td class="mono">+0,03</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section class="tile" aria-label="Histórico da sessão">
+          <h2 style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Histórico desta sessão</h2>
+          <ul class="hist">
+            <li><span class="mono">14:52</span><span>Uso cartão × terminal 70 → 2</span><span class="mono">0,69</span><span class="tag t-med">Médio</span></li>
+            <li><span class="mono">14:51</span><span>Original · EVT_…94500</span><span class="mono">0,99</span><span class="tag t-high">Alto</span></li>
+            <li><span class="mono">14:47</span><span>Original · EVT_…91388</span><span class="mono">0,58</span><span class="tag t-low">Baixo</span></li>
+            <li><span class="mono">14:45</span><span>Tokens 7 → 80 · EVT_…43320</span><span class="mono">0,22</span><span class="tag t-low">Baixo</span></li>
+          </ul>
+          <p style="font-size: 12px; color: #525252; margin-top: 12px">Clique numa linha para voltar àquele cenário. O histórico some quando você fecha a aba.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1024}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

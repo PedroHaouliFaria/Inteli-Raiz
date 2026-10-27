@@ -9,6 +9,7 @@ Processo guiado pelo IBM Enterprise Design Thinking, com estilo visual Carbon (I
 | [02-mockup/](02-mockup/README.md) | 3 versões de mockup Carbon | escolhida: 3 com o tema da 1 |
 | [03-prototipo/](03-prototipo/README.md) | 3 protótipos navegáveis | escolhido: 3 com os chips da 2 |
 | [04-alta-fidelidade/](04-alta-fidelidade/README.md) | Alta fidelidade em código | escolhida: 2 no produto, 3 como modo apresentação |
+| [05-laboratorio-do-modelo/](05-laboratorio-do-modelo/README.md) | Aba experimental do modelo de risco (3 versões) | escolhida: B "E se?", implementada |
 | [agentes/](agentes/arquitetura-de-agentes.md) | Arquitetura de agentes do trabalho | proposta |
 
 Canvas visual: https://claude.ai/artifact/9cF1c4qRvuL9kWKphDoQcw (privado; compartilhar pelo menu Share).

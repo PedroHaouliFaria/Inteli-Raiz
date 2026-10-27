@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Versão C · Explorador do conjunto de teste</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wt{--bg:#f4f4f4;--l1:#ffffff;--l2:#f4f4f4;--bd:#e0e0e0;--bds:#8d8d8d;--tp:#161616;--ts:#525252;--blue:#0f62fe;box-sizing:border-box;background:var(--bg);color:var(--tp);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column;position:relative}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt dl,.wt dd{margin:0}
+.wt ul{padding:0;list-style:none}
+.wt button{font-family:inherit;letter-spacing:0.16px}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.hdr{height:48px;display:flex;align-items:center;background:#161616;color:#f4f4f4;border-bottom:1px solid #393939}
+.hdr .brand{padding:0 32px 0 16px;color:#f4f4f4;text-decoration:none}
+.hdr .brand b{font-weight:600;margin-right:4px}
+.hdr .sp{flex-grow:1}
+.hdr button{width:48px;height:48px;background:transparent;border:0;color:#f4f4f4;display:inline-flex;align-items:center;justify-content:center}
+.row{display:flex;flex-grow:1;min-height:0}
+.rail{flex:0 0 48px;background:var(--l1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding-top:8px}
+.rail a{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--ts);border-left:3px solid transparent}
+.rail a.on{border-left-color:var(--blue);background:#e0e0e0;color:var(--tp)}
+.rail hr{border:0;border-top:1px solid var(--bd);margin:8px 8px;width:32px}
+.main{flex-grow:1;padding:24px 32px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.exp{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:12px;background:#e8daff;color:#491d8b;font-size:12px}
+.lbl{font-size:12px;line-height:16px;color:var(--ts);display:block;margin-bottom:8px}
+.field{height:40px;background:var(--l2);border:0;border-bottom:1px solid var(--bds);padding:0 16px;color:var(--tp);width:100%;display:flex;align-items:center;justify-content:space-between}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:12px;font-size:12px}
+.t-high{background:#ffd7d9;color:#a2191f}
+.t-med{background:#fcf4d6;color:#684e00}
+.t-low{background:#a7f0ba;color:#0e6027}
+.t-gray{background:#e0e0e0;color:#161616}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--bd)}
+.kpi{background:var(--l1);padding:16px;display:flex;flex-direction:column;gap:4px;text-align:left;border:0;font:inherit;color:inherit}
+.kpi b{font-size:32px;line-height:40px;font-weight:300}
+.kpi.on{box-shadow:inset 0 -3px 0 #da1e28}
+.toolbar{display:flex;align-items:center;gap:8px;background:var(--l1);padding:8px 16px;border-bottom:1px solid var(--bd)}
+.search{flex-grow:1;height:40px;background:var(--l2);border-bottom:1px solid var(--bds);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--ts)}
+.btn{height:40px;padding:0 48px 0 16px;border:0;font-size:14px;text-align:left}
+.btn.p{background:#0f62fe;color:#fff}
+.btn.t{background:transparent;border:1px solid #0f62fe;color:#0f62fe}
+table{border-collapse:collapse;width:100%;background:var(--l1)}
+th{text-align:left;font-size:12px;font-weight:600;background:#e0e0e0;height:40px;padding:0 16px}
+td{height:44px;padding:0 16px;border-bottom:1px solid var(--bd)}
+tr.sel td{background:#e0e0e0}
+tr.sel td:first-child{box-shadow:inset 3px 0 0 #0f62fe}
+.panel{position:absolute;top:48px;right:0;bottom:0;width:480px;background:var(--l1);border-left:1px solid var(--bd);box-shadow:-4px 0 12px rgba(0,0,0,0.12);display:flex;flex-direction:column}
+.panel-h{padding:16px 24px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:start}
+.panel-b{padding:16px 24px;display:flex;flex-direction:column;gap:16px;flex-grow:1;overflow:hidden}
+.panel-f{display:flex;gap:1px}
+.panel-f .btn{flex:1 1 0;height:64px;padding:16px}
+.bar{position:relative;height:10px;display:flex;margin:12px 0 4px 0}
+.bar .z1{width:60%;background:#a7f0ba}
+.bar .z2{width:20%;background:#f1c21b}
+.bar .z3{width:20%;background:#da1e28}
+.bar .thr{position:absolute;top:-5px;bottom:-5px;left:81.7%;border-left:2px dashed #161616}
+.bar .dot{position:absolute;top:-7px;width:4px;height:24px;background:#161616}
+.f2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ico{width:32px;height:32px;background:transparent;border:0;display:inline-flex;align-items:center;justify-content:center;color:var(--tp)}
+.fl{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--bd)}
+</style>
+</helmet>
+<div class="wt" style="width: 1440px; height: 1024px">
+  <header class="hdr">
+    <a class="brand" href="#top"><b>Watson</b>Prevenção a fraudes</a>
+    <span class="sp"></span>
+    <button type="button" aria-label="Dicionário do Watson"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M8 8a2 2 0 1 1 3 1.7c-.6.4-1 .8-1 1.5V12"></path><circle cx="10" cy="14.5" r=".6"></circle></svg></button>
+  </header>
+  <div class="row">
+    <nav class="rail" aria-label="Navegação principal">
+      <a href="#fila" aria-label="Fila"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5h12M4 10h12M4 15h12"></path></svg></a>
+      <a href="#quadro" aria-label="Quadro do processo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="4" height="12"></rect><rect x="8" y="4" width="4" height="8"></rect><rect x="13" y="4" width="4" height="10"></rect></svg></a>
+      <hr>
+      <a class="on" href="#lab" aria-label="Laboratório do modelo" aria-current="page"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 3h4M9 3v5l-5 8a1 1 0 0 0 1 1.5h10a1 1 0 0 0 1-1.5l-5-8V3"></path><path d="M6.5 12.5h7"></path></svg></a>
+      <a href="#monitor" aria-label="Monitoramento do modelo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 16l4-6 4 3 6-8"></path></svg></a>
+    </nav>
+    <main class="main" style="padding-right: 512px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <h1 class="h1">Laboratório do modelo</h1>
+        <span class="exp">Ambiente experimental</span>
+      </div>
+      <p style="color: #525252">O modelo já pontuou as 32.000 transações do conjunto de teste. Filtre por faixa, abra uma linha e edite os campos para ver o score mudar.</p>
+      <div class="kpis" role="group" aria-label="Transações por faixa">
+        <button type="button" class="kpi"><span class="lbl" style="margin: 0">Todas</span><b>32.000</b><span style="font-size: 12px; color: #525252">29 fraudes reais</span></button>
+        <button type="button" class="kpi"><span class="tag t-low" style="align-self: flex-start">Baixo · abaixo de 0,60</span><b>31.971</b><span style="font-size: 12px; color: #525252">0 fraudes</span></button>
+        <button type="button" class="kpi"><span class="tag t-med" style="align-self: flex-start">Médio · 0,60 a 0,80</span><b>0</b><span style="font-size: 12px; color: #525252">nenhuma cai aqui</span></button>
+        <button type="button" class="kpi on"><span class="tag t-high" style="align-self: flex-start">Alto · 0,80 ou mais</span><b>29</b><span style="font-size: 12px; color: #525252">29 fraudes · 0 falsos alarmes</span></button>
+      </div>
+      <div>
+        <div class="toolbar">
+          <div class="search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l3 3"></path></svg><span>Buscar por id, MCC ou região</span></div>
+          <button type="button" class="btn t">Transação em branco</button>
+          <button type="button" class="btn p">Sortear transação</button>
+        </div>
+        <table>
+          <thead><tr><th scope="col">Transação</th><th scope="col">Score</th><th scope="col">Faixa</th><th scope="col">Rótulo real</th><th scope="col">Valor</th><th scope="col">MCC</th><th scope="col">Hora</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">EVT_SYN_000126055</td><td class="mono">1,00</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 387,98</td><td class="mono">5912</td><td class="mono">01h</td></tr>
+            <tr><td class="mono">EVT_SYN_000006299</td><td class="mono">1,00</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 341,79</td><td class="mono">5311</td><td class="mono">00h</td></tr>
+            <tr class="sel"><td class="mono">EVT_SYN_000094500</td><td class="mono">0,99</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 149,58</td><td class="mono">5411</td><td class="mono">03h</td></tr>
+            <tr><td class="mono">EVT_SYN_000154028</td><td class="mono">0,87</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 22,58</td><td class="mono">4111</td><td class="mono">01h</td></tr>
+            <tr><td class="mono">EVT_SYN_000093227</td><td class="mono">0,85</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 232,93</td><td class="mono">5999</td><td class="mono">00h</td></tr>
+            <tr><td class="mono">EVT_SYN_000157227</td><td class="mono">0,82</td><td><span class="tag t-high">Alto</span></td><td>Fraude</td><td class="mono">R$ 442,54</td><td class="mono">5541</td><td class="mono">01h</td></tr>
+            <tr><td class="mono">EVT_SYN_000091388</td><td class="mono">0,58</td><td><span class="tag t-low">Baixo</span></td><td>Legítima</td><td class="mono">R$ 60,86</td><td class="mono">5541</td><td class="mono">00h</td></tr>
+            <tr><td class="mono">EVT_SYN_000148014</td><td class="mono">0,46</td><td><span class="tag t-low">Baixo</span></td><td>Legítima</td><td class="mono">R$ 226,15</td><td class="mono">5541</td><td class="mono">02h</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <aside class="panel" aria-label="Transação EVT_SYN_000094500">
+    <div class="panel-h">
+      <div><p class="lbl" style="margin: 0">Transação</p><h2 class="mono" style="font-size: 20px; line-height: 28px; font-weight: 400">EVT_SYN_000094500</h2></div>
+      <button type="button" class="ico" aria-label="Fechar painel"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg></button>
+    </div>
+    <div class="panel-b">
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 12px"><span style="font-size: 42px; line-height: 50px; font-weight: 300">0,99</span><span class="tag t-high">Alto risco</span><span class="tag t-gray">Rótulo real: fraude</span></div>
+        <div class="bar" role="img" aria-label="Score 0,99, faixa alta"><span class="z1"></span><span class="z2"></span><span class="z3"></span><span class="thr"></span><span class="dot" style="left: 98.6%"></span></div>
+      </div>
+      <div>
+        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px">Sinais que mais pesaram</h3>
+        <p class="fl"><span>Uso cartão × terminal (1h): 70</span><span class="mono">+0,30</span></p>
+        <p class="fl"><span>Tokens de carteira digital (3m): 80</span><span class="mono">+0,25</span></p>
+        <p class="fl"><span>Contagem do cartão (1m): 30</span><span class="mono">+0,20</span></p>
+      </div>
+      <div>
+        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Editar e reenviar</h3>
+        <div class="f2">
+          <div><span class="lbl">Uso cartão × terminal (1h)</span><div class="field"><span class="mono">70</span></div></div>
+          <div><span class="lbl">Contagem do cartão (1m)</span><div class="field"><span class="mono">30</span></div></div>
+          <div><span class="lbl">Tokens de carteira digital (3m)</span><div class="field"><span class="mono">80</span></div></div>
+          <div><span class="lbl">Hora</span><div class="field"><span class="mono">3</span></div></div>
+          <div><span class="lbl">Valor da compra (R$)</span><div class="field"><span class="mono">149,58</span></div></div>
+          <div><span class="lbl">Modalidade</span><div class="field"><span>Cartão não presente</span><span>⌄</span></div></div>
+        </div>
+        <p style="font-size: 12px; color: #0f62fe; margin-top: 12px">Ver os 28 campos</p>
+      </div>
+    </div>
+    <div class="panel-f">
+      <button type="button" class="btn" style="background: #393939; color: #ffffff">Restaurar</button>
+      <button type="button" class="btn p">Enviar ao modelo</button>
+    </div>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1024}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
