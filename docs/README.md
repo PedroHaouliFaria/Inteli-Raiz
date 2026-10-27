@@ -13,7 +13,8 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 ## Plano de implementação proposto
 
 - [Plano revisado: confirmação de compras pelo associado](plano_implementacao.md).
-- [Versão em PDF](plano_implementacao.pdf).
+- [Direcional das entregas recomendadas nas aulas](direcional_entregas.md): 11 entregas, estruturas para preencher, instruções, fontes/templates, revisão e critérios de qualidade; inclui prototipação e validação como apoio.
+- [Versão em PDF — v2 de 23/10/2026](plano_implementacao.pdf). A ampliação de 27/10/2026 está no plano Markdown e no direcional acima; ainda não está incorporada a esse PDF.
 
 O sistema avalia a compra e decide o tratamento inicial; o associado autoriza, recusa ou informa dúvida, e o analista trata exceções. Ações financeiras são simuladas no MVP. A proposta inclui regras, arquitetura, requisitos, backlog e testes; não representa implementação concluída.
 

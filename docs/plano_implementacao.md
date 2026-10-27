@@ -1,6 +1,8 @@
 # Plano revisado · Confirmação de compras
 
-**Versão 2 · 23/10/2026 · Substitui a direção de produto do plano centrado no analista.**
+**Versão 2.1 · 27/10/2026 · Substitui a direção de produto do plano centrado no analista.**
+
+**Complemento de execução:** o [Direcional de entregas — Da descoberta à confirmação de compras](direcional_entregas.md) detalha as 11 entregas recomendadas dos slides, com títulos, partes, passo a passo, fontes/templates, responsáveis por função e critérios de qualidade. Inclui prototipação e validação como apoio. A versão PDF disponível corresponde à v2 de 23/10/2026; as adições de entregas estão nesta versão Markdown e no direcional.
 
 ## 1. A mudança e o fluxo final
 
@@ -215,18 +217,37 @@ Não pressionar o associado a autorizar. Não pedir senha, PIN ou dados completo
 
 **Primeiro:** grupo confirma este fluxo e nomeia responsáveis para dados/modelo, agente/integração, backend, front e validação. A divisão nominal anterior não implica atribuição automática das novas tarefas.
 
+**Divisão das entregas em quatro pessoas:** Pessoa 1 lidera negócios/produto (D01, D04, D05, D07, D08); Pessoa 2 lidera pesquisa/usuário (D02, D03, D06); Pessoa 3 lidera estrutura/arquitetura (D09, D10); Pessoa 4 lidera protótipo, registro do fluxo e validação (D11, D12, D13). A [matriz no direcional](direcional_entregas.md#organização-em-quatro-pessoas-responsáveis-sequência-e-revisão) define apoio, revisor e passagem de trabalho por entrega. Os nomes e a alocação da implementação são definidos pela equipe; liderar um artefato não significa implementar sozinho todos os componentes associados.
+
+### 8.1. Entregas de negócio, design e estruturação
+
+As entregas recomendadas pelas aulas passam a integrar explicitamente o planejamento. O [direcional completo](direcional_entregas.md) contém instruções para produzir e revisar cada uma. IDs D01–D11 correspondem às entregas nomeadas nos slides; D12–D13 organizam atividades de prototipação e validação. Criar o direcional não significa que pesquisa, protótipo ou testes foram executados.
+
+| Bloco | Entregas a produzir | Critério de passagem | Responsabilidade sugerida |
+|---|---|---|---|
+| Descoberta | D01 Mapeamento de Oportunidades; D02 Mapa de Empatia; D03 Cenário Atual | Fricção, contexto, fontes e hipóteses identificados; pergunta de projeto definida | Produto/negócios + pesquisa/design |
+| Escolha e experiência | D04 Agrupamento/Priorização; D05 Conceito; D06 Persona e Cenários | Alternativas comparadas e escolha justificada; persona funcional; atual/futuro comparáveis | Produto + pesquisa/design, com revisão técnica |
+| Valor | D07 Ideia e Descrição; D08 Proposta de Valor e Justificativa de IA | Dor, adoção/custeio, valor, necessidade do agente e “por que agora” explícitos | Produto/negócios, com revisão do grupo |
+| Estrutura técnica | D09 Estrutura da Solução; D10 Arquitetura Técnica | Necessidades ligadas a requisitos/testes; papéis, ferramentas, política e limites documentados | Produto + backend/agente + dados/modelo |
+| Experiência testável | D12 Protótipo da Experiência | Estados, respostas, linguagem e próximo passo testáveis | Produto/design; implementação da interface a definir |
+| Fluxo e melhoria | D11 Fluxo Principal do MVP; D13 Validação | Execução reproduzível, observações, correções e reteste na versão identificada | Autores técnicos + integração/testes + pesquisa/validação |
+
+Revisar D01–D03 antes de fechar a experiência; revisar D04–D08 antes de consolidar a proposta de valor; usar D09–D10 para orientar contratos e implementação. D12 permite testar cedo; D11 comprova o caminho integrado; D13 realimenta as decisões. Contratos e exemplos sintéticos podem avançar em paralelo à pesquisa. As entregas semanais são recomendadas, conforme o guia; o checkpoint e o envio final permanecem obrigatórios.
+
+### 8.2. Implementação e integração das entregas
+
 | Etapa | Entrega concreta | Dono sugerido por função | Critério de passagem |
 |---|---|---|---|
-| 1 | Jornada do associado e política inicial | Produto + grupo | Liberação, confirmação, dúvida, recusa e expiração definidos. |
+| 1 | Descoberta, escolha, valor e jornada do associado; política inicial (D01–D09) | Produto + pesquisa/design + grupo | Fontes/hipóteses, alternativas, persona, atual/futuro e valor registrados; liberação, confirmação, dúvida, recusa e expiração definidos. |
 | 2 | Contratos e fixtures neutras | Backend + dados | Compra, análise e confirmação com IDs e versões; rótulos fora do agente. |
 | 3 | Prova real do modelo pela ferramenta | Modelo + integração | Payload validado; retorno real; falha tratada. |
 | 4 | Motor de decisão e persistência | Backend | Política testada; estados e eventos duráveis. |
 | 5 | Resposta humana por endpoint | Backend | Propriedade, expiração, repetição e concorrência testadas. |
-| 6 | Tela do associado | Front + produto | Pessoa vê a compra, responde e entende o resultado. |
+| 6 | Protótipo e tela do associado (D06, D12) | Produto/design; implementação a definir | Protótipo revisado; pessoa vê a compra, responde e entende o resultado na experiência implementada. |
 | 7 | Conversa contextual real | Agente + front | Dúvida usa contexto correto e não altera autorização. |
 | 8 | Exceções e status | Backend + agente | Caso sem resposta ou informação chega à revisão com protocolo. |
-| 9 | Bateria ponta a ponta | Todos, revisão cruzada | Cenários da p.9 passam, falhas críticas corrigidas. |
-| 10 | Teste de compreensão | Produto + design | Achados, limites e ajustes registrados. |
+| 9 | Bateria ponta a ponta e registro do fluxo (D10–D11) | Todos, revisão cruzada | Cenários da seção 9 passam, falhas críticas corrigidas; versão, arquitetura e evidências coerentes. |
+| 10 | Teste de compreensão e relatório de melhorias (D13) | Pesquisa/validação + produto/design | Achados, limites, ajustes e retestes registrados; proposta de valor atualizada com resultados. |
 | 11 | Documentação, Bob e vídeo | Todos; uma pessoa consolida | Mesma versão, evidências e links revisados. |
 
 ### O que sai do backlog anterior
