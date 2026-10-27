@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
-// Estado do painel "Pergunte ao Watson": fechado, ele vira um botão flutuante; aberto, fica por cima
-// do conteúdo (versão C, escolhida pelo Leo em 27/10/2026). Começa fechado; a preferência fica salva no navegador.
+// Estado do painel "Pergunte ao Watson": abre e fecha pelo botão de IA no cabeçalho e fica por cima do conteúdo,
+// à direita (27/10/2026: o botão flutuante cobria "Bloquear cartão"). Começa fechado; a preferência fica salva no navegador.
 const RailContext = createContext(null);
 
 function readCollapsed() {
@@ -10,6 +10,7 @@ function readCollapsed() {
 
 export function RailProvider({ children }) {
   const [collapsed, setCollapsed] = useState(readCollapsed);
+  const triggerRef = useRef(null);
 
   useEffect(() => {
     try { localStorage.setItem('watson-rail-open', collapsed ? '0' : '1'); } catch { /* sem armazenamento */ }
@@ -17,7 +18,7 @@ export function RailProvider({ children }) {
 
   const toggle = () => setCollapsed((v) => !v);
   return (
-    <RailContext.Provider value={{ collapsed, setCollapsed, toggle }}>
+    <RailContext.Provider value={{ collapsed, setCollapsed, toggle, triggerRef }}>
       {children}
     </RailContext.Provider>
   );

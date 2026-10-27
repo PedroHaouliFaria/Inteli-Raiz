@@ -5,10 +5,11 @@ import {
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
   Theme, Toggle, Button, ToastNotification, ProgressIndicator, ProgressStep, IconButton,
 } from '@carbon/react';
-import { Help, Renew, Mobile, Close, List, Column, Archive, UserMultiple, ChartLineData, Report } from '@carbon/icons-react';
+import { Help, Renew, Mobile, Close, WatsonxAi, List, Column, Archive, UserMultiple, ChartLineData, Report } from '@carbon/icons-react';
 import { GlossaryProvider, GlossaryPanel, useGlossary } from '../components/Glossary';
 import { WatsonProvider, useWatson } from '../state/store';
-import { RailProvider } from '../components/RailPreferences';
+import { RailProvider, useRail } from '../components/RailPreferences';
+import NavTooltip from '../components/NavTooltip';
 import MemberPhone from '../features/member-app/MemberPhone';
 import QueuePage from '../features/queue/QueuePage';
 import BoardPage from '../features/board/BoardPage';
@@ -48,6 +49,7 @@ function Shell() {
   const { pathname } = useLocation();
   const { isOpen: glossaryOpen, toggle: toggleGlossary } = useGlossary();
   const { state, dispatch } = useWatson();
+  const rail = useRail();
   const [presentation, setPresentation] = useState(readPresentationMode);
   const [phoneOpen, setPhoneOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -69,6 +71,11 @@ function Shell() {
           <HeaderMenuButton isCollapsible aria-label={navOpen ? 'Recolher o menu' : 'Abrir o menu'} isActive={navOpen} onClick={() => setNavOpen((v) => !v)} />
           <HeaderName href="/" prefix="Watson" onClick={go('/')}>Prevenção a fraudes</HeaderName>
           <HeaderGlobalBar>
+            {/* O painel do Watson abre por aqui, para não cobrir os botões da decisão no rodapé da tela. */}
+            <HeaderGlobalAction ref={rail.triggerRef} aria-label={rail.collapsed ? 'Pergunte ao Watson' : 'Fechar o painel do Watson'}
+              aria-expanded={!rail.collapsed} isActive={!rail.collapsed} onClick={rail.toggle} className="watson-ai-action">
+              <WatsonxAi size={20} />
+            </HeaderGlobalAction>
             {!presentation && (
               <HeaderGlobalAction aria-label="Celular do associado" isActive={phoneOpen} onClick={() => setPhoneOpen((v) => !v)}>
                 <Mobile size={20} />
@@ -82,8 +89,10 @@ function Shell() {
         </Header>
       </Theme>
 
-      {/* Navegação lateral do mockup 3: trilho de ícones que abre com os nomes (botão do menu ou passar o mouse). */}
-      <SideNav aria-label="Navegação principal" isRail expanded={navOpen} onOverlayClick={() => setNavOpen(false)}>
+      {/* Navegação lateral do mockup 3: trilho de ícones que abre com os nomes só pelo botão do menu.
+          No hover e no foco, o trilho mostra o nome da seção numa tooltip (NavTooltip). */}
+      <SideNav aria-label="Navegação principal" isRail expanded={navOpen} onOverlayClick={() => setNavOpen(false)}
+        addMouseListeners={false} addFocusListeners={false}>
         <SideNavItems>
           <SideNavLink renderIcon={List} href="/" isActive={pathname === '/' || pathname.startsWith('/cases')} onClick={go('/')}>Fila</SideNavLink>
           <SideNavLink renderIcon={Column} href="/board" isActive={pathname === '/board'} onClick={go('/board')}>Quadro do processo</SideNavLink>
@@ -94,6 +103,7 @@ function Shell() {
           <SideNavLink renderIcon={Report} href="/soon/reports" isActive={pathname === '/soon/reports'} onClick={go('/soon/reports')}>Relatórios</SideNavLink>
         </SideNavItems>
       </SideNav>
+      <NavTooltip disabled={navOpen} />
 
       <div className="watson-content" style={{ paddingTop: '3rem' }}>
         <div className="watson-demo-controls" role="region" aria-label="Controles do protótipo">

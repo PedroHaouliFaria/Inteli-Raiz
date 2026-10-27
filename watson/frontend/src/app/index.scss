@@ -72,33 +72,11 @@ body {
   transition: transform motion.$duration-moderate-02 motion.motion(entrance, expressive), visibility 0s;
 }
 
-.watson-rail-launcher {
-  position: fixed;
-  right: 1.5rem;
-  bottom: 1.5rem;
-  z-index: 7000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: opacity motion.$duration-fast-02 motion.motion(standard, productive),
-    transform motion.$duration-fast-02 motion.motion(standard, productive);
-}
-
-.watson-rail-launcher--hidden {
-  opacity: 0;
-  transform: scale(0.9);
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .watson-rail--overlay,
-  .watson-rail--open,
-  .watson-rail-launcher {
-    transition: none;
-  }
-}
 
 .watson-case-queue {
   flex: 0 0 18rem;
   max-width: 18rem;
+  overflow: hidden;
   background: var(--cds-layer-01);
   border-right: 1px solid var(--cds-border-subtle-01);
   display: flex;
@@ -108,9 +86,21 @@ body {
 .watson-case-queue--collapsed {
   flex-basis: 3rem;
   max-width: 3rem;
+}
+
+// Largura fixa por dentro: o texto não se reorganiza enquanto a fila abre e recolhe.
+.watson-case-queue__body {
+  width: 18rem;
+}
+
+.watson-case-queue__strip {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   padding: 0.5rem 0;
   gap: 0.5rem;
+
+  &[hidden] { display: none; }
 }
 
 .watson-case-queue__vertical-label {
@@ -375,4 +365,117 @@ body {
 
 .watson-main .cds--data-table-content {
   overflow-x: auto;
+}
+
+// Nome da seção no trilho da navegação lateral (hover e foco). Visual da tooltip do Carbon.
+.watson-nav-tooltip {
+  position: fixed;
+  z-index: 9000;
+  transform: translateY(-50%);
+  padding: 0.125rem 0.75rem;
+  background: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+  border-radius: 2px;
+  pointer-events: none;
+  white-space: nowrap;
+  @include type.type-style('body-compact-01');
+}
+
+// ---------------------------------------------------------------------------
+// Transições (tokens de motion do Carbon). Productive para o que a analista faz o tempo todo
+// (hover, troca de caso, recolher); expressive para o que aparece de novo e merece atenção
+// (painel do Watson, notificações). Com "reduzir movimento" no sistema, nada disso roda.
+// ---------------------------------------------------------------------------
+@keyframes watson-enter {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes watson-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes watson-slide-in-right {
+  from { opacity: 0; transform: translateX(1rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes watson-grow-x {
+  from { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // Troca de tela e de caso: o conteúdo entra de leve, em vez de piscar.
+  .watson-main {
+    animation: watson-enter motion.$duration-moderate-01 motion.motion(entrance, productive);
+  }
+
+  // Cards da tela entram um depois do outro.
+  .watson-main > .cds--tile,
+  .watson-columns > .cds--tile,
+  .watson-kpis > .cds--tile {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, productive) backwards;
+  }
+  .watson-columns > .cds--tile:nth-child(2),
+  .watson-kpis > .cds--tile:nth-child(2) { animation-delay: 40ms; }
+  .watson-kpis > .cds--tile:nth-child(3) { animation-delay: 80ms; }
+  .watson-kpis > .cds--tile:nth-child(4) { animation-delay: 120ms; }
+  .watson-kpis > .cds--tile:nth-child(5) { animation-delay: 160ms; }
+
+  // Barras de peso do "Por que é suspeito" crescem até o valor.
+  .watson-main .cds--progress-bar__bar {
+    transform-origin: left;
+    animation: watson-grow-x motion.$duration-slow-01 motion.motion(entrance, expressive) backwards;
+    animation-delay: 120ms;
+  }
+
+  // Linha do tempo: itens entram em sequência.
+  .watson-timeline li {
+    animation: watson-enter motion.$duration-moderate-01 motion.motion(entrance, productive) backwards;
+  }
+  @for $i from 2 through 10 {
+    .watson-timeline li:nth-child(#{$i}) { animation-delay: #{($i - 1) * 40}ms; }
+  }
+
+  .watson-burst {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, expressive) backwards;
+  }
+
+  // Fila ao lado do caso: largura anima ao recolher; itens com hover e seleção suaves.
+  .watson-case-queue {
+    transition: flex-basis motion.$duration-moderate-01 motion.motion(standard, productive),
+      max-width motion.$duration-moderate-01 motion.motion(standard, productive);
+  }
+  .watson-case-queue__body:not([hidden]),
+  .watson-case-queue__strip:not([hidden]) {
+    animation: watson-fade-in motion.$duration-moderate-01 motion.motion(entrance, productive);
+  }
+  .watson-case-queue__item {
+    transition: background-color motion.$duration-fast-01 motion.motion(standard, productive);
+  }
+
+  // Tooltips dos termos e da navegação lateral.
+  .watson-term .cds--popover--open .cds--popover-content,
+  .watson-nav-tooltip {
+    animation: watson-fade-in motion.$duration-fast-02 motion.motion(entrance, productive);
+  }
+
+  // Notificações, aviso no celular e painel do celular.
+  .watson-main .cds--inline-notification {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+  .watson-toast .cds--toast-notification {
+    animation: watson-slide-in-right motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+  .watson-floating {
+    animation: watson-slide-in-right motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watson-rail--overlay,
+  .watson-rail--open {
+    transition: none;
+  }
 }

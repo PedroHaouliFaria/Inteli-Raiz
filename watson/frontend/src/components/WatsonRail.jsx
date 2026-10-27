@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AILabel, AILabelContent, Button, IconButton, Tile, Tag } from '@carbon/react';
-import { AiLaunch, Close } from '@carbon/icons-react';
+import { Close } from '@carbon/icons-react';
 import Term from './Term';
 import { useRail } from './RailPreferences';
 
@@ -29,27 +29,21 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
   const [question, setQuestion] = useState(null);
   const [accepted, setAccepted] = useState(false);
   const answer = question && ANSWERS[question];
-  const { collapsed, toggle } = useRail();
-  const launcherRef = useRef(null);
+  const { collapsed, toggle, triggerRef } = useRail();
   const closeRef = useRef(null);
-  const toggled = useRef(false);
+  const firstRender = useRef(true);
 
-  // Painel e botão ficam sempre montados para a transição de abrir e fechar (index.scss).
-  // O foco acompanha: abre → botão de fechar; fecha → botão flutuante.
+  // O painel fica sempre montado para a transição de abrir e fechar (index.scss).
+  // O foco acompanha: abre → botão de fechar; fecha → botão do Watson no cabeçalho.
   useEffect(() => {
-    if (!toggled.current) return;
-    (collapsed ? launcherRef : closeRef).current?.focus();
-  }, [collapsed]);
-  const onToggle = () => { toggled.current = true; toggle(); };
+    if (firstRender.current) { firstRender.current = false; return; }
+    (collapsed ? triggerRef : closeRef).current?.focus();
+  }, [collapsed, triggerRef]);
+  const onKeyDown = (e) => { if (e.key === 'Escape' && !collapsed) toggle(); };
 
   return (
-    <>
-    <Button ref={launcherRef} className={`watson-rail-launcher${collapsed ? '' : ' watson-rail-launcher--hidden'}`}
-      renderIcon={AiLaunch} onClick={onToggle} aria-expanded={!collapsed} tabIndex={collapsed ? 0 : -1} aria-hidden={!collapsed}>
-      Pergunte ao Watson
-    </Button>
     <aside className={`watson-rail watson-rail--overlay${collapsed ? '' : ' watson-rail--open'}`} aria-label="Pergunte ao Watson"
-      aria-hidden={collapsed} inert={collapsed ? '' : undefined}>
+      aria-hidden={collapsed} inert={collapsed ? '' : undefined} onKeyDownCapture={onKeyDown}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <h2 className="cds--type-heading-02" style={{ flexGrow: 1 }}>Pergunte ao Watson</h2>
         <AILabel size="xs" aria-label="Conteúdo gerado por IA">
@@ -57,7 +51,7 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
             <p>Sugestões geradas pelo agente a partir dos sinais. A decisão final é sempre da analista.</p>
           </AILabelContent>
         </AILabel>
-        <IconButton kind="ghost" size="sm" ref={closeRef} label="Fechar o painel do Watson" align="bottom-right" onClick={onToggle}>
+        <IconButton kind="ghost" size="sm" ref={closeRef} label="Fechar o painel do Watson" align="bottom-right" onClick={toggle}>
           <Close />
         </IconButton>
       </div>
@@ -98,6 +92,5 @@ export default function WatsonRail({ title, suggestion, reason, confidence, acti
         </Tile>
       )}
     </aside>
-    </>
   );
 }
