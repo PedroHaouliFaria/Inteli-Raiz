@@ -87,7 +87,7 @@ Regras de tipo:
 {"predictions": [{"fields": ["prediction", "probability"], "values": [[1, [0.03, 0.97]]]}]}
 ```
 
-`score` = `probability[1]`. Localizar `"probability"` pelo índice em `fields`, não por posição fixa. Este formato ainda não foi confirmado numa chamada real. Se vier diferente, ajustar o parser e anotar aqui.
+`score` = `probability[1]`. Localizar `"probability"` pelo índice em `fields`, não por posição fixa. Formato confirmado numa chamada real em 27/10: `{"predictions": [{"fields": ["prediction", "probability"], "values": [[1, [0.0083, 0.9917]]]}]}`.
 
 ## 5. Os dois casos fixos
 
@@ -224,4 +224,32 @@ Os casos de demo (10 a 15), as faixas de decisão, os sinais explicativos, o wor
 
 ## Resultado
 
-_(preencher em 24/10)_
+### 27/10: watsonx.ai validado; Orchestrate bloqueado
+
+**Modelo implantado** (PR #6, branch `modelo/sklearn-1.6`):
+
+- Retreinado em Python 3.12.8, scikit-learn 1.6.1 e pandas 2.2.3, com as categóricas lidas como texto e sem a `lambda`.
+- Publicado com `scripts/deploy_watsonx.py` no space "Inteli Raiz Space" (Dallas), como deploy online.
+- `deployment_id` = `01a17dba-b0c2-7778-b2ca-fa8e3ad07593`.
+
+**Teste 7.1** (`pontuar` local → IAM → `/predictions`), duas rodadas seguidas:
+
+| Caso | Score | Predição | Latência 1ª | Latência 2ª | Critério |
+|---|---|---|---|---|---|
+| `fraude` | 0,9917 | 1 | 2.920 ms | 1.266 ms | ≥ 0,80 ✓ |
+| `legitima` | 0,0089 | 0 | 1.129 ms | 1.162 ms | < 0,30 ✓ |
+
+Os scores são idênticos aos do modelo local. As latências medidas vão do computador do Lucas até Dallas, não do Orchestrate.
+
+**Critérios da seção 1:**
+
+1. Allowlist do `requests` no `tools import`: **não testado.** O trial do watsonx Orchestrate expirou e o "Extend Trial" deu erro. O caso foi levado ao orientador.
+2. e 3. Scores dos dois casos: **passam** na chamada direta ao watsonx.ai. Ainda falta passar pelo preview do agente.
+4. Latência abaixo de 10 s: **passa** na chamada direta.
+
+**Erros encontrados e correções:**
+
+- O `store_model` do `ibm-watsonx-ai` 1.8.1 sobe o conteúdo com `httpx.put` sem timeout, e o padrão de 5 s do httpx estoura. O script aumenta esse timeout para 300 s.
+- O deploy exigiu uma task credential (`missing_user_task_credential`). O script cria uma com a API key atual quando não existe nenhuma.
+
+**Proposta de decisão (a confirmar com o grupo):** o watsonx.ai segue como a fonte do score. O plano B só entra se o Orchestrate não voltar. Nesse caso, a parte que fica sem prova é a chamada de dentro do Orchestrate, não o modelo.
