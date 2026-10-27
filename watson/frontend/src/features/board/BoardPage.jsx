@@ -32,6 +32,7 @@ export default function BoardPage({ phoneSlot }) {
                       <div style={{ display: 'flex', gap: '0.25rem', margin: '0.5rem 0', flexWrap: 'wrap' }}>
                         <Tag type={riskLevel(c.score).tagType} size="sm">{riskLevel(c.score).label} · {c.score.toFixed(2).replace('.', ',')}</Tag>
                         <Tag type="outline" size="sm">{c.channel}</Tag>
+                        {c.autoNotice && c.status === 'awaiting_member' && <Tag type="blue" size="sm">Aviso pelo Watson</Tag>}
                         {c.decision && <Tag type={c.decision === 'blocked' ? 'red' : 'green'} size="sm">{c.decision === 'blocked' ? 'Bloqueado' : 'Liberado'} por {c.by}</Tag>}
                       </div>
                       <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>

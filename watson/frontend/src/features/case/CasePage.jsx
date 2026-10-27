@@ -6,6 +6,7 @@ import {
 } from '@carbon/react';
 import { STATUS_LABELS, riskLevel, formatBRL } from '../../mocks/cases';
 import { useWatson } from '../../state/store';
+import { NOTICE_POLICY } from '../../state/noticePolicy';
 import Term from '../../components/Term';
 import WatsonRail from '../../components/WatsonRail';
 
@@ -54,7 +55,11 @@ export default function CasePage({ phoneSlot }) {
           </Tile>
         </div>
 
-        {awaiting && (
+        {awaiting && fraudCase.autoNotice && (
+          <InlineNotification kind="info" lowContrast hideCloseButton title="O Watson enviou o aviso sozinho (risco médio)."
+            subtitle={`Você só entra se o associado não reconhecer, pedir atendimento ou não responder em ${NOTICE_POLICY.responseTimeoutMinutes} min.`} />
+        )}
+        {awaiting && !fraudCase.autoNotice && (
           <InlineNotification kind="info" lowContrast hideCloseButton title="Aguardando o associado."
             subtitle="Se ele não reconhecer, o Watson bloqueia na hora. Se confirmar com biometria em aparelho conhecido, libera." />
         )}
@@ -120,7 +125,7 @@ export default function CasePage({ phoneSlot }) {
           <ul style={{ listStyle: 'disc', paddingLeft: '1.25rem' }}>
             <li>“Não reconheço”: bloqueia o cartão na hora.</li>
             <li>“Sim, fui eu” com biometria em aparelho conhecido: libera a compra.</li>
-            <li>Aparelho trocado ou sem resposta em 30 min: o caso volta para você.</li>
+            <li>Aparelho trocado ou sem resposta em {NOTICE_POLICY.responseTimeoutMinutes} min: o caso volta para você.</li>
           </ul>
         </Modal>
 
@@ -140,10 +145,11 @@ export default function CasePage({ phoneSlot }) {
         key={fraudCase.id + fraudCase.status}
         title="Recomendação"
         suggestion={resolved ? 'Caso resolvido. Abra o próximo da fila.'
+          : awaiting && fraudCase.autoNotice ? 'Nada a fazer agora: enviei o aviso de compra e te chamo se houver exceção.'
           : returned ? 'Ligar para o associado pelo número cadastrado antes de liberar. Não confio na confirmação vinda do aparelho novo.'
           : 'Perguntar ao associado pelo app antes de bloquear. Se ele não reconhecer, eu bloqueio na hora.'}
-        confidence={resolved ? null : returned ? 'média · 61%' : 'alta · 87%'}
-        reason={resolved ? null : returned ? 'o aparelho foi trocado há 2 dias, sinal comum de troca de chip (anti-persona).' : 'os 4 sinais mais fortes concordam, mas ainda não sei se o associado está viajando.'}
+        confidence={resolved || fraudCase.autoNotice ? null : returned ? 'média · 61%' : 'alta · 87%'}
+        reason={resolved ? null : fraudCase.autoNotice ? 'risco médio: pela política, eu mesmo pergunto ao associado.'  : returned ? 'o aparelho foi trocado há 2 dias, sinal comum de troca de chip (anti-persona).' : 'os 4 sinais mais fortes concordam, mas ainda não sei se o associado está viajando.'}
         actionLabel={resolved || awaiting || returned ? null : 'Preparar aviso'}
         onAccept={() => setModal('ask')}
         chips={['Por que 0,92?', 'Compare com o histórico', 'Redija a justificativa']}

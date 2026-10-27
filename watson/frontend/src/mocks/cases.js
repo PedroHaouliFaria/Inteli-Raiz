@@ -25,6 +25,16 @@ export const STATUS_LABELS = {
   resolved: 'Resolvido hoje',
 };
 
+// Por que o caso está com a analista (escalation_reason no modelo de dados).
+export const ESCALATION_LABELS = {
+  high_risk: 'Alto risco',
+  device_changed: 'Aparelho trocado',
+  confirmation_review: 'Confirmação para conferir',
+  not_recognized: 'Não reconheço',
+  no_response: 'Sem resposta',
+  talk_to_person: 'Pediu atendimento',
+};
+
 export function riskLevel(score) {
   if (score >= 0.8) return { label: 'Alto', tagType: 'red' };
   if (score >= 0.6) return { label: 'Médio', tagType: 'warm-gray' };

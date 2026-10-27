@@ -1,19 +1,36 @@
 import { createContext, useContext, useReducer } from 'react';
 import { CASES } from '../mocks/cases';
+import { NOTICE_POLICY, initialHandling } from './noticePolicy';
 
 // Estado compartilhado entre o console da analista e o app do associado (protótipo 3, Playback 3).
 // O agente coordena: envia o aviso de compra, recebe a resposta e aplica a regra combinada com a analista.
 
 const clock = (m) => `03:${String(m).padStart(2, '0')}`;
 
-const initialState = (deviceChanged = false) => ({
-  minute: 16,
-  deviceChanged,
-  cases: CASES.map((c) => ({ ...c, ungrouped: false })),
-  events: { 4821: [] },
-  phone: { screen: 'locked', notifications: [] },
-  toast: null,
-});
+// Casos de risco médio ainda abertos já começam com o aviso enviado pelo Watson.
+function withAutoNotice(c) {
+  const open = c.status !== 'resolved';
+  const handling = initialHandling(c.score);
+  if (handling === 'route_to_analyst') return { ...c, escalationReason: 'high_risk' };
+  if (!open || handling !== 'auto_send_notice') return c;
+  return { ...c, status: 'awaiting_member', autoNotice: true };
+}
+
+const initialState = (deviceChanged = false) => {
+  const cases = CASES.map((c) => ({ ...withAutoNotice(c), ungrouped: false }));
+  const events = { 4821: [] };
+  cases.filter((c) => c.autoNotice).forEach((c) => {
+    events[c.id] = [{ time: '03:10', type: 'sent', title: 'Aviso de compra enviado pelo Watson', detail: 'Risco médio: o Watson envia sozinho. Você só entra se houver exceção.', ai: true }];
+  });
+  return {
+    minute: 16,
+    deviceChanged,
+    cases,
+    events,
+    phone: { screen: 'locked', notifications: [] },
+    toast: null,
+  };
+};
 
 function addEvent(state, caseId, type, title, detail, ai = false) {
   const list = state.events[caseId] ?? [];
@@ -56,11 +73,20 @@ function reducer(state, action) {
     case 'biometrics': {
       const s = { ...state, minute: state.minute + 1 };
       const events = addEvent(s, action.caseId, 'response', 'Associado confirmou: fui eu (com biometria)', 'Resposta pelo app autenticado.');
+      if (!NOTICE_POLICY.autoCloseOnItWasMe) {
+        return {
+          ...s,
+          events: addEvent({ ...s, events }, action.caseId, 'alert', 'Voltou para você: confirmação para conferir', 'Pela política atual, "Fui eu" não fecha o caso sozinho.', true),
+          cases: setStatus(s, action.caseId, 'in_review', { decision: null, escalationReason: 'confirmation_review' }),
+          phone: { screen: 'reviewing', notifications: [] },
+          toast: { kind: 'info', title: 'Caso #4821 voltou para você', subtitle: 'O associado confirmou a compra. Confira antes de liberar.' },
+        };
+      }
       if (state.deviceChanged) {
         return {
           ...s,
           events: addEvent({ ...s, events }, action.caseId, 'alert', 'Voltou para você: aparelho trocado há 2 dias', 'Contramedida da anti-persona: o Watson não libera sozinho quando o aparelho é novo.', true),
-          cases: setStatus(s, action.caseId, 'in_review', { decision: null }),
+          cases: setStatus(s, action.caseId, 'in_review', { decision: null, escalationReason: 'device_changed' }),
           phone: { screen: 'reviewing', notifications: [] },
           toast: { kind: 'warning', title: 'Caso #4821 voltou para você', subtitle: 'Confirmação veio de um aparelho trocado há 2 dias.' },
         };

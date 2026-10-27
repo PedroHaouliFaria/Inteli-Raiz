@@ -3,7 +3,7 @@ import {
   DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableContainer,
   TableToolbar, TableToolbarContent, TableToolbarSearch, Tag, Tile, Button,
 } from '@carbon/react';
-import { STATUS_LABELS, riskLevel, formatBRL } from '../../mocks/cases';
+import { STATUS_LABELS, ESCALATION_LABELS, riskLevel, formatBRL } from '../../mocks/cases';
 import { useWatson } from '../../state/store';
 import Term from '../../components/Term';
 import WatsonRail from '../../components/WatsonRail';
@@ -17,20 +17,24 @@ const HEADERS = [
   { key: 'score', header: 'Score' },
   { key: 'risk', header: 'Risco' },
   { key: 'status', header: 'Estado' },
+  { key: 'escalation', header: 'Por que está com você' },
   { key: 'waitTime', header: 'Na fila' },
 ];
 
 export default function QueuePage({ phoneSlot }) {
   const navigate = useNavigate();
   const { state } = useWatson();
-  const open = state.cases.filter((c) => c.status !== 'resolved').sort((a, b) => b.score * b.amount - a.score * a.amount);
+  // Casos de risco médio aguardando o associado ficam com o Watson; a fila mostra só o que precisa da analista.
+  const withWatson = state.cases.filter((c) => c.autoNotice && c.status === 'awaiting_member');
+  const open = state.cases.filter((c) => c.status !== 'resolved' && !withWatson.includes(c)).sort((a, b) => b.score * b.amount - a.score * a.amount);
   const resolvedCount = state.cases.filter((c) => c.status === 'resolved').length;
-  const rows = open.map((c) => ({ ...c, amount: formatBRL(c.amount), score: c.score.toFixed(2).replace('.', ','), risk: c.score, status: STATUS_LABELS[c.status] }));
+  const rows = open.map((c) => ({ ...c, amount: formatBRL(c.amount), score: c.score.toFixed(2).replace('.', ','), risk: c.score, status: STATUS_LABELS[c.status], escalation: ESCALATION_LABELS[c.escalationReason] ?? '—' }));
   const kpis = [
     { termId: 'case', label: 'Casos abertos', value: String(open.length) },
     { termId: 'alert', label: 'Alertas em casos abertos', value: String(open.reduce((n, c) => n + c.alertCount, 0)) },
     { termId: 'timeToDecision', label: 'Tempo até a decisão', value: '3 min 40 s', note: 'valor fictício no protótipo' },
     { termId: 'awaitingMember', label: 'Aguardando associado', value: String(open.filter((c) => c.status === 'awaiting_member').length) },
+    { termId: 'purchaseNotice', label: 'Conduzidos pelo Watson', value: String(withWatson.length), note: 'risco médio, aviso enviado sozinho' },
   ];
   const first = open[0];
 
