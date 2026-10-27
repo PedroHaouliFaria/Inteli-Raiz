@@ -250,7 +250,7 @@ Para viabilidade, usar uma tabela de premissas: volume de casos, proporção env
 
 **Orientação da aula.** Explicitar agentes, papéis, padrões de orquestração e workflow; cada tecnologia deve cumprir um papel. S4 pp.9–12, 29. O slide recomenda arquitetura técnica, mas não torna diagrama visual ou múltiplos agentes obrigatórios. Propomos o diagrama para tornar a decisão mais fácil de avaliar.
 
-**Partes do artefato:** diagrama de componentes; sequência de execução; ficha do agente; catálogo de ferramentas; contratos/exemplos; política e máquina de estados; persistência; falhas; integração IBM; evidências de execução e decisões técnicas.
+**Partes do artefato:** diagrama de componentes; sequência de execução; ficha do agente; catálogo de ferramentas; contratos/exemplos; política e máquina de estados; persistência; falhas; uso de tecnologia IBM (Bob e o deploy de evidência no watsonx.ai); evidências de execução e decisões técnicas.
 
 **Diagrama inicial de planejamento:**
 
@@ -261,7 +261,7 @@ flowchart TD
     P -->|Elegível| L[Liberação simulada]
     P -->|Confirmação necessária| I[Interface do associado]
     P -->|Falha ou fora da política| R[Revisão de exceção]
-    I -->|Dúvida contextual| A[Agente no Orchestrate]
+    I -->|Dúvida contextual| A[Agente no backend]
     A --> Q[Ferramentas de contexto e status]
     Q --> A
     A -->|Explicação e limites| I
