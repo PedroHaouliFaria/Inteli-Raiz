@@ -5,3 +5,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 class Base(DeclarativeBase):
     pass
+
+
+# Importa todas as tabelas para que o Alembic as detecte automaticamente
+from app.db.tables.purchases import Purchase, Confirmation, Review, Event  # noqa: E402, F401

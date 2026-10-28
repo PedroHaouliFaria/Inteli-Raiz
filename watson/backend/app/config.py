@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     burst_window_minutes: int = 15
     burst_seed: int = 42
 
+    # Confirmação: prazo em segundos para o associado responder (padrão 15 min)
+    confirmation_ttl_seconds: int = 900
+
     # Modelo de risco: "local" lê o .joblib; "watsonx" chama o deployment online no watsonx.ai Runtime.
     risk_model_provider: str = "local"
     risk_model_path: str = str(REPO_ROOT / "outputs" / "modelo_rf.joblib")
