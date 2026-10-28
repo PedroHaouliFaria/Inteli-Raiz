@@ -10,7 +10,8 @@
 - Rotas novas do contrato ficam sob `/api`. Não mexa em `/health` nem em `/model-lab`.
 - Configuração por variável de ambiente, no `app/config.py`, no mesmo estilo dos campos que já existem. Nenhum segredo no código ou em arquivo versionado.
 - Código, rotas, tabelas e colunas em inglês. Mensagens ao usuário e comentários em português.
-- O venv fica em `watson/backend/.venv`. Rode os testes com `cd watson/backend && .venv/bin/python -m pytest -q`.
+- O repositório e o venv ficam dentro do WSL (Ubuntu). Rode todo comando no bash do WSL, nunca no PowerShell. Se o terminal for PowerShell, prefixe com `wsl -e bash -lc "..."`.
+- O venv fica em `watson/backend/.venv`. Rode os testes com `cd ~/Projetos/Inteli/Inteli-Raiz/watson/backend && .venv/bin/python -m pytest -q`.
 
 ## Regras de negócio que não se negociam
 - Identidade vem só do cookie de sessão. Nunca aceite `customer_id` do corpo, da URL ou do texto do LLM. Compra de outra pessoa responde 404, igual a uma inexistente.
