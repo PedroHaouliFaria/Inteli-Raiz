@@ -32,3 +32,7 @@ data/            dicionário e orientações do case
 ```
 
 > O CSV original (~290 MB) **não é versionado**. Para rodar os notebooks, coloque `case_transacoes_cartoes_sintetico_900k.csv` em `data/`. Para regerar as figuras desta documentação: `python scripts/gerar_figuras_docs.py`.
+
+## Pacote de pesquisa e compreensão do usuário (Pessoa 2)
+
+- [Pacote Pessoa 2 — Pesquisa e compreensão do associado](entregas/pessoa2/README.md): rascunho para revisão das entregas D02, D03 e D06, com registro de evidências/hipóteses e roteiro de pesquisa. **Estado:** rascunho — pesquisa com usuários não executada. Branch: `docs/pessoa2-pesquisa-associado` · 28/10/2026.
