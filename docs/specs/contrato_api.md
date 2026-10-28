@@ -2,6 +2,7 @@
 
 > **Versão do contrato:** `v1` · 28/10/2026 · **Responsável:** Lucas (backend e agente).
 > **Base:** [`plano_implementacao.md`](../plano_implementacao.md) v2.2, §3 (regras), §4 (arquitetura e decisões de 27/10), §5 (contratos e estados), §6 (requisitos R01–R12) e §9 (testes). Esta spec é a etapa 2 do backlog (§8.2).
+> **Onde fica o código:** `watson/backend` (FastAPI, SQLAlchemy sobre SQLite) e `watson/frontend` (React + Carbon), conforme o alinhamento de 28/10 no plano.
 > **Para que serve:** quem fizer o front trabalha só com este documento e os exemplos, sem esperar o backend. Quem fizer o backend implementa exatamente isto no Bob. Mudança de contrato passa por PR nesta spec antes de ir para o código.
 
 ## 1. Escopo
@@ -14,7 +15,7 @@
 
 | Tema | Regra |
 |---|---|
-| Base | Todos os caminhos começam com `/api`. Exemplo: `GET /api/purchases`. |
+| Base | Todos os caminhos deste contrato começam com `/api`. Exemplo: `GET /api/purchases`. As rotas que o Watson já tinha (`/health`, `/model-lab`) ficam como estão até o front migrar. |
 | Formato | JSON em UTF-8, nomes em `snake_case`, valores de enum em `MAIUSCULAS` como no plano. |
 | Datas | ISO 8601 em UTC, com `Z` (`2026-10-28T03:12:00Z`). O front converte para o fuso de quem vê. |
 | Dinheiro | Objeto `{"value": "149.58", "currency": "BRL"}`. O valor é **string decimal** para não perder centavos em `float`. |
@@ -22,7 +23,7 @@
 | Simulação | Toda resposta que fala de compra traz `"simulation": true` (R11). |
 | Identidade | **Nunca** vem no corpo nem na URL. O backend lê o associado do cookie de sessão (§4). Um `customer_id` enviado pelo cliente é ignorado. |
 | Compra de outra pessoa | Responde **404**, igual a uma compra que não existe. Não confirma que o ID existe (R05). |
-| Origem | Front e API na **mesma origem** (o FastAPI serve o build estático, ou o servidor de desenvolvimento do front faz proxy de `/api`). Assim o cookie funciona com `SameSite=Lax` e não é preciso CORS. Se o front ficar em outro domínio, isso vira decisão de PR nesta spec. |
+| Origem | Front e API na **mesma origem**: em desenvolvimento, o Vite do `watson/frontend` faz proxy de `/api` para o backend; em produção, o FastAPI serve o build estático. Assim o cookie funciona com `SameSite=Lax` e as rotas `/api` não dependem de CORS. Se o front ficar em outro domínio, isso vira decisão de PR nesta spec. |
 | Documentação viva | Os modelos Pydantic do backend carregam os exemplos desta spec (`json_schema_extra`), e o `/docs` do FastAPI mostra o mesmo contrato. |
 
 ### Envelope de erro
