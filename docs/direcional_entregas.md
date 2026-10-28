@@ -250,7 +250,7 @@ Para viabilidade, usar uma tabela de premissas: volume de casos, proporção env
 
 **Orientação da aula.** Explicitar agentes, papéis, padrões de orquestração e workflow; cada tecnologia deve cumprir um papel. S4 pp.9–12, 29. O slide recomenda arquitetura técnica, mas não torna diagrama visual ou múltiplos agentes obrigatórios. Propomos o diagrama para tornar a decisão mais fácil de avaliar.
 
-**Partes do artefato:** diagrama de componentes; sequência de execução; ficha do agente; catálogo de ferramentas; contratos/exemplos; política e máquina de estados; persistência; falhas; integração IBM; evidências de execução e decisões técnicas.
+**Partes do artefato:** diagrama de componentes; sequência de execução; ficha do agente; catálogo de ferramentas; contratos/exemplos; política e máquina de estados; persistência; falhas; uso de tecnologia IBM (Bob e o deploy de evidência no watsonx.ai); evidências de execução e decisões técnicas.
 
 **Diagrama inicial de planejamento:**
 
@@ -261,7 +261,7 @@ flowchart TD
     P -->|Elegível| L[Liberação simulada]
     P -->|Confirmação necessária| I[Interface do associado]
     P -->|Falha ou fora da política| R[Revisão de exceção]
-    I -->|Dúvida contextual| A[Agente no Orchestrate]
+    I -->|Dúvida contextual| A[Agente no backend]
     A --> Q[Ferramentas de contexto e status]
     Q --> A
     A -->|Explicação e limites| I
@@ -313,13 +313,13 @@ Na ficha do agente, escrever objetivo, conhecimento permitido, instruções, fer
 
 **Partes do artefato:** link ou arquivo do protótipo; objetivo do percurso; telas/estados; textos; decisões ligadas a D02/D06; roteiro de tarefas; achados e versão.
 
-**Como produzir.** Começar com uma compra identificada e seus detalhes, motivo verificável do alerta, pergunta explícita e três respostas. Desenhar carregamento, falha, confirmação recebida, recusa, revisão e expiração. Mostrar como a ajuda contextual funciona e como a pessoa volta ao fluxo. A mensagem final identifica compra, resultado e próximo passo.
+**Como produzir.** Adaptar o frontend Watson existente em React + Carbon para começar com uma compra identificada e seus detalhes, motivo verificável do alerta, pergunta explícita e três respostas. Desenhar carregamento, falha, confirmação recebida, recusa, revisão e expiração. “Estou em dúvida” registra `UNSURE` e encerra a confirmação em `REVISAO_PENDENTE`; “Quero falar com alguém” é uma ação separada que abre revisão sem registrar resposta nem encerrar a confirmação válida. Pedir ajuda não prorroga o prazo. Mostrar como a ajuda contextual funciona e como a pessoa volta ao fluxo. A mensagem final identifica compra, resultado e próximo passo.
 
 Revisar leitura em celular, teclado, foco visível, rótulos claros e status compreensível sem depender de cor. Testar se o texto distingue autorização da compra, indicação de fraude e bloqueio do cartão. O protótipo deve mostrar a identificação de dados fictícios e ações simuladas.
 
 **Para concluir:** uma pessoa percorre o cenário e compreende a consequência de cada resposta. **Para elevar a qualidade:** registrar pelo menos uma comparação de alternativas de texto/interação e a razão da escolha após teste.
 
-**Liderança sugerida:** produto e design; revisão de pesquisa e backend/agente. A implementação da interface continua com responsável a definir pela equipe; este guia não atribui front-end ao integrante de integração/testes. **Saída:** `entregas/12_prototipo.md` com acesso ao protótipo. Depende de D06 e D09; alimenta D13 e a implementação.
+**Liderança sugerida:** Pessoa 4 consolida D12; Leonardo adapta e integra o frontend Watson existente, com revisão de Pessoa 2 em pesquisa/usabilidade e apoio de backend em contrato/integração. Os cards C10/C13/C18/C27 estão ativos; isso não redefine os demais papéis da matriz. **Saída:** `entregas/12_prototipo.md` com acesso ao protótipo. Depende de D06 e D09; alimenta D13 e a implementação.
 
 ## D13 — Validação da experiência e registro de melhorias
 
@@ -356,7 +356,7 @@ A divisão abaixo organiza a produção e a revisão das entregas em quatro pess
 
 Pessoa 1 reúne mais IDs porque ideia, conceito e proposta de valor compartilham conteúdo. Pessoa 3 tem menos IDs, mas concentra a especificação técnica. Pessoa 4 concentra trabalho de produção visual e teste. Distribuir o esforço por complexidade e disponibilidade, não pelo número de documentos.
 
-Esta divisão cobre os artefatos deste direcional. Em D11, Pessoa 4 organiza o roteiro, reproduz o fluxo e consolida evidências; os autores técnicos precisam fornecer e corrigir a implementação executável. A liderança documental de Pessoa 3 não atribui automaticamente todo o desenvolvimento a ela. A implementação de interface própria segue a definição de escopo e alocação do plano.
+Esta divisão cobre os artefatos deste direcional. Em D11, Pessoa 4 organiza o roteiro, reproduz o fluxo e consolida evidências; os autores técnicos precisam fornecer e corrigir a implementação executável. A liderança documental de Pessoa 3 não atribui automaticamente todo o desenvolvimento a ela. Leonardo é o executor da adaptação/integração do frontend Watson em C10/C13/C18/C27; Pessoa 4 consolida a entrega e Pessoa 2 revisa a experiência. Essa atribuição técnica não pressupõe a identidade dos outros papéis.
 
 ### Matriz de responsabilidade e revisão por entrega
 

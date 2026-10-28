@@ -1,6 +1,8 @@
 # Plano revisado · Confirmação de compras
 
-**Versão 2.1 · 27/10/2026 · Substitui a direção de produto do plano centrado no analista.**
+**Versão 2.3 · 28/10/2026 · Substitui a direção de produto do plano centrado no analista.**
+
+> **Mudança de 27/10: sem IBM Cloud em tempo de execução.** O orientador comunicou que o watsonx Orchestrate não está funcionando para muitos grupos e que a obrigatoriedade do IBM Cloud foi revogada. **Só o IBM Bob continua obrigatório.** O produto, a jornada, as regras e os contratos deste plano não mudam. Muda onde o agente e o modelo rodam: os dois passam para o nosso backend. As decisões técnicas estão no §4.
 
 **Complemento de execução:** o [Direcional de entregas — Da descoberta à confirmação de compras](direcional_entregas.md) detalha as 11 entregas recomendadas dos slides, com títulos, partes, passo a passo, fontes/templates, responsáveis por função e critérios de qualidade. Inclui prototipação e validação como apoio. A versão PDF disponível corresponde à v2 de 23/10/2026; as adições de entregas estão nesta versão Markdown e no direcional.
 
@@ -87,6 +89,8 @@ Limiar e critérios devem ser definidos na validação, não escolhidos para pro
 | Resposta repetida | Retornar o resultado já registrado, sem duplicar ação. |
 | Resposta a outra compra ou versão antiga | Rejeitar e pedir que o associado abra a solicitação correta. |
 
+**Pedir ajuda não é responder à confirmação.** “Quero falar com alguém” abre ou reaproveita uma revisão, mas não registra `UNSURE` nem encerra a confirmação. Se ela ainda estiver válida e pendente, o associado continua podendo escolher uma das três respostas. O prazo continua correndo; pedir atendimento não prorroga a validade. Já “Estou em dúvida” registra explicitamente `UNSURE` e leva a compra a `REVISAO_PENDENTE`.
+
 **Aprovar compra não é declarar ausência de fraude.** Recusar compra não é aprovar automaticamente bloqueio de cartão. O protótipo mantém esses eventos separados.
 
 O associado responde por um controle de interface vinculado à sua sessão. O agente não consegue gerar a autorização em nome dele. Respostas livres podem ajudar a conversa, mas não executam liberação sem confirmação explícita no controle previsto.
@@ -99,12 +103,12 @@ O associado responde por um controle de interface vinculado à sua sessão. O ag
 
 | Componente | Função |
 |---|---|
-| Modelo no watsonx.ai | Produzir score/classificação com versão e schema conhecidos. |
+| Modelo no backend | Produzir score/classificação com versão e schema conhecidos, carregando `outputs/modelo_rf.joblib` no próprio processo. |
 | Política no backend | Decidir tratamento inicial e aplicar transições de estado. |
-| Agente no Orchestrate | Consultar contexto, explicar sinais, esclarecer dúvidas e solicitar revisão. |
-| Front do associado | Mostrar uma compra, coletar resposta explícita e apresentar status. |
-| Backend | Validar sessão, vincular associado e compra, controlar expiração, persistir e evitar duplicação. |
-| Visão de exceções | Lista mínima ou tarefa humana para casos sem resolução. Não é uma mesa antifraude completa. |
+| Agente no backend | Consultar contexto, explicar sinais, esclarecer dúvidas e solicitar revisão, com Pydantic AI e um LLM externo. |
+| Front do associado | Experiência principal da demo. Mostrar uma compra, coletar resposta explícita e apresentar status; consome só a API JSON. React + Carbon, em `watson/frontend`. |
+| Backend | FastAPI + SQLAlchemy sobre SQLite, em `watson/backend`. Validar sessão, vincular associado e compra, controlar expiração, persistir e evitar duplicação. |
+| Visão de exceções | O console da analista do Watson (fila e caso), limitado aos casos que precisam de humano. Não é uma mesa antifraude completa. |
 | Bob IDE | Construção, revisão, testes e documentação, com evidências por integrante. |
 
 ### Ferramentas e operações
@@ -117,7 +121,43 @@ O associado responde por um controle de interface vinculado à sua sessão. O ag
 
 O front consome o estado persistido. Não extrai decisão do texto do chat. Uma explicação do agente não altera estado por si só.
 
-A integração web precisa ser provada no tenant. Começar com interface mínima e chat embutido, se houver suporte e vínculo de caso confirmado. Se o chat embutido não sincronizar o caso, manter conversa como recurso opcional e preservar o caminho explícito de confirmação. Nunca substituir o agente real por respostas fixas sem indicar simulação.
+A conversa fica no próprio front, chamando um endpoint de chat do backend que já sabe qual compra e qual associado estão na sessão. Se o LLM falhar, a conversa mostra o erro e o caminho explícito de confirmação continua funcionando. Nunca substituir o agente real por respostas fixas sem indicar simulação.
+
+### Decisões técnicas de 27/10
+
+| Tema | Decisão | Por quê |
+|---|---|---|
+| Modelo | Roda no backend a partir do `joblib` (Python 3.12, scikit-learn 1.6, pandas 2.2). | Elimina chave da IBM Cloud, cota Lite e deploy ocioso; o score é idêntico ao do deploy. |
+| watsonx.ai | O deploy de 27/10 fica como evidência de que o modelo roda em nuvem; a chamada continua disponível como `score_source=watsonx`. | O teste 7.1 da [spec de integração](specs/teste_integracao_orchestrate_wml.md) passou; ninguém depende dele em tempo de execução. |
+| Backend | FastAPI + SQLAlchemy sobre SQLite, no `watson/backend`, expondo só API JSON. | Mesmo processo do modelo; SQLite atende R06 e R10 com volume durável. Atualizado em 28/10 (ver abaixo). |
+| Contrato | Escrito antes do código, com exemplos de resposta. | O front começa com dados falsos sem esperar o backend (etapa 2). |
+| Front | React + Carbon, no `watson/frontend`. | Escolha de quem implementa (Leo); o backend não depende dela, porque só expõe JSON. |
+| Agente | Pydantic AI com LLM de plano gratuito (Groq ou Gemini); um provedor pago só se alguém do grupo tiver crédito; Granite no watsonx.ai como opção se houver chave funcionando. | Trocar de provedor é configuração. O associado chega às ferramentas por injeção de dependência, não por argumento que o LLM preenche (R05, R09). |
+| Ferramentas do agente | `avaliar_transacao`, `consultar_compra`, `consultar_status`, `solicitar_revisao`. Nenhuma autoriza ou recusa. | Mantém a regra do §3: só o controle da interface responde pelo associado. |
+| Identidade | Login fictício com 2 ou 3 associados identificados como fictícios e cookie de sessão assinado. | Atende R05 e o §5 sem fingir autenticação bancária. |
+| Bob | O código novo é escrito no Bob, com sessões exportadas em `bob_sessions/<nome>/`. | É a única exigência da IBM que permanece. |
+
+### Alinhamento com o Watson (28/10)
+
+O PR #7 (aplicação Watson, do Leo) e este plano apontavam para produtos diferentes. Em 28/10 o grupo aceitou as recomendações da [pauta de alinhamento](https://claude.ai/artifact/L5BArsjDT4RY3PGtAb1s5R). Elas valem sobre as decisões 0001–0004 de `docs/arquitetura/decisoes/`, que passam a ser propostas incorporadas aqui.
+
+| # | Tema | Decisão |
+|---|---|---|
+| 1 | Usuário principal | O associado. A tela de confirmação conduz o vídeo; o console da analista do Watson vira a visão de exceções. Quadro, dicionário e Laboratório do modelo saem do caminho da demo. |
+| 2 | Política inicial | Todo caso avaliado vai para a confirmação (§3). A `NoticePolicy` do Watson mantém os limiares configuráveis, desligados até uma validação fora do conjunto de teste. |
+| 3 | Respostas | `AUTHORIZE` ("Reconheço e autorizo"), `DENY` ("Não reconheço") e `UNSURE` ("Estou em dúvida"). As duas primeiras substituem `it_was_me` e `not_me`; `talk_to_person` é pedido de atendimento separado, não equivalente a `UNSURE`. Pedir ajuda abre revisão sem responder nem encerrar a confirmação válida. "Não reconheço" registra a recusa simulada e abre revisão; a tela não diz que o cartão foi bloqueado. |
+| 4 | Biometria e aparelho | Fora do MVP: a base não tem esses dados. Uma etapa de digital na tela, se ficar, aparece como simulação e não muda a regra. |
+| 5 | Rajada | `cp_card_term_vel_1h` aparece como o dicionário do case define ("velocidade sintética por cartão/terminal em 1 hora"). O MVP não gera tentativas simuladas. |
+| 6 | LLM | Pydantic AI (ver tabela acima). O provedor "simulado" fica só nos testes. |
+| 7 | Banco | SQLAlchemy do Watson com SQLite na demo. PostgreSQL segue possível pela `DATABASE_URL`; sem obrigação de testar no Db2. |
+| 8 | Processo | Este plano é a fonte única; decisão nova entra por PR revisado por mais uma pessoa. Código novo, inclusive no `watson/`, sai do Bob. |
+
+**Recomendações, ainda não decididas pelo grupo:**
+
+- **Backend e modelo:** Lucas no backend e no agente; Pedro R. no score local, nos sinais por regra e nos casos de demonstração. A alocação restante segue a matriz de quatro pessoas do direcional.
+- **Hospedagem:** Railway, com um serviço e volume persistente para o SQLite e as chaves do LLM como variáveis de ambiente. Responsável a definir. Hospedar atende R12 e permite gravar o vídeo sobre uma execução real.
+
+**Frontend já definido:** Leonardo adapta e integra o React + Carbon existente do Watson (`watson/frontend`, PR #7), com apoio do responsável de backend no contrato e de produto/pesquisa na experiência. Os cards C10, C13, C18 e C27 passam a ativos: adaptação, integração, correções de usabilidade e reteste. D12 continua sob consolidação de Pessoa 4; a autoria técnica do frontend não atribui automaticamente a Leonardo outro papel na matriz de quatro pessoas. O trabalho é planejado, não concluído; a disponibilidade do código do #7 e a implementação dos endpoints precisam ser conferidas.
 
 <!--page-->
 
@@ -190,7 +230,7 @@ Segredos ficam em connections ou no servidor. Não registrar credenciais ou dado
 
 ### Mantemos
 
-O trabalho de EDA e o Random Forest como candidato inicial; integração Orchestrate–watsonx.ai; ferramenta de avaliação; dados sintéticos; sessões do Bob; explicação ligada a evidências. A mudança é no usuário, no fluxo e em quem responde à compra.
+O trabalho de EDA e o Random Forest como candidato inicial; o deploy validado no watsonx.ai, como evidência; ferramenta de avaliação; dados sintéticos; sessões do Bob; explicação ligada a evidências. A mudança é no usuário, no fluxo e em quem responde à compra.
 
 ### Corrigimos antes de apresentar resultados
 
@@ -209,7 +249,7 @@ Explicar por que o sistema pediu confirmação com base nos sinais retornados. S
 
 Não pressionar o associado a autorizar. Não pedir senha, PIN ou dados completos de cartão. Não inventar nomes alternativos de estabelecimentos, políticas da instituição ou resultados de bloqueio. Dados e documentos consultados não podem mudar suas instruções.
 
-**Plano alternativo:** se o deployment falhar, decidir explicitamente usar índice por regras, com `score_source=regras`, política própria e identificação na demonstração. O aplicativo preserva o fluxo de confirmação; a declaração técnica muda. Não esconder essa substituição.
+**Plano alternativo:** se a avaliação pelo modelo falhar, decidir explicitamente usar índice por regras, com `score_source=regras`, política própria e identificação na demonstração. O aplicativo preserva o fluxo de confirmação; a declaração técnica muda. Não esconder essa substituição.
 
 <!--page-->
 
@@ -229,7 +269,7 @@ As entregas recomendadas pelas aulas passam a integrar explicitamente o planejam
 | Escolha e experiência | D04 Agrupamento/Priorização; D05 Conceito; D06 Persona e Cenários | Alternativas comparadas e escolha justificada; persona funcional; atual/futuro comparáveis | Produto + pesquisa/design, com revisão técnica |
 | Valor | D07 Ideia e Descrição; D08 Proposta de Valor e Justificativa de IA | Dor, adoção/custeio, valor, necessidade do agente e “por que agora” explícitos | Produto/negócios, com revisão do grupo |
 | Estrutura técnica | D09 Estrutura da Solução; D10 Arquitetura Técnica | Necessidades ligadas a requisitos/testes; papéis, ferramentas, política e limites documentados | Produto + backend/agente + dados/modelo |
-| Experiência testável | D12 Protótipo da Experiência | Estados, respostas, linguagem e próximo passo testáveis | Produto/design; implementação da interface a definir |
+| Experiência testável | D12 Protótipo da Experiência | Estados, três respostas e ajuda separada testáveis | Pessoa 4 consolida; Leonardo adapta o frontend Watson; produto/pesquisa revisam |
 | Fluxo e melhoria | D11 Fluxo Principal do MVP; D13 Validação | Execução reproduzível, observações, correções e reteste na versão identificada | Autores técnicos + integração/testes + pesquisa/validação |
 
 Revisar D01–D03 antes de fechar a experiência; revisar D04–D08 antes de consolidar a proposta de valor; usar D09–D10 para orientar contratos e implementação. D12 permite testar cedo; D11 comprova o caminho integrado; D13 realimenta as decisões. Contratos e exemplos sintéticos podem avançar em paralelo à pesquisa. As entregas semanais são recomendadas, conforme o guia; o checkpoint e o envio final permanecem obrigatórios.
@@ -239,11 +279,11 @@ Revisar D01–D03 antes de fechar a experiência; revisar D04–D08 antes de con
 | Etapa | Entrega concreta | Dono sugerido por função | Critério de passagem |
 |---|---|---|---|
 | 1 | Descoberta, escolha, valor e jornada do associado; política inicial (D01–D09) | Produto + pesquisa/design + grupo | Fontes/hipóteses, alternativas, persona, atual/futuro e valor registrados; liberação, confirmação, dúvida, recusa e expiração definidos. |
-| 2 | Contratos e fixtures neutras | Backend + dados | Compra, análise e confirmação com IDs e versões; rótulos fora do agente. |
-| 3 | Prova real do modelo pela ferramenta | Modelo + integração | Payload validado; retorno real; falha tratada. |
+| 2 | Contratos da API JSON e fixtures neutras | Backend + dados | Compra, análise, confirmação e chat com IDs, versões e exemplos de resposta; rótulos fora do agente; o front consegue trabalhar só com o contrato. |
+| 3 | Modelo local no backend | Modelo + backend | Mesmos scores do notebook para os casos fixos; falha tratada. A prova no watsonx.ai já foi feita em 27/10. |
 | 4 | Motor de decisão e persistência | Backend | Política testada; estados e eventos duráveis. |
 | 5 | Resposta humana por endpoint | Backend | Propriedade, expiração, repetição e concorrência testadas. |
-| 6 | Protótipo e tela do associado (D06, D12) | Produto/design; implementação a definir | Protótipo revisado; pessoa vê a compra, responde e entende o resultado na experiência implementada. |
+| 6 | Adaptar e integrar a tela do associado do Watson (D06, D12; C10/C13) | Leonardo no React + Carbon; Pessoa 4 consolida D12; backend apoia API | Três respostas e ajuda separada; sessão, compra, estados e erros lidos da API; console limitado às exceções. |
 | 7 | Conversa contextual real | Agente + front | Dúvida usa contexto correto e não altera autorização. |
 | 8 | Exceções e status | Backend + agente | Caso sem resposta ou informação chega à revisão com protocolo. |
 | 9 | Bateria ponta a ponta e registro do fluxo (D10–D11) | Todos, revisão cruzada | Cenários da seção 9 passam, falhas críticas corrigidas; versão, arquitetura e evidências coerentes. |
@@ -270,6 +310,7 @@ Reestimar o esforço depois das etapas 2 e 3. A estimativa de 69–114 horas do 
 | Compra sinalizada; associado autoriza | Uma confirmação e uma liberação simulada registradas. |
 | Associado não reconhece | Recusa simulada e encaminhamento de proteção; sem liberação. |
 | Associado está em dúvida | Revisão pendente, com status e próximo passo compreensíveis. |
+| Associado pede atendimento sem responder à compra | Revisão aberta, sem resposta registrada; confirmação permanece pendente se válida e expira no prazo original. |
 | Associado não responde | Expiração sem aprovação presumida. |
 | Resposta duplicada ou concorrente | Um resultado consistente; conflito não sobrescreve autorização. |
 | Outro usuário tenta responder | Acesso negado. |
@@ -317,6 +358,7 @@ Checkpoint, conforme plataforma; vídeo de 3 minutos; declaração do problema e
 - **G:** [Guia IBM](../contexto/2H26%20GuideBob_IBM%20SkillsBuild_AI%20Experiential%20Learning%20Lab%20BR.pdf), pp.5, 13–14 e 30–31.
 - **C:** [Desafio Sicredi](../contexto/2026%20AI%20Experiential%20Learning%20Lab%20with%20Bob%20-%20Industry%20Challenges_Portuguese.pdf), p.6.
 - **Base técnica local:** [Preparação dos dados](02_base_balanceada.md), [Modelo](03_modelo.md) e notebooks 02/03. As regras e requisitos desta proposta revisam a direção anterior centrada no analista.
-- **Referências técnicas:** [Integração web do Orchestrate](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=deploying-integrating-agents-web-applications), [limiares de classificação](https://scikit-learn.org/stable/modules/classification_threshold.html) e [calibração](https://scikit-learn.org/stable/modules/calibration.html). Recursos disponíveis no tenant ainda precisam ser testados.
+- **Referências técnicas:** [Pydantic AI](https://ai.pydantic.dev/), [FastAPI](https://fastapi.tiangolo.com/), [limiares de classificação](https://scikit-learn.org/stable/modules/classification_threshold.html) e [calibração](https://scikit-learn.org/stable/modules/calibration.html).
+- **Integração IBM testada:** [spec do teste Orchestrate → watsonx.ai](specs/teste_integracao_orchestrate_wml.md), com o resultado de 27/10. O Orchestrate saiu do escopo antes do teste completo.
 
 **Resultado desta revisão:** produto, jornada, regras, interface, contratos, testes e backlog foram atualizados no planejamento. Código de aplicação e serviços IBM ainda não foram implementados ou modificados nesta revisão.
