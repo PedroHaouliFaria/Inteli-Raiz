@@ -1,6 +1,6 @@
 # Plano revisado · Confirmação de compras
 
-**Versão 2.2 · 27/10/2026 · Substitui a direção de produto do plano centrado no analista.**
+**Versão 2.3 · 28/10/2026 · Substitui a direção de produto do plano centrado no analista.**
 
 > **Mudança de 27/10: sem IBM Cloud em tempo de execução.** O orientador comunicou que o watsonx Orchestrate não está funcionando para muitos grupos e que a obrigatoriedade do IBM Cloud foi revogada. **Só o IBM Bob continua obrigatório.** O produto, a jornada, as regras e os contratos deste plano não mudam. Muda onde o agente e o modelo rodam: os dois passam para o nosso backend. As decisões técnicas estão no §4.
 
@@ -104,9 +104,9 @@ O associado responde por um controle de interface vinculado à sua sessão. O ag
 | Modelo no backend | Produzir score/classificação com versão e schema conhecidos, carregando `outputs/modelo_rf.joblib` no próprio processo. |
 | Política no backend | Decidir tratamento inicial e aplicar transições de estado. |
 | Agente no backend | Consultar contexto, explicar sinais, esclarecer dúvidas e solicitar revisão, com Pydantic AI e um LLM externo. |
-| Front do associado | Mostrar uma compra, coletar resposta explícita e apresentar status; consome só a API JSON. |
-| Backend | FastAPI + SQLite. Validar sessão, vincular associado e compra, controlar expiração, persistir e evitar duplicação. |
-| Visão de exceções | Lista mínima ou tarefa humana para casos sem resolução. Não é uma mesa antifraude completa. |
+| Front do associado | Experiência principal da demo. Mostrar uma compra, coletar resposta explícita e apresentar status; consome só a API JSON. React + Carbon, em `watson/frontend`. |
+| Backend | FastAPI + SQLAlchemy sobre SQLite, em `watson/backend`. Validar sessão, vincular associado e compra, controlar expiração, persistir e evitar duplicação. |
+| Visão de exceções | O console da analista do Watson (fila e caso), limitado aos casos que precisam de humano. Não é uma mesa antifraude completa. |
 | Bob IDE | Construção, revisão, testes e documentação, com evidências por integrante. |
 
 ### Ferramentas e operações
@@ -127,13 +127,28 @@ A conversa fica no próprio front, chamando um endpoint de chat do backend que j
 |---|---|---|
 | Modelo | Roda no backend a partir do `joblib` (Python 3.12, scikit-learn 1.6, pandas 2.2). | Elimina chave da IBM Cloud, cota Lite e deploy ocioso; o score é idêntico ao do deploy. |
 | watsonx.ai | O deploy de 27/10 fica como evidência de que o modelo roda em nuvem; a chamada continua disponível como `score_source=watsonx`. | O teste 7.1 da [spec de integração](specs/teste_integracao_orchestrate_wml.md) passou; ninguém depende dele em tempo de execução. |
-| Backend | FastAPI + SQLite, expondo só API JSON. | Mesmo processo do modelo; SQLite atende R06 e R10 com volume durável. |
+| Backend | FastAPI + SQLAlchemy sobre SQLite, no `watson/backend`, expondo só API JSON. | Mesmo processo do modelo; SQLite atende R06 e R10 com volume durável. Atualizado em 28/10 (ver abaixo). |
 | Contrato | Escrito antes do código, com exemplos de resposta. | O front começa com dados falsos sem esperar o backend (etapa 2). |
-| Front | Stack escolhida por quem implementar. | O backend não depende dela, porque só expõe JSON. |
-| Agente | Pydantic AI com LLM de plano gratuito (Groq ou Gemini); um provedor pago só se alguém do grupo tiver crédito. | Trocar de provedor é configuração. O associado chega às ferramentas por injeção de dependência, não por argumento que o LLM preenche (R05, R09). |
+| Front | React + Carbon, no `watson/frontend`. | Escolha de quem implementa (Leo); o backend não depende dela, porque só expõe JSON. |
+| Agente | Pydantic AI com LLM de plano gratuito (Groq ou Gemini); um provedor pago só se alguém do grupo tiver crédito; Granite no watsonx.ai como opção se houver chave funcionando. | Trocar de provedor é configuração. O associado chega às ferramentas por injeção de dependência, não por argumento que o LLM preenche (R05, R09). |
 | Ferramentas do agente | `avaliar_transacao`, `consultar_compra`, `consultar_status`, `solicitar_revisao`. Nenhuma autoriza ou recusa. | Mantém a regra do §3: só o controle da interface responde pelo associado. |
 | Identidade | Login fictício com 2 ou 3 associados identificados como fictícios e cookie de sessão assinado. | Atende R05 e o §5 sem fingir autenticação bancária. |
 | Bob | O código novo é escrito no Bob, com sessões exportadas em `bob_sessions/<nome>/`. | É a única exigência da IBM que permanece. |
+
+### Alinhamento com o Watson (28/10)
+
+O PR #7 (aplicação Watson, do Leo) e este plano apontavam para produtos diferentes. Em 28/10 o grupo aceitou as recomendações da [pauta de alinhamento](https://claude.ai/artifact/L5BArsjDT4RY3PGtAb1s5R). Elas valem sobre as decisões 0001–0004 de `docs/arquitetura/decisoes/`, que passam a ser propostas incorporadas aqui.
+
+| # | Tema | Decisão |
+|---|---|---|
+| 1 | Usuário principal | O associado. A tela de confirmação conduz o vídeo; o console da analista do Watson vira a visão de exceções. Quadro, dicionário e Laboratório do modelo saem do caminho da demo. |
+| 2 | Política inicial | Todo caso avaliado vai para a confirmação (§3). A `NoticePolicy` do Watson mantém os limiares configuráveis, desligados até uma validação fora do conjunto de teste. |
+| 3 | Respostas | `AUTHORIZE`, `DENY`, `UNSURE`, como no contrato da API (equivalem a `it_was_me`, `not_me`, `talk_to_person`). "Não reconheço" registra a recusa simulada e abre revisão; a tela não diz que o cartão foi bloqueado. |
+| 4 | Biometria e aparelho | Fora do MVP: a base não tem esses dados. Uma etapa de digital na tela, se ficar, aparece como simulação e não muda a regra. |
+| 5 | Rajada | `cp_card_term_vel_1h` aparece como o dicionário do case define ("velocidade sintética por cartão/terminal em 1 hora"). O MVP não gera tentativas simuladas. |
+| 6 | LLM | Pydantic AI (ver tabela acima). O provedor "simulado" fica só nos testes. |
+| 7 | Banco | SQLAlchemy do Watson com SQLite na demo. PostgreSQL segue possível pela `DATABASE_URL`; sem obrigação de testar no Db2. |
+| 8 | Processo | Este plano é a fonte única; decisão nova entra por PR revisado por mais uma pessoa. Código novo, inclusive no `watson/`, sai do Bob. |
 
 **Recomendações, ainda não decididas pelo grupo:**
 
