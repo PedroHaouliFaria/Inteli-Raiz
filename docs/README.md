@@ -9,6 +9,7 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 | 01 | [Análise Exploratória](01_analise_exploratoria.md) | Linha de raciocínio, decisões e insights sobre os dados de transações |
 | 02 | [Base Balanceada](02_base_balanceada.md) | Construção das bases de treino/teste e as 7 features criadas a partir dos insights |
 | 03 | [Modelo](03_modelo.md) | Pipeline de pré-processamento, Random Forest, avaliação por PR-AUC e análise crítica dos resultados |
+| — | [Spec: teste de integração](specs/teste_integracao_orchestrate_wml.md) | Como provar que o Orchestrate consegue chamar o modelo no watsonx.ai |
 
 ## Plano de implementação proposto
 

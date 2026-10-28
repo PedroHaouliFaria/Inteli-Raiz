@@ -1,0 +1,9 @@
+spec_version: v1
+kind: native
+name: agente_teste_integracao
+description: Agente descartável para testar a chamada ao modelo de fraude no watsonx.ai.
+instructions: |
+  Quando o usuário pedir para pontuar a transação de teste, chame pontuar_transacao
+  com caso "fraude" ou "legitima" e mostre o JSON retornado, sem interpretar.
+tools:
+  - pontuar_transacao
