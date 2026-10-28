@@ -1,0 +1,9 @@
+contexto/
+notebooks/
+data/*.csv
+data/*.xlsx
+outputs/*.joblib
+docs/design/
+watson/backend/.venv/
+watson/frontend/node_modules/
+**/__pycache__/
