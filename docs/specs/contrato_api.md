@@ -569,14 +569,14 @@ Instruções fixas do agente, além do prompt: não pressionar a autorização, 
 
 ## 11. Fixtures para o front
 
-As fixtures iniciais (carregadas no início e no `reset`) usam linhas reais de `data/processed/teste_proporcao_real.csv`, sem `feedback_label`:
+As fixtures iniciais (carregadas no início e no `reset`) usam linhas reais de `data/processed/teste_proporcao_real.csv`, sem `feedback_label`. A data é sintética e bate com a `hora` e o `dia_semana` da linha, no horário de Brasília:
 
-| `fixture_id` | Linha | Para | Política esperada | Uso na demo |
-|---|---|---|---|---|
-| `fraude_supermercado_madrugada` | `EVT_SYN_000094500` | Ana | confirmação | autorizar ou recusar (vídeo 0:25–1:10) |
-| `legitima_farmacia` | `EVT_SYN_000043320` | Ana | confirmação na política conservadora | dúvida contextual (vídeo 1:10–1:50) |
-| `compra_do_bruno` | `EVT_SYN_000072693` (restaurante, R$ 131,44) | Bruno | confirmação | teste de acesso cruzado |
-| `falha_modelo` | qualquer, com feature crítica ausente | Ana | revisão `FALHA_AVALIACAO` | erro seguro (R09) |
+| `fixture_id` | Linha | Para | `case_id` / `challenge_id` | `occurred_at` | Política esperada | Uso na demo |
+|---|---|---|---|---|---|---|
+| `fraude_supermercado_madrugada` | `EVT_SYN_000094500` | Ana | `T-007` / `CH-007` | `2026-10-25T06:12:00Z` | confirmação | autorizar ou recusar (vídeo 0:25–1:10) |
+| `legitima_farmacia` | `EVT_SYN_000043320` | Ana | `T-003` / `CH-003` | `2026-10-19T21:40:00Z` | confirmação na política conservadora | dúvida contextual (vídeo 1:10–1:50) |
+| `compra_do_bruno` | `EVT_SYN_000072693` (restaurante, R$ 131,44) | Bruno | `T-011` / `CH-011` | `2026-10-22T11:05:00Z` | confirmação | teste de acesso cruzado |
+| `falha_modelo` | qualquer, com feature crítica ausente | Ana | `T-015` / nenhum | a definir | revisão `FALHA_AVALIACAO` | erro seguro (R09) |
 
 A política conservadora do §3 do plano manda **todo** caso avaliado para confirmação até haver evidência para liberar automaticamente. A liberação direta (`LIBERADA_SIMULACAO` sem `confirmation`) fica no contrato para quando o grupo validar um critério. O dono dos casos de demo (Pedro R. na recomendação) completa os 10 a 15 casos com o mesmo formato.
 
