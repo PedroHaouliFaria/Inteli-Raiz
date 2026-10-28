@@ -1,6 +1,6 @@
 # Plano operacional por entregas — Inteli-Raiz
 
-**Revisão de 27/10/2026 · Quatro pessoas · Confirmação de compras pelo associado.**
+**Revisão de 28/10/2026 · Quatro pessoas · Confirmação de compras pelo associado.**
 
 O nome `plano_15_dias.md` foi mantido para preservar os links existentes. A organização vigente é por entregas e dependências. A janela de 15 dias, a equipe de cinco pessoas e as estimativas de horas da proposta anterior não são compromissos atuais. Datas e disponibilidade precisam ser combinadas pela equipe.
 
@@ -28,7 +28,9 @@ Este documento organiza a execução; não substitui o detalhamento dos requisit
 
 O agente consulta informações e solicita revisão. Ele não autoriza em nome do associado. Recusar a compra não equivale a bloquear automaticamente todo o cartão. O analista participa das exceções; uma mesa completa de análise não faz parte do recorte.
 
-**Interface:** desenvolvimento de front-end próprio continua sem responsável e fora da alocação ativa. O grupo deve escolher e comprovar uma interface que permita resposta humana explícita, sessão, vínculo da compra e apresentação do resultado. Um chat de texto livre sozinho não atende a esses requisitos. Se a ferramenta disponível não suportar esse caminho, a equipe precisa resolver essa dependência antes de declarar o MVP completo.
+**Interface:** aproveitar o React + Carbon do Watson (`watson/frontend`, PR #7). Leonardo adapta e integra a tela do associado, com apoio do backend no contrato e de produto/pesquisa nos textos e na experiência. C10/C13/C18/C27 estão ativos. A interface deve comprovar sessão, vínculo da compra, resposta humana explícita e resultado persistido. Um chat de texto livre sozinho não atende a esses requisitos. A existência do protótipo não comprova integração.
+
+**Ajuda e resposta:** “Estou em dúvida” registra `UNSURE` e leva a `REVISAO_PENDENTE`. “Quero falar com alguém” abre ou reaproveita uma revisão sem responder nem encerrar uma confirmação ainda válida; o prazo original continua correndo. O frontend deve mostrar ações distintas e o backend persistir os eventos correspondentes.
 
 **Prioridade:** caminho completo, contexto fiel, persistência, testes e experiência compreensível. Segundo modelo, dashboards, telas decorativas, RAG ou múltiplos agentes só entram depois, com necessidade demonstrada. Integração bancária real, bloqueio efetivo e streaming produtivo permanecem fora do escopo.
 
@@ -45,6 +47,8 @@ Usar Pessoa 1–4 até a equipe informar os nomes. Esses rótulos não reaprovei
 
 A [matriz por entrega](../../docs/direcional_entregas.md#organização-em-quatro-pessoas-responsáveis-sequência-e-revisão) define o revisor principal e o resultado para aceite. Liderar o documento não significa desenvolver sozinho os componentes associados. Pessoa 3 coordena a definição dos executores técnicos; cada card de implementação só fica pronto para iniciar quando executor e revisor com competência técnica estiverem identificados. Pessoa 4 registra e testa o fluxo entregue pelos autores técnicos.
 
+Para o frontend Watson, Leonardo já é o executor técnico; Pessoa 4 mantém a consolidação de D12/D11/D13, Pessoa 2 revisa usabilidade e Pessoa 3 apoia integração. Essa atribuição específica não redefine a identidade das quatro funções.
+
 Cada integrante entrega suas próprias evidências do IBM Bob. O líder cadastrado na plataforma realiza o envio, independentemente da função documental acima.
 
 ## 4. Sequência por dependência
@@ -54,7 +58,7 @@ Cada integrante entrega suas próprias evidências do IBM Bob. O líder cadastra
 | Descoberta | Pessoas 1 e 2 produzem D01–D03; Pessoa 3 verifica acessos/contratos; Pessoa 4 prepara esboço e teste | Problema, contexto, fontes, hipóteses e dependências identificados |
 | Escolha e valor | Pessoa 1 facilita D04 e consolida D05/D07/D08; Pessoa 2 fecha D06 | Alternativas comparadas, persona funcional e valor/IA justificados |
 | Estrutura e protótipo | Pessoa 3 fecha D09/D10; Pessoa 4 refina D12 com Pessoa 2 | Requisitos, estados, contratos e resposta humana explícita compatíveis |
-| Implementação e integração | Autores técnicos implementam ferramentas, avaliação, política, persistência e resposta; Pessoa 4 prepara D11 | Mesma compra rastreável pelos componentes, inclusive em falha |
+| Implementação e integração | Autores técnicos implementam backend/modelo; Leonardo adapta e integra o frontend Watson em C10/C13; Pessoa 4 prepara D11 | Mesma compra rastreável pelos componentes, três respostas e ajuda separada, inclusive em falha |
 | Validação e melhoria | Pessoa 4 consolida D13, Pessoa 2 modera e autores corrigem | Observações, métricas, correções e reteste documentados |
 | Consolidação | As quatro pessoas fecham declarações, vídeo, links e Bob | Evidências e acesso conferidos na mesma versão candidata |
 
@@ -80,7 +84,7 @@ O [plano §7](../../docs/plano_implementacao.md) e a [documentação do modelo](
 | Marco | Critério de passagem | Ação diante de pendência |
 |---|---|---|
 | Recorte revisado | D01–D08 coerentes, com evidências ou hipóteses identificadas | Investigar a hipótese que pode mudar a escolha antes de expandir |
-| Contratos e interface viáveis | Ferramentas, sessão, resposta explícita e estados demonstráveis | Priorizar acesso/integração e decidir interface mínima compatível |
+| Contratos e interface viáveis | Contrato e frontend Watson compatíveis com sessão, resposta explícita, ajuda e estados | Priorizar adaptação/integração do código existente |
 | Primeira integração | Compra → avaliação → política → confirmação → resposta → persistência | Concentrar executores no caminho; adiar recursos adicionais |
 | Versão candidata | Modelo/política/contrato identificados; cenários críticos executados | Abrir correções com dono e preservar rastreabilidade |
 | Validação revisada | D13 com achados, correções e retestes; sem falha crítica aberta | Corrigir e repetir o cenário afetado antes da gravação final |
@@ -111,7 +115,7 @@ Os códigos A01–A12 deixam de orientar o quadro vigente. A correspondência ab
 | A05 Arquitetura/contratos | D09/D10 |
 | A06 Protótipo | D12, agora centrado na compra e resposta do associado |
 | A08 Agente/backend | Implementação necessária a D10/D11, com política externa e autorização humana |
-| A09 Front-end próprio | Continua sem alocação; decisão da interface mínima é dependência explícita |
+| A09 Front-end próprio | Adaptação e integração do frontend Watson por Leonardo; C10/C13/C18/C27 ativos, com consolidação de Pessoa 4 |
 | A10 Validação | D13, com teste de compreensão e correções |
 | A11 Reprodução | D11, C28 e declaração tecnológica |
 | A12 Pacote final | C23 e C29–C32; divisão entre quatro pessoas no direcional |

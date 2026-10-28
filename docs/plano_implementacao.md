@@ -89,6 +89,8 @@ Limiar e critérios devem ser definidos na validação, não escolhidos para pro
 | Resposta repetida | Retornar o resultado já registrado, sem duplicar ação. |
 | Resposta a outra compra ou versão antiga | Rejeitar e pedir que o associado abra a solicitação correta. |
 
+**Pedir ajuda não é responder à confirmação.** “Quero falar com alguém” abre ou reaproveita uma revisão, mas não registra `UNSURE` nem encerra a confirmação. Se ela ainda estiver válida e pendente, o associado continua podendo escolher uma das três respostas. O prazo continua correndo; pedir atendimento não prorroga a validade. Já “Estou em dúvida” registra explicitamente `UNSURE` e leva a compra a `REVISAO_PENDENTE`.
+
 **Aprovar compra não é declarar ausência de fraude.** Recusar compra não é aprovar automaticamente bloqueio de cartão. O protótipo mantém esses eventos separados.
 
 O associado responde por um controle de interface vinculado à sua sessão. O agente não consegue gerar a autorização em nome dele. Respostas livres podem ajudar a conversa, mas não executam liberação sem confirmação explícita no controle previsto.
@@ -143,7 +145,7 @@ O PR #7 (aplicação Watson, do Leo) e este plano apontavam para produtos difere
 |---|---|---|
 | 1 | Usuário principal | O associado. A tela de confirmação conduz o vídeo; o console da analista do Watson vira a visão de exceções. Quadro, dicionário e Laboratório do modelo saem do caminho da demo. |
 | 2 | Política inicial | Todo caso avaliado vai para a confirmação (§3). A `NoticePolicy` do Watson mantém os limiares configuráveis, desligados até uma validação fora do conjunto de teste. |
-| 3 | Respostas | `AUTHORIZE`, `DENY`, `UNSURE`, como no contrato da API (equivalem a `it_was_me`, `not_me`, `talk_to_person`). "Não reconheço" registra a recusa simulada e abre revisão; a tela não diz que o cartão foi bloqueado. |
+| 3 | Respostas | `AUTHORIZE` ("Reconheço e autorizo"), `DENY` ("Não reconheço") e `UNSURE` ("Estou em dúvida"). As duas primeiras substituem `it_was_me` e `not_me`; `talk_to_person` é pedido de atendimento separado, não equivalente a `UNSURE`. Pedir ajuda abre revisão sem responder nem encerrar a confirmação válida. "Não reconheço" registra a recusa simulada e abre revisão; a tela não diz que o cartão foi bloqueado. |
 | 4 | Biometria e aparelho | Fora do MVP: a base não tem esses dados. Uma etapa de digital na tela, se ficar, aparece como simulação e não muda a regra. |
 | 5 | Rajada | `cp_card_term_vel_1h` aparece como o dicionário do case define ("velocidade sintética por cartão/terminal em 1 hora"). O MVP não gera tentativas simuladas. |
 | 6 | LLM | Pydantic AI (ver tabela acima). O provedor "simulado" fica só nos testes. |
@@ -152,8 +154,10 @@ O PR #7 (aplicação Watson, do Leo) e este plano apontavam para produtos difere
 
 **Recomendações, ainda não decididas pelo grupo:**
 
-- **Implementação:** Lucas no backend e no agente; Pedro R. no score local, nos sinais por regra e nos casos de demonstração; Isadora e Pedro H. na tela do associado e no protótipo (D12), além das entregas de negócio e pesquisa.
+- **Backend e modelo:** Lucas no backend e no agente; Pedro R. no score local, nos sinais por regra e nos casos de demonstração. A alocação restante segue a matriz de quatro pessoas do direcional.
 - **Hospedagem:** Railway, com um serviço e volume persistente para o SQLite e as chaves do LLM como variáveis de ambiente. Responsável a definir. Hospedar atende R12 e permite gravar o vídeo sobre uma execução real.
+
+**Frontend já definido:** Leonardo adapta e integra o React + Carbon existente do Watson (`watson/frontend`, PR #7), com apoio do responsável de backend no contrato e de produto/pesquisa na experiência. Os cards C10, C13, C18 e C27 passam a ativos: adaptação, integração, correções de usabilidade e reteste. D12 continua sob consolidação de Pessoa 4; a autoria técnica do frontend não atribui automaticamente a Leonardo outro papel na matriz de quatro pessoas. O trabalho é planejado, não concluído; a disponibilidade do código do #7 e a implementação dos endpoints precisam ser conferidas.
 
 <!--page-->
 
@@ -265,7 +269,7 @@ As entregas recomendadas pelas aulas passam a integrar explicitamente o planejam
 | Escolha e experiência | D04 Agrupamento/Priorização; D05 Conceito; D06 Persona e Cenários | Alternativas comparadas e escolha justificada; persona funcional; atual/futuro comparáveis | Produto + pesquisa/design, com revisão técnica |
 | Valor | D07 Ideia e Descrição; D08 Proposta de Valor e Justificativa de IA | Dor, adoção/custeio, valor, necessidade do agente e “por que agora” explícitos | Produto/negócios, com revisão do grupo |
 | Estrutura técnica | D09 Estrutura da Solução; D10 Arquitetura Técnica | Necessidades ligadas a requisitos/testes; papéis, ferramentas, política e limites documentados | Produto + backend/agente + dados/modelo |
-| Experiência testável | D12 Protótipo da Experiência | Estados, respostas, linguagem e próximo passo testáveis | Produto/design; implementação da interface a definir |
+| Experiência testável | D12 Protótipo da Experiência | Estados, três respostas e ajuda separada testáveis | Pessoa 4 consolida; Leonardo adapta o frontend Watson; produto/pesquisa revisam |
 | Fluxo e melhoria | D11 Fluxo Principal do MVP; D13 Validação | Execução reproduzível, observações, correções e reteste na versão identificada | Autores técnicos + integração/testes + pesquisa/validação |
 
 Revisar D01–D03 antes de fechar a experiência; revisar D04–D08 antes de consolidar a proposta de valor; usar D09–D10 para orientar contratos e implementação. D12 permite testar cedo; D11 comprova o caminho integrado; D13 realimenta as decisões. Contratos e exemplos sintéticos podem avançar em paralelo à pesquisa. As entregas semanais são recomendadas, conforme o guia; o checkpoint e o envio final permanecem obrigatórios.
@@ -279,7 +283,7 @@ Revisar D01–D03 antes de fechar a experiência; revisar D04–D08 antes de con
 | 3 | Modelo local no backend | Modelo + backend | Mesmos scores do notebook para os casos fixos; falha tratada. A prova no watsonx.ai já foi feita em 27/10. |
 | 4 | Motor de decisão e persistência | Backend | Política testada; estados e eventos duráveis. |
 | 5 | Resposta humana por endpoint | Backend | Propriedade, expiração, repetição e concorrência testadas. |
-| 6 | Protótipo e tela do associado (D06, D12) | Produto/design; stack escolhida por quem implementar | Protótipo revisado; pessoa vê a compra, responde e entende o resultado na experiência implementada. |
+| 6 | Adaptar e integrar a tela do associado do Watson (D06, D12; C10/C13) | Leonardo no React + Carbon; Pessoa 4 consolida D12; backend apoia API | Três respostas e ajuda separada; sessão, compra, estados e erros lidos da API; console limitado às exceções. |
 | 7 | Conversa contextual real | Agente + front | Dúvida usa contexto correto e não altera autorização. |
 | 8 | Exceções e status | Backend + agente | Caso sem resposta ou informação chega à revisão com protocolo. |
 | 9 | Bateria ponta a ponta e registro do fluxo (D10–D11) | Todos, revisão cruzada | Cenários da seção 9 passam, falhas críticas corrigidas; versão, arquitetura e evidências coerentes. |
@@ -306,6 +310,7 @@ Reestimar o esforço depois das etapas 2 e 3. A estimativa de 69–114 horas do 
 | Compra sinalizada; associado autoriza | Uma confirmação e uma liberação simulada registradas. |
 | Associado não reconhece | Recusa simulada e encaminhamento de proteção; sem liberação. |
 | Associado está em dúvida | Revisão pendente, com status e próximo passo compreensíveis. |
+| Associado pede atendimento sem responder à compra | Revisão aberta, sem resposta registrada; confirmação permanece pendente se válida e expira no prazo original. |
 | Associado não responde | Expiração sem aprovação presumida. |
 | Resposta duplicada ou concorrente | Um resultado consistente; conflito não sobrescreve autorização. |
 | Outro usuário tenta responder | Acesso negado. |
