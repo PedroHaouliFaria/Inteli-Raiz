@@ -22,12 +22,11 @@ def db_path(tmp_path):
     return str(tmp_path / "test.db")
 
 
-def _make_app(db_path: str, ttl_seconds: int = 900):
+def _make_app(db_path: str, monkeypatch, ttl_seconds: int = 900):
     """Cria um app com SQLite no db_path e TTL configurável."""
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
-    os.environ["CONFIRMATION_TTL_SECONDS"] = str(ttl_seconds)
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("CONFIRMATION_TTL_SECONDS", str(ttl_seconds))
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -39,15 +38,10 @@ def _make_app(db_path: str, ttl_seconds: int = 900):
 
 
 @pytest.fixture()
-def client(db_path):
-    app = _make_app(db_path)
+def client(db_path, monkeypatch):
+    app = _make_app(db_path, monkeypatch)
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
-
-    from app.config import get_settings
-    from app.db.session import get_engine
-    get_settings.cache_clear()
-    get_engine.cache_clear()
 
 
 def _login(client, persona_id):
@@ -123,16 +117,11 @@ def test_r03_unsure_sets_revisao_pendente(client):
 # ---------------------------------------------------------------------------
 
 @pytest.fixture()
-def client_ttl1(db_path):
+def client_ttl1(db_path, monkeypatch):
     """App com TTL de 1 segundo."""
-    app = _make_app(db_path, ttl_seconds=1)
+    app = _make_app(db_path, monkeypatch, ttl_seconds=1)
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
-
-    from app.config import get_settings
-    from app.db.session import get_engine
-    get_settings.cache_clear()
-    get_engine.cache_clear()
 
 
 def test_r04_response_after_ttl_returns_410_and_status_expirada(client_ttl1):
@@ -313,17 +302,16 @@ def test_r06_new_key_different_response_returns_409_already_answered(client):
     assert r2.json()["error"]["code"] == "ALREADY_ANSWERED"
 
 
-def test_r06_parallel_same_response_single_event(db_path):
+def test_r06_parallel_same_response_single_event(db_path, monkeypatch):
     """R06: duas respostas iguais em paralelo geram um único evento ANSWER.
 
     Usa um único app (startup serializado) e envia as duas requisições em threads
     simultâneas para o mesmo TestClient — isso testa a serialização do banco, não
     a inicialização do app.
     """
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
-    os.environ["CONFIRMATION_TTL_SECONDS"] = "900"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("CONFIRMATION_TTL_SECONDS", "900")
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -370,10 +358,6 @@ def test_r06_parallel_same_response_single_event(db_path):
             select(Event).where(Event.purchase_id == p.id, Event.event_type == "ANSWER")
         ).scalars().all()
         assert len(events) == 1, f"Esperado 1 evento ANSWER, encontrados {len(events)}"
-
-    get_settings.cache_clear()
-    get_engine.cache_clear()
-
 
 # ---------------------------------------------------------------------------
 # Outros erros de resposta
@@ -436,12 +420,11 @@ def test_response_inexistent_challenge_404(client):
 # R10: segundo app sobre o mesmo SQLite preserva status e resposta
 # ---------------------------------------------------------------------------
 
-def test_r10_second_app_preserves_status_and_response(db_path):
+def test_r10_second_app_preserves_status_and_response(db_path, monkeypatch):
     """R10: reiniciar o app preserva status, resposta e histórico."""
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
-    os.environ["CONFIRMATION_TTL_SECONDS"] = "900"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("CONFIRMATION_TTL_SECONDS", "900")
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -472,9 +455,6 @@ def test_r10_second_app_preserves_status_and_response(db_path):
         data = r2.json()
         assert data["status"] == "RECUSADA_SIMULACAO"
         assert data["confirmation"]["answered"]["response"] == "DENY"
-
-    get_settings.cache_clear()
-    get_engine.cache_clear()
 
 
 # ---------------------------------------------------------------------------
@@ -554,10 +534,10 @@ def test_already_answered_message_uses_button_label(client):
 # Desvio 2: segunda tentativa em compra CONFIRMACAO_EXPIRADA → 410
 # ---------------------------------------------------------------------------
 
-def test_expired_second_attempt_returns_410(db_path):
+def test_expired_second_attempt_returns_410(db_path, monkeypatch):
     """§6: responder de novo a uma compra já em CONFIRMACAO_EXPIRADA → 410 CONFIRMATION_EXPIRED."""
     # App com TTL de 1 s para expirar rapidamente
-    app = _make_app(db_path, ttl_seconds=1)
+    app = _make_app(db_path, monkeypatch, ttl_seconds=1)
     with TestClient(app, raise_server_exceptions=True) as c:
         _login(c, "ana")
         time.sleep(2)
@@ -582,20 +562,15 @@ def test_expired_second_attempt_returns_410(db_path):
         )
         assert r2.json()["error"]["code"] == "CONFIRMATION_EXPIRED"
 
-    from app.config import get_settings
-    from app.db.session import get_engine
-    get_settings.cache_clear()
-    get_engine.cache_clear()
-
 
 # ---------------------------------------------------------------------------
 # Desvio 3: expired_at no 410 não deve ter fração de segundo (microssegundos)
 # ---------------------------------------------------------------------------
 
-def test_expired_at_no_microseconds_in_410(db_path):
+def test_expired_at_no_microseconds_in_410(db_path, monkeypatch):
     """§6: details.expired_at no 410 usa formato UTC com Z sem fração ("…:SSZ")."""
     import re as _re
-    app = _make_app(db_path, ttl_seconds=1)
+    app = _make_app(db_path, monkeypatch, ttl_seconds=1)
     with TestClient(app, raise_server_exceptions=True) as c:
         _login(c, "ana")
         time.sleep(2)
@@ -610,8 +585,3 @@ def test_expired_at_no_microseconds_in_410(db_path):
         assert _re.fullmatch(
             r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", expired_at
         ), f"expired_at com formato inválido: {expired_at!r}"
-
-    from app.config import get_settings
-    from app.db.session import get_engine
-    get_settings.cache_clear()
-    get_engine.cache_clear()

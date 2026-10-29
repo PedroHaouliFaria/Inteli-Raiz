@@ -40,6 +40,13 @@ class Settings(BaseSettings):
     # Confirmação: prazo em segundos para o associado responder (padrão 15 min)
     confirmation_ttl_seconds: int = 900
 
+    # LLM para o agente de chat (§7 e §10)
+    llm_model: str = "groq:openai/gpt-oss-120b"
+    groq_api_key: str = ""
+    # Limite de mensagens por compra em 10 min (§7)
+    chat_rate_limit_messages: int = 20
+    chat_rate_limit_window_seconds: int = 600
+
     # Modelo de risco: "local" lê o .joblib; "watsonx" chama o deployment online no watsonx.ai Runtime.
     risk_model_provider: str = "local"
     risk_model_path: str = str(REPO_ROOT / "outputs" / "modelo_rf.joblib")

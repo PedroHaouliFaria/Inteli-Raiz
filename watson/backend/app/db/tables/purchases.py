@@ -1,9 +1,9 @@
-"""Tabelas SQLAlchemy para o fluxo de confirmação de compras (§3, §5 e §6)."""
+"""Tabelas SQLAlchemy para o fluxo de confirmação de compras (§3, §5, §6, §8 e §10)."""
 from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.tables import Base
@@ -43,6 +43,15 @@ class Purchase(Base):
     # Features como dict (texto no SQLite, JSON no Postgres)
     features_json: Mapped[dict] = mapped_column(PortableJSON, nullable=False)
 
+    # Análise do modelo de risco (gravada no seed e no demo; nunca exposta ao associado)
+    analysis_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    analysis_score_source: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    analysis_model_version: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    analysis_decision: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    analysis_policy_version: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    analysis_gaps_json: Mapped[list | None] = mapped_column(PortableJSON, nullable=True)
+    analysis_evaluated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC).replace(tzinfo=None)
     )
@@ -60,6 +69,9 @@ class Purchase(Base):
     )
     reviews: Mapped[list["Review"]] = relationship(
         "Review", back_populates="purchase", cascade="all, delete-orphan"
+    )
+    chat_messages: Mapped[list["ChatMessage"]] = relationship(
+        "ChatMessage", back_populates="purchase", cascade="all, delete-orphan", order_by="ChatMessage.id"
     )
 
 
@@ -141,3 +153,22 @@ class IdempotencyKey(Base):
     )
 
     __table_args__ = (UniqueConstraint("key", "challenge_id", name="uq_idempotency_key_challenge"),)
+
+
+class ChatMessage(Base):
+    """Mensagem do chat presa a uma compra (§7 e §10 do contrato)."""
+
+    __tablename__ = "chat_messages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    message_id: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
+    purchase_id: Mapped[int] = mapped_column(ForeignKey("purchases.id"), nullable=False, index=True)
+    role: Mapped[str] = mapped_column(String(10), nullable=False)  # user | assistant
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    # Lista de ferramentas usadas (apenas para mensagens do assistente)
+    tools_used_json: Mapped[list | None] = mapped_column(PortableJSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC).replace(tzinfo=None)
+    )
+
+    purchase: Mapped["Purchase"] = relationship("Purchase", back_populates="chat_messages")

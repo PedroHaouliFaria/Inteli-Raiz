@@ -12,11 +12,10 @@ def db_path(tmp_path):
 
 
 @pytest.fixture()
-def client(db_path):
+def client(db_path, monkeypatch):
     """App com SQLite temporário, sessão configurada."""
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -27,9 +26,6 @@ def client(db_path):
     app = create_app()
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
-
-    get_settings.cache_clear()
-    get_engine.cache_clear()
 
 
 def _login(client, persona_id):
@@ -218,11 +214,10 @@ def test_no_forbidden_fields_in_any_level(client):
 # R10: dois apps sobre o mesmo SQLite
 # ---------------------------------------------------------------------------
 
-def test_r10_second_app_sees_same_data_no_re_seed(db_path):
+def test_r10_second_app_sees_same_data_no_re_seed(db_path, monkeypatch):
     """R10: segundo app sobre o mesmo SQLite devolve os mesmos dados sem rodar seed de novo."""
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{db_path}"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -247,6 +242,3 @@ def test_r10_second_app_sees_same_data_no_re_seed(db_path):
         ids2 = [p["case_id"] for p in r2.json()["purchases"]]
 
     assert ids1 == ids2 == ["T-007", "T-003"]
-
-    get_settings.cache_clear()
-    get_engine.cache_clear()

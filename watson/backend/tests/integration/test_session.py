@@ -8,11 +8,10 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture()
-def client(tmp_path):
+def client(tmp_path, monkeypatch):
     """App com SQLite temporário e SESSION_SECRET definido."""
-    import os
-    os.environ["DATABASE_URL"] = f"sqlite:///{tmp_path}/test.db"
-    os.environ["SESSION_SECRET"] = "test-secret-for-session"
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path}/test.db")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
 
     # Reinicializa get_settings e get_engine para o SQLite do teste
     from app.config import get_settings
@@ -24,9 +23,6 @@ def client(tmp_path):
     app = create_app()
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
-
-    get_settings.cache_clear()
-    get_engine.cache_clear()
 
 
 # ---------------------------------------------------------------------------

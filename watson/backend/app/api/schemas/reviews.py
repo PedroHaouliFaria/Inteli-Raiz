@@ -52,8 +52,8 @@ class ReviewOut(BaseModel):
 class AnalysisSummary(BaseModel):
     model_config = {"extra": "forbid"}
     score: float | None
-    score_source: str
-    model_version: str
+    score_source: str | None
+    model_version: str | None
 
 
 class ReviewListItem(BaseModel):
