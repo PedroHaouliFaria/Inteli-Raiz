@@ -1,9 +1,17 @@
 """Esquemas de resposta para os endpoints de revisão (§8 do contrato)."""
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel
 
-from app.api.schemas.common import Money, SimulationTrue
+from app.api.schemas.common import Money, SimulationTrue, UtcDatetime
+from app.api.schemas.purchases import PurchaseStatus
+
+
+ReviewKind = Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO"]
+ReviewStatus = Literal["ABERTA", "FECHADA"]
+ReviewCreatedBy = Literal["ASSOCIADO", "AGENTE", "SISTEMA"]
 
 
 class ReviewOut(BaseModel):
@@ -31,12 +39,12 @@ class ReviewOut(BaseModel):
     review_id: str
     protocol: str
     case_id: str
-    kind: str
+    kind: ReviewKind
     reason: str
-    status: str
-    created_at: str
-    created_by: str
-    case_status: str
+    status: ReviewStatus
+    created_at: UtcDatetime
+    created_by: ReviewCreatedBy
+    case_status: PurchaseStatus
     message: str
     simulation: SimulationTrue
 
@@ -56,12 +64,12 @@ class ReviewListItem(BaseModel):
     review_id: str
     protocol: str
     case_id: str
-    kind: str
+    kind: ReviewKind
     reason: str
-    status: str
-    created_by: str
-    created_at: str
-    case_status: str
+    status: ReviewStatus
+    created_by: ReviewCreatedBy
+    created_at: UtcDatetime
+    case_status: PurchaseStatus
     customer_display_name: str
     amount: Money
     analysis: AnalysisSummary

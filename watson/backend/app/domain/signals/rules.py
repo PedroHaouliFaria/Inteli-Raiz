@@ -44,8 +44,9 @@ def compute_signals(features: dict) -> list[Signal]:
     """Aplica as três regras documentadas e retorna os sinais disparados, em ordem."""
     signals: list[Signal] = []
 
-    # CARTAO_NAO_PRESENTE: flag card_presence_flag = "N"
-    if str(features.get("card_presence_flag", "Y")).upper() == "N":
+    # CARTAO_NAO_PRESENTE: usa modalidade_transacao == "cartao_nao_presente"
+    # (card_presence_flag="N" com modalidade "cartao_presente" é inconsistência nos dados — ignorar)
+    if str(features.get("modalidade_transacao", "")).lower() == "cartao_nao_presente":
         signals.append(
             Signal(
                 code="CARTAO_NAO_PRESENTE",
@@ -53,20 +54,17 @@ def compute_signals(features: dict) -> list[Signal]:
             )
         )
 
-    # MADRUGADA: hora entre 0 e 5 (inclusive), ou coluna madrugada = 1
-    hora = features.get("hora")
-    madrugada_flag = features.get("madrugada")
-    is_madrugada = (str(madrugada_flag) == "1") or (
-        hora is not None and 0 <= int(hora) <= 5
-    )
-    if is_madrugada:
-        hora_display = int(hora) if hora is not None else "?"
-        signals.append(
-            Signal(
-                code="MADRUGADA",
-                label=f"Feita de madrugada, às {hora_display}h.",
-            )
-        )
+    # MADRUGADA: usa exclusivamente a coluna madrugada == "1"
+    # (hora=5 com madrugada=0 não dispara; hora vazia não quebra)
+    madrugada_flag = str(features.get("madrugada", "0"))
+    if madrugada_flag == "1":
+        hora = features.get("hora")
+        hora_str = str(hora).strip() if hora is not None else ""
+        if hora_str and hora_str.lstrip("-").isdigit():
+            label = f"Feita de madrugada, às {int(hora_str)}h."
+        else:
+            label = "Feita de madrugada."
+        signals.append(Signal(code="MADRUGADA", label=label))
 
     # PRIMEIRA_COMPRA_CARTAO: coluna primeira_compra_cartao = 1
     if str(features.get("primeira_compra_cartao", "0")) == "1":

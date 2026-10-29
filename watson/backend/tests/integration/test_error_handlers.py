@@ -69,3 +69,28 @@ def test_validation_error_returns_400_invalid_request():
     assert resp.status_code == 400
     body = resp.json()
     assert body["error"]["code"] == "INVALID_REQUEST"
+
+
+def test_validation_error_with_custom_validator_returns_400_not_500():
+    """ValueError de validador customizado (ex.: Money com '149.5') deve devolver 400, não 500.
+    O bug estava em exc.errors() serializar o objeto da exceção e causar 500."""
+    from fastapi import FastAPI
+
+    app = FastAPI()
+    add_error_handlers(app)
+
+    from app.api.schemas.common import Money
+
+    @app.post("/api/money")
+    def money_route(body: Money):
+        return body
+
+    resp = TestClient(app, raise_server_exceptions=False).post(
+        "/api/money", json={"value": "149.5", "currency": "BRL"}
+    )
+    assert resp.status_code == 400, f"Esperado 400, recebeu {resp.status_code}: {resp.text}"
+    body = resp.json()
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    # Cada erro deve ter só loc, msg e type — sem objetos não-serializáveis
+    for err in body["error"]["details"]["validation_errors"]:
+        assert set(err.keys()) <= {"loc", "msg", "type"}, f"Campos extras: {err.keys()}"

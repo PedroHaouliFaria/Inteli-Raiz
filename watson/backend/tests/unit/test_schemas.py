@@ -219,3 +219,45 @@ def test_review_out_example_validates():
     dumped = obj.model_dump(mode="json")
     assert dumped["simulation"] is True
     assert dumped["kind"] == "DUVIDA"
+
+
+# ---------------------------------------------------------------------------
+# Fix F: Literal types e datetime UTC com Z
+# ---------------------------------------------------------------------------
+
+def test_purchase_list_rejects_invalid_status():
+    """status fora do enum deve ser rejeitado pelo schema (Literal)."""
+    bad = {**PURCHASE_LIST_EXAMPLE}
+    bad["purchases"] = [{**PURCHASE_LIST_EXAMPLE["purchases"][0], "status": "INVALIDO"}]
+    with pytest.raises(ValidationError):
+        PurchaseListResponse(**bad)
+
+
+def test_purchase_detail_rejects_invalid_channel():
+    """channel fora do enum deve ser rejeitado."""
+    bad_purchase = {**PURCHASE_DETAIL_AWAITING["purchase"], "channel": "PRESENCIAL"}
+    bad = {**PURCHASE_DETAIL_AWAITING, "purchase": bad_purchase}
+    with pytest.raises(ValidationError):
+        PurchaseDetailResponse(**bad)
+
+
+def test_occurred_at_datetime_serializes_as_utc_z():
+    """occurred_at como datetime naive tratado como UTC serializa com Z."""
+    from datetime import datetime, timezone
+    # Simula o que vem do banco: datetime sem timezone (naive), armazenado como UTC
+    naive_dt = datetime(2026, 10, 25, 6, 12, 0)  # sem tzinfo
+    # O schema deve aceitar e serializar como "2026-10-25T06:12:00Z"
+    from app.api.schemas.purchases import PurchaseInfo, MerchantCategory, CardInfo, Money
+    info = PurchaseInfo(
+        merchant_name=None,
+        merchant_category=MerchantCategory(mcc="5411", label="Supermercado"),
+        merchant_display="Supermercado",
+        amount=Money(value="149.58", currency="BRL"),
+        occurred_at=naive_dt,
+        channel="CARTAO_NAO_PRESENTE",
+        channel_label="Compra online ou por telefone",
+        card=CardInfo(brand="BANDEIRA_A", type="credito", last4="2938"),
+    )
+    dumped = info.model_dump(mode="json")
+    assert dumped["occurred_at"].endswith("Z"), f"Esperado Z no final: {dumped['occurred_at']}"
+

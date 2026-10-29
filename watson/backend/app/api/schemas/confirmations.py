@@ -1,10 +1,12 @@
 """Esquemas de resposta para o endpoint de confirmação (§6 do contrato)."""
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel
 
-from app.api.schemas.common import SimulationTrue
-from app.api.schemas.purchases import ResultInfo
+from app.api.schemas.common import SimulationTrue, UtcDatetime
+from app.api.schemas.purchases import AssociateResponse, PurchaseStatus, ResultInfo
 
 
 class ConfirmationResponseOut(BaseModel):
@@ -35,10 +37,10 @@ class ConfirmationResponseOut(BaseModel):
 
     challenge_id: str
     case_id: str
-    response: str
-    answered_at: str
+    response: AssociateResponse
+    answered_at: UtcDatetime
     version: int
-    status: str
+    status: PurchaseStatus
     status_label: str
     review_protocol: str | None
     result: ResultInfo

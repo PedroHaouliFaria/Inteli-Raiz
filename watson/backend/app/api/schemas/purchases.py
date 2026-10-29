@@ -1,11 +1,33 @@
 """Esquemas de resposta para os endpoints de compras (§5 do contrato)."""
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel
 
-from app.api.schemas.common import Money, SimulationTrue
+from app.api.schemas.common import Money, SimulationTrue, UtcDatetime
+
+
+# Enum de status da compra conforme §3 do contrato
+PurchaseStatus = Literal[
+    "RECEBIDA",
+    "EM_AVALIACAO",
+    "AGUARDANDO_ASSOCIADO",
+    "LIBERADA_SIMULACAO",
+    "RECUSADA_SIMULACAO",
+    "REVISAO_PENDENTE",
+    "CONFIRMACAO_EXPIRADA",
+]
+
+# Resposta do associado à confirmação (§6)
+AssociateResponse = Literal["AUTHORIZE", "DENY", "UNSURE"]
+
+# Canal da compra (§5): T-003 e T-011 são presenciais
+PurchaseChannel = Literal["CARTAO_PRESENTE", "CARTAO_NAO_PRESENTE"]
+
+# Origem dos sinais (§5)
+SignalSource = Literal["regra"]
 
 
 # ---------------------------------------------------------------------------
@@ -31,8 +53,8 @@ class PurchaseInfo(BaseModel):
     merchant_category: MerchantCategory
     merchant_display: str
     amount: Money
-    occurred_at: str  # ISO 8601 UTC terminando em Z
-    channel: str
+    occurred_at: UtcDatetime
+    channel: PurchaseChannel
     channel_label: str
     card: CardInfo
 
@@ -41,7 +63,7 @@ class Signal(BaseModel):
     model_config = {"extra": "forbid"}
     code: str
     label: str
-    source: str
+    source: SignalSource
 
 
 class Alert(BaseModel):
@@ -53,14 +75,14 @@ class Alert(BaseModel):
 
 class AllowedResponse(BaseModel):
     model_config = {"extra": "forbid"}
-    response: str
+    response: AssociateResponse
     label: str
 
 
 class AnsweredInfo(BaseModel):
     model_config = {"extra": "forbid"}
-    response: str
-    answered_at: str
+    response: AssociateResponse
+    answered_at: UtcDatetime
 
 
 class ConfirmationInfo(BaseModel):
@@ -68,7 +90,7 @@ class ConfirmationInfo(BaseModel):
     challenge_id: str
     question: str
     allowed_responses: list[AllowedResponse]
-    expires_at: str
+    expires_at: UtcDatetime
     answered: AnsweredInfo | None
 
 
@@ -76,8 +98,8 @@ class ReviewSummary(BaseModel):
     model_config = {"extra": "forbid"}
     review_id: str
     protocol: str
-    kind: str
-    status: str
+    kind: Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO"]
+    status: Literal["ABERTA", "FECHADA"]
 
 
 class ResultInfo(BaseModel):
@@ -96,10 +118,10 @@ class PurchaseListItem(BaseModel):
     case_id: str
     merchant_display: str
     amount: Money
-    occurred_at: str
-    status: str
+    occurred_at: UtcDatetime
+    status: PurchaseStatus
     status_label: str
-    expires_at: str | None
+    expires_at: UtcDatetime | None
 
 
 # ---------------------------------------------------------------------------
@@ -184,7 +206,7 @@ class PurchaseDetailResponse(BaseModel):
 
     case_id: str
     version: int
-    status: str
+    status: PurchaseStatus
     status_label: str
     purchase: PurchaseInfo
     alert: Alert
@@ -218,11 +240,11 @@ class PurchaseStatusResponse(BaseModel):
 
     case_id: str
     version: int
-    status: str
+    status: PurchaseStatus
     status_label: str
-    expires_at: str | None
+    expires_at: UtcDatetime | None
     seconds_remaining: int
-    allowed_responses: list[str]
+    allowed_responses: list[AssociateResponse]
     review_protocol: str | None
     next_steps: list[str]
     simulation: SimulationTrue

@@ -15,6 +15,10 @@ class Settings(BaseSettings):
 
     database_url: str = "sqlite:///./watson.db"
     agent_provider: str = "simulated"
+    # Segredo obrigatório para assinar o cookie de sessão (§4 do contrato)
+    session_secret: str
+    # Cookie Secure só em produção; em dev (False) o cookie funciona em HTTP
+    session_secure: bool = False
     watsonx_url: str = "https://us-south.ml.cloud.ibm.com"
     watsonx_api_key: str = ""
     watsonx_project_id: str = ""

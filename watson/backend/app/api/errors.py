@@ -64,12 +64,19 @@ def add_error_handlers(app: FastAPI) -> None:
     async def validation_error_handler(
         request: Request, exc: RequestValidationError
     ) -> JSONResponse:
+        # exc.errors() pode trazer o objeto da exceção em "ctx.error" quando um
+        # validador customizado levanta ValueError — isso quebra o JSON.
+        # Devolver só loc, msg e type é suficiente para o front (§2 do contrato).
+        safe_errors = [
+            {"loc": list(e.get("loc", [])), "msg": e.get("msg", ""), "type": e.get("type", "")}
+            for e in exc.errors()
+        ]
         return JSONResponse(
             status_code=400,
             content=_error_body(
                 "INVALID_REQUEST",
                 "Dados inválidos. Verifique os campos enviados.",
-                {"validation_errors": exc.errors()},
+                {"validation_errors": safe_errors},
             ),
         )
 

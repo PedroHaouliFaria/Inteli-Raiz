@@ -102,13 +102,15 @@ class Review(Base):
 
 
 class Event(Base):
-    """Registro de auditoria imutável de cada transição ou ação."""
+    """Registro de auditoria imutável de cada transição ou ação (§5 do plano)."""
 
     __tablename__ = "events"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     purchase_id: Mapped[int] = mapped_column(ForeignKey("purchases.id"), nullable=False, index=True)
     event_type: Mapped[str] = mapped_column(String(40), nullable=False)  # SEED, ANSWER, EXPIRE, ...
+    from_status: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    to_status: Mapped[str | None] = mapped_column(String(40), nullable=True)
     payload: Mapped[dict | None] = mapped_column(PortableJSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC).replace(tzinfo=None)

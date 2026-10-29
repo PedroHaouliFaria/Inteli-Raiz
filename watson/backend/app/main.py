@@ -2,31 +2,32 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.api.errors import add_error_handlers
-from app.api.routes import health, model_lab
+from app.api.routes import health, model_lab, purchases, session
 from app.config import get_settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Executa o seed na inicialização se o banco estiver vazio."""
-    settings = get_settings()
-    try:
-        from sqlalchemy import create_engine, inspect
-        from sqlalchemy.orm import sessionmaker
-        from app.db.tables import Base
-        from app.db.seed import run_seed
+    """Executa o seed na inicialização se o banco estiver vazio.
 
-        engine = create_engine(settings.database_url, pool_pre_ping=True)
-        # Cria as tabelas se ainda não existirem (para dev/teste sem Alembic)
-        Base.metadata.create_all(engine)
-        Session = sessionmaker(bind=engine)
-        with Session() as session:
-            run_seed(session, ttl_seconds=settings.confirmation_ttl_seconds)
-    except Exception:
-        import logging
-        logging.getLogger(__name__).exception("Seed falhou na inicialização")
+    Usa o get_engine() compartilhado pelo resto da aplicação (não cria engine próprio).
+    Qualquer falha no seed derruba a subida — banco sem dados é pior que app que não sobe.
+    """
+    from sqlalchemy.orm import sessionmaker
+    from app.db.session import get_engine
+    from app.db.tables import Base
+    from app.db.seed import run_seed
+
+    settings = get_settings()
+    engine = get_engine()
+    # Cria as tabelas se ainda não existirem (para dev/teste sem Alembic)
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    with Session() as session:
+        run_seed(session, ttl_seconds=settings.confirmation_ttl_seconds)
     yield
 
 
@@ -39,9 +40,20 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    # Cookie de sessão com timestamp (§4); SESSION_SECRET é obrigatório no config
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.session_secret,
+        session_cookie="raiz_session",
+        same_site="lax",
+        https_only=settings.session_secure,
+        max_age=int(8 * 3600),  # 8 horas
+    )
     add_error_handlers(app)
     app.include_router(health.router)
     app.include_router(model_lab.router)
+    app.include_router(session.router)
+    app.include_router(purchases.router)
     return app
 
 

@@ -2,12 +2,24 @@
 from __future__ import annotations
 
 import re
-from typing import Literal
+from datetime import datetime, timezone
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, PlainSerializer, field_validator
 
 
 _MONEY_RE = re.compile(r"^\d+\.\d{2}$")
+
+
+def _serialize_utc(v: datetime) -> str:
+    """Serializa datetime para ISO 8601 UTC com Z. Naive é tratado como UTC."""
+    if v.tzinfo is None:
+        v = v.replace(tzinfo=timezone.utc)
+    return v.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+# Tipo anotado: aceita datetime (naive=UTC) e serializa como "YYYY-MM-DDTHH:MM:SSZ"
+UtcDatetime = Annotated[datetime, PlainSerializer(_serialize_utc, return_type=str)]
 
 
 class Money(BaseModel):
@@ -16,7 +28,7 @@ class Money(BaseModel):
     model_config = {"extra": "forbid"}
 
     value: str
-    currency: str = "BRL"
+    currency: Literal["BRL"] = "BRL"
 
     @field_validator("value")
     @classmethod
