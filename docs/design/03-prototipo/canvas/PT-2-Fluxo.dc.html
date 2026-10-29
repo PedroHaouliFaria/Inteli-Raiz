@@ -1,0 +1,1946 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Protótipo 2 · Analista no controle</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+sc-if,sc-for{display:contents}
+.wt{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-hover-01:#e8e8e8;--layer-selected-01:#e0e0e0;--layer-selected-inverse:#161616;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-subtle-02:#c6c6c6;--border-strong-01:#8d8d8d;--border-inverse:#161616;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--link-primary:#0f62fe;--link-primary-hover:#0043ce;--icon-primary:#161616;--icon-secondary:#525252;--interactive:#0f62fe;--focus:#0f62fe;--button-primary:#0f62fe;--button-secondary:#393939;--button-tertiary:#0f62fe;--button-danger:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-info:#0043ce;--notification-info-bg:#edf5ff;--notification-success-bg:#defbe6;--notification-warning-bg:#fcf4d6;--tag-red-bg:#ffd7d9;--tag-red-text:#a2191f;--tag-yellow-bg:#fddc69;--tag-yellow-text:#483700;--tag-gray-bg:#e0e0e0;--tag-gray-text:#161616;--tag-blue-bg:#d0e2ff;--tag-blue-text:#0043ce;--tag-green-bg:#a7f0ba;--tag-green-text:#0e6027;--tag-cool-bg:#dde1e6;--tag-cool-text:#343a3f;--ai-border-strong:#4589ff;--ai-border-subtle:#a6c8ff;--ai-aura-start:rgba(69,137,255,0.10);--ai-aura-end:rgba(255,255,255,0);--shell-background:#161616;--shell-border:#393939;--shell-text:#f4f4f4;--shell-hover:#2c2c2c;--overlay:rgba(22,22,22,0.5);position:relative;box-sizing:border-box;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt ol,.wt dl,.wt dd{margin:0}
+.wt ul,.wt ol{padding:0;list-style:none}
+.wt button{font-family:'IBM Plex Sans',Arial,sans-serif;letter-spacing:0.16px}
+.wt :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.wt input::placeholder,.wt textarea::placeholder{color:var(--text-helper)}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.skip{position:absolute;left:-9999px;top:48px;z-index:10;background:var(--layer-01);padding:12px 16px;color:var(--link-primary);border:2px solid var(--focus)}
+.skip:focus{left:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* faixa do protótipo: fora da UI do produto */
+.pbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;min-height:40px;padding:4px 16px;background:#e0e0e0;border-bottom:1px solid #c6c6c6;font-size:12px;line-height:16px;color:#161616}
+.pb-t b{font-weight:600}
+.pb-seg{display:inline-flex}
+.pb-seg button{min-width:40px;height:32px;padding:0 12px;border:1px solid #8d8d8d;background:#f4f4f4;color:#161616;font-size:12px;cursor:pointer}
+.pb-seg button+button{border-left:0}
+.pb-seg button.on{background:#161616;border-color:#161616;color:#ffffff}
+.pb-d{flex:1 1 320px;min-width:0;color:#393939}
+.pb-r{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid #8d8d8d;background:transparent;color:#161616;font-size:12px;cursor:pointer}
+
+/* UI shell g10 clássico: header Gray 100, side nav branca */
+.shell{height:48px;flex-shrink:0;display:flex;align-items:center;background:var(--shell-background);border-bottom:1px solid var(--shell-border)}
+.shell :focus-visible{outline-color:#ffffff}
+.hbtn{width:48px;height:47px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;padding:0;color:var(--shell-text);cursor:pointer;flex-shrink:0}
+.hbtn:hover{background:var(--shell-hover)}
+.brand{display:flex;align-items:center;height:47px;padding:0 32px 0 16px;font-size:14px;color:var(--shell-text);white-space:nowrap}
+.brand b{font-weight:600;margin-left:4px}
+.shell-sp{flex-grow:1}
+.body-row{display:flex;flex-wrap:wrap;flex-grow:1;align-items:stretch}
+.snav{flex:0 0 48px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);display:flex;flex-direction:column;padding-top:8px}
+.snav button{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--icon-secondary);border:0;background:transparent;padding:0;cursor:pointer}
+.snav button:hover{background:var(--layer-hover-01)}
+.snav button.on{background:var(--layer-selected-01);box-shadow:inset 3px 0 0 var(--interactive);color:var(--icon-primary)}
+.snav .div{height:1px;background:var(--border-subtle-01);margin:8px}
+.main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px;padding:24px 16px 32px}
+
+/* cabeçalho de página + content switcher */
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.phead-t{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.sub{font-size:14px;color:var(--text-secondary)}
+.cs{display:inline-flex;height:40px}
+.cs button{display:inline-flex;align-items:center;gap:8px;min-width:128px;height:40px;padding:0 16px;border:1px solid var(--border-inverse);color:var(--text-secondary);font-size:14px;background:transparent;cursor:pointer}
+.cs button+button{border-left:0}
+.cs button:first-child{border-radius:4px 0 0 4px}
+.cs button:last-child{border-radius:0 4px 4px 0}
+.cs button.on{background:var(--layer-selected-inverse);color:var(--text-on-color)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;padding:0 16px;font-size:14px;line-height:18px;border:1px solid transparent;border-radius:0;cursor:pointer;white-space:nowrap;background:transparent;text-align:left}
+.btn svg{flex-shrink:0}
+.btn-lg{min-height:48px}
+.btn-sm{min-height:32px;padding:0 12px;gap:8px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-secondary{background:var(--button-secondary);color:var(--text-on-color)}
+.btn-danger{background:var(--button-danger);color:var(--text-on-color)}
+.btn-tertiary{border-color:var(--button-tertiary);color:var(--button-tertiary)}
+.btn-ghost{color:var(--link-primary);padding:0 12px;justify-content:flex-start;gap:8px}
+.ibtn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer;flex-shrink:0}
+.ibtn:hover{background:var(--layer-hover-01)}
+.ibtn-sm{width:32px;height:32px}
+.lnk{border:0;background:transparent;padding:0;margin:0;color:var(--link-primary);font-size:14px;line-height:20px;cursor:pointer;text-align:left}
+.lnk:hover{text-decoration:underline}
+.lnk.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+
+/* atalhos: só rótulos, sem teclado global */
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--border-strong-01);border-radius:2px;background:var(--layer-01);color:var(--text-secondary);font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1;letter-spacing:0;flex-shrink:0}
+.kbd.inv{background:transparent;border-color:#ffffff;color:#ffffff}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag svg{flex-shrink:0}
+.tag-red{background:var(--tag-red-bg);color:var(--tag-red-text)}
+.tag-yellow{background:var(--tag-yellow-bg);color:var(--tag-yellow-text)}
+.tag-gray{background:var(--tag-gray-bg);color:var(--tag-gray-text)}
+.tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue-text)}
+.tag-green{background:var(--tag-green-bg);color:var(--tag-green-text)}
+.tag-cool{background:var(--tag-cool-bg);color:var(--tag-cool-text)}
+.tag-outline{background:var(--layer-01);color:var(--text-primary);border:1px solid var(--border-strong-01)}
+
+/* Carbon for AI: só identifica conteúdo gerado pelo agente */
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--ai-border-strong);border-radius:4px;background:linear-gradient(to top,var(--ai-aura-start),var(--layer-01));color:var(--text-primary);font-size:12px;line-height:1;font-weight:600;cursor:pointer;flex-shrink:0;letter-spacing:0}
+.ai-box{background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+
+/* toggletip educativa (Carbon) e dicionário */
+.tt{position:relative;display:inline-flex;vertical-align:middle}
+.tt-b{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;background:transparent;padding:0;color:var(--icon-secondary);cursor:pointer;border-radius:12px}
+.tt-b:hover{background:var(--layer-hover-01);color:var(--icon-primary)}
+.tt-b[aria-expanded="true"]{color:var(--icon-primary);background:var(--layer-selected-01)}
+.tt-pop{position:absolute;top:calc(100% + 8px);left:-8px;z-index:25;width:288px;display:flex;flex-direction:column;gap:8px;padding:16px;background:#393939;color:#ffffff;font-size:14px;line-height:20px;font-weight:400;font-family:'IBM Plex Sans',Arial,sans-serif;letter-spacing:0.16px;text-align:left;white-space:normal;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.tt-pop.r{left:auto;right:-8px}
+.tt-t{font-weight:600}
+.tt-l{align-self:flex-start;border:0;background:transparent;padding:0;color:#78a9ff;font-size:14px;line-height:20px;cursor:pointer;text-decoration:underline}
+.hbtn.on{background:#393939}
+.hpanel{position:absolute;top:88px;right:0;bottom:0;z-index:22;width:352px;max-width:100%;display:flex;flex-direction:column;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);box-shadow:-2px 0 6px rgba(0,0,0,0.2)}
+.hp-h{display:flex;align-items:flex-start;gap:8px;padding:16px 8px 16px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.hp-h div{flex-grow:1;display:flex;flex-direction:column;gap:4px}
+.hp-h h2{font-size:20px;line-height:28px;font-weight:400}
+.hp-h p{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.hp-l{display:flex;flex-direction:column}
+.hp-l li{display:flex;flex-direction:column;gap:8px;padding:16px;border-bottom:1px solid var(--border-subtle-01);border-left:3px solid transparent}
+.hp-l li.cur{background:var(--notification-info-bg);border-left-color:var(--interactive)}
+.hp-l h3{font-size:16px;line-height:22px;font-weight:600}
+.hp-l p{font-size:14px;line-height:20px}
+.hp-l .w{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.kpi{display:flex;flex-direction:column;gap:4px;background:var(--layer-01);padding:16px}
+.kpi-l{display:flex;align-items:center;gap:4px;min-height:24px;font-size:14px;color:var(--text-secondary)}
+.kpi-v{font-size:28px;line-height:36px;font-weight:300}
+.kpi-n{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.kpi-n svg{flex-shrink:0}
+.why-app{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--layer-01);border:1px solid var(--border-subtle-01);font-size:16px;line-height:22px}
+.wlink{display:inline-flex;align-items:center;gap:8px;min-height:44px;border:0;background:transparent;padding:0;color:var(--link-primary);font-size:16px;cursor:pointer;text-align:left;align-self:flex-start}
+.bub .lab{font-size:14px;line-height:20px;font-weight:600;color:var(--text-secondary)}
+
+/* status e tiles */
+.st{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.st svg{flex-shrink:0}
+.tile{background:var(--layer-01);padding:16px}
+.muted{color:var(--text-secondary);font-size:14px}
+
+/* checkbox Carbon como botão */
+.cbb{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;background:transparent;padding:0;cursor:pointer;flex-shrink:0}
+.cb{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01);color:var(--layer-01);flex-shrink:0}
+.cb.on{background:var(--icon-primary);color:var(--text-on-color)}
+
+/* data table */
+.dt-box{background:var(--layer-01);display:flex;flex-direction:column}
+.dt-head{display:flex;flex-direction:column;gap:4px;padding:16px}
+.dt-head h2{font-size:20px;line-height:28px;font-weight:400}
+.dt-head p{font-size:14px;color:var(--text-secondary)}
+.dt-tb{display:flex;align-items:stretch;flex-wrap:wrap;min-height:48px;background:var(--layer-01)}
+.dt-search{flex:1 1 280px;min-width:0;display:flex;align-items:center;gap:8px;padding:0 16px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--icon-secondary)}
+.dt-search input{flex-grow:1;min-width:0;height:46px;border:0;background:transparent;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.dt-tb .ibtn{width:48px;height:48px}
+.bbar{display:flex;flex-wrap:wrap;align-items:center;min-height:48px;background:var(--interactive);color:var(--text-on-color)}
+.bbar .n{flex:1 1 200px;min-width:0;padding:0 16px;font-size:14px}
+.bb{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border:0;background:transparent;color:var(--text-on-color);font-size:14px;cursor:pointer;white-space:nowrap}
+.bb:hover{background:#0050e6}
+.bb-div{width:1px;height:16px;background:#ffffff}
+.dt-keys{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px 16px;border-top:1px solid var(--border-subtle-01);font-size:12px;line-height:16px;color:var(--text-secondary)}
+.dt-keys .k{display:inline-flex;align-items:center;gap:4px}
+.dt-keys .k svg{color:var(--icon-primary)}
+.dt-wrap{overflow-x:auto;background:var(--layer-01)}
+.dt{width:100%;min-width:1000px;border-collapse:collapse;font-size:14px;line-height:18px}
+.dt th{height:48px;background:var(--layer-accent-01);text-align:left;font-weight:600;padding:0 16px;color:var(--text-primary);white-space:nowrap}
+.dt th.r{text-align:right}
+.dt th .srt{display:inline-flex;align-items:center;gap:8px}
+.dt th.cbc,.dt td.cbc{width:48px;padding:0 0 0 12px}
+.dt td{height:48px;padding:0 16px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);color:var(--text-secondary);white-space:nowrap}
+.dt td.r{text-align:right}
+.dt td.pri{color:var(--text-primary)}
+.dt td .t{display:block;max-width:184px;overflow:hidden;text-overflow:ellipsis}
+.dt tr.sel td{background:var(--layer-selected-01);color:var(--text-primary)}
+.dt tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--interactive)}
+.dt tr.sel .lnk{color:var(--link-primary-hover)}
+.dt td.acts-c{padding:0 8px}
+.cid{display:inline-flex;align-items:center;gap:8px}
+.rk{display:inline-flex;align-items:center;gap:8px}
+.ras{display:inline-flex;align-items:center;gap:4px}
+.ra{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 6px;border:0;background:transparent;color:var(--icon-primary);cursor:pointer}
+.ra:hover{background:var(--layer-hover-01)}
+.pg{display:flex;flex-wrap:wrap;align-items:center;min-height:48px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);font-size:14px;color:var(--text-secondary)}
+.pg-c{display:flex;align-items:center;gap:8px;padding:0 16px;height:48px}
+.pg .sp{flex-grow:1}
+.pg .ibtn{width:48px;height:48px;border-left:1px solid var(--border-subtle-01)}
+
+/* quadro */
+.flt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.dd{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 12px 0 16px;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--layer-01);font-size:14px;color:var(--text-primary);cursor:pointer}
+.dd .k{color:var(--text-secondary)}
+.flt .sp{flex-grow:1}
+.board-wrap{overflow-x:auto;padding-bottom:8px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(232px,1fr));gap:16px;min-width:976px;align-items:start}
+.col{display:flex;flex-direction:column;gap:8px;background:var(--layer-accent-01);padding:8px}
+.col-h{display:flex;flex-direction:column;gap:4px;padding:8px}
+.col-hr{display:flex;align-items:center;gap:8px}
+.col-h h2{font-size:14px;line-height:18px;font-weight:600;flex-grow:1}
+.cnt{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;border-radius:12px;background:var(--layer-01);font-size:12px;font-weight:600}
+.col-w{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:16px;color:var(--text-primary)}
+.col-w svg{flex-shrink:0}
+.kc{display:flex;background:var(--layer-01);border:1px solid var(--border-subtle-01)}
+.kc.sel{border:2px solid var(--interactive)}
+.kc-bar{width:4px;flex-shrink:0}
+.kc-b{display:flex;flex-direction:column;gap:8px;padding:12px;flex-grow:1;min-width:0}
+.kc-top{display:flex;align-items:center;gap:8px}
+.kc-top .sp{flex-grow:1}
+.kc-v{font-size:20px;line-height:28px;font-weight:400}
+.kc-l{font-size:14px;line-height:18px;color:var(--text-secondary)}
+.kc-sig{display:flex;flex-wrap:wrap;gap:4px}
+.kc-f{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.kc-f .sp{flex-grow:1}
+.kc-f .st{color:var(--text-primary)}
+.grp-h{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.grp-h .ai{margin-left:auto}
+.gl{display:flex;flex-direction:column;border-top:1px solid var(--border-subtle-01)}
+.gl li{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:1px solid var(--border-subtle-01);font-size:12px;line-height:16px;color:var(--text-secondary)}
+.gl li .r1{display:flex;align-items:center;gap:8px;color:var(--text-primary);font-size:14px;line-height:18px}
+.gl li .r1 .sp{flex-grow:1}
+.kc-act{display:flex;flex-wrap:wrap;gap:8px;margin-left:-12px}
+.more{align-self:flex-start;border:0;background:transparent;font-size:14px;padding:8px;color:var(--link-primary-hover);cursor:pointer}
+
+/* caso */
+.bcrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.bc{display:flex;align-items:center;gap:8px;font-size:14px}
+.bc li{display:flex;align-items:center;gap:8px}
+.bc li+li::before{content:'/';color:var(--text-secondary)}
+.bcrow .sp{flex-grow:1}
+.nx{display:inline-flex;align-items:center;gap:8px;min-height:32px;font-size:14px;color:var(--text-secondary)}
+.ch{display:flex;flex-direction:column;gap:16px;padding:16px 16px 0}
+.ch-top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.ch-l{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ch-eb{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ch-t{font-size:28px;line-height:36px;font-weight:400}
+.ch-s{font-size:14px;color:var(--text-secondary)}
+.ch-tags{display:flex;flex-wrap:wrap;gap:8px}
+.score{flex:0 0 216px;display:flex;flex-direction:column;gap:8px;padding:16px;background:var(--layer-02)}
+.score-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.score-v{display:flex;align-items:baseline;gap:8px}
+.score-v b{font-size:42px;line-height:50px;font-weight:300}
+.score-v span{font-size:14px;color:var(--text-secondary)}
+.meter{position:relative;height:8px;background:var(--layer-accent-01)}
+.meter i{position:absolute;left:0;top:0;bottom:0;background:var(--support-error)}
+.meter .mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text-primary)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));border-top:1px solid var(--border-subtle-01)}
+.meta div{display:flex;flex-direction:column;gap:4px;padding:12px 16px 16px 0}
+.meta dt{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.meta dd{font-size:14px;color:var(--text-primary)}
+.row2,.row3{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch}
+.dec{flex:2 1 520px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.sec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec-h h2{font-size:16px;line-height:22px;font-weight:600}
+.sec-h .sp{flex-grow:1}
+.sec-d{font-size:14px;color:var(--text-secondary)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.fld{display:flex;flex-direction:column;gap:8px}
+.fld-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:32px}
+.fld-h label{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-h .ed{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-h .sp{flex-grow:1}
+.fld textarea{width:100%;min-height:96px;resize:vertical;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:12px 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;color:var(--text-primary)}
+.fld-f{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-f .sp{flex-grow:1}
+.perfil{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.pl{display:flex;flex-direction:column}
+.pl div{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid var(--border-subtle-01)}
+.pl dt{font-size:14px;color:var(--text-secondary)}
+.pl dd{font-size:14px;color:var(--text-primary);text-align:right}
+.fat{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.fx{display:flex;gap:12px;padding:6px 0;border-top:1px solid var(--border-subtle-01)}
+.fx-n{width:16px;font-size:12px;line-height:20px;color:var(--text-secondary);flex-shrink:0}
+.fx-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.fx-t{font-size:14px;line-height:20px;font-weight:600}
+.fx-d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.bar{height:4px;background:var(--layer-accent-01)}
+.bar i{display:block;height:4px;background:var(--text-secondary)}
+.fx-p{width:48px;text-align:right;font-size:14px;line-height:20px;flex-shrink:0}
+.tl{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.tli{display:flex;gap:12px}
+.tli-r{width:16px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.tli-d{width:12px;height:12px;border-radius:6px;border:2px solid var(--text-primary);margin-top:4px;flex-shrink:0}
+.tli-ln{width:1px;flex-grow:1;background:var(--border-strong-01)}
+.tli-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:2px 8px 12px}
+.tli-h{display:flex;align-items:center;gap:8px}
+.tli-h p{font-size:14px;line-height:20px;flex-grow:1}
+.tli-s{font-size:12px;line-height:16px;color:var(--text-secondary)}
+
+/* notificações inline e toast */
+.ntf{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-left:3px solid var(--support-info);background:var(--notification-info-bg)}
+.ntf.ok{border-left-color:var(--support-success);background:var(--notification-success-bg)}
+.ntf svg{flex-shrink:0;margin-top:2px}
+.ntf-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ntf-t{font-size:14px;line-height:20px;font-weight:600}
+.ntf-s{font-size:14px;line-height:20px}
+.ntf-a{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.toast{position:absolute;top:96px;right:16px;z-index:20;width:400px;max-width:calc(100% - 32px);display:flex;align-items:flex-start;gap:12px;padding:12px 0 12px 16px;border-left:3px solid var(--support-success);background:var(--notification-success-bg);box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.toast.info{border-left-color:var(--support-info);background:var(--notification-info-bg)}
+.toast svg{flex-shrink:0}
+.toast .ic{margin-top:2px}
+.toast-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.toast-t{font-size:14px;line-height:20px;font-weight:600}
+.toast-s{font-size:14px;line-height:20px}
+.toast-u{align-self:flex-start;border:0;background:transparent;padding:4px 0;color:var(--link-primary-hover);font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline}
+
+/* modal Carbon (danger) */
+.ov{position:absolute;top:0;left:0;right:0;bottom:0;z-index:30;background:var(--overlay);display:flex;justify-content:center;align-items:flex-start;padding:144px 16px 16px}
+.mdl{width:100%;max-width:576px;background:var(--layer-01);display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.mdl-h{display:flex;align-items:flex-start;gap:8px;padding:16px 0 0 16px}
+.mdl-h div{flex-grow:1;display:flex;flex-direction:column;gap:4px;padding-top:8px}
+.mdl-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.mdl-t{font-size:20px;line-height:28px;font-weight:400}
+.mdl-b{display:flex;flex-direction:column;gap:16px;padding:16px 16px 32px}
+.mdl-b ul{display:flex;flex-direction:column;gap:4px}
+.mdl-b li{display:flex;gap:8px;font-size:14px;line-height:20px}
+.mdl-b li::before{content:'';width:4px;height:4px;background:var(--text-secondary);margin-top:8px;flex-shrink:0}
+.mdl-f{display:flex}
+.mdl-f .btn{flex:1 1 50%;min-height:64px;align-items:flex-start;padding-top:14px}
+.mdl-k{display:flex;gap:16px;padding:0 16px 8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.mdl-k span{display:inline-flex;align-items:center;gap:4px}
+
+/* trilho Pergunte ao Watson: responde quando perguntado */
+.agent{flex:1 1 320px;min-width:0;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column}
+.ag-head{display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 8px 8px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.ag-title{display:flex;align-items:center;gap:8px;flex-grow:1;min-width:0}
+.ag-title h2{font-size:16px;line-height:22px;font-weight:600}
+.ag-ctx{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:var(--layer-02);border-bottom:1px solid var(--border-subtle-01)}
+.ag-ctx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ag-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-ctx p.d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-q{display:flex;flex-direction:column;gap:8px;padding:16px;border-bottom:1px solid var(--border-subtle-01)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 12px;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--layer-01);color:var(--text-primary);font-size:14px;cursor:pointer;text-align:left}
+.chip:hover{background:var(--layer-hover-01)}
+.chip.on{background:var(--layer-selected-01);border-color:var(--border-inverse)}
+.ag-body{flex-grow:1;display:flex;flex-direction:column;gap:16px;padding:16px}
+.empty{display:flex;flex-direction:column;gap:8px;padding:16px;border:1px dashed var(--border-subtle-02);color:var(--text-secondary);font-size:14px}
+.empty b{color:var(--text-primary);font-weight:600}
+.msg{display:flex;flex-direction:column;gap:12px;padding:16px}
+.msg-head{display:flex;align-items:center;gap:8px}
+.msg-who{font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.msg-when{font-size:12px;line-height:16px;color:var(--text-secondary);margin-left:auto}
+.msg-t{font-size:16px;line-height:22px;font-weight:600}
+.msg p.tx{font-size:14px;line-height:20px}
+.quote{padding:12px;background:var(--layer-02);border-left:2px solid var(--ai-border-strong);font-size:14px;line-height:20px}
+.bul{display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:20px}
+.bul li{display:flex;gap:8px}
+.bul li::before{content:'';width:4px;height:4px;background:var(--text-secondary);margin-top:8px;flex-shrink:0}
+.alist{display:flex;flex-direction:column;border-top:1px solid var(--border-subtle-01)}
+.alist li{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--border-subtle-01);font-size:14px}
+.alist li .v{margin-left:auto}
+.src{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.src svg{flex-shrink:0;margin-top:0}
+.msg-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.done{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--text-primary)}
+.done svg{flex-shrink:0;margin-top:2px}
+.fb{display:flex;align-items:center;margin-left:-8px}
+.fb-l{font-size:12px;color:var(--text-secondary);padding:0 8px}
+.umsg{align-self:flex-end;max-width:85%;background:var(--layer-accent-01);padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.umsg .who{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-foot{display:flex;flex-direction:column;gap:12px;padding:16px;border-top:1px solid var(--border-subtle-01)}
+.ask{display:flex;align-items:stretch}
+.ask input{flex-grow:1;min-width:0;height:48px;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:0 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.ask .ibtn{width:48px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--link-primary)}
+.disc{font-size:12px;line-height:16px;color:var(--text-secondary)}
+
+/* app do associado (T3) */
+.stage{flex-grow:1;display:flex;flex-direction:column;align-items:center;gap:16px;padding:32px 16px 48px;background:#e0e0e0}
+.stage-l{font-size:12px;line-height:16px;color:#393939}
+.wa{position:relative;overflow:hidden;background:var(--background);color:var(--text-primary);font-size:16px;line-height:24px;letter-spacing:0;display:flex;flex-direction:column;border:1px solid #8d8d8d;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.wa button{letter-spacing:0}
+.ab{height:64px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 16px 0 0;background:var(--layer-01);border-bottom:1px solid var(--border-subtle-01)}
+.back{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;color:var(--icon-primary);flex-shrink:0;margin-left:4px;border:0;background:transparent;padding:0;cursor:pointer}
+.av{width:40px;height:40px;border-radius:20px;background:var(--layer-02);border:1px solid var(--border-subtle-01);display:flex;align-items:center;justify-content:center;color:var(--support-info);flex-shrink:0}
+.ab-t{display:flex;flex-direction:column;min-width:0}
+.ab-t h1{font-size:18px;line-height:24px;font-weight:600}
+.ab-t p{display:flex;align-items:center;gap:4px;font-size:16px;line-height:20px;color:var(--text-secondary)}
+.callout{flex-shrink:0;display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--notification-info-bg);border-left:3px solid var(--support-info)}
+.callout svg{flex-shrink:0;margin-top:2px;color:var(--support-info)}
+.callout p{font-size:16px;line-height:22px;font-weight:600}
+.chat{flex-grow:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px;overflow:hidden}
+.selo{display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;color:var(--text-secondary)}
+.selo .who{color:var(--text-primary);font-weight:600}
+.wa .ai{font-size:14px;min-width:28px;height:28px}
+.bub{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:4px 16px 16px 16px;background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.bub .hi{font-size:18px;line-height:26px}
+.det{display:flex;flex-direction:column;background:var(--layer-02);border:1px solid var(--border-subtle-01)}
+.det div{display:flex;align-items:baseline;gap:12px;padding:8px 12px;border-top:1px solid var(--border-subtle-01)}
+.det div:first-child{border-top:0}
+.det dt{width:72px;flex-shrink:0;font-size:16px;color:var(--text-secondary)}
+.det dd{font-size:18px;line-height:24px;font-weight:600;min-width:0}
+.det dd.big{font-size:24px;line-height:32px}
+.q{font-size:22px;line-height:28px;font-weight:600}
+.pause{display:flex;gap:8px;align-items:flex-start;font-size:16px;line-height:22px;color:var(--text-primary);padding:0 4px}
+.pause svg{flex-shrink:0;margin-top:3px}
+.wacts{flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding:16px 16px 12px;background:var(--layer-01);border-top:1px solid var(--border-subtle-01)}
+.choice{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:0 16px;border:1px solid var(--border-strong-01);background:var(--layer-01);color:var(--text-primary);font-size:18px;line-height:24px;font-weight:600;text-align:left;cursor:pointer}
+.choice svg{flex-shrink:0}
+.abtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:56px;padding:0 16px;border:0;background:var(--button-primary);color:var(--text-on-color);font-size:18px;line-height:24px;font-weight:600;cursor:pointer}
+.abtn-g{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;background:transparent;color:var(--link-primary);font-size:16px;cursor:pointer}
+.big-ic{width:96px;height:96px;border-radius:48px;display:flex;align-items:center;justify-content:center;align-self:center;margin-top:16px}
+.big-ic.blue{background:var(--notification-info-bg);color:var(--support-info)}
+.big-ic.green{background:var(--notification-success-bg);color:#0e6027}
+.big-ic.red{background:var(--tag-red-bg);color:#a2191f}
+.ttl{font-size:24px;line-height:32px;font-weight:600;text-align:center}
+.lead{font-size:18px;line-height:26px;text-align:center}
+.warnbox{display:flex;gap:8px;align-items:flex-start;padding:12px;background:var(--notification-warning-bg);border-left:3px solid var(--support-warning);font-size:16px;line-height:22px}
+.warnbox svg{flex-shrink:0;margin-top:2px}
+.next{display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:22px}
+.next li{display:flex;gap:8px}
+.next li svg{flex-shrink:0;margin-top:3px}
+.sim{font-size:14px;line-height:20px;color:var(--text-secondary);text-align:center}
+</style>
+</helmet>
+<div class="wt" style="width: 100%; min-height: 1000px">
+
+  <div class="pbar" role="region" aria-label="Controles do protótipo, fora do produto">
+    <span class="pb-t"><b>Protótipo 2</b> · Analista no controle</span>
+    <span>Tarefa:</span>
+    <div class="pb-seg" role="group" aria-label="Tarefa de teste">
+      <sc-for list="{{tasks}}" as="t" hint-placeholder-count="3">
+        <button type="button" class="{{t.cls}}" aria-pressed="{{t.on}}" onClick="{{t.go}}">{{t.k}}</button>
+      </sc-for>
+    </div>
+    <p class="pb-d">{{taskTx}}</p>
+    <button type="button" class="pb-r" onClick="{{reset}}">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.5-3.5"></path><path d="M3 2.5v3h3"></path></svg>
+      Reiniciar
+    </button>
+  </div>
+
+  <sc-if value="{{isConsole}}" hint-placeholder-val="{{ true }}">
+    <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+    <header class="shell" aria-label="Watson · Prevenção a fraudes">
+      <span class="brand">Watson<b>Prevenção a fraudes</b></span>
+      <div class="shell-sp"></div>
+      <button class="hbtn" type="button" aria-label="Buscar associado, cartão ou caso">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l4.5 4.5"></path></svg>
+      </button>
+      <button class="hbtn" type="button" aria-label="Notificações">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 1.5h-13z"></path><path d="M8 17.5h4"></path></svg>
+      </button>
+      <button class="{{dictBtnCls}}" type="button" aria-label="Dicionário do Watson" aria-expanded="{{dictExp}}" onClick="{{toggleDict}}">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7.5"></circle><path d="M7.8 7.8a2.3 2.3 0 1 1 3.2 2.1c-0.6 0.3-1 0.8-1 1.4v0.7"></path><path d="M10 14.3v0.2" stroke-width="2" stroke-linecap="round"></path></svg>
+      </button>
+      <button class="hbtn" type="button" aria-label="Camila Rocha, perfil e turno">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+      </button>
+      <button class="hbtn" type="button" aria-label="Trocar de aplicativo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h3v3H3zM8.5 3h3v3h-3zM14 3h3v3h-3zM3 8.5h3v3H3zM8.5 8.5h3v3h-3zM14 8.5h3v3h-3zM3 14h3v3H3zM8.5 14h3v3h-3zM14 14h3v3h-3z"></path></svg>
+      </button>
+    </header>
+
+    <div class="body-row">
+      <nav class="snav" aria-label="Navegação principal">
+        <button class="on" type="button" aria-label="Casos (página atual)" aria-current="page" title="Casos" onClick="{{goFila}}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h2M8 5h9M3 10h2M8 10h9M3 15h2M8 15h9"></path></svg>
+        </button>
+        <button type="button" aria-label="Casos encerrados" title="Casos encerrados">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 5.5h5l1.5 2h8.5v9h-15z"></path></svg>
+        </button>
+        <button type="button" aria-label="Associados" title="Associados">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="2.5"></circle><path d="M2.5 16c0.5-2.7 2.2-4 4.5-4s4 1.3 4.5 4"></path><circle cx="14" cy="7.5" r="2"></circle><path d="M13 12c2.2 0 3.7 1.2 4.3 3.5"></path></svg>
+        </button>
+        <button type="button" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 17h14M4.5 13l3.5-4 3 2.5 5-6"></path></svg>
+        </button>
+        <button type="button" aria-label="Relatórios" title="Relatórios">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 2.5h7l3 3v12H5z"></path><path d="M8 9h4M8 12h4"></path></svg>
+        </button>
+        <span class="div" role="separator"></span>
+        <button type="button" aria-label="Ajuda e atalhos do teclado" title="Ajuda e atalhos">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="5.5" width="15" height="9" rx="1"></rect><path d="M5.5 8.5h1M9.5 8.5h1M13.5 8.5h1M6.5 11.5h7"></path></svg>
+        </button>
+      </nav>
+
+      <main id="conteudo" class="main">
+
+        <!-- ============ FILA ============ -->
+        <sc-if value="{{isFila}}" hint-placeholder-val="{{ true }}">
+          <div class="phead">
+            <div class="phead-t">
+              <p class="eyebrow">Prevenção a fraudes · turno da madrugada, 00:00 às 08:00</p>
+              <h1 class="h1">Fila de casos</h1>
+              <p class="sub">{{filaSub}}</p>
+            </div>
+            <div class="cs" role="tablist" aria-label="Modo de visualização dos casos">
+              <button class="on" type="button" role="tab" aria-selected="true" onClick="{{goFila}}">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"></path></svg>
+                Fila
+              </button>
+              <button type="button" role="tab" aria-selected="false" onClick="{{goQuadro}}">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+                Quadro
+              </button>
+            </div>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi">
+              <p class="kpi-l">Casos abertos <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.filaCaso.label}}" aria-expanded="{{tips.filaCaso.exp}}" onClick="{{tips.filaCaso.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.filaCaso.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.filaCaso.term}}</span><span>{{tips.filaCaso.def}}</span><button class="tt-l" type="button" onClick="{{tips.filaCaso.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+              <p class="kpi-v">{{kOpen}}</p>
+              <p class="kpi-n">Juntam {{kAlerts}} alertas <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.filaAlerta.label}}" aria-expanded="{{tips.filaAlerta.exp}}" onClick="{{tips.filaAlerta.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.filaAlerta.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.filaAlerta.term}}</span><span>{{tips.filaAlerta.def}}</span><button class="tt-l" type="button" onClick="{{tips.filaAlerta.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-l">Risco alto</p>
+              <p class="kpi-v">23</p>
+              <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.5 6.5L8 14.5 1.5 8z" fill="#da1e28"></path><path d="M8 4.8v3.6M8 10.8v0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path></svg>9 de cartão não presente</p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-l">Aguardando associado <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.filaAguard.label}}" aria-expanded="{{tips.filaAguard.exp}}" onClick="{{tips.filaAguard.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.filaAguard.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.filaAguard.term}}</span><span>{{tips.filaAguard.def}}</span><button class="tt-l" type="button" onClick="{{tips.filaAguard.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+              <p class="kpi-v">{{kAguard}}</p>
+              <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{kAgA}}" fill="{{kAgAf}}" stroke="{{kAgAs}}" stroke-width="{{kAgAw}}"></path><path d="{{kAgB}}" fill="none" stroke="{{kAgBs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{kAgNote}}</p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-l">Tempo até a decisão <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.filaTempo.label}}" aria-expanded="{{tips.filaTempo.exp}}" onClick="{{tips.filaTempo.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.filaTempo.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop r"><span class="tt-t">{{tips.filaTempo.term}}</span><span>{{tips.filaTempo.def}}</span><button class="tt-l" type="button" onClick="{{tips.filaTempo.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+              <p class="kpi-v">1 min 48 s</p>
+              <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>Dentro da meta de 2 min</p>
+            </div>
+          </div>
+
+          <section class="dt-box" aria-labelledby="dt-t">
+            <div class="dt-head">
+              <h2 id="dt-t">Casos abertos</h2>
+              <p>Ordenados por score de risco, do maior para o menor. Você escolhe a ordem e age direto na linha; o Watson só responde quando você pergunta.</p>
+            </div>
+            <sc-if value="{{noSel}}" hint-placeholder-val="{{ true }}">
+              <div class="dt-tb" role="toolbar" aria-label="Ferramentas da tabela">
+                <label class="dt-search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5l3.5 3.5"></path></svg>
+                  <span class="sr">Buscar na fila</span>
+                  <input type="search" placeholder="Buscar caso, associado ou cartão">
+                </label>
+                <button class="ibtn" type="button" aria-label="Filtros, 2 ativos">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14l-5.5 6.5v5l-3 1.5v-6.5z"></path></svg>
+                </button>
+                <button class="ibtn" type="button" aria-label="Exportar fila">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 3v10M6 9l4 4 4-4M3.5 16.5h13"></path></svg>
+                </button>
+                <button class="ibtn" type="button" aria-label="Configurar colunas">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h8M14 5h3M3 10h3M9 10h8M3 15h10M16 15h1"></path><circle cx="12.5" cy="5" r="1.5"></circle><circle cx="7.5" cy="10" r="1.5"></circle><circle cx="14.5" cy="15" r="1.5"></circle></svg>
+                </button>
+              </div>
+            </sc-if>
+            <sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+              <div class="bbar" role="toolbar" aria-label="Ações em lote">
+                <p class="n" aria-live="polite">{{selTx}}</p>
+                <button class="bb" type="button" onClick="{{bulkResend}}">
+                  Reenviar aviso de compra
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 8l12-5.5L10 14l-2-4.5z"></path><path d="M8 9.5L14 2.5"></path></svg>
+                  <kbd class="kbd inv">R</kbd>
+                </button>
+                <button class="bb" type="button" onClick="{{bulkAssign}}">
+                  Atribuir a mim
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 14c0.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"></path></svg>
+                  <kbd class="kbd inv">A</kbd>
+                </button>
+                <span class="bb-div" aria-hidden="true"></span>
+                <button class="bb" type="button" onClick="{{clearSel}}">Cancelar <kbd class="kbd inv">Esc</kbd></button>
+              </div>
+            </sc-if>
+            <div class="dt-keys" aria-label="Atalhos do teclado da fila">
+              <span>Atalhos:</span>
+              <span class="k"><kbd class="kbd">J</kbd><kbd class="kbd">K</kbd> mover na fila</span>
+              <span class="k"><kbd class="kbd">X</kbd> selecionar</span>
+              <span class="k"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 3h4v4M13 3L7 9M11 9.5V13H3V5h3.5"></path></svg><kbd class="kbd">O</kbd> abrir caso</span>
+              <span class="k"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7.5" width="9" height="6.5" fill="none" stroke="#da1e28" stroke-width="1.5"></rect><path d="M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="#da1e28" stroke-width="1.5"></path></svg><kbd class="kbd">B</kbd> bloquear cartão</span>
+              <span class="k"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg><kbd class="kbd">P</kbd> perguntar ao associado</span>
+              <span class="k"><kbd class="kbd">R</kbd> reenviar aviso em lote</span>
+            </div>
+            <div class="dt-wrap">
+              <table class="dt">
+                <thead>
+                  <tr>
+                    <th class="cbc" scope="col">
+                      <button class="cbb" type="button" role="checkbox" aria-checked="{{allChk}}" aria-label="Selecionar todos os casos abertos da página" onClick="{{toggleAll}}"><span class="{{allCbCls}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="{{allCbPath}}"></path></svg></span></button>
+                    </th>
+                    <th scope="col">Caso</th>
+                    <th scope="col">Associado</th>
+                    <th scope="col" class="r">Valor</th>
+                    <th scope="col">Estabelecimento</th>
+                    <th scope="col" aria-sort="descending"><span class="srt">Risco · score <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 2.5v11M4 9.5l4 4 4-4"></path></svg><span class="tt"><button class="tt-b" type="button" aria-label="{{tips.filaScore.label}}" aria-expanded="{{tips.filaScore.exp}}" onClick="{{tips.filaScore.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.filaScore.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.filaScore.term}}</span><span>{{tips.filaScore.def}}</span><button class="tt-l" type="button" onClick="{{tips.filaScore.dict}}">Ver no dicionário</button></span></sc-if></span></span></th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Ações rápidas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+                    <tr class="{{r.cls}}">
+                      <td class="cbc">
+                        <sc-if value="{{r.canAct}}" hint-placeholder-val="{{ true }}">
+                          <button class="cbb" type="button" role="checkbox" aria-checked="{{r.chk}}" aria-label="{{r.cbL}}" onClick="{{r.toggle}}"><span class="{{r.cbCls}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"></path></svg></span></button>
+                        </sc-if>
+                      </td>
+                      <td class="pri">
+                        <span class="cid">
+                          <button class="lnk mono" type="button" onClick="{{r.open}}">{{r.id}}</button>
+                          <sc-if value="{{r.grp}}" hint-placeholder-val="{{ false }}">
+                            <button class="ai" type="button" aria-label="IA: o Watson juntou 3 alertas do mesmo cartão neste caso">IA</button>
+                          </sc-if>
+                        </span>
+                      </td>
+                      <td class="pri">{{r.assoc}}</td>
+                      <td class="r pri mono">{{r.valor}}</td>
+                      <td><span class="t" title="{{r.loja}}">{{r.loja}}</span></td>
+                      <td>
+                        <span class="rk">
+                          <span class="{{r.tagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.ra1}}" fill="{{r.raf}}" stroke="{{r.ras}}" stroke-width="1"></path><path d="{{r.rb}}" fill="none" stroke="{{r.rbs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{r.risco}}</span>
+                          <span class="mono" style="color: #161616">{{r.score}}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="st" style="color: #161616"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.sa}}" fill="{{r.saf}}" stroke="{{r.sas}}" stroke-width="{{r.saw}}"></path><path d="{{r.sb}}" fill="none" stroke="{{r.sbs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{r.estado}}</span>
+                      </td>
+                      <td class="acts-c">
+                        <sc-if value="{{r.canAct}}" hint-placeholder-val="{{ true }}">
+                          <span class="ras">
+                            <button class="ra" type="button" aria-label="{{r.aOpen}}" title="Abrir caso (O)" onClick="{{r.open}}">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 3h4v4M13 3L7 9M11 9.5V13H3V5h3.5"></path></svg>
+                              <kbd class="kbd">O</kbd>
+                            </button>
+                            <button class="ra" type="button" aria-label="{{r.aBlock}}" title="Bloquear cartão (B)" onClick="{{r.block}}">
+                              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7.5" width="9" height="6.5" fill="none" stroke="#da1e28" stroke-width="1.5"></rect><path d="M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="#da1e28" stroke-width="1.5"></path></svg>
+                              <kbd class="kbd">B</kbd>
+                            </button>
+                            <button class="ra" type="button" aria-label="{{r.aAsk}}" title="{{r.tAsk}}" onClick="{{r.ask}}">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg>
+                              <kbd class="kbd">P</kbd>
+                            </button>
+                          </span>
+                        </sc-if>
+                        <sc-if value="{{r.isRes}}" hint-placeholder-val="{{ false }}">
+                          <span class="muted">Encerrado</span>
+                        </sc-if>
+                      </td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+            <div class="pg">
+              <div class="pg-c">Itens por página: 25</div>
+              <div class="pg-c">{{pgTx}}</div>
+              <span class="sp"></span>
+              <div class="pg-c">Página 1 de 6</div>
+              <button class="ibtn" type="button" aria-label="Página anterior">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8d8d8d" stroke-width="1.5" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"></path></svg>
+              </button>
+              <button class="ibtn" type="button" aria-label="Próxima página">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"></path></svg>
+              </button>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- ============ QUADRO ============ -->
+        <sc-if value="{{isQuadro}}" hint-placeholder-val="{{ false }}">
+          <div class="phead">
+            <div class="phead-t">
+              <p class="eyebrow">Prevenção a fraudes · turno da madrugada, 00:00 às 08:00</p>
+              <h1 class="h1">Quadro do processo</h1>
+              <p class="sub">{{quadroSub}} <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.quadroCaso.label}}" aria-expanded="{{tips.quadroCaso.exp}}" onClick="{{tips.quadroCaso.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.quadroCaso.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.quadroCaso.term}}</span><span>{{tips.quadroCaso.def}}</span><button class="tt-l" type="button" onClick="{{tips.quadroCaso.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+            </div>
+            <div class="cs" role="tablist" aria-label="Modo de visualização dos casos">
+              <button type="button" role="tab" aria-selected="false" onClick="{{goFila}}">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"></path></svg>
+                Fila
+              </button>
+              <button class="on" type="button" role="tab" aria-selected="true" onClick="{{goQuadro}}">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+                Quadro
+              </button>
+            </div>
+          </div>
+
+          <sc-if value="{{noSel}}" hint-placeholder-val="{{ true }}">
+            <div class="flt" role="toolbar" aria-label="Filtros do quadro">
+              <button class="dd" type="button" aria-label="Risco: todos"><span class="k">Risco:</span> Todos
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+              </button>
+              <button class="dd" type="button" aria-label="Canal: todos"><span class="k">Canal:</span> Todos
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+              </button>
+              <button class="dd" type="button" aria-label="Analista: todas"><span class="k">Analista:</span> Todas
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+              </button>
+              <span class="muted" style="display: inline-flex; align-items: center; gap: 4px">Cards por score de risco <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.quadroScore.label}}" aria-expanded="{{tips.quadroScore.exp}}" onClick="{{tips.quadroScore.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.quadroScore.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.quadroScore.term}}</span><span>{{tips.quadroScore.def}}</span><button class="tt-l" type="button" onClick="{{tips.quadroScore.dict}}">Ver no dicionário</button></span></sc-if></span></span>
+              <span class="sp"></span>
+              <span class="muted" style="display: inline-flex; align-items: center; gap: 8px; font-size: 12px">Atalhos: <kbd class="kbd">X</kbd> selecionar <kbd class="kbd">R</kbd> reenviar aviso <kbd class="kbd">D</kbd> desagrupar</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+            <div class="bbar" role="toolbar" aria-label="Ações em lote">
+              <p class="n" aria-live="polite">{{selTx}}</p>
+              <button class="bb" type="button" onClick="{{bulkResend}}">
+                Reenviar aviso de compra
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 8l12-5.5L10 14l-2-4.5z"></path><path d="M8 9.5L14 2.5"></path></svg>
+                <kbd class="kbd inv">R</kbd>
+              </button>
+              <button class="bb" type="button" onClick="{{bulkAssign}}">
+                Atribuir a mim
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 14c0.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"></path></svg>
+                <kbd class="kbd inv">A</kbd>
+              </button>
+              <span class="bb-div" aria-hidden="true"></span>
+              <button class="bb" type="button" onClick="{{clearSel}}">Cancelar <kbd class="kbd inv">Esc</kbd></button>
+            </div>
+          </sc-if>
+
+          <div class="board-wrap">
+            <div class="board">
+              <sc-for list="{{cols}}" as="col" hint-placeholder-count="4">
+                <section class="col" aria-labelledby="{{col.hid}}">
+                  <div class="col-h">
+                    <div class="col-hr">
+                      <sc-if value="{{col.canSelAll}}" hint-placeholder-val="{{ false }}">
+                        <button class="cbb" type="button" role="checkbox" aria-checked="{{col.chk}}" aria-label="{{col.cbL}}" onClick="{{col.selAll}}"><span class="{{col.cbCls}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="{{col.cbPath}}"></path></svg></span></button>
+                      </sc-if>
+                      <h2 id="{{col.hid}}">{{col.t}}</h2>
+                      <sc-if value="{{col.hasTip}}" hint-placeholder-val="{{ false }}"><span class="tt"><button class="tt-b" type="button" aria-label="{{col.tip.label}}" aria-expanded="{{col.tip.exp}}" onClick="{{col.tip.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{col.tip.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{col.tip.term}}</span><span>{{col.tip.def}}</span><button class="tt-l" type="button" onClick="{{col.tip.dict}}">Ver no dicionário</button></span></sc-if></span></sc-if>
+                      <span class="cnt">{{col.n}}</span>
+                    </div>
+                    <sc-if value="{{col.hasNote}}" hint-placeholder-val="{{ false }}">
+                      <p class="col-w"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{col.na}}" fill="{{col.naf}}" stroke="{{col.nas}}" stroke-width="{{col.naw}}"></path><path d="{{col.nb}}" fill="none" stroke="{{col.nbs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{col.note}}</p>
+                    </sc-if>
+                  </div>
+                  <sc-for list="{{col.cards}}" as="c" hint-placeholder-count="3">
+                    <article class="{{c.cls}}" aria-label="{{c.aria}}">
+                      <span class="kc-bar" style="background: {{c.bar}}"></span>
+                      <div class="kc-b">
+                        <sc-if value="{{c.isGroup}}" hint-placeholder-val="{{ false }}">
+                          <div class="grp-h">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4.5" y="4.5" width="9" height="9"></rect><path d="M2.5 11.5v-9h9"></path></svg>
+                            3 alertas juntados pelo Watson
+                            <span class="tt"><button class="tt-b" type="button" aria-label="{{c.tip.label}}" aria-expanded="{{c.tip.exp}}" onClick="{{c.tip.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{c.tip.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{c.tip.term}}</span><span>{{c.tip.def}}</span><button class="tt-l" type="button" onClick="{{c.tip.dict}}">Ver no dicionário</button></span></sc-if></span>
+                            <button class="ai" type="button" aria-label="IA: o Watson juntou estes alertas em um caso pela regra mesmo cartão em até 10 min">IA</button>
+                          </div>
+                        </sc-if>
+                        <div class="kc-top">
+                          <sc-if value="{{c.canSel}}" hint-placeholder-val="{{ true }}">
+                            <button class="cbb" type="button" role="checkbox" aria-checked="{{c.chk}}" aria-label="{{c.cbL}}" onClick="{{c.toggle}}"><span class="{{c.cbCls}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3 4.7-5"></path></svg></span></button>
+                          </sc-if>
+                          <button class="lnk mono" type="button" onClick="{{c.open}}">{{c.id}}</button>
+                          <span class="sp"></span>
+                          <span class="{{c.tagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.ra1}}" fill="{{c.raf}}" stroke="{{c.ras}}" stroke-width="1"></path><path d="{{c.rb}}" fill="none" stroke="{{c.rbs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.risco}}</span>
+                        </div>
+                        <p class="kc-v">{{c.valor}}</p>
+                        <p class="kc-l">{{c.loja}}</p>
+                        <sc-if value="{{c.isGroup}}" hint-placeholder-val="{{ false }}">
+                          <button class="lnk" type="button" aria-expanded="{{c.exp}}" onClick="{{c.toggleGrp}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 32px; align-self: flex-start">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="{{c.chev}}"></path></svg>
+                            {{c.expL}}
+                          </button>
+                          <sc-if value="{{c.grpOpen}}" hint-placeholder-val="{{ false }}">
+                            <ul class="gl" aria-label="Alertas do grupo">
+                              <sc-for list="{{c.alerts}}" as="g" hint-placeholder-count="3">
+                                <li>
+                                  <span class="r1"><span class="mono">{{g.h}}</span><span class="mono">{{g.v}}</span><span class="sp"></span><span class="{{g.tagCls}}">{{g.canal}}</span></span>
+                                  <span>{{g.loja}}</span>
+                                </li>
+                              </sc-for>
+                            </ul>
+                          </sc-if>
+                          <div class="kc-act">
+                            <button class="btn btn-ghost btn-sm" type="button" onClick="{{c.ungroup}}">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5"></rect><rect x="9" y="9" width="5.5" height="5.5"></rect><path d="M9 4h3.5v3M7 12H3.5V9"></path></svg>
+                              Desagrupar
+                              <kbd class="kbd">D</kbd>
+                            </button>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{c.hasSig}}" hint-placeholder-val="{{ true }}">
+                          <div class="kc-sig"><span class="tag tag-outline">{{c.s1}}</span><span class="tag tag-outline">{{c.s2}}</span></div>
+                        </sc-if>
+                        <div class="kc-f">
+                          <span class="mono">{{c.foot}}</span>
+                          <span class="sp"></span>
+                          <span class="st"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.sa}}" fill="{{c.saf}}" stroke="{{c.sas}}" stroke-width="{{c.saw}}"></path><path d="{{c.sb}}" fill="none" stroke="{{c.sbs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.estado}}</span>
+                        </div>
+                      </div>
+                    </article>
+                  </sc-for>
+                  <sc-if value="{{col.hasMore}}" hint-placeholder-val="{{ false }}">
+                    <button class="more" type="button">{{col.more}}</button>
+                  </sc-if>
+                </section>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ CASO #4821 ============ -->
+        <sc-if value="{{isCaso}}" hint-placeholder-val="{{ false }}">
+          <div class="bcrow">
+            <nav aria-label="Trilha de navegação">
+              <ol class="bc">
+                <li><button class="lnk" type="button" onClick="{{goFila}}">Fila</button></li>
+                <li aria-current="page">Caso #4821</li>
+              </ol>
+            </nav>
+            <span class="sp"></span>
+            <span class="nx"><kbd class="kbd">K</kbd> caso anterior</span>
+            <span class="nx"><kbd class="kbd">J</kbd> próximo da fila: #5107</span>
+          </div>
+
+          <section class="tile ch" aria-labelledby="ch-t">
+            <div class="ch-top">
+              <div class="ch-l">
+                <p class="ch-eb"><span class="mono">Caso #4821 · crédito · cartão não presente · aberto há 4 min</span> <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.casoCaso.label}}" aria-expanded="{{tips.casoCaso.exp}}" onClick="{{tips.casoCaso.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.casoCaso.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.casoCaso.term}}</span><span>{{tips.casoCaso.def}}</span><button class="tt-l" type="button" onClick="{{tips.casoCaso.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+                <h1 class="ch-t" id="ch-t">R$ 2.349,90 · Loja Exemplo Eletrônicos</h1>
+                <p class="ch-s">Valdir B. (fictício) · cartão de crédito final 4821 · associado desde 2006</p>
+                <div class="ch-tags">
+                  <span class="tag tag-red"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.5 6.5L8 14.5 1.5 8z" fill="#da1e28"></path><path d="M8 4.8v3.6M8 10.8v0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path></svg>Risco alto</span>
+                  <span class="{{csTagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{csA}}" fill="{{csAf}}" stroke="{{csAs}}" stroke-width="{{csAw}}"></path><path d="{{csB}}" fill="none" stroke="{{csBs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{csTag}}</span>
+                  <span class="tag tag-cool">Online</span>
+                  <span class="tag tag-cool">Rajada: 5 tentativas</span>
+                </div>
+              </div>
+              <div class="score" role="group" aria-label="Score de risco 0,92 de 1,00, acima do limite de bloqueio 0,85">
+                <p class="score-l" style="display: flex; align-items: center; gap: 4px">Score de risco <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.casoScore.label}}" aria-expanded="{{tips.casoScore.exp}}" onClick="{{tips.casoScore.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.casoScore.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop r"><span class="tt-t">{{tips.casoScore.term}}</span><span>{{tips.casoScore.def}}</span><button class="tt-l" type="button" onClick="{{tips.casoScore.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+                <p class="score-v"><b>0,92</b><span>de 1,00</span></p>
+                <div class="meter" aria-hidden="true"><i style="width: 92%"></i><span class="mk" style="left: 85%"></span></div>
+                <p class="score-l">Limite de bloqueio: 0,85</p>
+              </div>
+            </div>
+            <dl class="meta">
+              <sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
+                <div><dt>{{m.k}}</dt><dd>{{m.v}}</dd></div>
+              </sc-for>
+            </dl>
+          </section>
+
+          <div class="row2">
+            <section class="tile dec" aria-labelledby="dec-t">
+              <div class="sec-h">
+                <h2 id="dec-t">Sua decisão</h2>
+                <span class="sp"></span>
+                <span class="sec-d">Você decide; pergunte ao Watson se precisar</span>
+              </div>
+
+              <sc-if value="{{caseRes}}" hint-placeholder-val="{{ false }}">
+                <div class="{{resCls}}" role="status">
+                  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17z" fill="{{resIc}}"></path><path d="M6.2 10.2l2.6 2.6 5-5.2" fill="none" stroke="#ffffff" stroke-width="1.75"></path></svg>
+                  <div class="ntf-b">
+                    <p class="ntf-t">{{resT}}</p>
+                    <p class="ntf-s">{{resS}}</p>
+                    <div class="ntf-a">
+                      <button class="btn btn-tertiary btn-sm" type="button" onClick="{{goFila}}">Voltar para a fila</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{caseOpen}}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{casePedido}}" hint-placeholder-val="{{ false }}">
+                  <div class="ntf" role="status">
+                    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17z" fill="#0043ce"></path><path d="M10 9v5M10 6.2v0.3" fill="none" stroke="#ffffff" stroke-width="1.75" stroke-linecap="round"></path></svg>
+                    <div class="ntf-b">
+                      <p class="ntf-t" style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap">Aguardando associado <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.casoAguard.label}}" aria-expanded="{{tips.casoAguard.exp}}" onClick="{{tips.casoAguard.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.casoAguard.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{tips.casoAguard.term}}</span><span>{{tips.casoAguard.def}}</span><button class="tt-l" type="button" onClick="{{tips.casoAguard.dict}}">Ver no dicionário</button></span></sc-if></span> · aviso de compra enviado ao Valdir às 03:20</p>
+                      <p class="ntf-s">A compra segue pausada até ele responder. Você pode bloquear a qualquer momento.</p>
+                    </div>
+                  </div>
+                </sc-if>
+                <div class="acts">
+                  <button class="btn btn-danger btn-lg" type="button" onClick="{{blockCase}}">
+                    Bloquear cartão
+                    <span style="display: inline-flex; align-items: center; gap: 8px"><kbd class="kbd inv">B</kbd><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg></span>
+                  </button>
+                  <sc-if value="{{caseNovo}}" hint-placeholder-val="{{ true }}">
+                    <button class="btn btn-tertiary btn-lg" type="button" onClick="{{askCase}}">
+                      Perguntar ao associado
+                      <span style="display: inline-flex; align-items: center; gap: 8px"><kbd class="kbd">P</kbd><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg></span>
+                    </button>
+                  </sc-if>
+                  <button class="btn btn-ghost btn-lg" type="button" onClick="{{notSimLib}}">
+                    Liberar compra
+                    <kbd class="kbd">L</kbd>
+                  </button>
+                  <button class="btn btn-ghost btn-lg" type="button" onClick="{{notSimEsc}}">
+                    Escalar
+                    <kbd class="kbd">E</kbd>
+                  </button>
+                </div>
+                <div class="fld">
+                  <sc-if value="{{draftOff}}" hint-placeholder-val="{{ true }}">
+                    <div class="fld-h">
+                      <label for="just">Justificativa para a auditoria (obrigatória para bloquear)</label>
+                      <span class="sp"></span>
+                      <button class="btn btn-ghost btn-sm" type="button" onClick="{{askJust}}">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg>
+                        Pedir rascunho ao Watson
+                      </button>
+                    </div>
+                    <textarea id="just" rows="3" placeholder="Descreva por que vai bloquear. Ex.: rajada online longe de casa, valor fora do padrão."></textarea>
+                    <div class="fld-f"><span>Vai para a trilha de auditoria com o seu nome.</span><span class="sp"></span><span class="mono">0/500</span></div>
+                  </sc-if>
+                  <sc-if value="{{draftOn}}" hint-placeholder-val="{{ false }}">
+                    <div class="fld-h">
+                      <label for="just2">Justificativa para a auditoria</label>
+                      <button class="ai" type="button" aria-label="IA: rascunho escrito pelo Watson a partir dos fatores 1 a 3, inserido por você">IA</button>
+                      <span class="ed">· rascunho do Watson, inserido por você</span>
+                      <span class="sp"></span>
+                      <button class="btn btn-ghost btn-sm" type="button" onClick="{{revertDraft}}">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                        Reverter
+                      </button>
+                    </div>
+                    <textarea id="just2" rows="3">Rajada de 5 tentativas online em 4 min (03:14 a 03:18), a 760 km da última compra presencial do associado, em Chapecó (SC). Valor 6 vezes acima da média online dele. Padrão semelhante a 38 fraudes confirmadas em 90 dias.</textarea>
+                    <div class="fld-f"><span>Você pode editar antes de bloquear. Vai para a trilha de auditoria com o seu nome.</span><span class="sp"></span><span class="mono">236/500</span></div>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </section>
+
+            <section class="tile perfil" aria-labelledby="pf-t">
+              <div class="sec-h">
+                <h2 id="pf-t">Perfil do associado</h2>
+              </div>
+              <dl class="pl">
+                <sc-for list="{{perfil}}" as="p" hint-placeholder-count="6">
+                  <div><dt>{{p.k}}</dt><dd>{{p.v}}</dd></div>
+                </sc-for>
+              </dl>
+            </section>
+          </div>
+
+          <div class="row3">
+            <section class="tile fat" aria-labelledby="fx-t">
+              <div class="sec-h">
+                <h2 id="fx-t">Por que o score é 0,92</h2>
+                <button class="ai" type="button" aria-label="IA: explicação do modelo de risco">IA</button>
+                <span class="sp"></span>
+                <span class="sec-d">Peso no score</span>
+              </div>
+              <sc-for list="{{fatores}}" as="f" hint-placeholder-count="5">
+                <div class="fx">
+                  <span class="fx-n mono">{{f.n}}</span>
+                  <div class="fx-b">
+                    <p class="fx-t">{{f.t}}</p>
+                    <p class="fx-d">{{f.d}}</p>
+                    <div class="bar" aria-hidden="true"><i style="width: {{f.w}}"></i></div>
+                  </div>
+                  <span class="fx-p mono">{{f.p}}</span>
+                </div>
+              </sc-for>
+              <div class="fx">
+                <span class="fx-n mono">−</span>
+                <div class="fx-b">
+                  <p class="fx-t">Reduz o risco: já comprou online antes</p>
+                  <p class="fx-d">2 compras online legítimas em 2026</p>
+                </div>
+                <span class="fx-p mono">−0,03</span>
+              </div>
+              <p class="fx-d" style="border-top: 1px solid #e0e0e0; padding-top: 8px">Base do modelo para cartão não presente: +0,06. Soma: 0,92.</p>
+            </section>
+
+            <section class="tile tl" aria-labelledby="tl-t">
+              <div class="sec-h">
+                <h2 id="tl-t">Linha do tempo do cartão</h2>
+                <span class="sp"></span>
+                <span class="sec-d" style="display: inline-flex; align-items: center; gap: 4px">5 alertas neste caso <span class="tt"><button class="tt-b" type="button" aria-label="{{tips.casoAlerta.label}}" aria-expanded="{{tips.casoAlerta.exp}}" onClick="{{tips.casoAlerta.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{tips.casoAlerta.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop r"><span class="tt-t">{{tips.casoAlerta.term}}</span><span>{{tips.casoAlerta.def}}</span><button class="tt-l" type="button" onClick="{{tips.casoAlerta.dict}}">Ver no dicionário</button></span></sc-if></span></span>
+              </div>
+              <ol>
+                <sc-for list="{{tl}}" as="t" hint-placeholder-count="6">
+                  <li class="tli">
+                    <div class="tli-r" aria-hidden="true"><span class="tli-d" style="background: {{t.dot}}"></span><span class="tli-ln"></span></div>
+                    <div class="tli-b" style="background: {{t.bg}}">
+                      <div class="tli-h">
+                        <p><span class="mono">{{t.h}}</span> · <span style="font-weight: {{t.fw}}">{{t.v}}</span></p>
+                        <span class="{{t.tagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{t.i1}}" fill="{{t.f}}" stroke="{{t.s}}" stroke-width="1"></path><path d="{{t.i2}}" fill="none" stroke="{{t.m}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{t.tag}}</span>
+                      </div>
+                      <p class="tli-s">{{t.loja}}</p>
+                    </div>
+                  </li>
+                </sc-for>
+              </ol>
+            </section>
+          </div>
+        </sc-if>
+      </main>
+
+      <!-- ============ TRILHO: PERGUNTE AO WATSON (sob demanda) ============ -->
+      <aside class="agent" aria-labelledby="ag-t">
+        <div class="ag-head">
+          <div class="ag-title">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14v10H9l-4 3v-3H3z"></path><path d="M7 9h0.01M10 9h0.01M13 9h0.01"></path></svg>
+            <h2 id="ag-t">Pergunte ao Watson</h2>
+            <button class="ai" type="button" aria-label="IA: o Watson responde perguntas sobre a tela atual e mostra a fonte de cada resposta">IA</button>
+          </div>
+          <sc-if value="{{hasConv}}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-ghost btn-sm" type="button" onClick="{{clearConv}}">Limpar</button>
+          </sc-if>
+        </div>
+        <div class="ag-ctx">
+          <div class="ag-ctx-row">
+            <span class="ag-l">Contexto</span>
+            <span class="tag tag-cool">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"></path><circle cx="8" cy="8" r="2"></circle></svg>
+              {{ctxTela}}
+            </span>
+            <span class="tag tag-outline">Responde quando perguntado</span>
+          </div>
+          <p class="d">{{ctxDesc}}</p>
+        </div>
+        <div class="ag-q">
+          <p class="ag-l">Perguntas rápidas para esta tela</p>
+          <div class="chips">
+            <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+              <button class="{{c.cls}}" type="button" aria-pressed="{{c.on}}" onClick="{{c.ask}}">{{c.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="ag-body" aria-live="polite">
+          <sc-if value="{{noConv}}" hint-placeholder-val="{{ true }}">
+            <div class="empty">
+              <b>O Watson fica em silêncio até você perguntar.</b>
+              <p>Ele não reordena a fila nem sugere ações sozinho. Toque numa pergunta acima ou escreva a sua; cada resposta mostra de onde veio.</p>
+            </div>
+          </sc-if>
+          <sc-for list="{{msgs}}" as="m" hint-placeholder-count="2">
+            <div class="umsg">
+              <span class="who">Você · {{m.when}}</span>
+              <p>{{m.q}}</p>
+            </div>
+            <article class="ai-box msg" aria-label="{{m.aria}}">
+              <div class="msg-head">
+                <span class="msg-who">Watson</span>
+                <button class="ai" type="button" aria-label="IA: resposta gerada pelo Watson; veja a fonte abaixo">IA</button>
+                <span class="msg-when">{{m.when}}</span>
+              </div>
+              <h3 class="msg-t">{{m.title}}</h3>
+              <p class="tx">{{m.body}}</p>
+              <sc-if value="{{m.hasQuote}}" hint-placeholder-val="{{ false }}">
+                <p class="quote">{{m.quote}}</p>
+              </sc-if>
+              <sc-if value="{{m.hasConf}}" hint-placeholder-val="{{ false }}">
+                <p class="done" style="align-items: center">Confiança do agente: alta, 87% <span class="tt"><button class="tt-b" type="button" aria-label="{{m.tip.label}}" aria-expanded="{{m.tip.exp}}" onClick="{{m.tip.toggle}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg></button><sc-if value="{{m.tip.open}}" hint-placeholder-val="{{ false }}"><span class="tt-pop"><span class="tt-t">{{m.tip.term}}</span><span>{{m.tip.def}}</span><button class="tt-l" type="button" onClick="{{m.tip.dict}}">Ver no dicionário</button></span></sc-if></span></p>
+              </sc-if>
+              <sc-if value="{{m.hasBul}}" hint-placeholder-val="{{ false }}">
+                <ul class="bul">
+                  <sc-for list="{{m.bul}}" as="b" hint-placeholder-count="3">
+                    <li>{{b.t}}</li>
+                  </sc-for>
+                </ul>
+              </sc-if>
+              <sc-if value="{{m.hasCases}}" hint-placeholder-val="{{ false }}">
+                <ul class="alist" aria-label="Casos citados na resposta">
+                  <sc-for list="{{m.cases}}" as="k" hint-placeholder-count="5">
+                    <li><span class="mono">{{k.id}}</span><span>{{k.min}}</span><span class="v mono">{{k.v}}</span></li>
+                  </sc-for>
+                </ul>
+              </sc-if>
+              <p class="src">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 1.5h5l3 3v10H4z"></path><path d="M9 1.5v3h3"></path></svg>
+                {{m.src}}
+              </p>
+              <sc-if value="{{m.hasAct}}" hint-placeholder-val="{{ false }}">
+                <div class="msg-act">
+                  <button class="btn btn-tertiary btn-sm" type="button" onClick="{{m.act}}">{{m.actL}}</button>
+                  <sc-if value="{{m.hasAct2}}" hint-placeholder-val="{{ false }}">
+                    <button class="btn btn-ghost btn-sm" type="button" onClick="{{m.act2}}">{{m.act2L}}</button>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{m.isDone}}" hint-placeholder-val="{{ false }}">
+                <p class="done">
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>
+                  {{m.doneTx}}
+                </p>
+              </sc-if>
+              <div class="fb">
+                <span class="fb-l">Esta resposta ajudou?</span>
+                <button class="ibtn ibtn-sm" type="button" aria-label="Resposta útil">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></svg>
+                </button>
+                <button class="ibtn ibtn-sm" type="button" aria-label="Resposta não útil">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><g transform="rotate(180 8 8)"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></g></svg>
+                </button>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+        <div class="ag-foot">
+          <div class="ask">
+            <input type="text" placeholder="{{askPh}}" aria-label="Escreva uma pergunta para o Watson">
+            <button class="ibtn" type="button" aria-label="Enviar pergunta" onClick="{{sendFree}}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 10l14-6.5L12 17l-2.5-5.5z"></path><path d="M9.5 11.5L17 3.5"></path></svg>
+            </button>
+          </div>
+          <p class="disc">O Watson responde e mostra a fonte; ele pode errar. Nada é bloqueado, liberado ou enviado sem a sua ação.</p>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+
+  <!-- ============ APP DO ASSOCIADO (T3) ============ -->
+  <sc-if value="{{isApp}}" hint-placeholder-val="{{ false }}">
+    <div class="stage">
+      <p class="stage-l">Celular do Valdir · app da cooperativa (quadro de 390 × 844)</p>
+      <div class="wa" style="width: 390px; height: 844px" role="region" aria-label="App do associado">
+        <header class="ab">
+          <button class="back" type="button" aria-label="Voltar" onClick="{{appBack}}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+          </button>
+          <div class="av" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+          </div>
+          <div class="ab-t">
+            <h1>Cartões da cooperativa</h1>
+            <p>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg>
+              Conversa segura no seu app
+            </p>
+          </div>
+        </header>
+        <div class="callout" role="note">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M10 9v5M10 6.2v0.3"></path></svg>
+          <p>Ninguém da cooperativa pede senha, código ou resposta por telefone.</p>
+        </div>
+
+        <sc-if value="{{appAlerta}}" hint-placeholder-val="{{ true }}">
+          <main class="chat">
+            <p class="selo">
+              <button class="ai" type="button" aria-label="IA: aviso de compra enviado pelo assistente automático da cooperativa">IA</button>
+              <span class="who">Assistente automático da cooperativa</span>
+            </p>
+            <article class="bub" aria-label="Aviso de compra do assistente automático da cooperativa">
+              <p class="lab">Aviso de compra</p>
+              <p class="hi">Olá, Valdir. Vimos uma compra no seu cartão de crédito final 4821:</p>
+              <dl class="det">
+                <sc-for list="{{det}}" as="d" hint-placeholder-count="4">
+                  <div><dt>{{d.k}}</dt><dd class="{{d.cls}}">{{d.v}}</dd></div>
+                </sc-for>
+              </dl>
+              <p class="q">Foi você?</p>
+            </article>
+            <button class="wlink" type="button" aria-expanded="{{appWhyExp}}" onClick="{{toggleAppWhy}}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7.5"></circle><path d="M10 9v5M10 6.2v0.3"></path></svg>
+              Por que recebi este aviso?
+            </button>
+            <sc-if value="{{appWhy}}" hint-placeholder-val="{{ false }}">
+              <p class="why-app">Vimos uma compra diferente do seu costume. Confirmar ajuda a proteger seu cartão.</p>
+            </sc-if>
+            <p class="pause">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="9" r="7.5"></circle><path d="M7 6v6M11 6v6"></path></svg>
+              Enquanto você não responde, a compra fica pausada. Nada foi cobrado.
+            </p>
+          </main>
+          <div class="wacts">
+            <button class="choice" type="button" onClick="{{appYes}}">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#24a148"></path><path d="M7.5 12.3l3 3 6-6.3" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+              Sim, fui eu
+            </button>
+            <button class="choice" type="button" onClick="{{appNo}}">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#da1e28"></path><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+              Não reconheço
+            </button>
+            <button class="abtn-g" type="button" onClick="{{appHuman}}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+              Prefiro falar com uma pessoa
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{appBio}}" hint-placeholder-val="{{ false }}">
+          <main class="chat">
+            <div class="big-ic blue" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 6.5A8 8 0 0 1 20 11.5v1"></path><path d="M4 11.5a8 8 0 0 1 1-3.8"></path><path d="M8 12a4 4 0 0 1 8 0v1.5c0 2.5-.6 4.6-1.6 6.5"></path><path d="M12 12v2c0 2.6-.8 4.8-2.2 6.5"></path><path d="M4.5 15.5c.8-1 1.5-2.4 1.5-4"></path><path d="M17.8 17.5c.4-1.2.6-2.6.7-4"></path></svg>
+            </div>
+            <h2 class="ttl">Confirme que é você</h2>
+            <p class="lead">{{bioLead}}</p>
+            <dl class="det">
+              <div><dt>Valor</dt><dd>R$ 2.349,90</dd></div>
+              <div><dt>Loja</dt><dd>Loja Exemplo Eletrônicos (internet)</dd></div>
+            </dl>
+            <p class="warnbox">
+              <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="#f1c21b" stroke="#8e6a00" stroke-width="1"></path><path d="M8 6v3.5M8 11.2v0.3" fill="none" stroke="#161616" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              Se alguém pediu por telefone para você confirmar este aviso, toque em Voltar e escolha "Não reconheço".
+            </p>
+          </main>
+          <div class="wacts">
+            <button class="abtn" type="button" onClick="{{appBioOk}}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5A8 8 0 0 1 20 11.5v1"></path><path d="M8 12a4 4 0 0 1 8 0v1.5c0 2.5-.6 4.6-1.6 6.5"></path><path d="M12 12v2c0 2.6-.8 4.8-2.2 6.5"></path></svg>
+              Confirmar com biometria
+            </button>
+            <button class="abtn-g" type="button" onClick="{{appBack}}">Voltar</button>
+            <p class="sim">Biometria simulada neste protótipo.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{appBloq}}" hint-placeholder-val="{{ false }}">
+          <main class="chat">
+            <div class="big-ic red" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="5" y="10.5" width="14" height="10"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path></svg>
+            </div>
+            <h2 class="ttl">Cartão bloqueado</h2>
+            <p class="lead">Ninguém mais consegue comprar com o cartão final 4821. A compra de R$ 2.349,90 foi recusada e nada foi cobrado.</p>
+            <ul class="next">
+              <li><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>Outras compras pendentes neste cartão também foram recusadas.</li>
+              <li><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>A analista da cooperativa já foi avisada.</li>
+            </ul>
+            <sc-if value="{{appCardOk}}" hint-placeholder-val="{{ false }}">
+              <p class="warnbox" style="background: #defbe6; border-left-color: #24a148" role="status">
+                <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>
+                Pedido feito. O cartão novo chega em até 7 dias úteis no seu endereço.
+              </p>
+            </sc-if>
+          </main>
+          <div class="wacts">
+            <sc-if value="{{appCardNo}}" hint-placeholder-val="{{ true }}">
+              <button class="abtn" type="button" onClick="{{appCard}}">Pedir cartão novo</button>
+            </sc-if>
+            <button class="abtn-g" type="button" onClick="{{appOops}}">Toquei por engano</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{appLib}}" hint-placeholder-val="{{ false }}">
+          <main class="chat">
+            <div class="big-ic green" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+            </div>
+            <h2 class="ttl">Compra liberada</h2>
+            <p class="lead">Obrigado, Valdir. A compra de R$ 2.349,90 na Loja Exemplo Eletrônicos foi aprovada. Você pode concluir a compra no site da loja.</p>
+            <p class="pause">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#0043ce" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4.5M8 4.8v0.3"></path></svg>
+              Confirmado com a sua biometria às 03:21.
+            </p>
+          </main>
+          <div class="wacts">
+            <button class="abtn-g" type="button" onClick="{{appHuman}}">Não fui eu, quero falar com uma pessoa</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{appHum}}" hint-placeholder-val="{{ false }}">
+          <main class="chat">
+            <div class="big-ic blue" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8.5" r="4"></circle><path d="M4.5 21c1-4 3.8-6 7.5-6s6.5 2 7.5 6"></path></svg>
+            </div>
+            <h2 class="ttl">Uma pessoa vai falar com você aqui</h2>
+            <p class="lead">Respondemos nesta conversa, dentro do app, em até 5 min. Não vamos ligar para você.</p>
+            <p class="pause">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="9" r="7.5"></circle><path d="M7 6v6M11 6v6"></path></svg>
+              A compra continua pausada. Nada foi cobrado.
+            </p>
+          </main>
+          <div class="wacts">
+            <button class="abtn-g" type="button" onClick="{{appBack}}">Voltar ao aviso de compra</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ DICIONÁRIO DO WATSON (header panel) ============ -->
+  <sc-if value="{{dictOpen}}" hint-placeholder-val="{{ false }}">
+    <aside class="hpanel" aria-labelledby="dict-t">
+      <div class="hp-h">
+        <div>
+          <h2 id="dict-t">Dicionário do Watson</h2>
+          <p>O mesmo vocabulário nas telas, nas dicas e nos materiais.</p>
+        </div>
+        <button class="ibtn" type="button" aria-label="Fechar dicionário" onClick="{{toggleDict}}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"></path></svg>
+        </button>
+      </div>
+      <ul class="hp-l">
+        <sc-for list="{{dict}}" as="d" hint-placeholder-count="7">
+          <li class="{{d.cls}}" aria-current="{{d.cur}}">
+            <h3>{{d.term}}</h3>
+            <p>{{d.def}}</p>
+            <p class="w">Onde aparece: {{d.onde}}</p>
+            <p class="w">Quem vê: {{d.quem}}</p>
+          </li>
+        </sc-for>
+      </ul>
+    </aside>
+  </sc-if>
+
+  <!-- ============ TOAST ============ -->
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="{{toastCls}}" role="status" aria-live="polite">
+      <svg class="ic" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17z" fill="{{toastIc}}"></path><path d="{{toastMark}}" fill="none" stroke="#ffffff" stroke-width="1.75" stroke-linecap="round"></path></svg>
+      <div class="toast-b">
+        <p class="toast-t">{{toastT}}</p>
+        <p class="toast-s">{{toastS}}</p>
+        <sc-if value="{{toastUndo}}" hint-placeholder-val="{{ false }}">
+          <button class="toast-u" type="button" onClick="{{undo}}">Desfazer</button>
+        </sc-if>
+      </div>
+      <button class="ibtn" type="button" aria-label="Fechar notificação" onClick="{{closeToast}}">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+      </button>
+    </div>
+  </sc-if>
+
+  <!-- ============ MODAL: CONFIRMAR BLOQUEIO ============ -->
+  <sc-if value="{{hasModal}}" hint-placeholder-val="{{ false }}">
+    <div class="ov">
+      <div class="mdl" role="dialog" aria-modal="true" aria-labelledby="mdl-t">
+        <div class="mdl-h">
+          <div>
+            <p class="mdl-l">{{mLabel}}</p>
+            <h2 class="mdl-t" id="mdl-t">{{mTitle}}</h2>
+          </div>
+          <button class="ibtn btn-lg" type="button" aria-label="Fechar" onClick="{{closeModal}}" style="width: 48px; height: 48px">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"></path></svg>
+          </button>
+        </div>
+        <div class="mdl-b">
+          <ul>
+            <sc-for list="{{mEffects}}" as="e" hint-placeholder-count="3">
+              <li>{{e.t}}</li>
+            </sc-for>
+          </ul>
+          <div class="fld">
+            <sc-if value="{{mDraftOff}}" hint-placeholder-val="{{ true }}">
+              <div class="fld-h">
+                <label for="mjust">Justificativa para a auditoria (obrigatória)</label>
+                <span class="sp"></span>
+                <button class="btn btn-ghost btn-sm" type="button" onClick="{{mDraft}}">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg>
+                  Pedir rascunho ao Watson
+                </button>
+              </div>
+              <textarea id="mjust" rows="3" placeholder="Descreva por que vai bloquear este cartão."></textarea>
+            </sc-if>
+            <sc-if value="{{mDraftOn}}" hint-placeholder-val="{{ false }}">
+              <div class="fld-h">
+                <label for="mjust2">Justificativa para a auditoria</label>
+                <button class="ai" type="button" aria-label="IA: rascunho escrito pelo Watson a partir dos fatores do caso">IA</button>
+                <span class="ed">· rascunho do Watson, edite se precisar</span>
+                <span class="sp"></span>
+                <button class="btn btn-ghost btn-sm" type="button" onClick="{{mRevert}}">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                  Reverter
+                </button>
+              </div>
+              <sc-if value="{{mIs4821}}" hint-placeholder-val="{{ true }}">
+                <textarea id="mjust2" rows="4">Rajada de 5 tentativas online em 4 min (03:14 a 03:18), a 760 km da última compra presencial do associado, em Chapecó (SC). Valor 6 vezes acima da média online dele. Padrão semelhante a 38 fraudes confirmadas em 90 dias.</textarea>
+              </sc-if>
+              <sc-if value="{{mNot4821}}" hint-placeholder-val="{{ false }}">
+                <p class="quote">{{mDraftTx}}</p>
+              </sc-if>
+            </sc-if>
+          </div>
+        </div>
+        <div class="mdl-k" aria-hidden="true"><span><kbd class="kbd">Esc</kbd> cancelar</span><span><kbd class="kbd">Enter</kbd> confirmar</span></div>
+        <div class="mdl-f">
+          <button class="btn btn-secondary" type="button" onClick="{{closeModal}}">Cancelar</button>
+          <button class="btn btn-danger" type="button" onClick="{{confirmBlock}}">Bloquear cartão</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.fresh('T1');
+  }
+
+  fresh(task) {
+    return {
+      task: task,
+      tela: task === 'T2' ? 'quadro' : (task === 'T3' ? 'app' : 'fila'),
+      sel: [], st: {}, draft: {}, grouped: true, grpOpen: false,
+      conv: { fila: [], caso: [], quadro: [] },
+      modal: null, toast: null, snap: null, app: 'alerta', appCard: false, appWhy: false,
+      tip: null, dict: false, dictTerm: null
+    };
+  }
+
+  renderVals() {
+    const s = Object.assign(this.fresh('T1'), this.state || {});
+    const set = (o) => this.setState(o);
+    const noop = () => {};
+
+    // ---------- ícones (caminhos SVG de 16 px) ----------
+    const RISK = {
+      alto: { tagCls: 'tag tag-red', risco: 'Alto', ra1: 'M8 1.5l6.5 6.5L8 14.5 1.5 8z', raf: '#da1e28', ras: '#da1e28', rb: 'M8 4.8v3.6M8 10.8v0.4', rbs: '#ffffff', bar: '#da1e28' },
+      medio: { tagCls: 'tag tag-yellow', risco: 'Médio', ra1: 'M8 1.8l6.6 11.7H1.4z', raf: '#f1c21b', ras: '#8e6a00', rb: 'M8 6v3.5M8 11.2v0.3', rbs: '#161616', bar: '#f1c21b' },
+      baixo: { tagCls: 'tag tag-green', risco: 'Baixo', ra1: 'M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', raf: '#24a148', ras: '#24a148', rb: 'M5 8.2l2 2 4-4.2', rbs: '#ffffff', bar: '#24a148' }
+    };
+    const IC = {
+      novo: { sa: 'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z', saf: '#0f62fe', sas: '#0f62fe', saw: '1', sb: 'M8 8h0', sbs: 'none' },
+      clock: { sa: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z', saf: 'none', sas: '#525252', saw: '1.5', sb: 'M8 4.5V8l2.5 1.5', sbs: '#525252' },
+      late: { sa: 'M8 1.8l6.6 11.7H1.4z', saf: '#f1c21b', sas: '#8e6a00', saw: '1', sb: 'M8 6v3.5M8 11.2v0.3', sbs: '#161616' },
+      sent: { sa: 'M2 8l12-5.5L10 14l-2-4.5z', saf: 'none', sas: '#0043ce', saw: '1.5', sb: 'M8 9.5L14 2.5', sbs: '#0043ce' },
+      person: { sa: 'M8 2.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5z', saf: 'none', sas: '#0f62fe', saw: '1.5', sb: 'M3 14c0.6-2.6 2.5-4 5-4s4.4 1.4 5 4', sbs: '#0f62fe' },
+      lock: { sa: 'M3.5 7.5h9v6.5h-9z', saf: '#da1e28', sas: '#da1e28', saw: '1', sb: 'M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2', sbs: '#da1e28' },
+      ok: { sa: 'M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', saf: '#24a148', sas: '#24a148', saw: '1', sb: 'M5 8.2l2 2 4-4.2', sbs: '#ffffff' }
+    };
+    const CHECK = 'M2.5 6.2l2.3 2.3 4.7-5';
+    const DASH = 'M3 6h6';
+
+    // ---------- dados fictícios ----------
+    const BASE = [
+      { id: '#4821', assoc: 'Valdir B.', valor: 'R$ 2.349,90', loja: 'Loja Exemplo Eletrônicos · online', score: 0.92, est: 'novo', min: 4, cartao: '4821', s1: 'Rajada: 5 em 4 min', s2: 'Longe de casa' },
+      { id: '#4799', assoc: 'Lúcia F.', valor: 'R$ 5.400,00', loja: 'Concessionária Fictícia · presencial', score: 0.83, est: 'analise', quem: 'Bruna', min: 11, cartao: '2290', s1: 'Valor alto', s2: 'Longe de casa' },
+      { id: '#4835', assoc: 'Joana P.', valor: 'R$ 2.450,00', loja: 'Agropecuária Modelo · presencial', score: 0.81, est: 'novo', min: 9, cartao: '6618', s1: 'Valor alto', s2: 'Horário atípico' },
+      { id: '#4774', assoc: 'Caio R.', valor: 'R$ 1.540,00', loja: 'Loja Exemplo Celulares · online', score: 0.79, est: 'aguard', min: 31, cartao: '3307', s1: 'Longe de casa', s2: 'Horário atípico' },
+      { id: '#4842', assoc: 'Ana C.', valor: 'R$ 389,90', loja: 'Viagens Fictícias · online', score: 0.78, est: 'novo', min: 12, cartao: '9012', s1: 'Dispositivo novo', s2: 'Não presente' },
+      { id: '#4790', assoc: 'Ivo T.', valor: 'R$ 860,00', loja: 'Farmácia Modelo · online', score: 0.76, est: 'aguard', min: 24, cartao: '5521', s1: 'Horário atípico', s2: 'Longe de casa' },
+      { id: '#4851', assoc: 'Edu S.', valor: 'R$ 74,50', loja: 'Posto Exemplo · presencial', score: 0.72, est: 'novo', min: 15, cartao: '1184', s1: 'Teste de valor baixo', s2: 'Horário atípico' },
+      { id: '#4812', assoc: 'Pedro A.', valor: 'R$ 3.200,00', loja: 'Máquinas Exemplo · online', score: 0.68, est: 'aguard', min: 22, cartao: '7403', s1: 'Valor alto', s2: 'Loja nova' },
+      { id: '#4781', assoc: 'Nilo G.', valor: 'R$ 299,00', loja: 'Loja Teste Online · online', score: 0.66, est: 'aguard', min: 21, cartao: '2675', s1: 'Não presente', s2: 'Dispositivo novo' },
+      { id: '#4808', assoc: 'Lia M.', valor: 'R$ 610,00', loja: 'Loja Teste Online · online', score: 0.64, est: 'analise', quem: 'Diego', min: 33, cartao: '5096', s1: 'Rajada', s2: 'Não presente' },
+      { id: '#4860', assoc: 'Sônia L.', valor: 'R$ 45,00', loja: 'Streaming Demo · online', score: 0.61, est: 'aguard', min: 27, cartao: '8830', s1: 'Não presente', s2: 'Dispositivo novo' },
+      { id: '#4866', assoc: 'Rui D.', valor: 'R$ 129,90', loja: 'Mercado Modelo · aproximação', score: 0.38, est: 'novo', min: 2, cartao: '4410', s1: 'Loja nova', s2: 'Horário atípico' }
+    ];
+    const GROUP = { id: '#5107', assoc: 'Rosa M.', valor: 'R$ 1.980,00', loja: 'Loja Exemplo Games e mais 2 · cartão •••• 4417', score: 0.89, est: 'novo', min: 13, cartao: '4417', grp: true, s1: '3 compras em 7 min', s2: 'Longe de casa' };
+    const SPLIT = [
+      { id: '#5107', assoc: 'Rosa M.', valor: 'R$ 750,00', loja: 'Loja Exemplo Games · online', score: 0.89, est: 'novo', min: 13, cartao: '4417', s1: 'Rajada', s2: 'Longe de casa' },
+      { id: '#5106', assoc: 'Rosa M.', valor: 'R$ 640,00', loja: 'Loja Exemplo Celulares · online', score: 0.86, est: 'novo', min: 10, cartao: '4417', s1: 'Rajada', s2: 'Longe de casa' },
+      { id: '#5105', assoc: 'Rosa M.', valor: 'R$ 590,00', loja: 'Posto Exemplo · presencial, chip e senha', score: 0.34, est: 'novo', min: 6, cartao: '4417', s1: 'Perto de casa', s2: 'Chip e senha' }
+    ];
+    const GROUP_ALERTS = [
+      { h: '03:05', v: 'R$ 750,00', loja: 'Loja Exemplo Games · São Paulo (SP)', canal: 'Online', tagCls: 'tag tag-cool' },
+      { h: '03:08', v: 'R$ 640,00', loja: 'Loja Exemplo Celulares · São Paulo (SP)', canal: 'Online', tagCls: 'tag tag-cool' },
+      { h: '03:12', v: 'R$ 590,00', loja: 'Posto Exemplo · Chapecó (SC), chip e senha', canal: 'Presencial', tagCls: 'tag tag-yellow' }
+    ];
+    const DONE_BASE = [
+      { id: '#4753', valor: 'R$ 1.249,90', loja: 'Eletro Demo Online', out: 'bloq', quem: 'Associado negou no app', hora: '02:42' },
+      { id: '#4748', valor: 'R$ 230,00', loja: 'Mercado Modelo', out: 'lib', quem: 'Associado confirmou', hora: '02:15' },
+      { id: '#4731', valor: 'R$ 980,00', loja: 'Agropecuária Exemplo', out: 'lib', quem: 'Camila liberou', hora: '01:50' }
+    ];
+
+    const lvl = (x) => (x >= 0.75 ? 'alto' : (x >= 0.5 ? 'medio' : 'baixo'));
+    const fmt = (x) => x.toFixed(2).replace('.', ',');
+    const list = BASE.concat(s.grouped ? [GROUP] : SPLIT).sort((a, b) => b.score - a.score);
+    const byId = {};
+    list.forEach((c) => { byId[c.id] = c; });
+    const eff = (c) => s.st[c.id] || c.est;
+    const RES = { bloq: true, bloqApp: true, libApp: true };
+    const isRes = (c) => !!RES[eff(c)];
+    const inSel = (id) => s.sel.indexOf(id) >= 0;
+
+    const status = (c) => {
+      const e = eff(c);
+      if (e === 'novo') return Object.assign({ estado: 'Novo · ' + c.min + ' min na fila' }, IC.novo);
+      if (e === 'aguard') return c.min > 20
+        ? Object.assign({ estado: 'Sem resposta há ' + c.min + ' min' }, IC.late)
+        : Object.assign({ estado: 'Aguardando associado · ' + c.min + ' min' }, IC.clock);
+      if (e === 'pedido') return Object.assign({ estado: 'Aviso enviado às 03:20' }, IC.sent);
+      if (e === 'reenv') return Object.assign({ estado: 'Aviso reenviado às 03:20' }, IC.sent);
+      if (e === 'analise') return Object.assign({ estado: 'Em análise · ' + c.quem }, IC.person);
+      if (e === 'voce') return Object.assign({ estado: 'Em análise · você' }, IC.person);
+      if (e === 'bloq') return Object.assign({ estado: 'Bloqueado por você' }, IC.lock);
+      if (e === 'bloqApp') return Object.assign({ estado: 'Bloqueado pelo associado' }, IC.lock);
+      return Object.assign({ estado: 'Liberado pelo associado' }, IC.ok);
+    };
+
+    const snapNow = { st: Object.assign({}, s.st), grouped: s.grouped, sel: s.sel.slice() };
+    const TOAST_OK = { cls: 'toast', ic: '#24a148', mark: 'M6.2 10.2l2.6 2.6 5-5.2' };
+    const TOAST_INFO = { cls: 'toast info', ic: '#0043ce', mark: 'M10 9v5M10 6.2v0.3' };
+    const info = (t, sub) => set({ toast: Object.assign({ t: t, s: sub, undo: false }, TOAST_INFO), snap: null });
+
+    // ---------- glossário (texto de /design/glossario.md) e toggletips ----------
+    const GLOSS = [
+      { k: 'alerta', term: 'Alerta', def: 'Transação que o modelo marcou como suspeita (score acima do limite). É gerado automaticamente, um por compra.', onde: 'indicadores da Fila, cards juntados no Quadro e linha do tempo do caso.', quem: 'Analista' },
+      { k: 'caso', term: 'Caso', def: 'Unidade de trabalho da analista. Junta os alertas do mesmo cartão e guarda investigação, contato com o associado, decisão e justificativa. Ex.: 3 compras em rajada = 3 alertas, 1 caso.', onde: 'Fila de casos, Quadro do processo e tela do caso.', quem: 'Analista' },
+      { k: 'score', term: 'Score de risco', def: 'Probabilidade estimada de fraude, de 0 a 1. Acima de 0,80 é alto risco.', onde: 'coluna Risco · score da Fila, cards do Quadro e cabeçalho do caso.', quem: 'Analista' },
+      { k: 'tempo', term: 'Tempo até a decisão', def: 'Tempo médio entre o caso entrar na fila e a analista registrar a decisão (bloquear, liberar ou escalar). Medido pelo Watson a partir do registro de eventos do caso. No MVP: medido em teste de usabilidade (tarefa T1).', onde: 'indicadores da Fila e resumo do turno.', quem: 'Analista e gestão' },
+      { k: 'aguard', term: 'Aguardando associado', def: 'Enviamos um aviso de compra ao associado e esperamos a resposta no app.', onde: 'estado na Fila, coluna do Quadro e decisão do caso.', quem: 'Analista' },
+      { k: 'conf', term: 'Confiança do agente', def: 'Quanto o Watson confia na recomendação, com base na força e na concordância dos sinais. A decisão final é sempre da analista.', onde: 'respostas do trilho Pergunte ao Watson.', quem: 'Analista' },
+      { k: 'aviso', term: 'Aviso de compra', def: 'Mensagem no app pedindo ao associado que confirme uma compra diferente do costume. Nunca se chama "alerta" para o associado.', onde: 'app do associado e ações Perguntar ao associado e Reenviar aviso de compra.', quem: 'Associado' }
+    ];
+    const G = {};
+    GLOSS.forEach((g) => { G[g.k] = g; });
+    const tipOf = (id, k) => {
+      const open = s.tip === id;
+      return {
+        term: G[k].term, def: G[k].def, label: 'O que é ' + G[k].term + '?',
+        open: open, exp: open ? 'true' : 'false',
+        toggle: () => set({ tip: open ? null : id }),
+        dict: () => set({ tip: null, dict: true, dictTerm: k })
+      };
+    };
+    const tips = {
+      filaCaso: tipOf('filaCaso', 'caso'), filaAlerta: tipOf('filaAlerta', 'alerta'), filaAguard: tipOf('filaAguard', 'aguard'),
+      filaTempo: tipOf('filaTempo', 'tempo'), filaScore: tipOf('filaScore', 'score'),
+      quadroCaso: tipOf('quadroCaso', 'caso'), quadroScore: tipOf('quadroScore', 'score'),
+      casoCaso: tipOf('casoCaso', 'caso'), casoScore: tipOf('casoScore', 'score'), casoAguard: tipOf('casoAguard', 'aguard'), casoAlerta: tipOf('casoAlerta', 'alerta')
+    };
+
+    // ---------- ações ----------
+    const goFila = () => set({ tela: 'fila', modal: null });
+    const goQuadro = () => set({ tela: 'quadro', modal: null });
+    const openCase = (id) => () => {
+      if (id === '#4821') set({ tela: 'caso', modal: null, toast: null });
+      else info('O caso ' + id + ' não está detalhado neste protótipo', 'Para a tarefa T1, abra o caso #4821.');
+    };
+    const toggleSel = (id) => () => set({ sel: inSel(id) ? s.sel.filter((x) => x !== id) : s.sel.concat([id]) });
+    const selectIds = (ids) => () => {
+      const out = s.sel.slice();
+      ids.forEach((id) => { if (out.indexOf(id) < 0) out.push(id); });
+      set({ sel: out });
+    };
+    const unselectIds = (ids) => () => set({ sel: s.sel.filter((x) => ids.indexOf(x) < 0) });
+    const clearSel = () => set({ sel: [] });
+    const openBlock = (id) => () => set({ modal: { id: id } });
+    const closeModal = () => set({ modal: null });
+    const setDraft = (id, on) => () => {
+      const d = Object.assign({}, s.draft);
+      d[id] = on;
+      set({ draft: d });
+    };
+    const confirmBlock = () => {
+      if (!s.modal) return;
+      const id = s.modal.id;
+      const c = byId[id];
+      const st = Object.assign({}, s.st);
+      st[id] = 'bloq';
+      set({
+        st: st, modal: null, sel: s.sel.filter((x) => x !== id), snap: snapNow,
+        toast: Object.assign({ t: 'Cartão final ' + c.cartao + ' bloqueado', s: 'Caso ' + id + ' encerrado às 03:20. Justificativa registrada para auditoria.', undo: true }, TOAST_OK)
+      });
+    };
+    const askAssoc = (id) => () => {
+      const c = byId[id];
+      const st = Object.assign({}, s.st);
+      const again = eff(c) === 'aguard' || eff(c) === 'pedido' || eff(c) === 'reenv';
+      st[id] = c.est === 'aguard' ? 'reenv' : 'pedido';
+      set({
+        st: st, snap: snapNow,
+        toast: Object.assign({ t: (again ? 'Aviso de compra reenviado ao associado do ' : 'Aviso de compra enviado ao associado do ') + id, s: 'A compra segue pausada até ele responder no app.', undo: true }, TOAST_OK)
+      });
+    };
+    const bulkResend = () => {
+      const st = Object.assign({}, s.st);
+      let n = 0;
+      s.sel.forEach((id) => {
+        const c = byId[id];
+        if (!c || isRes(c)) return;
+        st[id] = c.est === 'aguard' ? 'reenv' : 'pedido';
+        n += 1;
+      });
+      set({
+        st: st, sel: [], snap: snapNow,
+        toast: Object.assign({ t: 'Aviso de compra reenviado a ' + n + (n === 1 ? ' associado' : ' associados'), s: 'As compras seguem pausadas. Você decide cada caso quando eles responderem.', undo: true }, TOAST_OK)
+      });
+    };
+    const bulkAssign = () => {
+      const st = Object.assign({}, s.st);
+      let n = 0;
+      s.sel.forEach((id) => {
+        const c = byId[id];
+        if (!c || isRes(c)) return;
+        st[id] = 'voce';
+        n += 1;
+      });
+      set({
+        st: st, sel: [], snap: snapNow,
+        toast: Object.assign({ t: n + (n === 1 ? ' caso atribuído a você' : ' casos atribuídos a você'), s: 'Eles aparecem em Em análise com o seu nome.', undo: true }, TOAST_OK)
+      });
+    };
+    const ungroup = () => set({
+      grouped: false, grpOpen: false, sel: s.sel.filter((x) => x !== '#5107'), snap: snapNow,
+      toast: Object.assign({ t: 'Os 3 alertas viraram casos separados: #5105, #5106 e #5107', s: 'Registramos o agrupamento como incorreto para revisar a regra do Watson.', undo: true }, TOAST_OK)
+    });
+    const undo = () => {
+      if (!s.snap) return set({ toast: null });
+      set({ st: s.snap.st, grouped: s.snap.grouped, sel: s.snap.sel, toast: null, snap: null });
+    };
+    const closeToast = () => set({ toast: null, snap: null });
+
+    // ---------- conversa com o Watson (sob demanda) ----------
+    const ctx = s.tela === 'caso' ? 'caso' : (s.tela === 'quadro' ? 'quadro' : 'fila');
+    const askKey = (key) => () => {
+      const conv = Object.assign({}, s.conv);
+      const arr = conv[ctx].slice();
+      if (arr.indexOf(key) < 0) arr.push(key);
+      conv[ctx] = arr;
+      set({ conv: conv });
+    };
+    const dropKey = (key) => () => {
+      const conv = Object.assign({}, s.conv);
+      conv[ctx] = conv[ctx].filter((k) => k !== key);
+      set({ conv: conv });
+    };
+    const clearConv = () => {
+      const conv = Object.assign({}, s.conv);
+      conv[ctx] = [];
+      set({ conv: conv });
+    };
+
+    const lateCases = list.filter((c) => eff(c) === 'aguard' && c.min > 20).sort((a, b) => b.min - a.min);
+    const lateIds = lateCases.map((c) => c.id);
+    const allLateSel = lateIds.length > 0 && lateIds.every(inSel);
+    const draft4821 = !!s.draft['#4821'];
+
+    const CHIPS = {
+      fila: [['parados', 'Quais casos estão parados?'], ['porque', 'Por que o #4821 tem 0,92?'], ['hist', 'Compare o #4821 com o histórico']],
+      caso: [['porque', 'Por que 0,92?'], ['hist', 'Compare com o histórico'], ['just', 'Redija a justificativa'], ['parados', 'Quais casos estão parados?']],
+      quadro: [['parados', 'Quais casos estão parados?'], ['grupo', 'Por que o #5107 foi agrupado?'], ['turno', 'Compare o turno com o histórico']]
+    };
+    const chipText = {};
+    CHIPS[ctx].forEach((c) => { chipText[c[0]] = c[1]; });
+    const WHEN = ['03:19', '03:19', '03:20', '03:20', '03:21'];
+    const blank = { hasConf: false, hasQuote: false, quote: '', hasBul: false, bul: [], hasCases: false, cases: [], hasAct: false, actL: '', act: noop, hasAct2: false, act2L: '', act2: noop, isDone: false, doneTx: '' };
+    const bul = (xs) => xs.map((t) => ({ t: t }));
+
+    const answer = (key) => {
+      if (key === 'porque') return Object.assign({}, blank, {
+        title: '0,92 vem de 3 sinais fortes',
+        body: 'Rajada de 5 tentativas em 4 min, a 760 km de onde o Valdir comprou ontem, com valor 6 vezes acima da média online dele. Só esses 3 somam +0,72.',
+        hasBul: true,
+        bul: bul(['Rajada: +0,31', 'Longe de casa: +0,24', 'Valor acima da média: +0,17', 'Horário 03:14 e dispositivo novo: +0,17', 'O que eu não sei: se ele emprestou o cartão. Ninguém perguntou a ele ainda.']),
+        hasConf: true,
+        src: 'Fonte: modelo de risco v3.2, fatores do caso #4821',
+        hasAct: ctx !== 'caso', actL: 'Abrir caso #4821', act: openCase('#4821')
+      });
+      if (key === 'hist') return Object.assign({}, blank, {
+        title: 'Fora do padrão do Valdir em 4 de 4 pontos',
+        body: 'Comparei com 12 meses do cartão final 4821.',
+        hasBul: true,
+        bul: bul(['Nunca comprou na Loja Exemplo Eletrônicos', '2 compras online em 2026, média de R$ 380,00, sempre de dia', 'Nenhuma compra entre 00:00 e 06:00', 'Padrão parecido com 38 fraudes confirmadas nos últimos 90 dias']),
+        src: 'Fonte: histórico do cartão final 4821 (12 meses) e base de fraudes confirmadas (90 dias)',
+        hasAct: ctx !== 'caso', actL: 'Abrir caso #4821', act: openCase('#4821')
+      });
+      if (key === 'just') return Object.assign({}, blank, {
+        title: 'Rascunho da justificativa',
+        body: 'Escrevi a partir dos fatores 1 a 3 e da linha do tempo. Revise antes de usar.',
+        hasQuote: true,
+        quote: 'Rajada de 5 tentativas online em 4 min (03:14 a 03:18), a 760 km da última compra presencial do associado, em Chapecó (SC). Valor 6 vezes acima da média online dele. Padrão semelhante a 38 fraudes confirmadas em 90 dias.',
+        src: 'Fonte: fatores 1 a 3 e linha do tempo do caso #4821',
+        hasAct: !draft4821, actL: 'Inserir na justificativa', act: setDraft('#4821', true),
+        hasAct2: !draft4821, act2L: 'Descartar', act2: dropKey('just'),
+        isDone: draft4821, doneTx: 'Inserido por você no campo de justificativa. Edite ou reverta por lá.'
+      });
+      if (key === 'parados') {
+        const none = lateCases.length === 0;
+        return Object.assign({}, blank, {
+          title: none ? 'Nenhum caso parado agora' : lateCases.length + ' casos sem resposta há mais de 20 min',
+          body: none
+            ? 'Todos os associados que aguardavam já receberam um novo aviso de compra ou foram atendidos.'
+            : 'As compras seguem pausadas. No último mês, 7 em cada 10 associados responderam depois de um segundo aviso de compra.',
+          hasCases: !none,
+          cases: lateCases.map((c) => ({ id: c.id, min: c.min + ' min', v: c.valor })),
+          src: 'Fonte: fila aberta às 03:18 e taxa de resposta dos últimos 30 dias',
+          hasAct: !none && !allLateSel,
+          actL: ctx === 'caso' ? 'Selecionar na fila' : 'Selecionar os ' + lateCases.length,
+          act: ctx === 'caso' ? () => set({ tela: 'fila', sel: lateIds }) : selectIds(lateIds),
+          isDone: !none && allLateSel,
+          doneTx: 'Selecionados. Use a barra azul de ações em lote para reenviar o aviso.'
+        });
+      }
+      if (key === 'grupo') return Object.assign({}, blank, {
+        title: 'Juntei 3 alertas em 1 caso: mesmo cartão em até 10 min',
+        body: 'Os 3 alertas são do cartão •••• 4417, entre 03:05 e 03:12. Atenção: o de 03:12 foi presencial em Chapecó (SC), com chip e senha, onde a Rosa mora. Pode não ser da mesma rajada.',
+        src: 'Fonte: regra automática de agrupamento e alertas #5105 a #5107',
+        hasAct: s.grouped && !s.grpOpen, actL: 'Ver os 3 alertas', act: () => set({ grpOpen: true }),
+        isDone: !s.grouped, doneTx: 'Você desagrupou. O erro foi registrado para revisar a regra.'
+      });
+      return Object.assign({}, blank, {
+        title: 'Turno 12% mais cheio que a média das segundas',
+        body: '31 casos resolvidos até 03:18. O tempo até a decisão está em 1 min 48 s, dentro da meta de 2 min.',
+        hasBul: true,
+        bul: bul(['Gargalo: Aguardando associado, com 5 casos parados', 'Rajadas online somam 9 dos 23 casos de risco alto']),
+        src: 'Fonte: quadro às 03:18 e médias das últimas 8 segundas-feiras'
+      });
+    };
+    const msgs = s.conv[ctx].map((key, i) => Object.assign(answer(key), {
+      tip: tipOf('conf-' + ctx + '-' + key, 'conf'),
+      q: chipText[key] || key, when: WHEN[Math.min(i, WHEN.length - 1)], aria: 'Resposta do Watson: ' + (chipText[key] || key)
+    }));
+    const chips = CHIPS[ctx].map((c) => {
+      const on = s.conv[ctx].indexOf(c[0]) >= 0;
+      return { t: c[1], on: on ? 'true' : 'false', cls: on ? 'chip on' : 'chip', ask: askKey(c[0]) };
+    });
+    const CTX = {
+      fila: ['Fila de casos', 'Leio os casos abertos e os filtros ativos. Não reordeno a fila nem sugiro nada sem você pedir.', 'Pergunte sobre a fila'],
+      caso: ['Caso #4821', 'Leio os fatores do score, a linha do tempo e o perfil do associado. Respondo só sobre este caso, a menos que você peça.', 'Pergunte sobre este caso'],
+      quadro: ['Quadro do processo', 'Leio as 4 etapas, os tempos e quem está com cada caso. Respondo quando você pergunta.', 'Pergunte sobre o quadro']
+    };
+
+    // ---------- fila ----------
+    const openIds = list.filter((c) => !isRes(c)).map((c) => c.id);
+    const nSelOpen = openIds.filter(inSel).length;
+    const allSel = openIds.length > 0 && nSelOpen === openIds.length;
+    const someSel = nSelOpen > 0 && !allSel;
+    const rows = list.map((c) => {
+      const L = RISK[lvl(c.score)];
+      const res = isRes(c);
+      const sel = inSel(c.id);
+      const waiting = c.est === 'aguard' || eff(c) === 'pedido' || eff(c) === 'reenv';
+      return Object.assign({
+        id: c.id, assoc: c.assoc, valor: c.valor, loja: c.loja, score: fmt(c.score),
+        grp: !!c.grp, canAct: !res, isRes: res,
+        cls: sel ? 'sel' : '', chk: sel ? 'true' : 'false', cbCls: sel ? 'cb on' : 'cb',
+        cbL: 'Selecionar caso ' + c.id,
+        aOpen: 'Abrir caso ' + c.id + ', atalho O',
+        aBlock: 'Bloquear cartão do caso ' + c.id + ', atalho B',
+        aAsk: (waiting ? 'Reenviar aviso de compra ao associado do caso ' : 'Perguntar ao associado do caso ') + c.id + ', atalho P',
+        tAsk: waiting ? 'Reenviar aviso de compra (P)' : 'Perguntar ao associado (P)',
+        toggle: toggleSel(c.id), open: openCase(c.id), block: openBlock(c.id), ask: askAssoc(c.id)
+      }, L, status(c));
+    });
+    const nDoneDyn = list.filter(isRes).length;
+    const openTotal = 128 - nDoneDyn + (s.grouped ? 0 : 2);
+    const nSel = s.sel.length;
+
+    // ---------- quadro ----------
+    const card = (c) => {
+      const L = RISK[lvl(c.score)];
+      const sel = inSel(c.id);
+      return Object.assign({
+        id: c.id, valor: c.valor, loja: c.loja, s1: c.s1, s2: c.s2, hasSig: !c.grp,
+        foot: 'Score ' + fmt(c.score), canSel: true,
+        cls: sel ? 'kc sel' : 'kc', chk: sel ? 'true' : 'false', cbCls: sel ? 'cb on' : 'cb', cbL: 'Selecionar caso ' + c.id,
+        aria: 'Caso ' + c.id + (c.grp ? ', grupo de 3 alertas' : ''),
+        toggle: toggleSel(c.id), open: openCase(c.id),
+        isGroup: !!c.grp, grpOpen: !!c.grp && s.grpOpen, exp: s.grpOpen ? 'true' : 'false',
+        expL: s.grpOpen ? 'Ocultar os 3 alertas' : 'Ver os 3 alertas',
+        chev: s.grpOpen ? 'M3.5 6l4.5 4.5L12.5 6' : 'M6 3.5l4.5 4.5L6 12.5',
+        alerts: GROUP_ALERTS, tip: tipOf('quadroAlerta', 'alerta'),
+        toggleGrp: () => set({ grpOpen: !s.grpOpen }), ungroup: ungroup
+      }, L, status(c));
+    };
+    const doneCard = (d) => Object.assign({
+      id: d.id, valor: d.valor, loja: d.loja, s1: '', s2: '', hasSig: false, foot: d.quem, canSel: false,
+      cls: 'kc', chk: 'false', cbCls: 'cb', cbL: '', aria: 'Caso ' + d.id + ' encerrado',
+      toggle: noop, open: openCase(d.id), isGroup: false, grpOpen: false, exp: 'false', expL: '', chev: '', alerts: [], tip: tipOf('none', 'alerta'),
+      toggleGrp: noop, ungroup: noop, bar: 'transparent',
+      tagCls: d.out === 'lib' ? 'tag tag-green' : 'tag tag-gray', risco: d.out === 'lib' ? 'Liberado' : 'Bloqueado',
+      ra1: d.out === 'lib' ? IC.ok.sa : IC.lock.sa, raf: d.out === 'lib' ? '#24a148' : '#da1e28', ras: d.out === 'lib' ? '#24a148' : '#da1e28',
+      rb: d.out === 'lib' ? IC.ok.sb : IC.lock.sb, rbs: d.out === 'lib' ? '#ffffff' : '#da1e28',
+      estado: d.hora
+    }, IC.clock);
+    const dyn = list.filter(isRes).map((c) => {
+      const e = eff(c);
+      return { id: c.id, valor: c.valor, loja: c.loja.split(' · ')[0], out: e === 'libApp' ? 'lib' : 'bloq', quem: e === 'bloq' ? 'Camila bloqueou' : (e === 'bloqApp' ? 'Associado negou no app' : 'Associado confirmou com biometria'), hora: e === 'bloq' ? '03:20' : '03:21' };
+    });
+    const colNovo = list.filter((c) => eff(c) === 'novo');
+    const colAg = list.filter((c) => { const e = eff(c); return e === 'aguard' || e === 'pedido' || e === 'reenv'; });
+    const colAn = list.filter((c) => { const e = eff(c); return e === 'analise' || e === 'voce'; });
+    const agIds = colAg.map((c) => c.id);
+    const agAll = agIds.length > 0 && agIds.every(inSel);
+    const agSome = agIds.some(inSel) && !agAll;
+    const nReenv = colAg.filter((c) => eff(c) === 'reenv').length;
+    const colNote = lateCases.length > 0
+      ? Object.assign({ note: lateCases.length + ' sem resposta há mais de 20 min' }, { na: IC.late.sa, naf: IC.late.saf, nas: IC.late.sas, naw: IC.late.saw, nb: IC.late.sb, nbs: IC.late.sbs })
+      : Object.assign({ note: 'Aviso reenviado a ' + nReenv + ' associados às 03:20' }, { na: IC.sent.sa, naf: IC.sent.saf, nas: IC.sent.sas, naw: IC.sent.saw, nb: IC.sent.sb, nbs: IC.sent.sbs });
+    const colBase = { hasTip: false, tip: tipOf('none', 'caso'), canSelAll: false, chk: 'false', cbL: '', cbCls: 'cb', cbPath: CHECK, selAll: noop, hasNote: false, note: '', na: '', naf: 'none', nas: 'none', naw: '1', nb: '', nbs: 'none', hasMore: false, more: '' };
+    const cols = [
+      Object.assign({}, colBase, { hid: 'c-novo', t: 'Novo', n: String(colNovo.length), cards: colNovo.map(card) }),
+      Object.assign({}, colBase, colNote, {
+        hid: 'c-aguard', t: 'Aguardando associado', n: String(colAg.length), cards: colAg.map(card),
+        hasTip: true, tip: tipOf('quadroAguard', 'aguard'),
+        canSelAll: colAg.length > 0, chk: agAll ? 'true' : (agSome ? 'mixed' : 'false'),
+        cbCls: agAll || agSome ? 'cb on' : 'cb', cbPath: agSome ? DASH : CHECK,
+        cbL: 'Selecionar todos os ' + colAg.length + ' casos aguardando associado',
+        selAll: agAll ? unselectIds(agIds) : selectIds(agIds),
+        hasNote: colAg.length > 0 && (lateCases.length > 0 || nReenv > 0)
+      }),
+      Object.assign({}, colBase, { hid: 'c-analise', t: 'Em análise', n: String(colAn.length), cards: colAn.map(card) }),
+      Object.assign({}, colBase, { hid: 'c-res', t: 'Resolvido hoje', n: String(31 + dyn.length), cards: dyn.concat(DONE_BASE).map(doneCard), hasMore: true, more: 'Ver todos os ' + (31 + dyn.length) })
+    ];
+
+    // ---------- caso #4821 ----------
+    const c4821 = byId['#4821'];
+    const e4821 = eff(c4821);
+    const CS = {
+      novo: { csTag: 'Novo · com você', csTagCls: 'tag tag-blue', ic: IC.novo },
+      pedido: { csTag: 'Aguardando associado', csTagCls: 'tag tag-blue', ic: IC.sent },
+      voce: { csTag: 'Em análise · você', csTagCls: 'tag tag-blue', ic: IC.person },
+      bloq: { csTag: 'Bloqueado por você · 03:20', csTagCls: 'tag tag-gray', ic: IC.lock },
+      bloqApp: { csTag: 'Bloqueado pelo associado · 03:21', csTagCls: 'tag tag-gray', ic: IC.lock },
+      libApp: { csTag: 'Liberado pelo associado · 03:21', csTagCls: 'tag tag-green', ic: IC.ok }
+    }[e4821] || { csTag: 'Novo · com você', csTagCls: 'tag tag-blue', ic: IC.novo };
+    const RESTX = {
+      bloq: ['Cartão bloqueado por você às 03:20', 'Justificativa registrada para auditoria. O Valdir recebeu o aviso no app.', 'ntf ok', '#24a148'],
+      bloqApp: ['O Valdir bloqueou o cartão no app às 03:21', 'Ele tocou em "Não reconheço". Nada foi cobrado e o caso foi encerrado.', 'ntf ok', '#24a148'],
+      libApp: ['O Valdir confirmou a compra com biometria às 03:21', 'A compra foi liberada e o caso foi encerrado.', 'ntf', '#0043ce']
+    }[e4821] || ['', '', 'ntf', '#0043ce'];
+
+    // ---------- modal ----------
+    const mc = s.modal ? byId[s.modal.id] : null;
+    const mDraftOn = !!(mc && s.draft[mc.id]);
+
+    // ---------- app ----------
+    const appSet = (step, stv) => () => {
+      const o = { app: step };
+      if (stv) {
+        const st = Object.assign({}, s.st);
+        st['#4821'] = stv;
+        o.st = st;
+      }
+      set(o);
+    };
+
+    const TASKS = {
+      T1: 'Camila: na Fila, abra o caso de maior risco, entenda por que é suspeito e bloqueie o cartão com justificativa.',
+      T2: 'Camila: no Quadro, reenvie o aviso de compra aos associados que não responderam ou desagrupe o caso que a IA juntou errado.',
+      T3: 'Valdir: no app, responda ao aviso de compra de R$ 2.349,90.'
+    };
+
+    const toast = s.toast || {};
+    return {
+      // faixa do protótipo
+      tasks: ['T1', 'T2', 'T3'].map((k) => ({
+        k: k, on: s.task === k ? 'true' : 'false', cls: s.task === k ? 'on' : '',
+        go: () => set({ task: k, tela: k === 'T2' ? 'quadro' : (k === 'T3' ? 'app' : 'fila'), modal: null, toast: null, snap: null })
+      })),
+      taskTx: TASKS[s.task],
+      reset: () => set(this.fresh(s.task)),
+
+      // telas
+      isConsole: s.tela !== 'app', isApp: s.tela === 'app',
+      isFila: s.tela === 'fila', isQuadro: s.tela === 'quadro', isCaso: s.tela === 'caso',
+      goFila: goFila, goQuadro: goQuadro,
+
+      // seleção e lote
+      hasSel: nSel > 0, noSel: nSel === 0,
+      selTx: nSel === 1 ? '1 caso selecionado' : nSel + ' casos selecionados',
+      bulkResend: bulkResend, bulkAssign: bulkAssign, clearSel: clearSel,
+
+      // toggletips e dicionário
+      tips: tips,
+      dictOpen: s.dict, dictExp: s.dict ? 'true' : 'false', dictBtnCls: s.dict ? 'hbtn on' : 'hbtn',
+      toggleDict: () => set({ dict: !s.dict, dictTerm: null, tip: null }),
+      dict: GLOSS.map((g) => ({
+        term: g.term, def: g.def, onde: g.onde, quem: g.quem,
+        cls: s.dictTerm === g.k ? 'cur' : '', cur: s.dictTerm === g.k ? 'true' : 'false'
+      })),
+
+      // indicadores da fila
+      kOpen: String(openTotal), kAlerts: String(141 - nDoneDyn),
+      kAguard: String(colAg.length),
+      kAgNote: lateCases.length > 0 ? lateCases.length + ' sem resposta há mais de 20 min' : 'Aviso reenviado a todos às 03:20',
+      kAgA: lateCases.length > 0 ? IC.late.sa : IC.sent.sa, kAgAf: lateCases.length > 0 ? IC.late.saf : IC.sent.saf,
+      kAgAs: lateCases.length > 0 ? IC.late.sas : IC.sent.sas, kAgAw: lateCases.length > 0 ? IC.late.saw : IC.sent.saw,
+      kAgB: lateCases.length > 0 ? IC.late.sb : IC.sent.sb, kAgBs: lateCases.length > 0 ? IC.late.sbs : IC.sent.sbs,
+
+      // fila
+      filaSub: 'Cada linha é um caso · atualizado às 03:18',
+      allChk: allSel ? 'true' : (someSel ? 'mixed' : 'false'),
+      allCbCls: allSel || someSel ? 'cb on' : 'cb',
+      allCbPath: someSel ? DASH : CHECK,
+      toggleAll: allSel || someSel ? clearSel : selectIds(openIds),
+      rows: rows,
+      pgTx: '1–' + rows.length + ' de ' + openTotal + ' itens',
+
+      // quadro
+      quadroSub: (colNovo.length + colAg.length + colAn.length) + ' casos em andamento · 31 resolvidos antes das 03:18',
+      cols: cols,
+
+      // caso
+      csTag: CS.csTag, csTagCls: CS.csTagCls,
+      csA: CS.ic.sa, csAf: CS.ic.saf, csAs: CS.ic.sas, csAw: CS.ic.saw, csB: CS.ic.sb, csBs: CS.ic.sbs,
+      caseOpen: !RES[e4821], caseRes: !!RES[e4821],
+      caseNovo: e4821 === 'novo' || e4821 === 'voce', casePedido: e4821 === 'pedido',
+      resT: RESTX[0], resS: RESTX[1], resCls: RESTX[2], resIc: RESTX[3],
+      blockCase: openBlock('#4821'), askCase: askAssoc('#4821'),
+      notSimLib: () => info('Liberar compra não está simulado', 'Este protótipo testa o bloqueio com justificativa (T1).'),
+      notSimEsc: () => info('Escalar não está simulado', 'Este protótipo testa o bloqueio com justificativa (T1).'),
+      draftOn: draft4821, draftOff: !draft4821,
+      askJust: () => {
+        const conv = Object.assign({}, s.conv);
+        if (conv.caso.indexOf('just') < 0) conv.caso = conv.caso.concat(['just']);
+        set({ conv: conv });
+      },
+      revertDraft: setDraft('#4821', false),
+      meta: [
+        { k: 'Horário', v: 'Hoje, 03:14' },
+        { k: 'Onde', v: 'São Paulo (SP), online' },
+        { k: 'Costuma comprar', v: 'Chapecó (SC)' },
+        { k: 'Dispositivo', v: 'Navegador nunca visto' }
+      ],
+      perfil: [
+        { k: 'Associado', v: 'Valdir B. (fictício)' },
+        { k: 'Cidade', v: 'Chapecó (SC)' },
+        { k: 'Gasto mensal médio', v: 'R$ 3.900,00' },
+        { k: 'Compras online', v: '2 em 2026 · média R$ 380,00' },
+        { k: 'Canal de contato', v: 'Aviso de compra no app' },
+        { k: 'Últimos avisos de compra', v: 'Respondeu 3 de 3' }
+      ],
+      fatores: [
+        { n: '1', t: 'Rajada: 5 tentativas em 4 minutos', d: 'Ele faz, em média, 1 compra por dia', w: '92%', p: '+0,31' },
+        { n: '2', t: 'Longe de casa: 760 km da última compra', d: 'Comprou presencialmente em Chapecó (SC) há 9 h', w: '78%', p: '+0,24' },
+        { n: '3', t: 'Valor 6 vezes acima da média online', d: 'Média de compras online: R$ 380,00', w: '64%', p: '+0,17' },
+        { n: '4', t: 'Horário atípico: 03:14', d: 'Nenhuma compra de madrugada em 12 meses', w: '40%', p: '+0,11' },
+        { n: '5', t: 'Dispositivo nunca visto', d: 'Primeiro uso deste navegador no cartão', w: '28%', p: '+0,06' }
+      ],
+      tl: [
+        { h: '03:18', v: 'R$ 1.190,00', loja: 'Loja Exemplo Games · online · São Paulo (SP)', dot: '#161616', bg: 'transparent', fw: '400', tagCls: 'tag tag-yellow', tag: 'Retida', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+        { h: '03:17', v: 'R$ 312,50', loja: 'Loja Exemplo Moda · online · São Paulo (SP)', dot: '#161616', bg: 'transparent', fw: '400', tagCls: 'tag tag-yellow', tag: 'Retida', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+        { h: '03:16', v: 'R$ 640,00', loja: 'Loja Exemplo Games · online · São Paulo (SP)', dot: '#161616', bg: 'transparent', fw: '400', tagCls: 'tag tag-yellow', tag: 'Retida', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+        { h: '03:15', v: 'R$ 899,00', loja: 'Loja Exemplo Celulares · online · São Paulo (SP)', dot: '#161616', bg: 'transparent', fw: '400', tagCls: 'tag tag-yellow', tag: 'Retida', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+        { h: '03:14', v: 'R$ 2.349,90', loja: 'Loja Exemplo Eletrônicos · online · São Paulo (SP)', dot: '#161616', bg: '#e0e0e0', fw: '600', tagCls: 'tag tag-blue', tag: 'Este caso', i1: 'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z', f: '#0f62fe', s: '#0f62fe', i2: 'M8 8h0', m: 'none' },
+        { h: 'Ontem, 17:40', v: 'R$ 4.210,00', loja: 'Agropecuária Exemplo · presencial · Chapecó (SC)', dot: '#ffffff', bg: 'transparent', fw: '400', tagCls: 'tag tag-gray', tag: 'Habitual', i1: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z', f: 'none', s: '#525252', i2: 'M5.5 8.2l1.8 1.8 3.4-3.6', m: '#525252' }
+      ],
+
+      // trilho do Watson
+      ctxTela: CTX[ctx][0], ctxDesc: CTX[ctx][1], askPh: CTX[ctx][2],
+      chips: chips, msgs: msgs,
+      hasConv: msgs.length > 0, noConv: msgs.length === 0,
+      clearConv: clearConv,
+      sendFree: () => info('Neste protótipo, use as perguntas rápidas', 'A pergunta livre não está simulada.'),
+
+      // toast
+      hasToast: !!s.toast,
+      toastCls: toast.cls || 'toast', toastIc: toast.ic || '#24a148', toastMark: toast.mark || '',
+      toastT: toast.t || '', toastS: toast.s || '', toastUndo: !!toast.undo,
+      undo: undo, closeToast: closeToast,
+
+      // modal
+      hasModal: !!mc,
+      mLabel: mc ? 'Caso ' + mc.id + ' · ' + mc.assoc + ' · ' + mc.valor : '',
+      mTitle: mc ? 'Bloquear o cartão final ' + mc.cartao + '?' : '',
+      mEffects: [
+        { t: 'Novas compras com este cartão serão recusadas até um cartão novo ser emitido.' },
+        { t: 'As tentativas retidas deste caso também serão recusadas.' },
+        { t: 'O associado recebe o aviso no app. Você pode desfazer logo depois de confirmar.' }
+      ],
+      mDraftOn: mDraftOn, mDraftOff: !mDraftOn,
+      mIs4821: !!(mc && mc.id === '#4821'), mNot4821: !!(mc && mc.id !== '#4821'),
+      mDraftTx: mc ? mc.s1 + ' e ' + mc.s2.toLowerCase() + ', score ' + fmt(mc.score) + ' (acima do limite de 0,85 para bloqueio preventivo). Bloqueio até o associado confirmar no app.' : '',
+      mDraft: mc ? setDraft(mc.id, true) : noop,
+      mRevert: mc ? setDraft(mc.id, false) : noop,
+      closeModal: closeModal, confirmBlock: confirmBlock,
+
+      // app do associado
+      appAlerta: s.app === 'alerta', appBio: s.app === 'bio', appBloq: s.app === 'bloq', appLib: s.app === 'lib', appHum: s.app === 'humano',
+      appCardOk: s.appCard, appCardNo: !s.appCard,
+      appWhy: s.appWhy, appWhyExp: s.appWhy ? 'true' : 'false', toggleAppWhy: () => set({ appWhy: !s.appWhy }),
+      bioLead: s.st['#4821'] === 'bloqApp'
+        ? 'Para desbloquear o cartão e liberar a compra, use a digital ou o rosto cadastrados neste celular.'
+        : 'Esta compra pede uma confirmação extra. Use a digital ou o rosto cadastrados neste celular.',
+      det: [
+        { k: 'Valor', v: 'R$ 2.349,90', cls: 'big' },
+        { k: 'Loja', v: 'Loja Exemplo Eletrônicos (internet)', cls: '' },
+        { k: 'Cidade', v: 'São Paulo (SP)', cls: '' },
+        { k: 'Horário', v: 'Hoje, 03:14', cls: '' }
+      ],
+      appYes: appSet('bio'),
+      appNo: appSet('bloq', 'bloqApp'),
+      appHuman: appSet('humano'),
+      appBioOk: appSet('lib', 'libApp'),
+      appBack: () => { if (s.app === 'bio' || s.app === 'humano') set({ app: s.st['#4821'] === 'bloqApp' ? 'bloq' : 'alerta' }); },
+      appOops: appSet('bio'),
+      appCard: () => set({ appCard: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

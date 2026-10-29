@@ -1,0 +1,539 @@
+@use '@carbon/react/scss/config' with ($css--font-face: false);
+@use '@carbon/react/scss/themes';
+@use '@carbon/react/scss/theme' with ($theme: themes.$g10);
+@use '@carbon/react';
+@use '@carbon/react/scss/type';
+@use '@carbon/react/scss/motion';
+
+@include type.type-classes();
+
+:root {
+  @include theme.theme();
+}
+
+body {
+  margin: 0;
+  background: var(--cds-background);
+  color-scheme: light;
+}
+
+// O trilho da navegação lateral (3rem) aparece a partir do breakpoint lg do Carbon.
+@media (min-width: 66rem) {
+  .watson-content { margin-left: 3rem; }
+}
+
+.watson-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  min-height: calc(100vh - 3rem);
+}
+
+.watson-main {
+  flex: 999 1 560px;
+  min-width: 0;
+  padding: 1.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watson-rail {
+  flex: 1 1 340px;
+  max-width: 400px;
+  background: var(--cds-layer-01);
+  border-left: 1px solid var(--cds-border-subtle-01);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.watson-rail--overlay {
+  position: fixed;
+  top: 3rem;
+  right: 0;
+  bottom: 0;
+  width: min(400px, 100vw);
+  max-width: none;
+  overflow-y: auto;
+  z-index: 7000;
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+  // Fechado: fora da tela à direita. A visibilidade só some depois que o painel termina de sair.
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform motion.$duration-moderate-02 motion.motion(exit, expressive),
+    visibility 0s linear motion.$duration-moderate-02;
+}
+
+.watson-rail--open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform motion.$duration-moderate-02 motion.motion(entrance, expressive), visibility 0s;
+}
+
+
+.watson-case-queue {
+  flex: 0 0 18rem;
+  max-width: 18rem;
+  overflow: hidden;
+  background: var(--cds-layer-01);
+  border-right: 1px solid var(--cds-border-subtle-01);
+  display: flex;
+  flex-direction: column;
+}
+
+.watson-case-queue--collapsed {
+  flex-basis: 3rem;
+  max-width: 3rem;
+}
+
+// Largura fixa por dentro: o texto não se reorganiza enquanto a fila abre e recolhe.
+.watson-case-queue__body {
+  width: 18rem;
+}
+
+.watson-case-queue__strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 0.5rem;
+
+  &[hidden] { display: none; }
+}
+
+.watson-case-queue__vertical-label {
+  writing-mode: vertical-rl;
+  @include type.type-style('label-01');
+  color: var(--cds-text-secondary);
+}
+
+.watson-case-queue__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem 0.75rem 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+
+.watson-case-queue__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.watson-case-queue__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  background: transparent;
+  color: var(--cds-text-primary);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+
+  &:hover { background: var(--cds-layer-hover-01); }
+  &:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+}
+
+.watson-case-queue__item--active {
+  background: var(--cds-layer-selected-01);
+  &:hover { background: var(--cds-layer-selected-hover-01); }
+}
+
+.watson-case-queue__bar {
+  align-self: stretch;
+  flex: 0 0 4px;
+  background: var(--cds-border-subtle-01);
+}
+.watson-case-queue__bar--red { background: var(--cds-support-error); }
+.watson-case-queue__bar--warm-gray { background: var(--cds-support-warning); }
+
+.watson-case-queue__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.watson-case-queue__score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+// Em telas estreitas a fila sai do lado do caso; a página da fila continua no menu.
+@media (max-width: 66rem) {
+  .watson-case-queue { display: none; }
+}
+
+.watson-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.watson-term {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.watson-glossary dt {
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.watson-glossary dd {
+  margin: 0.25rem 0 0;
+  color: var(--cds-text-secondary);
+}
+
+.watson-kpi {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  white-space: nowrap;
+  line-height: 2.5rem;
+  font-weight: 300;
+  margin: 0.25rem 0;
+}
+
+.watson-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.watson-column {
+  flex: 1 1 260px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cds--progress-bar + .cds--progress-bar,
+.cds--progress-bar { margin-bottom: 0.75rem; }
+
+.watson-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--cds-border-interactive);
+  }
+}
+
+.watson-timeline__item--simulated {
+  border-left-style: dashed !important;
+  border-left-color: var(--cds-border-strong-01) !important;
+  opacity: 0.85;
+}
+
+.watson-timeline__item--current {
+  border-left-width: 4px !important;
+}
+
+.watson-timeline__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.watson-card-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Indicador de rajada: número grande + texto, acima da linha do tempo.
+.watson-burst {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--cds-layer-02);
+  border-left: 4px solid var(--cds-border-strong-01);
+
+  code { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; }
+}
+
+.watson-burst--strong { border-left-color: var(--cds-support-error); }
+
+.watson-burst__value {
+  @include type.type-style('heading-05');
+}
+
+.watson-timeline__time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+// Celular do associado (simulado)
+.watson-phone {
+  flex: 0 0 340px;
+  padding: 1.5rem 1rem;
+  background: var(--cds-layer-accent-01);
+}
+
+.watson-phone__screen {
+  width: 300px;
+  min-height: 560px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  background: var(--cds-background);
+  border: 8px solid #161616;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .cds--inline-notification { min-width: 0; max-width: 100%; }
+  .cds--btn { max-width: 100%; width: 100%; }
+}
+
+.watson-phone__empty {
+  color: var(--cds-text-secondary);
+  font-size: 0.875rem;
+}
+
+// Barra de controle do protótipo (não faz parte do produto)
+.watson-demo-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  padding: 0.5rem 2rem;
+  background: var(--cds-layer-accent-01);
+  border-bottom: 1px dashed var(--cds-border-strong-01);
+}
+
+.watson-narration {
+  padding: 1rem 2rem;
+  min-width: 0;
+
+  .cds--progress { overflow-x: auto; padding-bottom: 0.25rem; }
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.watson-floating {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 8000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
+  .watson-phone { padding-top: 2rem; }
+}
+
+.watson-floating__close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}
+
+.watson-toast {
+  position: fixed;
+  top: 3.5rem;
+  right: 1rem;
+  z-index: 9000;
+}
+
+.watson-main .cds--data-table-content {
+  overflow-x: auto;
+}
+
+// Nome da seção no trilho da navegação lateral (hover e foco). Visual da tooltip do Carbon.
+.watson-nav-tooltip {
+  position: fixed;
+  z-index: 9000;
+  transform: translateY(-50%);
+  padding: 0.125rem 0.75rem;
+  background: var(--cds-background-inverse);
+  color: var(--cds-text-inverse);
+  border-radius: 2px;
+  pointer-events: none;
+  white-space: nowrap;
+  @include type.type-style('body-compact-01');
+}
+
+// ---------------------------------------------------------------------------
+// Transições (tokens de motion do Carbon). Productive para o que a analista faz o tempo todo
+// (hover, troca de caso, recolher); expressive para o que aparece de novo e merece atenção
+// (painel do Watson, notificações). Com "reduzir movimento" no sistema, nada disso roda.
+// ---------------------------------------------------------------------------
+@keyframes watson-enter {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes watson-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes watson-slide-in-right {
+  from { opacity: 0; transform: translateX(1rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes watson-grow-x {
+  from { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  // Troca de tela e de caso: o conteúdo entra de leve, em vez de piscar.
+  .watson-main {
+    animation: watson-enter motion.$duration-moderate-01 motion.motion(entrance, productive);
+  }
+
+  // Cards da tela entram um depois do outro.
+  .watson-main > .cds--tile,
+  .watson-columns > .cds--tile,
+  .watson-kpis > .cds--tile {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, productive) backwards;
+  }
+  .watson-columns > .cds--tile:nth-child(2),
+  .watson-kpis > .cds--tile:nth-child(2) { animation-delay: 40ms; }
+  .watson-kpis > .cds--tile:nth-child(3) { animation-delay: 80ms; }
+  .watson-kpis > .cds--tile:nth-child(4) { animation-delay: 120ms; }
+  .watson-kpis > .cds--tile:nth-child(5) { animation-delay: 160ms; }
+
+  // Barras de peso do "Por que é suspeito" crescem até o valor.
+  .watson-main .cds--progress-bar__bar {
+    transform-origin: left;
+    animation: watson-grow-x motion.$duration-slow-01 motion.motion(entrance, expressive) backwards;
+    animation-delay: 120ms;
+  }
+
+  // Linha do tempo: itens entram em sequência.
+  .watson-timeline li {
+    animation: watson-enter motion.$duration-moderate-01 motion.motion(entrance, productive) backwards;
+  }
+  @for $i from 2 through 10 {
+    .watson-timeline li:nth-child(#{$i}) { animation-delay: #{($i - 1) * 40}ms; }
+  }
+
+  .watson-burst {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, expressive) backwards;
+  }
+
+  // Fila ao lado do caso: largura anima ao recolher; itens com hover e seleção suaves.
+  .watson-case-queue {
+    transition: flex-basis motion.$duration-moderate-01 motion.motion(standard, productive),
+      max-width motion.$duration-moderate-01 motion.motion(standard, productive);
+  }
+  .watson-case-queue__body:not([hidden]),
+  .watson-case-queue__strip:not([hidden]) {
+    animation: watson-fade-in motion.$duration-moderate-01 motion.motion(entrance, productive);
+  }
+  .watson-case-queue__item {
+    transition: background-color motion.$duration-fast-01 motion.motion(standard, productive);
+  }
+
+  // Tooltips dos termos e da navegação lateral.
+  .watson-term .cds--popover--open .cds--popover-content,
+  .watson-nav-tooltip {
+    animation: watson-fade-in motion.$duration-fast-02 motion.motion(entrance, productive);
+  }
+
+  // Notificações, aviso no celular e painel do celular.
+  .watson-main .cds--inline-notification {
+    animation: watson-enter motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+  .watson-toast .cds--toast-notification {
+    animation: watson-slide-in-right motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+  .watson-floating {
+    animation: watson-slide-in-right motion.$duration-moderate-02 motion.motion(entrance, expressive);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watson-rail--overlay,
+  .watson-rail--open {
+    transition: none;
+  }
+}
+
+// Laboratório do modelo (versão B, "E se?")
+.watson-lab__title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.watson-lab__muted { color: var(--cds-text-secondary); }
+.watson-lab__mono { font-family: 'IBM Plex Mono', monospace; }
+.watson-lab__start { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem; }
+.watson-lab__start > .cds--list-box__wrapper { flex: 1 1 420px; }
+.watson-lab__start-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.watson-lab__duo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--cds-border-subtle-01);
+}
+.watson-lab__side { background: var(--cds-layer-01); padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.watson-lab__score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem; }
+.watson-lab__score-value { font-size: 3.375rem; line-height: 4rem; font-weight: 300; }
+.watson-lab__delta { display: flex; align-items: center; gap: 0.5rem; }
+.watson-lab__grid { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; }
+.watson-lab__table { flex: 999 1 560px; min-width: 0; background: var(--cds-layer-01); overflow-x: auto; }
+.watson-lab__toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; }
+.watson-lab__toolbar .cds--content-switcher { width: auto; flex: 0 1 360px; }
+.watson-lab__toolbar-actions { display: flex; gap: 1px; }
+.watson-lab__input { min-width: 12rem; }
+.watson-lab__row--changed td { background: var(--cds-highlight); }
+.watson-lab__row--changed td:first-child { box-shadow: inset 3px 0 0 var(--cds-interactive); }
+.watson-lab__empty { padding: 0.75rem 1rem; }
+.watson-lab__history { flex: 1 1 340px; background: var(--cds-layer-01); padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.watson-lab__history ul { list-style: none; margin: 0; padding: 0; }
+.watson-lab__history-item {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 2.5rem auto;
+  .watson-lab__history-label { overflow-wrap: anywhere; }
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  background: transparent;
+  color: var(--cds-text-primary);
+  font: inherit;
+  font-size: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  &:hover { background: var(--cds-layer-hover-01); }
+  &:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+}
+
+.watson-score-bar__track { position: relative; display: flex; height: 0.625rem; margin-top: 0.75rem; }
+.watson-score-bar__zone--low { background: var(--cds-support-success); }
+.watson-score-bar__zone--medium { background: var(--cds-support-warning); }
+.watson-score-bar__zone--high { background: var(--cds-support-error); }
+.watson-score-bar__threshold { position: absolute; top: -0.3125rem; bottom: -0.3125rem; border-left: 2px dashed var(--cds-text-primary); }
+.watson-score-bar__marker { position: absolute; top: -0.4375rem; width: 4px; height: 1.5rem; background: var(--cds-text-primary); }
+.watson-score-bar__scale { position: relative; height: 1rem; margin-top: 0.25rem; color: var(--cds-text-secondary); }
+.watson-score-bar__scale span { position: absolute; top: 0; }

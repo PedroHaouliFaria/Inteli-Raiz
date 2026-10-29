@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mockup 1 · Caso com o Watson</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.g10{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-selected-01:#e0e0e0;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-subtle-02:#c6c6c6;--border-strong-01:#8d8d8d;--border-inverse:#161616;--border-interactive:#0f62fe;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--text-disabled:#c6c6c6;--link-primary:#0f62fe;--link-primary-hover:#0043ce;--icon-primary:#161616;--icon-secondary:#525252;--focus:#0f62fe;--button-primary:#0f62fe;--button-secondary:#393939;--button-tertiary:#0f62fe;--button-danger-primary:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-info:#0043ce;--notification-background-info:#edf5ff;--notification-border-info:#a6c8ff;--tag-background-red:#ffd7d9;--tag-color-red:#a2191f;--tag-background-yellow:#fddc69;--tag-color-yellow:#483700;--tag-background-gray:#e0e0e0;--tag-color-gray:#161616;--tag-background-green:#a7f0ba;--tag-color-green:#0e6027;--tag-background-blue:#d0e2ff;--tag-color-blue:#0043ce;--ai-border:#4589ff;--ai-border-subtle:#a6c8ff;--ai-surface-end:#edf5ff;--shell-background:#161616;--shell-border:#393939;--shell-text:#f4f4f4;--shell-icon:#f4f4f4;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.g10 *{box-sizing:border-box}
+.skip{position:absolute;left:-10000px;top:0;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:0;width:auto;height:auto;padding:14px 16px;background:var(--layer-01);color:var(--link-primary);outline:2px solid var(--focus);outline-offset:-2px;z-index:10}
+.hdr{height:48px;flex:0 0 48px;display:flex;align-items:center;background:var(--shell-background);border-bottom:1px solid var(--shell-border)}
+.hdr-name{display:flex;align-items:center;height:47px;padding:0 32px 0 16px;color:var(--shell-text);text-decoration:none;font-size:14px;line-height:18px;letter-spacing:.1px;white-space:nowrap}
+.hdr-act{display:inline-flex;align-items:center;justify-content:center;width:48px;height:47px;border:0;padding:0;background:transparent;color:var(--shell-icon);cursor:pointer}
+.snav{flex:0 0 256px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);padding:16px 0;display:flex;flex-direction:column}
+.snav-link{display:flex;align-items:center;gap:12px;min-height:32px;padding:0 16px;color:var(--text-secondary);text-decoration:none;font-size:14px;line-height:18px;font-weight:600;letter-spacing:.16px}
+.snav-link svg{flex-shrink:0}
+.snav-link.cur{background:var(--layer-selected-01);color:var(--text-primary);box-shadow:inset 3px 0 0 var(--border-interactive)}
+.snav-div{height:1px;background:var(--border-subtle-01);margin:8px 16px}
+.lbl{margin:0;font-size:12px;line-height:16px;letter-spacing:.32px;color:var(--text-secondary)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:'IBM Plex Mono',Menlo,monospace}
+.cs{display:inline-flex}
+.cs-btn{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;min-width:128px;height:40px;padding:0 16px;border:1px solid var(--border-inverse);background:transparent;color:var(--text-secondary);font:inherit;font-size:14px;line-height:18px;letter-spacing:.16px;white-space:nowrap;cursor:pointer}
+.cs-btn.first{border-radius:4px 0 0 4px}
+.cs-btn.last{border-radius:0 4px 4px 0;border-left-width:0}
+.cs-btn.sel{background:var(--border-inverse);color:var(--text-on-color)}
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:32px;min-height:48px;padding:0 16px;border:1px solid transparent;border-radius:0;font:inherit;font-size:14px;line-height:18px;letter-spacing:.16px;text-decoration:none;white-space:nowrap;text-align:left;cursor:pointer}
+.btn svg{flex-shrink:0}
+.btn-md{min-height:40px}
+.btn-sm{min-height:32px;padding:0 12px;gap:8px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-ghost{background:transparent;color:var(--link-primary)}
+.btn-icon{width:48px;padding:0;justify-content:center;color:var(--icon-primary);background:transparent}
+.tag{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;letter-spacing:.32px;white-space:nowrap}
+.tag svg{flex-shrink:0}
+.tile{background:var(--layer-01);padding:16px}
+.ai{display:inline-flex;align-items:center;justify-content:center;height:24px;min-width:24px;padding:0 6px;border:1px solid var(--ai-border);border-radius:4px;background:linear-gradient(0deg,var(--ai-surface-end),var(--layer-01));color:var(--text-primary);font:inherit;font-size:12px;line-height:16px;font-weight:600;cursor:pointer;flex-shrink:0}
+.ntf{display:flex;align-items:flex-start;background:var(--notification-background-info);border:1px solid var(--notification-border-info);border-left:3px solid var(--support-info)}
+.tb{display:flex;align-items:center;height:48px;background:var(--layer-01)}
+.tb-search{flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;background:var(--field-02);color:var(--icon-primary)}
+.tb-search input{flex:1 1 auto;min-width:0;border:0;background:transparent;font:inherit;font-size:14px;color:var(--text-primary);outline:none}
+.tb-search input::placeholder{color:var(--text-helper)}
+.dd{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 16px;border:0;background:transparent;font:inherit;font-size:14px;line-height:18px;color:var(--text-primary);white-space:nowrap;cursor:pointer}
+.dd .k{color:var(--text-secondary)}
+.dt{min-width:1104px}
+.dt-row{display:grid;grid-template-columns:48px 80px minmax(128px,1fr) 112px minmax(160px,1.4fr) 104px 72px 112px minmax(160px,1fr) 80px 48px;align-items:center}
+.dt-head{height:48px;background:var(--layer-accent-01)}
+.dt-th{display:flex;align-items:center;gap:8px;height:48px;padding:0 16px;font-size:14px;line-height:18px;font-weight:600;color:var(--text-primary);white-space:nowrap}
+.dt-td{display:flex;align-items:center;height:47px;padding:0 16px;font-size:14px;line-height:18px;min-width:0;white-space:nowrap;overflow:hidden}
+.dt-td .t{overflow:hidden;text-overflow:ellipsis}
+.num{justify-content:flex-end;text-align:right;font-variant-numeric:tabular-nums}
+.cbx{display:inline-block;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01)}
+.pg{display:flex;align-items:center;height:48px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);font-size:14px;line-height:18px;color:var(--text-secondary)}
+.pg-sel{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 16px;border:0;border-right:1px solid var(--border-subtle-01);background:transparent;font:inherit;font-size:14px;color:var(--text-primary);cursor:pointer}
+.pg-nav{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border:0;border-left:1px solid var(--border-subtle-01);background:transparent;color:var(--icon-primary);cursor:pointer}
+.pg-nav[disabled]{color:var(--text-disabled);cursor:not-allowed}
+.rail{flex:0 0 48px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);padding:16px 0;display:flex;flex-direction:column}
+.rail-link{display:flex;align-items:center;justify-content:center;height:40px;color:var(--icon-secondary)}
+.rail-link.cur{background:var(--layer-selected-01);color:var(--icon-primary);box-shadow:inset 3px 0 0 var(--border-interactive)}
+.btn-secondary{background:var(--button-secondary);color:var(--text-on-color)}
+.btn-tertiary{background:transparent;border-color:var(--button-tertiary);color:var(--button-tertiary)}
+.btn-danger{background:var(--button-danger-primary);color:var(--text-on-color)}
+.ai-surface{background:linear-gradient(180deg,var(--layer-01) 0%,var(--ai-surface-end) 100%);border:1px solid var(--ai-border-subtle)}
+.ta{display:block;width:100%;min-height:64px;resize:vertical;padding:11px 16px;border:0;border-bottom:1px solid var(--border-strong-01);border-radius:0;background:var(--field-02);font:inherit;font-size:14px;line-height:20px;letter-spacing:.16px;color:var(--text-primary)}
+.ta:focus{outline:2px solid var(--focus);outline-offset:-2px}
+.fac{display:grid;grid-template-columns:24px minmax(0,1fr) 80px 48px;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid var(--border-subtle-01)}
+.bar{height:8px;background:var(--layer-accent-01);overflow:hidden}
+.agent{flex:1 1 360px;min-width:0;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column}
+.chip{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--layer-01);font:inherit;font-size:14px;line-height:18px;color:var(--text-primary);cursor:pointer}
+.fld{flex:1 1 auto;min-width:0;display:flex;align-items:center;height:48px;padding:0 16px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01)}
+.fld input{flex:1 1 auto;min-width:0;border:0;background:transparent;font:inherit;font-size:14px;color:var(--text-primary);outline:none}
+.fld input::placeholder{color:var(--text-helper)}
+.fld:focus-within{outline:2px solid var(--focus);outline-offset:-2px}
+</style>
+</helmet>
+<div class="g10" style="position: relative; width: 100%; min-height: 1100px; display: flex; flex-direction: column">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="hdr" aria-label="Watson · Prevenção a fraudes">
+    <button class="hdr-act" type="button" aria-label="Expandir menu de navegação" aria-expanded="false" style="border-right: 1px solid var(--shell-border)">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+    </button>
+    <a class="hdr-name" href="#"><span style="font-weight: 400">Watson</span>&nbsp;<span style="font-weight: 600">Prevenção a fraudes</span></a>
+    <div style="flex: 1 1 auto"></div>
+    <button class="hdr-act" type="button" aria-label="Buscar associado, cartão ou caso">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.4 10.4L14 14"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Notificações, 3 novas">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1.5 1.5h-11L4 11z"></path><path d="M6.5 14.5h3"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Camila Rocha, perfil e turno">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 14c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2" width="2.5" height="2.5"></rect><rect x="6.75" y="2" width="2.5" height="2.5"></rect><rect x="11.5" y="2" width="2.5" height="2.5"></rect><rect x="2" y="6.75" width="2.5" height="2.5"></rect><rect x="6.75" y="6.75" width="2.5" height="2.5"></rect><rect x="11.5" y="6.75" width="2.5" height="2.5"></rect><rect x="2" y="11.5" width="2.5" height="2.5"></rect><rect x="6.75" y="11.5" width="2.5" height="2.5"></rect><rect x="11.5" y="11.5" width="2.5" height="2.5"></rect></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto">
+    <nav class="rail" aria-label="Navegação principal, recolhida">
+      <a class="rail-link cur" href="#" aria-current="page" aria-label="Alertas" title="Alertas">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+      </a>
+      <a class="rail-link" href="#" aria-label="Casos encerrados" title="Casos encerrados">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3"></rect><path d="M3 5.5v8h10v-8M6.5 8.5h3"></path></svg>
+      </a>
+      <a class="rail-link" href="#" aria-label="Associados" title="Associados">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="5.5" r="2.3"></circle><path d="M1.8 13.5c.4-2.4 2-3.6 4.2-3.6s3.8 1.2 4.2 3.6M10.5 3.4a2.3 2.3 0 0 1 0 4.3M12 9.9c1.2.4 2 1.6 2.2 3.6"></path></svg>
+      </a>
+      <a class="rail-link" href="#" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 14h12M3 11l3-4 3 2 4-5"></path></svg>
+      </a>
+      <a class="rail-link" href="#" aria-label="Relatórios" title="Relatórios">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 1.5h5l3 3v10H4z"></path><path d="M9 1.5v3h3M6 8h4M6 10.5h4"></path></svg>
+      </a>
+      <div class="snav-div" role="separator" style="margin: 8px 12px"></div>
+      <a class="rail-link" href="#" aria-label="Regras e limites" title="Regras e limites">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4.5h6M11 4.5h3M2 11.5h3M8 11.5h6"></path><circle cx="9.5" cy="4.5" r="1.5"></circle><circle cx="6.5" cy="11.5" r="1.5"></circle></svg>
+      </a>
+      <a class="rail-link" href="#" aria-label="Ajuda e atalhos" title="Ajuda e atalhos">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.5"></path><path d="M8 11.4v.1" stroke-linecap="round" stroke-width="1.6"></path></svg>
+      </a>
+    </nav>
+
+    <main id="conteudo" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 16px 32px 24px">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 32px">
+        <nav aria-label="Trilha de navegação" style="flex: 1 1 auto">
+          <ol style="display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 18px">
+            <li style="display: flex; gap: 8px"><a href="#" style="color: var(--link-primary); text-decoration: none">Fila</a><span aria-hidden="true" style="color: var(--text-secondary)">/</span></li>
+            <li aria-current="page">Caso #4821</li>
+          </ol>
+        </nav>
+        <a class="btn btn-ghost btn-sm" href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M10 4L6 8l4 4"></path></svg>
+          Caso anterior
+        </a>
+        <a class="btn btn-ghost btn-sm" href="#">Próximo da fila
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg>
+        </a>
+      </div>
+
+      <section class="tile" style="padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start" aria-labelledby="caso-titulo">
+        <div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+            <p class="lbl"><span class="mono">Caso #4821</span> · crédito · cartão não presente · aberto há 3 min</p>
+            <span class="tag" style="background: var(--tag-background-blue); color: var(--tag-color-blue)">Em análise · com você</span>
+          </div>
+          <h1 id="caso-titulo" style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">R$ 2.349,90 na Loja Exemplo Eletrônicos</h1>
+          <p style="margin: 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">Valdir B. (associado fictício) · cartão final 4821 · hoje, 03:14 · São Paulo (SP), online</p>
+        </div>
+        <div style="flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; padding-left: 24px; border-left: 1px solid var(--border-subtle-01)">
+          <p class="lbl">Score de risco</p>
+          <p style="margin: 0; font-size: 42px; line-height: 50px; font-weight: 300">0,92</p>
+          <span class="tag" style="background: var(--tag-background-red); color: var(--tag-color-red); align-self: flex-start">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6"></circle><path d="M8 4.8v4"></path><path d="M8 11.1v.1" stroke-linecap="round" stroke-width="1.8"></path></svg>
+            Alto risco
+          </span>
+        </div>
+      </section>
+
+      <section class="tile" style="padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 12px" aria-labelledby="decisao">
+        <div style="display: flex; align-items: baseline; gap: 4px 16px; flex-wrap: wrap">
+          <h2 id="decisao" style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">Sua decisão</h2>
+          <p style="margin: 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">O Watson recomenda bloquear. Nada acontece sem a sua confirmação, e a decisão fica registrada com o seu nome.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+            <label for="justificativa" class="lbl" style="color: var(--text-secondary)">Justificativa para a auditoria</label>
+            <button class="ai" type="button" aria-label="IA: texto sugerido pelo Watson. Ver explicação">IA</button>
+            <span class="lbl">Sugerida pelo Watson, editada por você</span>
+            <span style="flex: 1 1 auto"></span>
+            <button class="btn btn-ghost btn-sm" type="button">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M5 2.5L2 5.5l3 3"></path><path d="M2 5.5h7.5a4 4 0 0 1 0 8H7"></path></svg>
+              Reverter para o texto do Watson
+            </button>
+          </div>
+          <textarea id="justificativa" class="ta" rows="2">Rajada de 5 tentativas online em 7 min (03:07 a 03:14), a 760 km da última compra presencial (Chapecó, SC), em navegador nunca visto. Bloqueio preventivo; associado avisado no app para confirmar.</textarea>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+          <p class="lbl" style="flex: 1 1 240px">Bloquear recusa as 4 tentativas retidas e avisa o associado no app.</p>
+          <div style="display: flex; flex-wrap: wrap" role="group" aria-label="Ações do caso">
+            <a class="btn btn-ghost" href="#">Escalar
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10"></path></svg>
+            </a>
+            <a class="btn btn-tertiary" href="#">Liberar
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg>
+            </a>
+            <a class="btn btn-secondary" href="#">Perguntar ao associado
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="4.5" y="1.5" width="7" height="13" rx="1"></rect><path d="M7 12h2"></path></svg>
+            </a>
+            <a class="btn btn-danger" href="#">Bloquear cartão
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+        <section class="tile" style="flex: 1 1 440px; min-width: 0; padding: 0" aria-labelledby="fatores">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 16px 16px 12px">
+            <h2 id="fatores" style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">Por que é suspeito</h2>
+            <button class="ai" type="button" aria-label="IA: fatores explicados pelo Watson. Ver explicação">IA</button>
+            <span style="flex: 1 1 auto"></span>
+            <p class="lbl">Peso no score</p>
+          </div>
+          <sc-for list="{{fatores}}" as="f" hint-placeholder-count="5">
+            <div class="fac">
+              <span class="mono" style="font-size: 14px; line-height: 20px; color: var(--text-secondary)">{{f.n}}</span>
+              <div style="min-width: 0">
+                <p style="margin: 0; font-size: 14px; line-height: 20px; font-weight: 600">{{f.t}}</p>
+                <p style="margin: 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">{{f.d}}</p>
+              </div>
+              <div class="bar" role="img" aria-label="{{f.aria}}"><div style="height: 8px; width: {{f.w}}; background: var(--button-secondary)"></div></div>
+              <span class="mono" style="font-size: 14px; line-height: 20px; text-align: right">{{f.p}}</span>
+            </div>
+          </sc-for>
+          <div class="fac">
+            <span style="display: flex; color: var(--support-success)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.3"></circle><path d="M5 8h6"></path></svg>
+            </span>
+            <div style="min-width: 0">
+              <p style="margin: 0; font-size: 14px; line-height: 20px; font-weight: 600">Reduz o risco: já comprou online antes</p>
+              <p style="margin: 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">2 compras online legítimas em 2026</p>
+            </div>
+            <div class="bar" role="img" aria-label="Reduz 3 pontos"><div style="height: 8px; width: 9%; background: var(--support-success)"></div></div>
+            <span class="mono" style="font-size: 14px; line-height: 20px; text-align: right">−0,03</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 12px 16px; border-top: 1px solid var(--border-subtle-01)">
+            <p class="lbl" style="flex: 1 1 auto">Base do modelo +0,06 · score final 0,92</p>
+            <a href="#" style="font-size: 14px; line-height: 18px; color: var(--link-primary); text-decoration: none">Como o score é calculado</a>
+          </div>
+        </section>
+
+        <div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+          <section class="tile" style="padding: 0" aria-labelledby="linha-tempo">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 12px 8px 8px 16px">
+              <h2 id="linha-tempo" style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600; flex: 1 1 auto">Linha do tempo do cartão</h2>
+              <a class="btn btn-ghost btn-sm" href="#">Ver 12 meses</a>
+            </div>
+            <ol style="margin: 0; padding: 0 0 8px; list-style: none">
+              <sc-for list="{{linha}}" as="t" hint-placeholder-count="6">
+                <li style="display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 0 16px; background: {{t.bg}}">
+                  <div style="display: flex; flex-direction: column; align-items: center; align-self: stretch">
+                    <span style="width: 10px; height: 10px; margin-top: 13px; border-radius: 50%; border: 2px solid {{t.dotBorda}}; background: {{t.dotFundo}}; flex-shrink: 0"></span>
+                    <span style="flex: 1 1 auto; width: 1px; background: {{t.trilho}}"></span>
+                  </div>
+                  <div style="min-width: 0; padding: 8px 0">
+                    <p style="margin: 0; font-size: 14px; line-height: 18px; font-weight: {{t.peso}}">{{t.linha}}</p>
+                    <p class="lbl" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.loja}}</p>
+                  </div>
+                  <span class="tag" style="margin-top: 9px; background: {{t.tagBg}}; color: {{t.tagFg}}">
+                    <sc-if value="{{t.retida}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6"></circle><path d="M6.5 5.5v5M9.5 5.5v5"></path></svg></sc-if>
+                    <sc-if value="{{t.habitual}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if>
+                    {{t.tag}}
+                  </span>
+                </li>
+              </sc-for>
+            </ol>
+          </section>
+
+          <section class="tile" style="padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px" aria-labelledby="perfil">
+            <div style="display: flex; align-items: center; gap: 8px; margin-right: -8px">
+              <h2 id="perfil" style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600; flex: 1 1 auto">Perfil do associado</h2>
+              <a class="btn btn-ghost btn-sm" href="#">Ver cadastro</a>
+            </div>
+            <dl style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; margin: 0">
+              <sc-for list="{{perfil}}" as="p" hint-placeholder-count="6">
+                <div style="padding: 8px 0; border-top: 1px solid var(--border-subtle-01)">
+                  <dt class="lbl">{{p.k}}</dt>
+                  <dd style="margin: 0; font-size: 14px; line-height: 20px">{{p.v}}</dd>
+                </div>
+              </sc-for>
+            </dl>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <aside class="agent" aria-labelledby="watson-titulo">
+      <div style="display: flex; align-items: flex-start; gap: 8px; padding: 12px 0 12px 16px; border-bottom: 1px solid var(--border-subtle-01)">
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 4px">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <h2 id="watson-titulo" style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">Pergunte ao Watson</h2>
+            <button class="ai" type="button" aria-label="IA: o que o Watson faz neste caso">IA</button>
+          </div>
+          <p class="lbl">O Watson sugere. Você decide.</p>
+        </div>
+        <button class="btn btn-icon" type="button" aria-label="Recolher painel do Watson">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11"></rect><path d="M10 2.5v11M5 6l2 2-2 2"></path></svg>
+        </button>
+      </div>
+
+      <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 16px; padding: 16px">
+        <section class="ai-surface" style="padding: 16px; display: flex; flex-direction: column; gap: 8px" aria-label="Resumo e recomendação do Watson">
+          <p class="lbl">Resumo do caso</p>
+          <p style="margin: 0; font-size: 14px; line-height: 20px">Parece fraude com cartão não presente: 5 tentativas em 7 min, de madrugada, a 760 km de onde o Valdir comprou ontem. O padrão lembra 38 fraudes confirmadas nos últimos 90 dias.</p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--ai-border-subtle)">
+            <p class="lbl">Recomendação</p>
+            <p style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">Bloquear o cartão e avisar o associado no app</p>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <p class="lbl" style="width: 64px">Confiança</p>
+              <div class="bar" role="img" aria-label="Confiança de 87 por cento" style="width: 96px"><div style="height: 8px; width: 87%; background: var(--button-secondary)"></div></div>
+              <p style="margin: 0; font-size: 14px; line-height: 20px">Alta · 87%</p>
+            </div>
+            <p class="lbl">Com base nos fatores 1, 2 e 3. Ainda não sei se o associado reconhece a compra.</p>
+            <a href="#" style="font-size: 14px; line-height: 18px; color: var(--link-primary); text-decoration: none">Como cheguei nisso</a>
+          </div>
+        </section>
+
+        <div style="align-self: flex-end; max-width: 85%; background: var(--layer-accent-01); padding: 8px 12px; display: flex; flex-direction: column; gap: 4px">
+          <p class="lbl">Você · 03:17</p>
+          <p style="margin: 0; font-size: 14px; line-height: 20px">Ele já comprou nessa loja antes?</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <p class="lbl">Watson · 03:17</p>
+            <button class="ai" type="button" aria-label="IA: resposta gerada pelo Watson. Ver explicação">IA</button>
+          </div>
+          <p style="margin: 0; font-size: 14px; line-height: 20px">Não. É a primeira compra do cartão na Loja Exemplo Eletrônicos. As 4 tentativas anteriores, desde as 03:07, também foram em lojas que ele nunca usou.</p>
+          <div style="display: flex; gap: 0; margin-left: -8px">
+            <button class="btn btn-icon" type="button" aria-label="Resposta útil" style="width: 32px; min-height: 32px">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h2.5v7H2z"></path><path d="M4.5 7.5L7.5 2c1 0 1.7.8 1.5 1.8L8.6 6.5h4a1.4 1.4 0 0 1 1.4 1.7l-.9 4.5a1.6 1.6 0 0 1-1.6 1.3H4.5"></path></svg>
+            </button>
+            <button class="btn btn-icon" type="button" aria-label="Resposta não útil" style="width: 32px; min-height: 32px">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M14 9h-2.5V2H14z"></path><path d="M11.5 8.5L8.5 14c-1 0-1.7-.8-1.5-1.8l.4-2.7h-4A1.4 1.4 0 0 1 2 7.8l.9-4.5A1.6 1.6 0 0 1 4.5 2h7"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-top: 1px solid var(--border-subtle-01)">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Sugestões de pergunta">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <button class="chip" type="button">{{c}}</button>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: stretch">
+          <label class="fld">
+            <span class="vh">Pergunte ao Watson sobre este caso</span>
+            <input type="text" placeholder="Pergunte sobre este caso">
+          </label>
+          <button class="btn btn-icon" type="button" aria-label="Enviar pergunta" style="background: var(--field-02); border-bottom: 1px solid var(--border-strong-01); color: var(--link-primary)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg>
+          </button>
+        </div>
+        <p class="lbl">Respostas geradas por IA podem errar. Confira os fatores antes de decidir.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Tokens Carbon (g10) usados nos holes.
+    const token = {
+      layer01: '#ffffff', layerSelected01: '#e0e0e0',
+      borderSubtle02: '#c6c6c6', borderStrong01: '#8d8d8d', iconPrimary: '#161616', interactive: '#0f62fe',
+      tagBackgroundGray: '#e0e0e0', tagColorGray: '#161616',
+      tagBackgroundBlue: '#d0e2ff', tagColorBlue: '#0043ce',
+      tagBackgroundGreen: '#a7f0ba', tagColorGreen: '#0e6027'
+    };
+    const tl = [
+      ['03:14 · R$ 2.349,90', 'Loja Exemplo Eletrônicos · online · este caso', 'atual'],
+      ['03:12 · R$ 1.190,00', 'Loja Exemplo Games · online · São Paulo (SP)', 'retida'],
+      ['03:10 · R$ 312,50', 'Loja Exemplo Moda · online · São Paulo (SP)', 'retida'],
+      ['03:09 · R$ 640,00', 'Loja Exemplo Celulares · online · São Paulo (SP)', 'retida'],
+      ['03:07 · R$ 899,00', 'Loja Exemplo Calçados · online · São Paulo (SP)', 'retida'],
+      ['Ontem 17:40 · R$ 4.210,00', 'Agropecuária Exemplo · presencial · Chapecó (SC)', 'habitual']
+    ];
+    const estilo = {
+      retida: { tag: 'Retida', tagBg: token.tagBackgroundGray, tagFg: token.tagColorGray, dotBorda: token.iconPrimary, dotFundo: token.layer01, bg: 'transparent', peso: '400' },
+      atual: { tag: 'Este caso', tagBg: token.tagBackgroundBlue, tagFg: token.tagColorBlue, dotBorda: token.interactive, dotFundo: token.interactive, bg: token.layerSelected01, peso: '600' },
+      habitual: { tag: 'Habitual', tagBg: token.tagBackgroundGreen, tagFg: token.tagColorGreen, dotBorda: token.borderStrong01, dotFundo: token.layer01, bg: 'transparent', peso: '400' }
+    };
+    return {
+      fatores: [
+        { n: '1', t: 'Rajada: 5 tentativas em 7 minutos', d: 'Ele faz em média 1 compra por dia', w: '100%', p: '+0,31', aria: 'Peso 31 pontos' },
+        { n: '2', t: 'Longe de casa: 760 km da última compra', d: 'Comprou presencialmente em Chapecó (SC) há 9 h', w: '77%', p: '+0,24', aria: 'Peso 24 pontos' },
+        { n: '3', t: 'Valor 6 vezes a média online', d: 'Média das compras online: R$ 380,00', w: '55%', p: '+0,17', aria: 'Peso 17 pontos' },
+        { n: '4', t: 'Horário atípico: 03:14', d: 'Nenhuma compra de madrugada em 12 meses', w: '35%', p: '+0,11', aria: 'Peso 11 pontos' },
+        { n: '5', t: 'Navegador nunca visto', d: 'Primeiro uso deste dispositivo no cartão', w: '19%', p: '+0,06', aria: 'Peso 6 pontos' }
+      ],
+      linha: tl.map((t, i) => Object.assign({
+        linha: t[0], loja: t[1],
+        retida: t[2] === 'retida', habitual: t[2] === 'habitual',
+        trilho: i === tl.length - 1 ? 'transparent' : token.borderSubtle02
+      }, estilo[t[2]])),
+      perfil: [
+        { k: 'Associado desde', v: '2006 (20 anos)' },
+        { k: 'Mora em', v: 'Chapecó (SC)' },
+        { k: 'Uso típico', v: 'Insumos, presencial' },
+        { k: 'Compras online', v: '2 em 2026, média R$ 380,00' },
+        { k: 'Contato preferido', v: 'App, responde em ~2 min' },
+        { k: 'Contestações', v: 'Nenhuma em 12 meses' }
+      ],
+      chips: ['Por que 0,92?', 'Compare com o histórico', 'Redija o aviso ao associado']
+    };
+  }
+}
+</script>
+</body>
+</html>

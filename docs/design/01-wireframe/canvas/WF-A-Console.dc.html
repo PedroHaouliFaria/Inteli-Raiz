@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Wireframe A · Console em tela dividida</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#393939}a:hover{color:#161616}
+.b{border:1px solid #8d8d8d;background:#fff;box-sizing:border-box}
+.ph{background:#e0e0e0}
+.l{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#525252;margin:0}
+.ann{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#161616;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.btn{border:1px solid #393939;background:#fff;font:inherit;font-size:13px;padding:10px 16px;min-height:44px}
+.btn.p{background:#393939;color:#fff}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 960px; box-sizing: border-box; background: #f4f4f4; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; display: flex; flex-direction: column">
+  <header class="b" style="height: 48px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-width: 0 0 1px 0">
+    <div class="ph" style="width: 96px; height: 20px"></div>
+    <p class="l">WATSON · PREVENÇÃO</p>
+    <div style="flex-grow: 1"></div>
+    <div class="b" style="width: 280px; height: 32px; display: flex; align-items: center; padding: 0 10px"><p class="l">Buscar associado, cartão, caso</p></div>
+    <div class="ph" style="width: 32px; height: 32px; border-radius: 50%"></div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 16px 24px">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+      <div class="b" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+        <p class="l">{{k}}</p>
+        <div class="ph" style="width: 64px; height: 24px"></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 0 24px 24px; flex-grow: 1">
+    <section class="b" style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #8d8d8d">
+        <span class="ann">1</span>
+        <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Fila por risco × valor</p>
+        <div class="b" style="width: 90px; height: 28px; display: flex; align-items: center; padding: 0 8px"><p class="l">Filtros ▾</p></div>
+      </div>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #e0e0e0; background: {{r.bg}}">
+          <div style="width: 6px; align-self: stretch; background: {{r.bar}}"></div>
+          <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1">
+            <div class="ph" style="width: 70%; height: 10px"></div>
+            <div class="ph" style="width: 45%; height: 8px"></div>
+          </div>
+          <p class="l">{{r.score}}</p>
+        </div>
+      </sc-for>
+    </section>
+
+    <section class="b" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 20px">
+      <div style="display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
+          <p class="l">CASO #4821 · CARTÃO DE CRÉDITO · NÃO PRESENTE</p>
+          <p style="margin: 0; font-size: 22px">Associado · R$ valor · Estabelecimento</p>
+        </div>
+        <div class="b" style="width: 120px; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center"><p class="l">SCORE</p><p style="margin: 0; font-size: 22px; font-weight: 600">0,92</p></div>
+      </div>
+
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+        <span class="ann">4</span>
+        <a class="btn p" href="#">Bloquear cartão</a>
+        <a class="btn" href="#">Perguntar ao associado</a>
+        <a class="btn" href="#">Liberar</a>
+        <a class="btn" href="#">Escalar</a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+        <div class="b" style="padding: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 8px; align-items: center"><span class="ann">2</span><p style="margin: 0; font-weight: 600; font-size: 14px">Por que é suspeito</p></div>
+          <sc-for list="{{factors}}" as="f" hint-placeholder-count="5">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <p class="l">{{f.t}}</p>
+              <div style="height: 8px; background: #e0e0e0"><div style="height: 8px; width: {{f.w}}; background: #6f6f6f"></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div class="b" style="padding: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 8px; align-items: center"><span class="ann">3</span><p style="margin: 0; font-weight: 600; font-size: 14px">Recomendação do agente</p></div>
+          <div class="ph" style="height: 14px; width: 80%"></div>
+          <div class="ph" style="height: 10px; width: 95%"></div>
+          <div class="ph" style="height: 10px; width: 60%"></div>
+          <p class="l">CONFIANÇA ▮▮▮▮▯ · DECISÃO FINAL É DA ANALISTA</p>
+        </div>
+      </div>
+
+      <div class="b" style="padding: 14px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1">
+        <p style="margin: 0; font-weight: 600; font-size: 14px">Linha do tempo das últimas transações</p>
+        <div style="display: flex; align-items: center; gap: 0; height: 60px; position: relative">
+          <div style="position: absolute; left: 0; right: 0; top: 30px; height: 1px; background: #8d8d8d"></div>
+          <sc-for list="{{dots}}" as="d" hint-placeholder-count="8">
+            <div style="flex-grow: 1; display: flex; justify-content: center"><div style="width: {{d}}; height: {{d}}; border-radius: 50%; background: #6f6f6f; position: relative"></div></div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <div class="ph" style="height: 80px; display: flex; align-items: center; justify-content: center"><p class="l">MAPA · DISTÂNCIA</p></div>
+          <div class="ph" style="height: 80px; display: flex; align-items: center; justify-content: center"><p class="l">DISPOSITIVO</p></div>
+          <div class="ph" style="height: 80px; display: flex; align-items: center; justify-content: center"><p class="l">PERFIL DO ASSOCIADO</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const scores = ['0,92', '0,88', '0,81', '0,74', '0,66', '0,52', '0,41', '0,33', '0,21'];
+    return {
+      kpis: ['ALERTAS ABERTOS', 'ALTO RISCO', 'TEMPO MÉDIO DE DECISÃO', 'AGUARDANDO ASSOCIADO'],
+      rows: scores.map((s, i) => ({ score: s, bar: i < 3 ? '#161616' : i < 6 ? '#8d8d8d' : '#c6c6c6', bg: i === 0 ? '#e0e0e0' : '#ffffff' })),
+      factors: [
+        { t: 'RAJADA: 5 COMPRAS EM 7 MIN', w: '92%' },
+        { t: 'DISTÂNCIA DA ÚLTIMA COMPRA', w: '78%' },
+        { t: 'VALOR × MÉDIA DO ASSOCIADO', w: '64%' },
+        { t: 'HORÁRIO ATÍPICO', w: '40%' },
+        { t: 'DISPOSITIVO NOVO', w: '28%' }
+      ],
+      dots: ['8px', '8px', '10px', '8px', '14px', '14px', '16px', '18px']
+    };
+  }
+}
+</script>
+</body>
+</html>

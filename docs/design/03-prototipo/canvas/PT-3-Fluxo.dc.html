@@ -1,0 +1,2084 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Protótipo 3 · Ponta a ponta em tempo real</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.g10{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-hover-01:#e8e8e8;--layer-selected-01:#e0e0e0;--layer-selected-inverse:#161616;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-subtle-02:#c6c6c6;--border-strong-01:#8d8d8d;--border-inverse:#161616;--border-interactive:#0f62fe;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--link-primary:#0f62fe;--link-on-selected:#0043ce;--icon-primary:#161616;--icon-secondary:#525252;--interactive:#0f62fe;--focus:#0f62fe;--button-primary:#0f62fe;--button-secondary:#393939;--button-tertiary:#0f62fe;--button-danger:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-warning-edge:#8e6a00;--support-info:#0043ce;--notif-info-bg:#edf5ff;--notif-info-border:#a6c8ff;--notif-success-bg:#defbe6;--notif-success-border:#a7f0ba;--notif-warning-bg:#fcf4d6;--notif-warning-border:#f1c21b;--tag-red-bg:#ffd7d9;--tag-red-text:#a2191f;--tag-gray-bg:#e0e0e0;--tag-gray-text:#161616;--tag-blue-bg:#d0e2ff;--tag-blue-text:#0043ce;--tag-green-bg:#a7f0ba;--tag-green-text:#0e6027;--tag-warm-bg:#e5e0df;--tag-warm-text:#3c3838;--tag-cool-bg:#dde1e6;--tag-cool-text:#343a3f;--ai-border-strong:#4589ff;--ai-border-subtle:#a6c8ff;--ai-aura-start:rgba(69,137,255,0.10);--ai-aura-end:rgba(255,255,255,0);--shell-bg:#161616;--shell-border:#393939;--shell-text:#f4f4f4;--overlay:rgba(22,22,22,0.5);--proto-bg:#e0e0e0;--proto-border:#c6c6c6;position:relative;box-sizing:border-box;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+.g10 *{box-sizing:border-box}
+.g10 p,.g10 h1,.g10 h2,.g10 h3,.g10 ul,.g10 ol,.g10 dl,.g10 dd{margin:0}
+.g10 ul,.g10 ol{padding:0;list-style:none}
+.g10 button{font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;letter-spacing:0.16px}
+.g10 :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.g10 input::placeholder,.g10 textarea::placeholder{color:var(--text-helper)}
+.mono{font-family:'IBM Plex Mono',Menlo,monospace;letter-spacing:0}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-10000px;top:0;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:8px;top:8px;width:auto;height:auto;padding:12px 16px;background:var(--layer-01);color:var(--link-primary);outline:2px solid var(--focus);outline-offset:-2px;z-index:30}
+
+/* faixa do protótipo (fora da UI do produto) */
+.proto{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;padding:8px 24px;background:var(--proto-bg);border-bottom:1px solid var(--proto-border);font-size:14px;line-height:18px}
+.proto-t{font-weight:600}
+.proto-g{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.proto-l{color:var(--text-secondary)}
+.seg{display:inline-flex}
+.seg button{height:32px;min-width:48px;padding:0 12px;border:1px solid var(--border-inverse);background:transparent;color:var(--text-primary);font-size:14px;cursor:pointer}
+.seg button+button{border-left:0}
+.seg button:first-child{border-radius:4px 0 0 4px}
+.seg button:last-child{border-radius:0 4px 4px 0}
+.seg button.on{background:var(--layer-selected-inverse);color:var(--text-on-color)}
+.sw{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 4px;border:0;background:transparent;color:var(--text-primary);font-size:14px;cursor:pointer}
+.sw-t{position:relative;width:32px;height:16px;border-radius:8px;background:#8d8d8d;flex-shrink:0}
+.sw-t::after{content:'';position:absolute;top:3px;left:3px;width:10px;height:10px;border-radius:5px;background:#ffffff}
+.sw-t.on{background:var(--support-success)}
+.sw-t.on::after{left:19px}
+.proto-r{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:0;background:transparent;color:var(--text-primary);font-size:14px;text-decoration:underline;cursor:pointer}
+.proto-sp{flex-grow:1}
+.proto-h{flex-basis:100%;font-size:12px;line-height:16px;color:var(--text-secondary)}
+
+/* palco: console + celular lado a lado */
+.stage{display:flex;flex-wrap:wrap;gap:24px;padding:16px 24px 32px;align-items:flex-start}
+.con-col{flex:999 1 960px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ph-col{flex:1 1 390px;display:flex;justify-content:center}
+.ph-wrap{width:390px;display:flex;flex-direction:column;gap:8px}
+.cap{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.cap b{font-weight:600;color:var(--text-primary)}
+.console{position:relative;display:flex;flex-direction:column;background:var(--background);border:1px solid var(--border-subtle-02);min-height:920px}
+
+/* UI shell g10 clássico */
+.hdr{height:48px;flex:0 0 48px;display:flex;align-items:center;background:var(--shell-bg);border-bottom:1px solid var(--shell-border)}
+.hdr-name{display:flex;align-items:center;height:47px;padding:0 32px 0 16px;color:var(--shell-text);text-decoration:none;font-size:14px;line-height:18px;white-space:nowrap}
+.hdr-name b{font-weight:600}
+.hdr-act{display:inline-flex;align-items:center;justify-content:center;width:48px;height:47px;border:0;padding:0;background:transparent;color:var(--shell-text);cursor:pointer;flex-shrink:0}
+.hdr-sp{flex:1 1 auto}
+.hdr-clock{color:var(--shell-text);font-size:14px;padding:0 16px;white-space:nowrap}
+.body-row{display:flex;flex-wrap:wrap;flex:1 1 auto;align-items:stretch}
+.rail{flex:0 0 48px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);padding:16px 0;display:flex;flex-direction:column}
+.rail-link{display:flex;align-items:center;justify-content:center;height:40px;color:var(--icon-secondary)}
+.rail-link.cur{background:var(--layer-selected-01);color:var(--icon-primary);box-shadow:inset 3px 0 0 var(--border-interactive)}
+.main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px;padding:24px 24px 32px}
+
+/* cabeçalho de página e content switcher */
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.phead-t{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.sub{font-size:14px;color:var(--text-secondary)}
+.cs{display:inline-flex;height:40px}
+.cs button{display:inline-flex;align-items:center;gap:8px;min-width:112px;padding:0 16px;border:1px solid var(--border-inverse);color:var(--text-secondary);font-size:14px;background:transparent;cursor:pointer}
+.cs button+button{border-left:0}
+.cs button:first-child{border-radius:4px 0 0 4px}
+.cs button:last-child{border-radius:0 4px 4px 0}
+.cs button.on{background:var(--layer-selected-inverse);color:var(--text-on-color)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;padding:0 16px;font-size:14px;line-height:18px;border:1px solid transparent;border-radius:0;text-decoration:none;cursor:pointer;white-space:nowrap;background:transparent;text-align:left}
+.btn svg{flex-shrink:0}
+.btn-md{min-height:40px}
+.btn-sm{min-height:32px;padding:0 12px;gap:8px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-secondary{background:var(--button-secondary);color:var(--text-on-color)}
+.btn-danger{background:var(--button-danger);color:var(--text-on-color)}
+.btn-tertiary{border-color:var(--button-tertiary);color:var(--button-tertiary)}
+.btn-ghost{color:var(--link-primary);justify-content:flex-start;gap:8px}
+.ibtn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer;flex-shrink:0}
+.ibtn:hover{background:var(--layer-hover-01)}
+.ibtn-sm{width:32px;height:32px}
+.lnk{display:inline-flex;align-items:center;min-height:24px;padding:0;border:0;background:transparent;color:var(--link-primary);font-size:14px;cursor:pointer;text-decoration:none}
+
+/* tags e status */
+.tag{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag svg{flex-shrink:0}
+.tag-red{background:var(--tag-red-bg);color:var(--tag-red-text)}
+.tag-gray{background:var(--tag-gray-bg);color:var(--tag-gray-text)}
+.tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue-text)}
+.tag-green{background:var(--tag-green-bg);color:var(--tag-green-text)}
+.tag-warm{background:var(--tag-warm-bg);color:var(--tag-warm-text)}
+.tag-cool{background:var(--tag-cool-bg);color:var(--tag-cool-text)}
+.tag-outline{background:var(--layer-01);color:var(--text-primary);border:1px solid var(--border-strong-01)}
+.st{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.st svg{flex-shrink:0}
+
+/* Carbon for AI */
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--ai-border-strong);border-radius:4px;background:linear-gradient(to top,var(--ai-aura-start),var(--layer-01));color:var(--text-primary);font-size:12px;line-height:1;font-weight:600;cursor:pointer;flex-shrink:0;letter-spacing:0}
+.ai-box{background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+
+/* notificações inline e toast */
+.ntf{display:flex;align-items:flex-start;gap:12px;padding:12px 16px 12px 13px;border:1px solid var(--notif-info-border);border-left:3px solid var(--support-info);background:var(--notif-info-bg)}
+.ntf svg{flex-shrink:0;margin-top:2px}
+.ntf-b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ntf-t{font-size:14px;line-height:18px;font-weight:600}
+.ntf-d{font-size:14px;line-height:20px}
+.ntf.ok{background:var(--notif-success-bg);border-color:var(--notif-success-border);border-left-color:var(--support-success)}
+.ntf.warn{background:var(--notif-warning-bg);border-color:var(--notif-warning-border);border-left-color:var(--support-warning-edge)}
+.toast{position:absolute;top:64px;right:16px;z-index:15;width:400px;max-width:calc(100% - 32px);display:flex;align-items:flex-start;gap:12px;padding:12px 0 12px 13px;border-left:3px solid var(--support-info);background:var(--notif-info-bg);box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+.toast.ok{background:var(--notif-success-bg);border-left-color:var(--support-success)}
+.toast.warn{background:var(--notif-warning-bg);border-left-color:var(--support-warning-edge)}
+.toast svg{flex-shrink:0}
+.toast-b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px;padding-top:2px}
+.toast-t{font-size:14px;line-height:18px;font-weight:600}
+.toast-d{font-size:14px;line-height:20px}
+.toast-a{align-self:flex-start;margin-left:-12px}
+
+/* modal Carbon */
+.ovl{position:absolute;inset:0;z-index:20;background:var(--overlay);display:flex;justify-content:center;align-items:flex-start;padding:88px 16px 16px}
+.mdl{width:576px;max-width:100%;background:var(--layer-01);display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.mdl-h{display:flex;align-items:flex-start;gap:8px;padding:16px 0 8px 16px}
+.mdl-ht{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px}
+.mdl-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.mdl-t{font-size:20px;line-height:28px;font-weight:400}
+.mdl-b{display:flex;flex-direction:column;gap:16px;padding:8px 16px 32px}
+.mdl-b p.tx{font-size:14px;line-height:20px}
+.mdl-f{display:flex;height:64px}
+.mdl-f .btn{flex:1 1 50%;height:64px;align-items:flex-start;padding-top:14px}
+.quote{display:flex;flex-direction:column;gap:8px;padding:12px 16px}
+.quote-h{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.quote p.q{font-size:14px;line-height:20px}
+.rules{display:flex;flex-direction:column;border-top:1px solid var(--border-subtle-01)}
+.rule{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle-01)}
+.rule svg{flex-shrink:0;margin-top:2px}
+.rule-b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px}
+.rule-t{font-size:14px;line-height:18px;font-weight:600}
+.rule-d{font-size:14px;line-height:20px;color:var(--text-secondary)}
+.cbx{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0;border:0;background:transparent;color:var(--text-primary);font-size:14px;cursor:pointer;text-align:left}
+.cb{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01);color:var(--layer-01);flex-shrink:0}
+.cb.on{background:var(--icon-primary);color:var(--text-on-color)}
+
+/* tiles, KPIs */
+.tile{background:var(--layer-01);padding:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:16px}
+.kpi{display:flex;flex-direction:column;gap:8px}
+.kpi-l{font-size:14px;color:var(--text-secondary)}
+.kpi-v{font-size:32px;line-height:40px;font-weight:300}
+.kpi-n{font-size:12px;line-height:16px;color:var(--text-secondary);display:flex;align-items:flex-start;gap:4px}
+.kpi-n svg{flex-shrink:0}
+
+/* data table, linhas de 48 px */
+.dt-box{background:var(--layer-01);display:flex;flex-direction:column}
+.dt-head{display:flex;flex-direction:column;gap:4px;padding:16px}
+.dt-head h2{font-size:20px;line-height:28px;font-weight:400}
+.dt-head p{font-size:14px;color:var(--text-secondary)}
+.dt-tb{display:flex;align-items:stretch;flex-wrap:wrap;min-height:48px}
+.dt-search{flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:8px;padding:0 16px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--icon-secondary)}
+.dt-search input{flex-grow:1;min-width:0;height:46px;border:0;background:transparent;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.dt-tb .ibtn{width:48px;height:48px}
+.dt-ord{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 16px;border-top:1px solid var(--border-subtle-01)}
+.dt-wrap{overflow-x:auto;background:var(--layer-01)}
+.dt{width:100%;min-width:920px;border-collapse:collapse;font-size:14px;line-height:18px}
+.dt th{height:48px;background:var(--layer-accent-01);text-align:left;font-weight:600;padding:0 16px;color:var(--text-primary);white-space:nowrap}
+.dt th.r,.dt td.r{text-align:right}
+.dt td{height:48px;padding:0 16px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);color:var(--text-secondary);white-space:nowrap}
+.dt td.pri{color:var(--text-primary)}
+.dt tr.sel td{background:var(--layer-selected-01);color:var(--text-primary)}
+.dt tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--interactive)}
+.dt tr.sel .lnk{color:var(--link-on-selected)}
+.cid{display:inline-flex;align-items:center;gap:8px}
+
+/* quadro do processo */
+.ai-inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 8px 8px 16px}
+.board-wrap{overflow-x:auto;padding-bottom:8px}
+.board{display:grid;grid-template-columns:repeat(4,minmax(216px,1fr));gap:12px;min-width:912px;align-items:start}
+.col{display:flex;flex-direction:column;gap:8px;background:var(--layer-accent-01);padding:8px}
+.col-h{display:flex;flex-direction:column;gap:8px;padding:8px}
+.col-hr{display:flex;align-items:center;gap:8px}
+.col-h h2{font-size:14px;line-height:18px;font-weight:600;flex-grow:1}
+.cnt{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 8px;border-radius:12px;background:var(--layer-01);font-size:12px;font-weight:600}
+.col-w{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:16px;color:var(--text-primary)}
+.col-w svg{flex-shrink:0}
+.kc{display:flex;background:var(--layer-01);border:1px solid var(--border-subtle-01);position:relative}
+.kc.cur{border:2px solid var(--interactive)}
+.kc-bar{width:4px;flex-shrink:0}
+.kc-b{display:flex;flex-direction:column;gap:8px;padding:12px;flex-grow:1;min-width:0}
+.kc-top{display:flex;align-items:center;gap:8px}
+.kc-top .sp{flex-grow:1}
+.kc-id{font-size:14px;color:var(--text-primary)}
+.kc-v{font-size:20px;line-height:28px;font-weight:400}
+.kc-l{font-size:14px;line-height:18px;color:var(--text-secondary)}
+.kc-sig{display:flex;flex-wrap:wrap;gap:4px}
+.kc-f{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.kc-f .sp{flex-grow:1}
+.kc-f .st{color:var(--text-primary);white-space:normal}
+.stk{margin-bottom:8px}
+.stk-l{position:absolute;height:4px;background:var(--layer-01);border:1px solid var(--border-strong-01);border-top:0}
+.stk-l.a{top:calc(100% + 1px);left:4px;right:4px}
+.stk-l.b{top:calc(100% + 5px);left:8px;right:8px}
+.grp-h{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.more{font-size:14px;padding:8px;color:var(--text-secondary)}
+
+/* caso */
+.bcrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.bc{display:flex;align-items:center;gap:8px;font-size:14px}
+.bc li{display:flex;align-items:center;gap:8px}
+.bc li+li::before{content:'/';color:var(--text-secondary)}
+.bcrow .sp{flex-grow:1}
+.ch{display:flex;flex-direction:column;gap:16px;padding:16px 16px 0}
+.ch-top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.ch-l{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ch-eb{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ch-t{font-size:28px;line-height:36px;font-weight:400}
+.ch-s{font-size:14px;color:var(--text-secondary)}
+.ch-tags{display:flex;flex-wrap:wrap;gap:8px}
+.score{flex:0 0 200px;display:flex;flex-direction:column;gap:8px;padding:16px;background:var(--layer-02)}
+.score-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.score-v{display:flex;align-items:baseline;gap:8px}
+.score-v b{font-size:42px;line-height:50px;font-weight:300}
+.score-v span{font-size:14px;color:var(--text-secondary)}
+.meter{position:relative;height:8px;background:var(--layer-accent-01)}
+.meter i{position:absolute;left:0;top:0;bottom:0;background:var(--support-error)}
+.meter .mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text-primary)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border-top:1px solid var(--border-subtle-01)}
+.meta div{display:flex;flex-direction:column;gap:4px;padding:12px 16px 16px 0}
+.meta dt{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.meta dd{font-size:14px;color:var(--text-primary)}
+.dec{display:flex;flex-direction:column;gap:16px}
+.sec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec-h h2{font-size:16px;line-height:22px;font-weight:600}
+.sec-h .sp{flex-grow:1}
+.sec-d{font-size:14px;color:var(--text-secondary)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.fld{display:flex;flex-direction:column;gap:8px}
+.fld-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fld-h label{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-h .ed{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld textarea{width:100%;min-height:88px;resize:vertical;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:12px 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;color:var(--text-primary)}
+.fld-f{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.row2{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch}
+.evs{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ev{display:flex;gap:12px}
+.ev-r{width:16px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:2px}
+.ev-ln{width:1px;flex-grow:1;background:var(--border-subtle-02);margin-top:4px}
+.ev-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:0 0 12px}
+.ev-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ev-h p{font-size:14px;line-height:20px}
+.ev-d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ev.new .ev-b{background:var(--notif-info-bg);padding:4px 8px 8px;margin-bottom:8px}
+.fat{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.fx{display:flex;gap:12px;padding:6px 0;border-top:1px solid var(--border-subtle-01)}
+.fx-n{width:16px;font-size:12px;line-height:20px;color:var(--text-secondary);flex-shrink:0}
+.fx-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.fx-t{font-size:14px;line-height:20px;font-weight:600}
+.fx-d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.bar{height:4px;background:var(--layer-accent-01)}
+.bar i{display:block;height:4px;background:var(--text-secondary)}
+.fx-p{width:48px;text-align:right;font-size:14px;line-height:20px;flex-shrink:0}
+.pl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 16px}
+.pl div{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--border-subtle-01)}
+.pl dt{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.pl dd{font-size:14px;color:var(--text-primary)}
+
+/* trilho Pergunte ao Watson */
+.agent{flex:1 1 320px;min-width:0;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column}
+.agent-min{flex:0 0 48px;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:8px}
+.ag-head{display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 4px 8px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.ag-title{display:flex;align-items:center;gap:8px;flex-grow:1;min-width:0}
+.ag-title h2{font-size:16px;line-height:22px;font-weight:600}
+.ag-ctx{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:var(--layer-02);border-bottom:1px solid var(--border-subtle-01)}
+.ag-ctx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ag-ctx-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-ctx p.d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-body{flex-grow:1;display:flex;flex-direction:column;gap:16px;padding:16px}
+.msg{display:flex;flex-direction:column;gap:12px;padding:16px}
+.msg.live{border-left:3px solid var(--ai-border-strong)}
+.msg-head{display:flex;align-items:center;gap:8px}
+.msg-who{font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.msg-when{font-size:12px;line-height:16px;color:var(--text-secondary);margin-left:auto}
+.msg-t{font-size:16px;line-height:22px;font-weight:600}
+.msg p.tx{font-size:14px;line-height:20px}
+.why{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border-subtle-01);padding-top:8px}
+.why-l{font-size:14px;line-height:20px;color:var(--text-primary)}
+.why-body{display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:20px;color:var(--text-secondary)}
+.why-body li{display:flex;gap:8px}
+.why-body li::before{content:'';width:4px;height:4px;background:var(--text-secondary);margin-top:8px;flex-shrink:0}
+.msg-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.done{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--text-primary)}
+.done svg{flex-shrink:0;margin-top:2px}
+.rec{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.rec-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.rec-t{font-size:16px;line-height:22px;font-weight:600}
+.conf{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-primary)}
+.conf-s{display:flex;gap:2px}
+.conf-s i{display:block;width:16px;height:4px;background:var(--text-primary)}
+.conf-s i.o{background:var(--layer-accent-01)}
+.rank{display:flex;flex-direction:column;border-top:1px solid var(--border-subtle-01)}
+.rank li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-subtle-01)}
+.rank-n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:12px;background:var(--layer-accent-01);font-size:12px;font-weight:600;flex-shrink:0}
+.rank-b{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rank-b .t{font-size:14px;color:var(--text-primary)}
+.rank-b .d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-foot{display:flex;flex-direction:column;gap:12px;padding:16px;border-top:1px solid var(--border-subtle-01)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--layer-01);color:var(--text-primary);font-size:14px;cursor:pointer}
+.ask{display:flex;align-items:stretch}
+.ask input{flex-grow:1;min-width:0;height:48px;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:0 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.ask .ibtn{width:48px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--link-primary)}
+.disc{font-size:12px;line-height:16px;color:var(--text-secondary)}
+
+/* celular do Valdir (390 x 844) */
+.phone{position:relative;width:390px;height:844px;overflow:hidden;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--background);display:flex;flex-direction:column;font-size:16px;line-height:24px;letter-spacing:0}
+.sbar{flex:0 0 32px;display:flex;align-items:center;gap:8px;padding:0 20px;font-size:14px;line-height:18px;font-weight:600;color:var(--text-primary);background:var(--layer-01)}
+.sbar .sp{flex-grow:1}
+.lock{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:16px;padding:48px 16px 24px;background:var(--layer-accent-01)}
+.lock-time{font-size:76px;line-height:84px;font-weight:300;text-align:center}
+.lock-date{font-size:18px;line-height:24px;text-align:center;color:var(--text-primary)}
+.lock-list{display:flex;flex-direction:column;gap:8px;margin-top:32px}
+.pn{display:flex;gap:12px;width:100%;padding:12px 16px;border:1px solid var(--border-subtle-02);border-radius:12px;background:var(--layer-01);color:var(--text-primary);text-align:left;cursor:pointer;font-family:'IBM Plex Sans',Arial,sans-serif}
+.pn-ic{width:40px;height:40px;border-radius:8px;background:var(--layer-02);border:1px solid var(--border-subtle-01);display:flex;align-items:center;justify-content:center;color:var(--support-info);flex-shrink:0}
+.pn-b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pn-app{display:flex;gap:8px;font-size:14px;line-height:18px;color:var(--text-secondary)}
+.pn-app .sp{flex-grow:1}
+.pn-t{font-size:16px;line-height:22px;font-weight:600}
+.pn-d{font-size:16px;line-height:22px}
+.lock-empty{font-size:16px;line-height:22px;color:var(--text-secondary);text-align:center}
+.lock-help{margin-top:auto;font-size:14px;line-height:20px;color:var(--text-secondary);text-align:center}
+.ab{height:64px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 16px 0 0;background:var(--layer-01);border-bottom:1px solid var(--border-subtle-01)}
+.back{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;color:var(--icon-primary);flex-shrink:0;margin-left:4px;border:0;background:transparent;padding:0;cursor:pointer}
+.av{width:40px;height:40px;border-radius:20px;background:var(--layer-02);border:1px solid var(--border-subtle-01);display:flex;align-items:center;justify-content:center;color:var(--support-info);flex-shrink:0}
+.ab-t{display:flex;flex-direction:column;min-width:0}
+.ab-t h1{font-size:18px;line-height:24px;font-weight:600}
+.ab-t p{display:flex;align-items:center;gap:4px;font-size:16px;line-height:20px;color:var(--text-secondary)}
+.callout{flex-shrink:0;display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--notif-info-bg);border-left:3px solid var(--support-info)}
+.callout svg{flex-shrink:0;margin-top:2px;color:var(--support-info)}
+.callout p{font-size:16px;line-height:22px;font-weight:600}
+.chat{flex-grow:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:16px}
+.selo{display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;color:var(--text-secondary)}
+.selo .who{color:var(--text-primary);font-weight:600}
+.selo .sp{flex-grow:1}
+.phone .ai{font-size:14px}
+.bub{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:4px 16px 16px 16px;background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.bub .hi{font-size:18px;line-height:26px}
+.det{display:flex;flex-direction:column;background:var(--layer-02);border:1px solid var(--border-subtle-01)}
+.det div{display:flex;align-items:baseline;gap:12px;padding:8px 12px;border-top:1px solid var(--border-subtle-01)}
+.det div:first-child{border-top:0}
+.det dt{width:72px;flex-shrink:0;font-size:16px;color:var(--text-secondary)}
+.det dd{font-size:18px;line-height:24px;font-weight:600;min-width:0}
+.det dd.big{font-size:24px;line-height:32px}
+.q{font-size:22px;line-height:28px;font-weight:600}
+.pause{display:flex;gap:8px;align-items:flex-start;font-size:16px;line-height:22px;color:var(--text-primary);padding:0 4px}
+.pause svg{flex-shrink:0;margin-top:3px}
+.pacts{flex-shrink:0;display:flex;flex-direction:column;gap:12px;padding:16px 16px 12px;background:var(--layer-01);border-top:1px solid var(--border-subtle-01)}
+.choice{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:0 16px;border:1px solid var(--border-strong-01);background:var(--layer-01);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:18px;line-height:24px;font-weight:600;text-align:left;cursor:pointer}
+.choice svg{flex-shrink:0}
+.human{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:0;background:transparent;color:var(--link-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:16px;cursor:pointer}
+.pbody{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:16px;padding:32px 16px 16px}
+.big-ic{width:96px;height:96px;border-radius:48px;display:flex;align-items:center;justify-content:center;background:var(--layer-01);border:1px solid var(--border-subtle-01);align-self:center}
+.ptitle{font-size:24px;line-height:32px;font-weight:600}
+.ptx{font-size:18px;line-height:26px}
+.psteps{display:flex;flex-direction:column;gap:8px;padding:16px;background:var(--layer-01);border:1px solid var(--border-subtle-01)}
+.psteps li{display:flex;gap:12px;font-size:16px;line-height:22px}
+.psteps li svg{flex-shrink:0;margin-top:3px}
+.pbtn{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:56px;padding:0 16px;border:1px solid transparent;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:18px;line-height:24px;cursor:pointer;text-align:left}
+.pbtn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.pbtn-ghost{background:transparent;color:var(--link-primary);border-color:var(--border-strong-01)}
+.pnote{font-size:14px;line-height:20px;color:var(--text-secondary)}
+.why-av{display:flex;flex-direction:column;gap:8px}
+.why-av-b{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;border:0;background:transparent;color:var(--link-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:16px;cursor:pointer;align-self:flex-start;text-align:left}
+.why-av-p{font-size:16px;line-height:22px;padding:12px 16px;background:var(--layer-01);border-left:3px solid var(--support-info)}
+
+/* toggletip educativa (Carbon) */
+.tt{position:relative;display:inline-flex;align-items:center;vertical-align:middle}
+.tt-b{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:0;border-radius:12px;background:transparent;color:var(--icon-secondary);cursor:pointer;flex-shrink:0}
+.tt-b:hover{background:var(--layer-hover-01)}
+.tt-b[aria-expanded="true"]{color:var(--icon-primary);background:var(--layer-accent-01)}
+.tt-p{position:absolute;top:calc(100% + 8px);left:-8px;z-index:25;width:288px;display:flex;flex-direction:column;gap:8px;padding:16px;background:#393939;color:#f4f4f4;font-size:14px;line-height:20px;font-weight:400;letter-spacing:0.16px;text-align:left;white-space:normal;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.tt-p.r{left:auto;right:-8px}
+.tt-p::before{content:'';position:absolute;top:-6px;left:14px;width:12px;height:12px;background:#393939;transform:rotate(45deg)}
+.tt-p.r::before{left:auto;right:14px}
+.tt-t{font-size:14px;line-height:18px;font-weight:600;color:#f4f4f4}
+.tt-d{color:#f4f4f4}
+.tt-l{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0;border:0;background:transparent;color:#78a9ff;font-size:14px;cursor:pointer;text-decoration:underline}
+
+/* Dicionário do Watson: header panel */
+.hdr-act.on{background:#393939;box-shadow:inset 0 -2px 0 #f4f4f4}
+.dict{position:absolute;top:48px;right:0;bottom:0;z-index:18;width:360px;max-width:100%;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);box-shadow:-2px 0 6px rgba(0,0,0,0.2);display:flex;flex-direction:column}
+.dict-h{display:flex;align-items:flex-start;gap:8px;padding:16px 4px 12px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.dict-ht{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px}
+.dict-ht h2{font-size:20px;line-height:28px;font-weight:400}
+.dict-ht p{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.dict-l{display:flex;flex-direction:column}
+.dict-i{display:flex;flex-direction:column;gap:4px;padding:12px 16px 12px 13px;border-bottom:1px solid var(--border-subtle-01);border-left:3px solid transparent}
+.dict-i.on{background:var(--layer-selected-01);border-left-color:var(--interactive)}
+.dict-i .dict-term{font-size:14px;line-height:18px;font-weight:600}
+.dict-i p.d{font-size:14px;line-height:20px}
+.dict-i p.w{font-size:12px;line-height:16px;color:var(--text-secondary)}
+</style>
+</helmet>
+<div class="g10" style="width: 100%; min-height: 1000px">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <div class="proto" role="region" aria-label="Controles do protótipo, fora do produto">
+    <span class="proto-t">Protótipo 3 · Ponta a ponta em tempo real</span>
+    <span class="proto-g" role="group" aria-label="Tarefa do teste">
+      <span class="proto-l">Tarefa:</span>
+      <span class="seg">
+        <button type="button" class="{{t1Cls}}" aria-pressed="{{t1On}}" onClick="{{ setT1 }}">T1</button>
+        <button type="button" class="{{t2Cls}}" aria-pressed="{{t2On}}" onClick="{{ setT2 }}">T2</button>
+        <button type="button" class="{{t3Cls}}" aria-pressed="{{t3On}}" onClick="{{ setT3 }}">T3</button>
+      </span>
+    </span>
+    <span class="proto-g">
+      <span class="proto-l">Cenário:</span>
+      <button type="button" class="sw" role="switch" aria-checked="{{trocAria}}" onClick="{{ toggleTroc }}">
+        <span class="{{swCls}}" aria-hidden="true"></span>
+        Aparelho do Valdir trocado há 2 dias
+      </button>
+    </span>
+    <span class="proto-sp"></span>
+    <button type="button" class="proto-r" onClick="{{ reiniciar }}">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4"></path><path d="M2.5 2v3h3"></path></svg>
+      Reiniciar
+    </button>
+    <p class="proto-h">{{hint}}</p>
+  </div>
+
+  <div class="stage">
+    <div class="con-col">
+      <p class="cap"><b>Console da Camila</b> · analista de prevenção a fraudes</p>
+      <div class="console">
+        <header class="hdr" aria-label="Watson · Prevenção a fraudes">
+          <button class="hdr-act" type="button" aria-label="Expandir menu de navegação" style="border-right: 1px solid var(--shell-border)">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+          </button>
+          <span class="hdr-name">Watson&nbsp;<b>Prevenção a fraudes</b></span>
+          <span class="hdr-sp"></span>
+          <span class="hdr-clock mono">Turno da madrugada · {{agora}}</span>
+          <button class="hdr-act" type="button" aria-label="Buscar associado, cartão ou caso">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.4 10.4L14 14"></path></svg>
+          </button>
+          <button class="{{dictBtnCls}}" type="button" aria-label="Dicionário do Watson" aria-expanded="{{dictExp}}" title="Dicionário do Watson" onClick="{{ toggleDict }}">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.5"></path><path d="M8 11.4v.1" stroke-linecap="round" stroke-width="1.6"></path></svg>
+          </button>
+          <button class="hdr-act" type="button" aria-label="Notificações">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1.5 1.5h-11L4 11z"></path><path d="M6.5 14.5h3"></path></svg>
+          </button>
+          <button class="hdr-act" type="button" aria-label="Camila Rocha, perfil e turno">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 14c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"></path></svg>
+          </button>
+          <button class="hdr-act" type="button" aria-label="Trocar de aplicativo">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2" width="2.5" height="2.5"></rect><rect x="6.75" y="2" width="2.5" height="2.5"></rect><rect x="11.5" y="2" width="2.5" height="2.5"></rect><rect x="2" y="6.75" width="2.5" height="2.5"></rect><rect x="6.75" y="6.75" width="2.5" height="2.5"></rect><rect x="11.5" y="6.75" width="2.5" height="2.5"></rect><rect x="2" y="11.5" width="2.5" height="2.5"></rect><rect x="6.75" y="11.5" width="2.5" height="2.5"></rect><rect x="11.5" y="11.5" width="2.5" height="2.5"></rect></svg>
+          </button>
+        </header>
+
+        <div class="body-row">
+          <nav class="rail" aria-label="Navegação principal, recolhida">
+            <a class="rail-link cur" href="#conteudo" aria-current="page" aria-label="Casos" title="Casos">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+            </a>
+            <a class="rail-link" href="#conteudo" aria-label="Casos encerrados" title="Casos encerrados">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3"></rect><path d="M3 5.5v8h10v-8M6.5 8.5h3"></path></svg>
+            </a>
+            <a class="rail-link" href="#conteudo" aria-label="Associados" title="Associados">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="5.5" r="2.3"></circle><path d="M1.8 13.5c.4-2.4 2-3.6 4.2-3.6s3.8 1.2 4.2 3.6M10.5 3.4a2.3 2.3 0 0 1 0 4.3M12 9.9c1.2.4 2 1.6 2.2 3.6"></path></svg>
+            </a>
+            <a class="rail-link" href="#conteudo" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 14h12M3 11l3-4 3 2 4-5"></path></svg>
+            </a>
+          </nav>
+
+          <main id="conteudo" class="main">
+
+            <sc-if value="{{isFila}}" hint-placeholder-val="{{ true }}">
+              <div class="phead">
+                <div class="phead-t">
+                  <p class="eyebrow">Prevenção a fraudes · turno da madrugada</p>
+                  <h1 class="h1">Fila de casos</h1>
+                  <p class="sub">{{abertos}} casos abertos · atualizado às {{agora}}</p>
+                </div>
+                <div class="cs" role="group" aria-label="Modo de visualização dos casos">
+                  <button type="button" class="on" aria-pressed="true" onClick="{{ goFila }}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"></path></svg>
+                    Fila
+                  </button>
+                  <button type="button" aria-pressed="false" onClick="{{ goQuadro }}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+                    Quadro
+                  </button>
+                </div>
+              </div>
+
+              <div class="kpis">
+                <div class="tile kpi">
+                  <p class="kpi-l st">Casos abertos <sc-for list="{{tipFCaso}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></p>
+                  <p class="kpi-v">{{abertos}}</p>
+                  <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z" fill="none" stroke="#525252" stroke-width="1.5"></path><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round"></path></svg>{{k1n}}</p>
+                </div>
+                <div class="tile kpi">
+                  <p class="kpi-l st">Aguardando associado <sc-for list="{{tipFAg}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></p>
+                  <p class="kpi-v">{{k2v}}</p>
+                  <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k2ia}}" fill="{{k2iaf}}" stroke="{{k2ias}}" stroke-width="1.2"></path><path d="{{k2ib}}" fill="none" stroke="{{k2ibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{k2n}}</p>
+                </div>
+                <div class="tile kpi">
+                  <p class="kpi-l st">Tempo até a decisão <sc-for list="{{tipFTempo}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></p>
+                  <p class="kpi-v">1 min 48 s</p>
+                  <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148" stroke="#24a148" stroke-width="1"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>Dentro da meta de 2 min</p>
+                </div>
+                <div class="tile kpi">
+                  <p class="kpi-l">Resolvidos com o associado</p>
+                  <p class="kpi-v">{{k4v}}</p>
+                  <p class="kpi-n"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 7.6l12.4-5.4-4.6 12-2.2-4.4z" fill="none" stroke="#0f62fe" stroke-width="1.5"></path><path d="M7.4 9.8l6.8-7.6" fill="none" stroke="#0f62fe" stroke-width="1.5"></path></svg>Pelo Watson, com a sua autorização</p>
+                </div>
+              </div>
+
+              <section class="dt-box" aria-labelledby="dt-t">
+                <div class="dt-head">
+                  <h2 id="dt-t">Casos abertos</h2>
+                  <p>Cada caso junta os alertas <sc-for list="{{tipFAlerta}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for> do mesmo cartão. Ordenados pelo score de risco <sc-for list="{{tipFScore}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for> e pelo valor. Clique no número do caso para abrir.</p>
+                </div>
+                <div class="dt-tb" role="toolbar" aria-label="Ferramentas da tabela">
+                  <label class="dt-search">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5l3.5 3.5"></path></svg>
+                    <span class="vh">Buscar na fila</span>
+                    <input type="search" placeholder="Buscar caso, associado ou cartão">
+                  </label>
+                  <button class="ibtn" type="button" aria-label="Filtros, 2 ativos">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14l-5.5 6.5v5l-3 1.5v-6.5z"></path></svg>
+                  </button>
+                  <button class="btn btn-primary" type="button" onClick="{{ goCaso }}">
+                    Abrir caso #4821
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+                  </button>
+                </div>
+                <div class="dt-ord">
+                  <span class="st">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 3v10M2.5 10.5L5 13l2.5-2.5M11 13V3M8.5 5.5L11 3l2.5 2.5"></path></svg>
+                    Ordem sugerida pelo Watson: valor em risco × score × tempo na fila
+                  </span>
+                  <button class="ai" type="button" aria-label="IA: por que esta ordem foi sugerida">IA</button>
+                </div>
+                <div class="dt-wrap">
+                  <table class="dt">
+                    <thead>
+                      <tr>
+                        <th scope="col">Caso</th>
+                        <th scope="col">Associado</th>
+                        <th scope="col" class="r">Valor</th>
+                        <th scope="col">Estabelecimento</th>
+                        <th scope="col">Canal</th>
+                        <th scope="col" class="r">Score</th>
+                        <th scope="col">Risco</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Na fila</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+                        <tr class="{{r.cls}}">
+                          <td class="pri">
+                            <span class="cid">
+                              <sc-if value="{{r.link}}" hint-placeholder-val="{{ false }}">
+                                <button class="lnk mono" type="button" onClick="{{ r.open }}">{{r.id}}</button>
+                              </sc-if>
+                              <sc-if value="{{r.noLink}}" hint-placeholder-val="{{ true }}">
+                                <span class="mono">{{r.id}}</span>
+                              </sc-if>
+                              <sc-if value="{{r.grp}}" hint-placeholder-val="{{ false }}">
+                                <span class="tag tag-cool">3 alertas</span>
+                                <button class="ai" type="button" aria-label="IA: o Watson agrupou 3 alertas do mesmo cartão">IA</button>
+                              </sc-if>
+                            </span>
+                          </td>
+                          <td class="pri">{{r.assoc}}</td>
+                          <td class="r pri mono">{{r.valor}}</td>
+                          <td>{{r.estab}}</td>
+                          <td>{{r.canal}}</td>
+                          <td class="r mono pri">{{r.score}}</td>
+                          <td>
+                            <span class="{{r.rcls}}">
+                              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.ria}}" fill="{{r.riaf}}" stroke="{{r.rias}}" stroke-width="1"></path><path d="{{r.rib}}" fill="none" stroke="{{r.ribs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                              {{r.rt}}
+                            </span>
+                          </td>
+                          <td class="pri">
+                            <span class="st">
+                              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{r.eia}}" fill="{{r.eiaf}}" stroke="{{r.eias}}" stroke-width="1.5"></path><path d="{{r.eib}}" fill="none" stroke="{{r.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                              {{r.est}}
+                            </span>
+                          </td>
+                          <td>
+                            <span class="st mono">
+                              <sc-if value="{{r.late}}" hint-placeholder-val="{{ false }}">
+                                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="#f1c21b" stroke="#8e6a00" stroke-width="1"></path><path d="M8 6v3.5M8 11.2v0.3" fill="none" stroke="#161616" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                                <span class="vh">Passou do prazo:</span>
+                              </sc-if>
+                              {{r.fila}}
+                            </span>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </sc-if>
+
+            <sc-if value="{{isQuadro}}" hint-placeholder-val="{{ false }}">
+              <div class="phead">
+                <div class="phead-t">
+                  <p class="eyebrow">Prevenção a fraudes · turno da madrugada</p>
+                  <h1 class="h1">Quadro do processo</h1>
+                  <p class="sub st" style="white-space: normal; flex-wrap: wrap">Cada cartão é um caso <sc-for list="{{tipQCaso}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for>. A barra colorida e o score de risco <sc-for list="{{tipQScore}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for> mostram a urgência · atualizado às {{agora}}</p>
+                </div>
+                <div class="cs" role="group" aria-label="Modo de visualização dos casos">
+                  <button type="button" aria-pressed="false" onClick="{{ goFila }}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 4h2M6 4h8M2 8h2M6 8h8M2 12h2M6 12h8"></path></svg>
+                    Fila
+                  </button>
+                  <button type="button" class="on" aria-pressed="true" onClick="{{ goQuadro }}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+                    Quadro
+                  </button>
+                </div>
+              </div>
+
+              <section class="ai-box ai-inline" aria-label="Resumo do Watson">
+                <button class="ai" type="button" aria-label="IA: resumo gerado pelo Watson a partir do quadro">IA</button>
+                <p style="flex: 1 1 360px; min-width: 0; font-size: 14px; line-height: 20px"><strong style="font-weight: 600">Resumo do Watson:</strong> {{qResumo}}</p>
+              </section>
+
+              <div class="board-wrap">
+                <div class="board">
+
+                  <section class="col" aria-labelledby="c1">
+                    <div class="col-h">
+                      <div class="col-hr"><h2 id="c1">Novo · alto risco</h2><span class="cnt">{{novoCount}}</span></div>
+                    </div>
+                    <sc-for list="{{novoTop}}" as="c" hint-placeholder-count="1">
+                      <article class="{{c.cls}}" aria-label="{{c.aria}}">
+                        <span class="kc-bar" style="background: {{c.bar}}"></span>
+                        <div class="kc-b">
+                          <div class="kc-top">
+                            <button class="lnk mono" type="button" onClick="{{ c.open }}">{{c.id}}</button>
+                            <span class="sp"></span>
+                            <span class="{{c.rcls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.ria}}" fill="{{c.riaf}}" stroke="{{c.rias}}" stroke-width="1"></path><path d="{{c.rib}}" fill="none" stroke="{{c.ribs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.rt}}</span>
+                          </div>
+                          <p class="kc-v">{{c.valor}}</p>
+                          <p class="kc-l">{{c.loja}}</p>
+                          <div class="kc-sig"><span class="tag tag-outline">{{c.s1}}</span><span class="tag tag-outline">{{c.s2}}</span></div>
+                          <div class="kc-f"><span class="mono">Score {{c.score}}</span><span class="sp"></span><span class="st"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.eia}}" fill="{{c.eiaf}}" stroke="{{c.eias}}" stroke-width="1.5"></path><path d="{{c.eib}}" fill="none" stroke="{{c.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.est}}</span></div>
+                        </div>
+                      </article>
+                    </sc-for>
+                    <sc-if value="{{grpShow}}" hint-placeholder-val="{{ true }}">
+                      <article class="kc stk" aria-label="Caso 5107, grupo de 3 alertas">
+                        <span class="stk-l a" aria-hidden="true"></span>
+                        <span class="stk-l b" aria-hidden="true"></span>
+                        <span class="kc-bar" style="background: #da1e28"></span>
+                        <div class="kc-b">
+                          <div class="grp-h">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4.5" y="4.5" width="9" height="9"></rect><path d="M2.5 11.5v-9h9"></path></svg>
+                            3 alertas <sc-for list="{{tipQAlerta}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for> do mesmo cartão
+                            <button class="ai" type="button" aria-label="IA: o Watson agrupou estes alertas" style="margin-left: auto">IA</button>
+                          </div>
+                          <div class="kc-top">
+                            <span class="kc-id mono">#5107</span>
+                            <span class="sp"></span>
+                            <span class="tag tag-red"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.5 6.5L8 14.5 1.5 8z" fill="#da1e28"></path><path d="M8 4.8v3.6M8 10.8v0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path></svg>Alto</span>
+                          </div>
+                          <p class="kc-v">R$ 1.980,00</p>
+                          <p class="kc-l">Loja Exemplo Games e mais 2 · cartão final 4417</p>
+                          <div class="kc-sig"><span class="tag tag-outline">3 compras em 7 min</span><span class="tag tag-outline">Inclui assinatura</span></div>
+                          <div class="kc-f"><span class="mono">Score 0,89</span><span class="sp"></span>
+                            <button class="btn btn-ghost btn-sm" type="button" onClick="{{ desagrupar }}" style="margin-right: -12px">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="5" height="5"></rect><rect x="9" y="9" width="5" height="5"></rect></svg>
+                              Desagrupar
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    </sc-if>
+                    <sc-for list="{{novoRest}}" as="c" hint-placeholder-count="2">
+                      <article class="kc">
+                        <span class="kc-bar" style="background: {{c.bar}}"></span>
+                        <div class="kc-b">
+                          <div class="kc-top">
+                            <span class="kc-id mono">{{c.id}}</span>
+                            <span class="sp"></span>
+                            <span class="{{c.rcls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.ria}}" fill="{{c.riaf}}" stroke="{{c.rias}}" stroke-width="1"></path><path d="{{c.rib}}" fill="none" stroke="{{c.ribs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.rt}}</span>
+                          </div>
+                          <p class="kc-v">{{c.valor}}</p>
+                          <p class="kc-l">{{c.loja}}</p>
+                          <div class="kc-sig"><span class="tag tag-outline">{{c.s1}}</span><span class="tag tag-outline">{{c.s2}}</span></div>
+                          <div class="kc-f"><span class="mono">Score {{c.score}}</span><span class="sp"></span><span class="st"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.eia}}" fill="{{c.eiaf}}" stroke="{{c.eias}}" stroke-width="1.5"></path><path d="{{c.eib}}" fill="none" stroke="{{c.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.est}}</span></div>
+                        </div>
+                      </article>
+                    </sc-for>
+                    <p class="more">Mais 8 casos nesta etapa</p>
+                  </section>
+
+                  <section class="col" aria-labelledby="c2">
+                    <div class="col-h">
+                      <div class="col-hr"><h2 id="c2" class="st" style="white-space: normal">Aguardando associado <sc-for list="{{tipQAg}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></h2><span class="cnt">{{aguardCount}}</span></div>
+                      <p class="col-w"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{cwia}}" fill="{{cwiaf}}" stroke="{{cwias}}" stroke-width="1.2"></path><path d="{{cwib}}" fill="none" stroke="{{cwibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{colW}}</p>
+                      <sc-if value="{{reenvBtn}}" hint-placeholder-val="{{ true }}">
+                        <button class="btn btn-tertiary btn-sm" type="button" onClick="{{ reenviarQuadro }}">
+                          Reenviar aviso aos 4
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.8 7.6l12.4-5.4-4.6 12-2.2-4.4z"></path><path d="M7.4 9.8l6.8-7.6"></path></svg>
+                        </button>
+                      </sc-if>
+                    </div>
+                    <sc-for list="{{aguardList}}" as="c" hint-placeholder-count="4">
+                      <article class="{{c.cls}}" aria-label="{{c.aria}}">
+                        <span class="kc-bar" style="background: {{c.bar}}"></span>
+                        <div class="kc-b">
+                          <div class="kc-top">
+                            <sc-if value="{{c.link}}" hint-placeholder-val="{{ false }}"><button class="lnk mono" type="button" onClick="{{ c.open }}">{{c.id}}</button></sc-if>
+                            <sc-if value="{{c.noLink}}" hint-placeholder-val="{{ true }}"><span class="kc-id mono">{{c.id}}</span></sc-if>
+                            <span class="sp"></span>
+                            <span class="{{c.rcls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.ria}}" fill="{{c.riaf}}" stroke="{{c.rias}}" stroke-width="1"></path><path d="{{c.rib}}" fill="none" stroke="{{c.ribs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.rt}}</span>
+                          </div>
+                          <p class="kc-v">{{c.valor}}</p>
+                          <p class="kc-l">{{c.loja}}</p>
+                          <div class="kc-sig"><span class="tag tag-outline">{{c.s1}}</span><span class="tag tag-outline">{{c.s2}}</span></div>
+                          <div class="kc-f"><span class="mono">Score {{c.score}}</span><span class="sp"></span><span class="st"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.eia}}" fill="{{c.eiaf}}" stroke="{{c.eias}}" stroke-width="1.5"></path><path d="{{c.eib}}" fill="none" stroke="{{c.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.est}}</span></div>
+                        </div>
+                      </article>
+                    </sc-for>
+                    <p class="more">Mais 3 casos nesta etapa</p>
+                  </section>
+
+                  <section class="col" aria-labelledby="c3">
+                    <div class="col-h">
+                      <div class="col-hr"><h2 id="c3">Em análise</h2><span class="cnt">{{analiseCount}}</span></div>
+                    </div>
+                    <sc-for list="{{analiseList}}" as="c" hint-placeholder-count="2">
+                      <article class="{{c.cls}}" aria-label="{{c.aria}}">
+                        <span class="kc-bar" style="background: {{c.bar}}"></span>
+                        <div class="kc-b">
+                          <div class="kc-top">
+                            <sc-if value="{{c.link}}" hint-placeholder-val="{{ false }}"><button class="lnk mono" type="button" onClick="{{ c.open }}">{{c.id}}</button></sc-if>
+                            <sc-if value="{{c.noLink}}" hint-placeholder-val="{{ true }}"><span class="kc-id mono">{{c.id}}</span></sc-if>
+                            <span class="sp"></span>
+                            <span class="{{c.rcls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.ria}}" fill="{{c.riaf}}" stroke="{{c.rias}}" stroke-width="1"></path><path d="{{c.rib}}" fill="none" stroke="{{c.ribs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.rt}}</span>
+                          </div>
+                          <p class="kc-v">{{c.valor}}</p>
+                          <p class="kc-l">{{c.loja}}</p>
+                          <div class="kc-sig"><span class="tag tag-outline">{{c.s1}}</span><span class="tag tag-outline">{{c.s2}}</span></div>
+                          <div class="kc-f"><span class="mono">Score {{c.score}}</span><span class="sp"></span><span class="st"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.eia}}" fill="{{c.eiaf}}" stroke="{{c.eias}}" stroke-width="1.5"></path><path d="{{c.eib}}" fill="none" stroke="{{c.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.est}}</span></div>
+                        </div>
+                      </article>
+                    </sc-for>
+                  </section>
+
+                  <section class="col" aria-labelledby="c4">
+                    <div class="col-h">
+                      <div class="col-hr"><h2 id="c4">Resolvido hoje</h2><span class="cnt">{{resolvCount}}</span></div>
+                    </div>
+                    <sc-for list="{{resolvList}}" as="c" hint-placeholder-count="3">
+                      <article class="{{c.cls}}" aria-label="{{c.aria}}">
+                        <div class="kc-b">
+                          <div class="kc-top">
+                            <sc-if value="{{c.link}}" hint-placeholder-val="{{ false }}"><button class="lnk mono" type="button" onClick="{{ c.open }}">{{c.id}}</button></sc-if>
+                            <sc-if value="{{c.noLink}}" hint-placeholder-val="{{ true }}"><span class="kc-id mono">{{c.id}}</span></sc-if>
+                            <span class="sp"></span>
+                            <span class="tag tag-gray"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.eia}}" fill="{{c.eiaf}}" stroke="{{c.eias}}" stroke-width="1.5"></path><path d="{{c.eib}}" fill="none" stroke="{{c.eibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{c.desfecho}}</span>
+                          </div>
+                          <p class="kc-v">{{c.valor}}</p>
+                          <p class="kc-l">{{c.loja}}</p>
+                          <div class="kc-f"><span>{{c.quem}}</span><span class="sp"></span><span class="mono">{{c.hora}}</span></div>
+                        </div>
+                      </article>
+                    </sc-for>
+                    <p class="more">Mais 28 casos resolvidos</p>
+                  </section>
+
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{isCaso}}" hint-placeholder-val="{{ false }}">
+              <div class="bcrow">
+                <nav aria-label="Trilha de navegação">
+                  <ol class="bc">
+                    <li><button class="lnk" type="button" onClick="{{ goFila }}">Fila</button></li>
+                    <li aria-current="page">Caso #4821</li>
+                  </ol>
+                </nav>
+                <span class="sp"></span>
+                <button class="btn btn-ghost btn-sm" type="button" onClick="{{ goQuadro }}">
+                  Ver no quadro
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 2.5h3.5v11H2zM6.5 2.5H10v7H6.5zM11 2.5h3.5v9H11z"></path></svg>
+                </button>
+              </div>
+
+              <section class="tile ch" style="padding-bottom: 0" aria-labelledby="ch-t">
+                <div class="ch-top">
+                  <div class="ch-l">
+                    <p class="ch-eb st" style="white-space: normal; flex-wrap: wrap"><span class="mono">Caso #4821</span><sc-for list="{{tipCCaso}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for><span>· junta 5 alertas</span><sc-for list="{{tipCAlerta}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for><span>· crédito · cartão não presente · aberto às 03:14</span></p>
+                    <h1 class="ch-t" id="ch-t">R$ 2.349,90 · Loja Exemplo Eletrônicos</h1>
+                    <p class="ch-s">Valdir B. (associado fictício) · cartão de crédito final 4821 · associado desde 2006</p>
+                    <div class="ch-tags">
+                      <span class="tag tag-red"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.5 6.5L8 14.5 1.5 8z" fill="#da1e28"></path><path d="M8 4.8v3.6M8 10.8v0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path></svg>Risco alto</span>
+                      <span class="{{caseTagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{stia}}" fill="{{stiaf}}" stroke="{{stias}}" stroke-width="1.5"></path><path d="{{stib}}" fill="none" stroke="{{stibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{caseTagT}}</span>
+                      <span class="tag tag-cool">Online</span>
+                      <span class="tag tag-cool">Rajada: 5 alertas</span>
+                      <sc-if value="{{trocado}}" hint-placeholder-val="{{ false }}">
+                        <span class="tag tag-warm"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="#f1c21b" stroke="#8e6a00" stroke-width="1"></path><path d="M8 6v3.5M8 11.2v0.3" fill="none" stroke="#161616" stroke-width="1.5" stroke-linecap="round"></path></svg>Aparelho do app trocado há 2 dias</span>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <div class="score" role="group" aria-label="Score de risco 0,92 de 1,00, acima do limite de bloqueio 0,85">
+                    <p class="score-l st">Score de risco <sc-for list="{{tipCScore}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></p>
+                    <p class="score-v"><b>0,92</b><span>de 1,00</span></p>
+                    <div class="meter" aria-hidden="true"><i style="width: 92%"></i><span class="mk" style="left: 85%"></span></div>
+                    <p class="score-l">Limite de bloqueio: 0,85</p>
+                  </div>
+                </div>
+                <dl class="meta">
+                  <sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
+                    <div><dt>{{m.k}}</dt><dd>{{m.v}}</dd></div>
+                  </sc-for>
+                </dl>
+              </section>
+
+              <sc-if value="{{snShow}}" hint-placeholder-val="{{ false }}">
+                <div class="{{snCls}}" role="status">
+                  <svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="{{snia}}" fill="{{sniaf}}" stroke="{{snias}}" stroke-width="1.2"></path><path d="{{snib}}" fill="none" stroke="{{snibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                  <div class="ntf-b">
+                    <p class="ntf-t st" style="white-space: normal">{{snTitle}}<sc-if value="{{snAg}}" hint-placeholder-val="{{ false }}"><sc-for list="{{tipCAg}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for></sc-if></p>
+                    <p class="ntf-d">{{snText}}</p>
+                  </div>
+                </div>
+              </sc-if>
+
+              <section class="tile dec" aria-labelledby="dec-t">
+                <div class="sec-h">
+                  <h2 id="dec-t">Sua decisão</h2>
+                  <span class="sp"></span>
+                  <span class="sec-d">{{decTxt}}</span>
+                </div>
+                <sc-if value="{{actNovo}}" hint-placeholder-val="{{ true }}">
+                  <div class="acts">
+                    <button class="btn btn-primary" type="button" onClick="{{ openPerg }}">
+                      Perguntar ao associado
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4.5" y="1.5" width="7" height="13" rx="1"></rect><path d="M7 12h2"></path></svg>
+                    </button>
+                    <button class="btn btn-danger" type="button" onClick="{{ openBloq }}">
+                      Bloquear cartão
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg>
+                    </button>
+                    <button class="btn btn-ghost" type="button" onClick="{{ liberar }}">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg>
+                      Liberar compra
+                    </button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{actAguard}}" hint-placeholder-val="{{ false }}">
+                  <div class="acts">
+                    <button class="btn btn-danger" type="button" onClick="{{ openBloq }}">
+                      Bloquear agora
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg>
+                    </button>
+                    <button class="btn btn-tertiary" type="button" onClick="{{ reenviar4821 }}">
+                      Reenviar aviso de compra
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.8 7.6l12.4-5.4-4.6 12-2.2-4.4z"></path><path d="M7.4 9.8l6.8-7.6"></path></svg>
+                    </button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{actVolta}}" hint-placeholder-val="{{ false }}">
+                  <div class="acts">
+                    <button class="btn btn-danger" type="button" onClick="{{ openBloq }}">
+                      Bloquear cartão
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7"></rect><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"></path></svg>
+                    </button>
+                    <button class="btn btn-tertiary" type="button" onClick="{{ liberar }}">
+                      Liberar compra
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg>
+                    </button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{actFim}}" hint-placeholder-val="{{ false }}">
+                  <div class="acts">
+                    <button class="btn btn-primary" type="button" onClick="{{ goFila }}">
+                      Voltar para a fila
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+                    </button>
+                    <sc-if value="{{actFimRev}}" hint-placeholder-val="{{ false }}">
+                      <button class="btn btn-ghost" type="button" onClick="{{ reverterAgente }}">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                        Reverter bloqueio do Watson
+                      </button>
+                    </sc-if>
+                  </div>
+                </sc-if>
+                <div class="fld">
+                  <div class="fld-h">
+                    <label for="just">Justificativa para a auditoria</label>
+                    <button class="ai" type="button" aria-label="IA: rascunho escrito pelo Watson a partir dos fatores 1 a 3">IA</button>
+                    <span class="ed">Rascunho do Watson · você pode editar</span>
+                  </div>
+                  <textarea id="just" rows="3">{{just}}</textarea>
+                  <p class="fld-f">Vai para a auditoria junto com a decisão e o seu nome.</p>
+                </div>
+              </section>
+
+              <div class="row2">
+                <section class="tile evs" aria-labelledby="ev-t">
+                  <div class="sec-h">
+                    <h2 id="ev-t">Linha do tempo do caso</h2>
+                    <span class="sp"></span>
+                    <span class="sec-d">Atualiza em tempo real</span>
+                  </div>
+                  <ol aria-live="polite">
+                    <sc-for list="{{eventosView}}" as="e" hint-placeholder-count="4">
+                      <li class="{{e.cls}}">
+                        <div class="ev-r" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 16 16"><path d="{{e.ia}}" fill="{{e.iaf}}" stroke="{{e.ias}}" stroke-width="1.5"></path><path d="{{e.ib}}" fill="none" stroke="{{e.ibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                          <span class="ev-ln"></span>
+                        </div>
+                        <div class="ev-b">
+                          <div class="ev-h">
+                            <p><span class="mono">{{e.h}}</span> · {{e.t}}</p>
+                            <sc-if value="{{e.ai}}" hint-placeholder-val="{{ false }}">
+                              <button class="ai" type="button" aria-label="IA: ação feita pelo Watson">IA</button>
+                            </sc-if>
+                          </div>
+                          <p class="ev-d">{{e.d}}</p>
+                        </div>
+                      </li>
+                    </sc-for>
+                  </ol>
+                </section>
+
+                <section class="tile fat" aria-labelledby="fx-t">
+                  <div class="sec-h">
+                    <h2 id="fx-t">Por que o score é 0,92</h2>
+                    <button class="ai" type="button" aria-label="IA: explicação do modelo de risco">IA</button>
+                    <span class="sp"></span>
+                    <span class="sec-d">Peso no score</span>
+                  </div>
+                  <sc-for list="{{fatores}}" as="f" hint-placeholder-count="5">
+                    <div class="fx">
+                      <span class="fx-n mono">{{f.n}}</span>
+                      <div class="fx-b">
+                        <p class="fx-t">{{f.t}}</p>
+                        <p class="fx-d">{{f.d}}</p>
+                        <div class="bar" aria-hidden="true"><i style="width: {{f.w}}"></i></div>
+                      </div>
+                      <span class="fx-p mono">{{f.p}}</span>
+                    </div>
+                  </sc-for>
+                  <p class="fx-d" style="border-top: 1px solid var(--border-subtle-01); padding-top: 8px">Reduz o risco: 2 compras online legítimas em 2026 (−0,03). Base do modelo: +0,06.</p>
+                </section>
+              </div>
+
+              <section class="tile" style="display: flex; flex-direction: column; gap: 8px" aria-labelledby="pf-t">
+                <div class="sec-h">
+                  <h2 id="pf-t">Perfil do associado</h2>
+                </div>
+                <dl class="pl">
+                  <sc-for list="{{perfil}}" as="p" hint-placeholder-count="6">
+                    <div><dt>{{p.k}}</dt><dd>{{p.v}}</dd></div>
+                  </sc-for>
+                </dl>
+              </section>
+            </sc-if>
+          </main>
+
+          <sc-if value="{{agentOpen}}" hint-placeholder-val="{{ true }}">
+            <aside class="agent" aria-labelledby="ag-t">
+              <div class="ag-head">
+                <div class="ag-title">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14v10H9l-4 3v-3H3z"></path><path d="M7 9h0.01M10 9h0.01M13 9h0.01"></path></svg>
+                  <h2 id="ag-t">Pergunte ao Watson</h2>
+                  <button class="ai" type="button" aria-label="IA: o que é o Watson e como ele usa os dados desta tela">IA</button>
+                </div>
+                <button class="ibtn" type="button" aria-label="Recolher painel do Watson" aria-expanded="true" onClick="{{ toggleAgent }}">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13"></rect><path d="M12.5 3.5v13M6.5 8l2 2-2 2"></path></svg>
+                </button>
+              </div>
+              <div class="ag-ctx">
+                <div class="ag-ctx-row">
+                  <span class="ag-ctx-l">Contexto</span>
+                  <span class="tag tag-cool">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"></path><circle cx="8" cy="8" r="2"></circle></svg>
+                    {{ctxTela}}
+                  </span>
+                </div>
+                <p class="d">{{ctxDesc}}</p>
+              </div>
+              <div class="ag-body" aria-live="polite">
+
+                <sc-if value="{{coordShow}}" hint-placeholder-val="{{ false }}">
+                  <article class="ai-box msg live" aria-label="Coordenação do Watson com o associado">
+                    <div class="msg-head">
+                      <span class="msg-who">Watson · coordenação</span>
+                      <button class="ai" type="button" aria-label="IA: ação ou acompanhamento feito pelo Watson">IA</button>
+                      <span class="msg-when mono">{{coordWhen}}</span>
+                    </div>
+                    <h3 class="msg-t">{{coordTitle}}</h3>
+                    <p class="tx">{{coordText}}</p>
+                    <p class="done">
+                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{ckia}}" fill="{{ckiaf}}" stroke="{{ckias}}" stroke-width="1.5"></path><path d="{{ckib}}" fill="none" stroke="{{ckibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                      {{coordStatus}}
+                    </p>
+                    <div class="msg-act">
+                      <sc-if value="{{coordBtnCaso}}" hint-placeholder-val="{{ false }}">
+                        <button class="btn btn-tertiary btn-sm" type="button" onClick="{{ goCaso }}">Abrir caso #4821</button>
+                      </sc-if>
+                      <sc-if value="{{coordRev}}" hint-placeholder-val="{{ false }}">
+                        <button class="btn btn-ghost btn-sm" type="button" onClick="{{ reverterAgente }}">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                          Reverter bloqueio
+                        </button>
+                      </sc-if>
+                    </div>
+                  </article>
+                </sc-if>
+
+                <sc-if value="{{isFila}}" hint-placeholder-val="{{ true }}">
+                  <article class="ai-box msg" aria-label="Sugestão do Watson: ordem de ataque">
+                    <div class="msg-head">
+                      <span class="msg-who">Watson</span>
+                      <button class="ai" type="button" aria-label="IA: sugestão gerada pelo Watson">IA</button>
+                      <span class="msg-when mono">03:15</span>
+                    </div>
+                    <h3 class="msg-t">Comece pelo #4821: R$ 2.349,90, rajada</h3>
+                    <p class="tx">Maior score da fila (0,92): 5 tentativas online em 7 min, às 03:14, a 760 km de onde o Valdir costuma comprar.</p>
+                    <ol class="rank" aria-label="Ordem sugerida">
+                      <sc-for list="{{rank}}" as="k" hint-placeholder-count="3">
+                        <li>
+                          <span class="rank-n">{{k.n}}</span>
+                          <div class="rank-b">
+                            <p class="t"><span class="mono">{{k.id}}</span> · {{k.v}}</p>
+                            <p class="d">{{k.d}}</p>
+                          </div>
+                        </li>
+                      </sc-for>
+                    </ol>
+                    <div class="msg-act">
+                      <button class="btn btn-tertiary btn-sm" type="button" onClick="{{ goCaso }}">Abrir #4821</button>
+                    </div>
+                  </article>
+                </sc-if>
+
+                <sc-if value="{{isCaso}}" hint-placeholder-val="{{ false }}">
+                  <sc-if value="{{recShow}}" hint-placeholder-val="{{ true }}">
+                    <article class="ai-box msg" aria-label="Resumo e recomendação do Watson">
+                      <div class="msg-head">
+                        <span class="msg-who">Watson</span>
+                        <button class="ai" type="button" aria-label="IA: resumo e recomendação gerados pelo Watson">IA</button>
+                        <span class="msg-when mono">03:15</span>
+                      </div>
+                      <p class="tx">Parece fraude com cartão não presente: 5 tentativas em 7 min, de madrugada, a 760 km de onde o Valdir comprou ontem. O padrão lembra 38 fraudes confirmadas nos últimos 90 dias.</p>
+                      <div class="rec">
+                        <p class="rec-l">Recomendação</p>
+                        <p class="rec-t">{{recTitle}}</p>
+                        <p class="conf">
+                          <span class="conf-s" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="o"></i></span>
+                          Fraude provável · confiança do agente: alta, 87%
+                          <sc-for list="{{tipCConf}}" as="tp" hint-placeholder-count="1"><span class="tt"><button class="tt-b" type="button" aria-label="{{tp.label}}" aria-expanded="{{tp.exp}}" onClick="{{ tp.toggle }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7.2v4.3M8 4.8v0.3" stroke-linecap="round"></path></svg></button><sc-if value="{{tp.open}}" hint-placeholder-val="{{ false }}"><span class="{{tp.cls}}" role="note"><span class="tt-t">{{tp.term}}</span><span class="tt-d">{{tp.text}}</span><button class="tt-l" type="button" onClick="{{ tp.dict }}">Ver no dicionário</button></span></sc-if></span></sc-for>
+                        </p>
+                      </div>
+                      <div class="why">
+                        <p class="why-l">Por que estou sugerindo isso</p>
+                        <ul class="why-body">
+                          <sc-for list="{{recWhy}}" as="w" hint-placeholder-count="3">
+                            <li>{{w}}</li>
+                          </sc-for>
+                        </ul>
+                      </div>
+                      <sc-if value="{{recNovo}}" hint-placeholder-val="{{ true }}">
+                        <div class="msg-act">
+                          <button class="btn btn-tertiary btn-sm" type="button" onClick="{{ openPerg }}">Aceitar e revisar o aviso</button>
+                          <button class="btn btn-ghost btn-sm" type="button" onClick="{{ openPerg }}">Editar</button>
+                          <button class="btn btn-ghost btn-sm" type="button" onClick="{{ descartarRec }}">Descartar</button>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{recFeita}}" hint-placeholder-val="{{ false }}">
+                        <p class="done">
+                          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>
+                          {{recFeitaTxt}}
+                        </p>
+                      </sc-if>
+                    </article>
+                  </sc-if>
+                  <sc-if value="{{recDescShow}}" hint-placeholder-val="{{ false }}">
+                    <article class="ai-box msg" aria-label="Recomendação descartada">
+                      <div class="msg-head">
+                        <span class="msg-who">Watson</span>
+                        <button class="ai" type="button" aria-label="IA: recomendação do Watson">IA</button>
+                      </div>
+                      <p class="tx">Você descartou a recomendação para este caso. A decisão segue com você.</p>
+                      <div class="msg-act">
+                        <button class="btn btn-ghost btn-sm" type="button" onClick="{{ reverterRec }}">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                          Reverter e mostrar de novo
+                        </button>
+                      </div>
+                    </article>
+                  </sc-if>
+                </sc-if>
+
+                <sc-if value="{{isQuadro}}" hint-placeholder-val="{{ false }}">
+                  <article class="ai-box msg" aria-label="Sugestão do Watson: reenviar aviso de compra">
+                    <div class="msg-head">
+                      <span class="msg-who">Watson</span>
+                      <button class="ai" type="button" aria-label="IA: sugestão gerada pelo Watson">IA</button>
+                      <span class="msg-when mono">03:15</span>
+                    </div>
+                    <h3 class="msg-t">4 associados sem resposta há mais de 20 min</h3>
+                    <p class="tx">Sugiro reenviar o aviso de compra no app de #4774, #4860, #4790 e #4812. As compras seguem pausadas; nada é bloqueado.</p>
+                    <div class="why">
+                      <p class="why-l">Por que estou sugerindo isso</p>
+                      <ul class="why-body">
+                        <li>No último mês, 7 em cada 10 associados responderam depois de um segundo aviso.</li>
+                        <li>Reenviar não muda o estado do cartão. Você continua decidindo cada caso.</li>
+                      </ul>
+                    </div>
+                    <sc-if value="{{reenvBtn}}" hint-placeholder-val="{{ true }}">
+                      <div class="msg-act">
+                        <button class="btn btn-tertiary btn-sm" type="button" onClick="{{ reenviarQuadro }}">Reenviar aviso aos 4</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{reenvDone}}" hint-placeholder-val="{{ false }}">
+                      <p class="done">
+                        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z" fill="#24a148"></path><path d="M5 8.2l2 2 4-4.2" fill="none" stroke="#ffffff" stroke-width="1.5"></path></svg>
+                        {{reenvTxt}}
+                      </p>
+                    </sc-if>
+                  </article>
+
+                  <article class="ai-box msg" aria-label="Ação automática do Watson: agrupamento">
+                    <div class="msg-head">
+                      <span class="msg-who">Watson</span>
+                      <button class="ai" type="button" aria-label="IA: ação automática do Watson">IA</button>
+                      <span class="msg-when mono">03:13</span>
+                    </div>
+                    <sc-if value="{{grpShow}}" hint-placeholder-val="{{ true }}">
+                      <h3 class="msg-t">Agrupei 3 alertas do cartão final 4417</h3>
+                      <p class="tx">3 compras online em 7 min, somando R$ 1.980,00, viraram um só caso, o #5107.</p>
+                      <p class="tx" style="color: var(--text-secondary)">O que eu não sei: a compra de R$ 150,00 no Streaming Demo se repete todo mês. Pode não fazer parte da rajada.</p>
+                      <div class="msg-act">
+                        <button class="btn btn-ghost btn-sm" type="button" onClick="{{ desagrupar }}">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="5" height="5"></rect><rect x="9" y="9" width="5" height="5"></rect></svg>
+                          Desagrupar
+                        </button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{desagShow}}" hint-placeholder-val="{{ false }}">
+                      <h3 class="msg-t">Você desagrupou o #5107</h3>
+                      <p class="tx">Os 3 alertas viraram #5107, #5108 e #5109. Vou levar isso em conta nos próximos agrupamentos de assinaturas.</p>
+                      <div class="msg-act">
+                        <button class="btn btn-ghost btn-sm" type="button" onClick="{{ reagrupar }}">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                          Reagrupar
+                        </button>
+                      </div>
+                    </sc-if>
+                  </article>
+                </sc-if>
+              </div>
+              <div class="ag-foot">
+                <p class="ag-ctx-l">Perguntas sugeridas para esta tela</p>
+                <div class="chips">
+                  <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+                    <button class="chip" type="button">{{c}}</button>
+                  </sc-for>
+                </div>
+                <div class="ask">
+                  <input type="text" placeholder="{{askPh}}" aria-label="Escreva uma pergunta para o Watson">
+                  <button class="ibtn" type="button" aria-label="Enviar pergunta">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 10l14-6.5L12 17l-2.5-5.5z"></path><path d="M9.5 11.5L17 3.5"></path></svg>
+                  </button>
+                </div>
+                <p class="disc">O Watson sugere e explica; ele pode errar. Ele só age sozinho no que você autorizou, e tudo fica na linha do tempo do caso.</p>
+              </div>
+            </aside>
+          </sc-if>
+          <sc-if value="{{agentClosed}}" hint-placeholder-val="{{ false }}">
+            <aside class="agent-min" aria-label="Painel do Watson recolhido">
+              <button class="ibtn" type="button" aria-label="Abrir painel Pergunte ao Watson" aria-expanded="false" onClick="{{ toggleAgent }}">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14v10H9l-4 3v-3H3z"></path><path d="M7 9h0.01M10 9h0.01M13 9h0.01"></path></svg>
+              </button>
+              <button class="ai" type="button" aria-label="IA: o Watson segue acompanhando os casos">IA</button>
+            </aside>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{dictOpen}}" hint-placeholder-val="{{ false }}">
+          <aside class="dict" aria-labelledby="dict-t">
+            <div class="dict-h">
+              <div class="dict-ht">
+                <h2 id="dict-t">Dicionário do Watson</h2>
+                <p>Os termos que você vê nas telas, com o mesmo texto das dicas "i".</p>
+              </div>
+              <button class="ibtn" type="button" aria-label="Fechar dicionário" onClick="{{ closeDict }}">
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+              </button>
+            </div>
+            <dl class="dict-l">
+              <sc-for list="{{dictList}}" as="d" hint-placeholder-count="7">
+                <div class="{{d.cls}}">
+                  <dt class="dict-term">{{d.term}}</dt>
+                  <dd>
+                    <p class="d">{{d.def}}</p>
+                    <p class="w">Onde aparece: {{d.onde}} · Quem vê: {{d.quem}}</p>
+                  </dd>
+                </div>
+              </sc-for>
+            </dl>
+          </aside>
+        </sc-if>
+
+        <sc-if value="{{toastOn}}" hint-placeholder-val="{{ false }}">
+          <div class="{{toastCls}}" role="status" aria-live="polite">
+            <svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true" style="margin-top: 2px"><path d="{{tkia}}" fill="{{tkiaf}}" stroke="{{tkias}}" stroke-width="1.2"></path><path d="{{tkib}}" fill="none" stroke="{{tkibs}}" stroke-width="1.5" stroke-linecap="round"></path></svg>
+            <div class="toast-b">
+              <p class="toast-t">{{toastTitle}}</p>
+              <p class="toast-d">{{toastSub}}</p>
+              <sc-if value="{{toastUndo}}" hint-placeholder-val="{{ false }}">
+                <button class="btn btn-ghost btn-sm toast-a" type="button" onClick="{{ desfazer }}">Desfazer</button>
+              </sc-if>
+              <sc-if value="{{toastCaso}}" hint-placeholder-val="{{ false }}">
+                <button class="btn btn-ghost btn-sm toast-a" type="button" onClick="{{ toastVerCaso }}">Ver caso #4821</button>
+              </sc-if>
+            </div>
+            <button class="ibtn" type="button" aria-label="Fechar notificação" onClick="{{ closeToast }}">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+            </button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{mPerg}}" hint-placeholder-val="{{ false }}">
+          <div class="ovl">
+            <div class="mdl" role="dialog" aria-modal="true" aria-labelledby="mp-t">
+              <div class="mdl-h">
+                <div class="mdl-ht">
+                  <p class="mdl-l">Caso #4821 · Valdir B.</p>
+                  <h2 class="mdl-t" id="mp-t">Perguntar ao Valdir no app?</h2>
+                </div>
+                <button class="ibtn" type="button" aria-label="Fechar" onClick="{{ closeModal }}">
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+                </button>
+              </div>
+              <div class="mdl-b">
+                <p class="tx">O Watson envia um aviso de compra ao app do Valdir e acompanha a resposta. Diga agora o que ele pode fazer sozinho quando o Valdir responder.</p>
+                <div class="ai-box quote">
+                  <p class="quote-h"><button class="ai" type="button" aria-label="IA: mensagem escrita pelo Watson">IA</button>Mensagem escrita pelo Watson, sem link</p>
+                  <p class="q">"Olá, Valdir. Vimos uma compra de R$ 2.349,90 no seu cartão final 4821, na Loja Exemplo Eletrônicos (internet), hoje às 03:14. Foi você?"</p>
+                </div>
+                <sc-if value="{{trocado}}" hint-placeholder-val="{{ false }}">
+                  <div class="ntf warn" role="note">
+                    <svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="#f1c21b" stroke="#8e6a00" stroke-width="1"></path><path d="M8 6v3.5M8 11.2v0.3" fill="none" stroke="#161616" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                    <div class="ntf-b">
+                      <p class="ntf-t">Aparelho do app trocado há 2 dias</p>
+                      <p class="ntf-d">É o padrão de troca de chip. Mesmo com biometria, um "Sim, fui eu" volta para você.</p>
+                    </div>
+                  </div>
+                </sc-if>
+                <ul class="rules" aria-label="O que o Watson faz com a resposta">
+                  <li class="rule">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 7.5h9v6.5h-9z" fill="#da1e28" stroke="#da1e28" stroke-width="1.5"></path><path d="M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="#da1e28" stroke-width="1.5"></path></svg>
+                    <div class="rule-b">
+                      <p class="rule-t">Se ele tocar "Não reconheço"</p>
+                      <p class="rule-d">O Watson bloqueia o cartão na hora e recusa as outras 4 compras retidas. Regra da cooperativa: para o associado, um toque basta.</p>
+                    </div>
+                  </li>
+                  <li class="rule">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 12.5V8a3.5 3.5 0 0 1 7 0v1" fill="none" stroke="#0e6027" stroke-width="1.5"></path><path d="M8 8v6M11.5 11v2.5" fill="none" stroke="#0e6027" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                    <div class="rule-b">
+                      <p class="rule-t">Se ele tocar "Sim, fui eu"</p>
+                      <p class="rule-d">{{libRegra}}</p>
+                      <sc-if value="{{naoTrocado}}" hint-placeholder-val="{{ true }}">
+                        <button class="cbx" type="button" role="checkbox" aria-checked="{{autoLibAria}}" onClick="{{ toggleAutoLib }}">
+                          <span class="{{cbCls}}" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M2.5 6.2l2.3 2.3 4.7-5"></path></svg></span>
+                          Deixar o Watson liberar sozinho depois da biometria
+                        </button>
+                      </sc-if>
+                    </div>
+                  </li>
+                  <li class="rule">
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z" fill="none" stroke="#525252" stroke-width="1.5"></path><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                    <div class="rule-b">
+                      <p class="rule-t">Se ele não responder em 20 min</p>
+                      <p class="rule-d">O caso volta para você, com a compra ainda pausada.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="mdl-f">
+                <button class="btn btn-secondary" type="button" onClick="{{ closeModal }}">Cancelar</button>
+                <button class="btn btn-primary" type="button" onClick="{{ enviarAlerta }}">Enviar aviso de compra</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{mBloq}}" hint-placeholder-val="{{ false }}">
+          <div class="ovl">
+            <div class="mdl" role="dialog" aria-modal="true" aria-labelledby="mb-t">
+              <div class="mdl-h">
+                <div class="mdl-ht">
+                  <p class="mdl-l">Caso #4821 · Valdir B.</p>
+                  <h2 class="mdl-t" id="mb-t">Bloquear o cartão final 4821?</h2>
+                </div>
+                <button class="ibtn" type="button" aria-label="Fechar" onClick="{{ closeModal }}">
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+                </button>
+              </div>
+              <div class="mdl-b">
+                <p class="tx">O cartão fica bloqueado e as outras 4 compras retidas são recusadas. O Watson avisa o Valdir no app, sem pedir resposta. {{bloqExtra}}</p>
+                <div class="ai-box quote">
+                  <p class="quote-h"><button class="ai" type="button" aria-label="IA: rascunho do Watson">IA</button>Justificativa que vai para a auditoria</p>
+                  <p class="q">{{just}}</p>
+                </div>
+                <p class="tx" style="color: var(--text-secondary)">A decisão fica registrada com o seu nome. Dá para desfazer logo depois.</p>
+              </div>
+              <div class="mdl-f">
+                <button class="btn btn-secondary" type="button" onClick="{{ closeModal }}">Cancelar</button>
+                <button class="btn btn-danger" type="button" onClick="{{ bloquear }}">Bloquear cartão</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div class="ph-col">
+      <div class="ph-wrap">
+        <p class="cap"><b>Celular do Valdir</b> · associado, app da cooperativa</p>
+        <div class="phone" role="region" aria-label="Celular do Valdir, simulado">
+          <div class="sbar" aria-hidden="true">
+            <span class="mono">{{agora}}</span>
+            <span class="sp"></span>
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#161616"><rect x="0" y="8" width="3" height="4"></rect><rect x="5" y="5" width="3" height="7"></rect><rect x="10" y="2" width="3" height="10"></rect></svg>
+            <svg width="24" height="12" viewBox="0 0 24 12" fill="none" stroke="#161616"><rect x="0.5" y="0.5" width="20" height="11" rx="2"></rect><rect x="2.5" y="2.5" width="12" height="7" fill="#161616" stroke="none"></rect><path d="M22.5 4v4"></path></svg>
+          </div>
+
+          <sc-if value="{{phLock}}" hint-placeholder-val="{{ true }}">
+            <div class="lock">
+              <p class="lock-time">{{agora}}</p>
+              <p class="lock-date">Segunda-feira, 26 de outubro</p>
+              <div class="lock-list" aria-live="polite">
+                <sc-for list="{{notifs}}" as="n" hint-placeholder-count="1">
+                  <button class="pn" type="button" onClick="{{ n.open }}">
+                    <span class="pn-ic" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+                    </span>
+                    <span class="pn-b">
+                      <span class="pn-app"><span>Cartões da cooperativa</span><span class="sp"></span><span class="mono">{{n.h}}</span></span>
+                      <span class="pn-t">{{n.title}}</span>
+                      <span class="pn-d">{{n.body}}</span>
+                    </span>
+                  </button>
+                </sc-for>
+                <sc-if value="{{notifsEmpty}}" hint-placeholder-val="{{ false }}">
+                  <p class="lock-empty">Nenhuma notificação</p>
+                </sc-if>
+              </div>
+              <p class="lock-help">Celular bloqueado · toque numa notificação para abrir o app</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{phAlerta}}" hint-placeholder-val="{{ false }}">
+            <header class="ab">
+              <button class="back" type="button" aria-label="Voltar para a tela inicial" onClick="{{ phHome }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+              </button>
+              <div class="av" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+              </div>
+              <div class="ab-t">
+                <h1>Cartões da cooperativa</h1>
+                <p>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg>
+                  Conversa segura no seu app
+                </p>
+              </div>
+            </header>
+            <div class="callout" role="note">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="10" cy="10" r="8"></circle><path d="M10 9v5M10 6.2v0.3"></path></svg>
+              <p>Ninguém da cooperativa vai pedir para você responder por telefone, nem pedir senha ou código.</p>
+            </div>
+            <div class="chat">
+              <p class="selo">
+                <button class="ai" type="button" aria-label="IA: o que é o assistente automático">IA</button>
+                <span class="who">Aviso de compra · assistente automático</span>
+                <span class="sp"></span>
+                <span class="mono">{{alertaH}}</span>
+              </p>
+              <article class="bub" aria-label="Mensagem do assistente automático da cooperativa">
+                <p class="hi">Olá, Valdir. Vimos uma compra no seu cartão de crédito final 4821:</p>
+                <dl class="det">
+                  <sc-for list="{{det}}" as="d" hint-placeholder-count="4">
+                    <div><dt>{{d.k}}</dt><dd class="{{d.cls}}">{{d.v}}</dd></div>
+                  </sc-for>
+                </dl>
+                <p class="q">Foi você?</p>
+              </article>
+              <div class="why-av">
+                <button class="why-av-b" type="button" aria-expanded="{{porqueExp}}" onClick="{{ togglePorque }}">
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.5"></path><path d="M8 11.4v.1" stroke-linecap="round" stroke-width="1.6"></path></svg>
+                  Por que recebi este aviso?
+                </button>
+                <sc-if value="{{porque}}" hint-placeholder-val="{{ false }}">
+                  <p class="why-av-p">Vimos uma compra diferente do seu costume. Confirmar ajuda a proteger seu cartão.</p>
+                </sc-if>
+              </div>
+              <p class="pause">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="9" r="7.5"></circle><path d="M7 6v6M11 6v6"></path></svg>
+                Enquanto você não responde, a compra fica pausada. Nada foi cobrado.
+              </p>
+            </div>
+            <div class="pacts">
+              <button class="choice" type="button" onClick="{{ fuiEu }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#24a148"></path><path d="M7.5 12.3l3 3 6-6.3" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+                Sim, fui eu
+              </button>
+              <button class="choice" type="button" onClick="{{ naoReconheco }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19z" fill="#da1e28"></path><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" fill="none" stroke="#ffffff" stroke-width="2"></path></svg>
+                Não reconheço
+              </button>
+              <button class="human" type="button" onClick="{{ pessoa }}">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+                Prefiro falar com uma pessoa
+              </button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{phBio}}" hint-placeholder-val="{{ false }}">
+            <header class="ab">
+              <button class="back" type="button" aria-label="Voltar para o aviso de compra" onClick="{{ bioCancel }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+              </button>
+              <div class="ab-t">
+                <h1>Confirme que é você</h1>
+                <p>Cartão final 4821</p>
+              </div>
+            </header>
+            <div class="pbody">
+              <div class="big-ic" aria-hidden="true">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0e6027" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 18.5V11a5.5 5.5 0 0 1 11 0v1.5"></path><path d="M9.5 20V11a2.5 2.5 0 0 1 5 0v4"></path><path d="M12 11v9.5M17.5 15.5v3.5"></path><path d="M4 9a8.5 8.5 0 0 1 16 0"></path></svg>
+              </div>
+              <p class="ptitle">Use a sua digital para liberar a compra</p>
+              <p class="ptx">Como a compra de R$ 2.349,90 é alta, pedimos a digital do seu celular antes de liberar.</p>
+              <p class="pnote">A cooperativa não vê a sua digital: quem confere é o próprio celular.</p>
+              <span style="flex-grow: 1"></span>
+              <button class="pbtn pbtn-primary" type="button" onClick="{{ bioOk }}">
+                Tocar no sensor (simulado)
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+              </button>
+              <button class="pbtn pbtn-ghost" type="button" onClick="{{ bioCancel }}">Voltar sem confirmar</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{phAviso}}" hint-placeholder-val="{{ false }}">
+            <header class="ab">
+              <button class="back" type="button" aria-label="Voltar para a tela inicial" onClick="{{ phHome }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+              </button>
+              <div class="av" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+              </div>
+              <div class="ab-t">
+                <h1>Cartões da cooperativa</h1>
+                <p>Cartão final 4821</p>
+              </div>
+            </header>
+            <div class="pbody" role="status">
+              <div class="big-ic" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 16 16"><path d="{{avia}}" fill="{{aviaf}}" stroke="{{avias}}" stroke-width="1"></path><path d="{{avib}}" fill="none" stroke="{{avibs}}" stroke-width="1.25" stroke-linecap="round"></path></svg>
+              </div>
+              <p class="ptitle">{{avTitle}}</p>
+              <p class="ptx">{{avBody}}</p>
+              <ul class="psteps">
+                <sc-for list="{{avSteps}}" as="s" hint-placeholder-count="2">
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#161616" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"></path></svg>
+                    {{s}}
+                  </li>
+                </sc-for>
+              </ul>
+              <span style="flex-grow: 1"></span>
+              <button class="pbtn pbtn-ghost" type="button" onClick="{{ phHome }}">Voltar ao início</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.preset('t1', false);
+  }
+
+  hm(m) { return '03:' + (m < 10 ? '0' + m : String(m)); }
+
+  ic(name) {
+    const I = {
+      dot: ['M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z', '#0f62fe', '#0f62fe', 'M8 8h0', 'none'],
+      clock: ['M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z', 'none', '#525252', 'M8 4.5V8l2.5 1.5', '#525252'],
+      warn: ['M8 1.8l6.6 11.7H1.4z', '#f1c21b', '#8e6a00', 'M8 6v3.5M8 11.2v0.3', '#161616'],
+      lock: ['M3.5 7.5h9v6.5h-9z', 'none', '#161616', 'M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2', '#161616'],
+      lockRed: ['M3.5 7.5h9v6.5h-9z', '#da1e28', '#da1e28', 'M5.5 7.5V5.5a2.5 2.5 0 0 1 5 0v2', '#da1e28'],
+      unlock: ['M3.5 7.5h9v6.5h-9z', 'none', '#161616', 'M5.5 7.5V5.5a2.5 2.5 0 0 1 4.9-0.7', '#161616'],
+      check: ['M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', '#24a148', '#24a148', 'M5 8.2l2 2 4-4.2', '#ffffff'],
+      checkLine: ['M8 8h0', 'none', 'none', 'M3 8.5l3 3 7-7', '#161616'],
+      send: ['M1.8 7.6l12.4-5.4-4.6 12-2.2-4.4z', 'none', '#0f62fe', 'M7.4 9.8l6.8-7.6', '#0f62fe'],
+      person: ['M8 2.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 1 0 0-5z', 'none', '#525252', 'M3 14c0.6-2.6 2.5-4 5-4s4.4 1.4 5 4', '#525252'],
+      bio: ['M4.5 12.5V8a3.5 3.5 0 0 1 7 0v1', 'none', '#0e6027', 'M8 8v6M11.5 11v2.5', '#0e6027'],
+      high: ['M8 1.5l6.5 6.5L8 14.5 1.5 8z', '#da1e28', '#da1e28', 'M8 4.8v3.6M8 10.8v0.4', '#ffffff'],
+      info: ['M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13z', '#0043ce', '#0043ce', 'M8 7v4.5M8 4.6v0.3', '#ffffff'],
+      shield: ['M8 1.5l5.5 2.3v3.9c0 3.4-2.3 6-5.5 7.3-3.2-1.3-5.5-3.9-5.5-7.3V3.8z', '#24a148', '#24a148', 'M5.4 8.1l1.8 1.8 3.5-3.6', '#ffffff']
+    };
+    const v = I[name];
+    return { ia: v[0], iaf: v[1], ias: v[2], ib: v[3], ibs: v[4] };
+  }
+
+  pre(p, name) {
+    const o = this.ic(name), r = {};
+    Object.keys(o).forEach(k => { r[p + k] = o[k]; });
+    return r;
+  }
+
+  avisos() {
+    return {
+      bloqueado: { icon: 'shield', title: 'Cartão bloqueado e protegido', body: 'Você não reconheceu a compra de R$ 2.349,90. Bloqueamos o cartão final 4821 e nada foi cobrado.', steps: ['Um cartão novo chega na sua casa em até 7 dias úteis.', 'Pix e débito continuam funcionando.', 'Não precisa ligar para ninguém.'], nTitle: 'Cartão final 4821 bloqueado', nBody: 'Nada foi cobrado. Toque para ver os próximos passos.' },
+      liberado: { icon: 'check', title: 'Compra liberada', body: 'Obrigado, Valdir. A compra de R$ 2.349,90 na Loja Exemplo Eletrônicos foi aprovada.', steps: ['Seu cartão continua funcionando normalmente.', 'Se mudar de ideia, fale com uma pessoa aqui no app.'], nTitle: 'Sua compra foi liberada', nBody: 'R$ 2.349,90 na Loja Exemplo Eletrônicos.' },
+      analise: { icon: 'info', title: 'Recebemos sua resposta', body: 'Por segurança, uma analista da cooperativa vai conferir esta compra antes de liberar. Ela segue pausada e nada foi cobrado.', steps: ['A resposta chega aqui no app em poucos minutos.', 'Ninguém da cooperativa vai pedir senha ou código por telefone.'], nTitle: 'Estamos conferindo sua compra', nBody: 'A compra segue pausada. Nada foi cobrado.' },
+      pessoa: { icon: 'info', title: 'Uma pessoa vai falar com você', body: 'Abrimos um atendimento aqui no app. A compra segue pausada e nada foi cobrado.', steps: ['A conversa aparece nesta tela.', 'Ninguém vai pedir senha ou código por telefone.'], nTitle: 'Atendimento aberto', nBody: 'Uma pessoa vai falar com você pelo app.' },
+      bloqAnalista: { icon: 'shield', title: 'Bloqueamos seu cartão por segurança', body: 'Vimos compras pela internet que não parecem suas. O cartão final 4821 está bloqueado e nada foi cobrado.', steps: ['Um cartão novo chega em até 7 dias úteis.', 'Foi você? Fale com uma pessoa aqui no app.'], nTitle: 'Bloqueamos seu cartão final 4821', nBody: 'Por segurança. Nada foi cobrado.' },
+      libAnalista: { icon: 'check', title: 'Compra liberada', body: 'Uma analista conferiu e liberou a compra de R$ 2.349,90 na Loja Exemplo Eletrônicos.', steps: ['Seu cartão continua funcionando normalmente.'], nTitle: 'Sua compra foi liberada', nBody: 'R$ 2.349,90 na Loja Exemplo Eletrônicos.' },
+      desbloq: { icon: 'info', title: 'Cartão desbloqueado', body: 'Uma analista revisou e desbloqueou o cartão final 4821. A compra de R$ 2.349,90 segue pausada até ela decidir.', steps: ['Você recebe a decisão aqui no app.', 'Ninguém vai pedir senha ou código por telefone.'], nTitle: 'Seu cartão foi desbloqueado', nBody: 'Uma analista está revisando a compra.' }
+    };
+  }
+
+  ev(m, kind, t, d, ai) { return { h: this.hm(m), kind: kind, t: t, d: d, ai: !!ai }; }
+
+  regraLib(autoLib, trocado) {
+    if (trocado) return 'Se ele confirmar, o caso volta para você (aparelho trocado há 2 dias).';
+    return autoLib ? 'Se ele confirmar com biometria, o Watson libera a compra.' : 'Se ele confirmar com biometria, o caso volta para você.';
+  }
+
+  evSend(m, autoLib, trocado) {
+    return this.ev(m, 'send', 'Aviso de compra enviado ao Valdir no app', 'Pedido pela Camila, texto do Watson. Se ele não reconhecer, o Watson bloqueia. ' + this.regraLib(autoLib, trocado), true);
+  }
+
+  notifAlerta(m) { return { k: 'alerta', av: '', title: 'Aviso de compra no seu cartão', body: 'R$ 2.349,90 na Loja Exemplo Eletrônicos. Foi você? Toque para responder.', h: this.hm(m) }; }
+
+  notifAviso(av, m) {
+    const A = this.avisos()[av];
+    return { k: 'aviso', av: av, title: A.nTitle, body: A.nBody, h: this.hm(m) };
+  }
+
+  preset(tarefa, trocado) {
+    const s = {
+      tarefa: tarefa, trocado: trocado, tela: 'fila', agentOpen: true, t: 16,
+      c: { st: 'novo', por: '', motivo: '' }, autoLib: true, eventos: [],
+      phone: 'lock', aviso: '', notifs: [], modal: '', toast: null, undo: null,
+      reenv: false, reenvT: '', desag: false, recDesc: false,
+      tip: '', dict: false, dictTerm: '', porque: false
+    };
+    if (tarefa !== 't1') {
+      s.tela = tarefa === 't2' ? 'quadro' : 'caso';
+      s.c = { st: 'aguard', por: '', motivo: '' };
+      s.eventos = [this.evSend(16, true, trocado)];
+      s.notifs = [this.notifAlerta(16)];
+      s.t = 17;
+    }
+    return s;
+  }
+
+  snap() {
+    const s = this.state;
+    return { c: s.c, eventos: s.eventos, phone: s.phone, aviso: s.aviso, notifs: s.notifs, t: s.t, reenv: s.reenv, reenvT: s.reenvT, desag: s.desag };
+  }
+
+  sentAt() {
+    const sends = (this.state.eventos || []).filter(e => e.kind === 'send');
+    return sends.length ? sends[0].h : this.hm(16);
+  }
+
+  go(tela) { this.setState({ tela: tela, modal: '', tip: '' }); }
+
+  glossario() {
+    return [
+      { k: 'alerta', term: 'Alerta', def: 'Transação que o modelo marcou como suspeita (score acima do limite). É gerado automaticamente, um por compra.', onde: 'fila, quadro (alertas agrupados) e cabeçalho do caso', quem: 'analista' },
+      { k: 'caso', term: 'Caso', def: 'Unidade de trabalho da analista. Junta os alertas do mesmo cartão e guarda investigação, contato com o associado, decisão e justificativa. Ex.: 3 compras em rajada = 3 alertas, 1 caso.', onde: 'cada linha da fila, cada cartão do quadro e a tela do caso', quem: 'analista' },
+      { k: 'score', term: 'Score de risco', def: 'Probabilidade estimada de fraude, de 0 a 1. Acima de 0,80 é alto risco.', onde: 'coluna Score da fila, cartões do quadro e cabeçalho do caso', quem: 'analista' },
+      { k: 'tempo', term: 'Tempo até a decisão', def: 'Tempo médio entre o caso entrar na fila e a analista registrar a decisão (bloquear, liberar ou escalar). Medido pelo Watson a partir do registro de eventos do caso. No MVP: medido em teste de usabilidade (tarefa T1).', onde: 'indicadores no topo da fila', quem: 'analista e gestão' },
+      { k: 'aguard', term: 'Aguardando associado', def: 'Enviamos um aviso de compra ao associado e esperamos a resposta no app.', onde: 'estado na fila, coluna do quadro e status do caso', quem: 'analista' },
+      { k: 'conf', term: 'Confiança do agente', def: 'Quanto o Watson confia na recomendação, com base na força e na concordância dos sinais. A decisão final é sempre da analista.', onde: 'recomendação do Watson no painel Pergunte ao Watson', quem: 'analista' },
+      { k: 'aviso', term: 'Aviso de compra', def: 'Mensagem no app pedindo ao associado que confirme uma compra diferente do costume. Nunca se chama "alerta" para o associado.', onde: 'app do associado e linha do tempo do caso', quem: 'associado' }
+    ];
+  }
+
+  tipList(id, k, right) {
+    const s = this.state || {};
+    const g = this.glossario().filter(x => x.k === k)[0];
+    const open = s.tip === id;
+    return [{
+      label: 'O que é ' + g.term + '?', exp: String(open), open: open, cls: right ? 'tt-p r' : 'tt-p',
+      term: g.term, text: g.def,
+      toggle: () => this.setState({ tip: open ? '' : id }),
+      dict: () => this.setState({ tip: '', dict: true, dictTerm: k })
+    }];
+  }
+
+  enviarAlerta() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    this.setState({
+      modal: '', c: { st: 'aguard', por: '', motivo: '' },
+      eventos: s.eventos.concat([this.evSend(m, s.autoLib, s.trocado)]),
+      notifs: [this.notifAlerta(m)].concat(s.notifs.filter(n => n.k !== 'alerta')),
+      phone: 'lock', aviso: '', t: m + 1, undo: undo,
+      toast: { kind: 'info', title: 'Aviso de compra enviado ao Valdir', sub: this.hm(m) + ' · o Watson acompanha a resposta e avisa você aqui.', act: 'undo' }
+    });
+  }
+
+  reenviar4821() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    this.setState({
+      eventos: s.eventos.concat([this.ev(m, 'send', 'Aviso de compra reenviado ao Valdir', 'Pedido pela Camila. As mesmas regras continuam valendo.', true)]),
+      notifs: [this.notifAlerta(m)].concat(s.notifs.filter(n => n.k !== 'alerta')),
+      phone: s.phone === 'alerta' || s.phone === 'bio' ? s.phone : 'lock', t: m + 1, undo: undo,
+      toast: { kind: 'info', title: 'Aviso de compra reenviado ao Valdir', sub: this.hm(m) + ' · a compra segue pausada.', act: 'undo' }
+    });
+  }
+
+  bloquear() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    const evs = [
+      this.ev(m, 'bloq', 'Cartão bloqueado pela analista', 'Camila, com justificativa para a auditoria. outras 4 compras retidas recusadas.', false),
+      this.ev(m, 'send', 'Watson avisou o Valdir no app', 'Aviso de bloqueio, sem pedir resposta.', true)
+    ];
+    this.setState({
+      modal: '', c: { st: 'bloq', por: 'analista', motivo: '' },
+      eventos: s.eventos.concat(evs),
+      notifs: [this.notifAviso('bloqAnalista', m)].concat(s.notifs.filter(n => n.k !== 'alerta')),
+      phone: 'lock', aviso: '', t: m + 1, undo: undo,
+      toast: { kind: 'ok', title: 'Cartão final 4821 bloqueado', sub: this.hm(m) + ' · o Watson avisou o Valdir no app.', act: 'undo' }
+    });
+  }
+
+  liberar() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    const evs = [
+      this.ev(m, 'lib', 'Compra liberada pela analista', 'Camila, com justificativa para a auditoria.', false),
+      this.ev(m, 'send', 'Watson avisou o Valdir no app', 'Aviso de compra liberada.', true)
+    ];
+    this.setState({
+      modal: '', c: { st: 'lib', por: 'analista', motivo: '' },
+      eventos: s.eventos.concat(evs),
+      notifs: [this.notifAviso('libAnalista', m)].concat(s.notifs.filter(n => n.k !== 'alerta')),
+      phone: 'lock', aviso: '', t: m + 1, undo: undo,
+      toast: { kind: 'ok', title: 'Compra de R$ 2.349,90 liberada', sub: this.hm(m) + ' · o Watson avisou o Valdir no app.', act: 'undo' }
+    });
+  }
+
+  reverterAgente() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    this.setState({
+      c: { st: 'volta', por: '', motivo: 'revertido' },
+      eventos: s.eventos.concat([
+        this.ev(m, 'unlock', 'Bloqueio do Watson revertido pela analista', 'Cartão desbloqueado. A compra segue pausada e o caso voltou para a Camila.', false),
+        this.ev(m, 'send', 'Watson avisou o Valdir no app', 'Aviso de desbloqueio.', true)
+      ]),
+      notifs: [this.notifAviso('desbloq', m)].concat(s.notifs.filter(n => n.k !== 'alerta')),
+      phone: 'lock', aviso: '', t: m + 1, undo: undo,
+      toast: { kind: 'info', title: 'Cartão final 4821 desbloqueado', sub: this.hm(m) + ' · o caso está com você. O Watson avisou o Valdir.', act: 'undo' }
+    });
+  }
+
+  naoReconheco() {
+    const s = this.state, m = s.t;
+    if (s.c.st !== 'aguard') return;
+    const sent = this.sentAt();
+    this.setState({
+      phone: 'aviso', aviso: 'bloqueado', notifs: s.notifs.filter(n => n.k !== 'alerta'),
+      c: { st: 'bloq', por: 'agente', motivo: '' },
+      eventos: s.eventos.concat([
+        this.ev(m, 'resp', 'Associado respondeu: "Não reconheço"', 'Valdir, no app, com um toque.', false),
+        this.ev(m, 'bloq', 'Cartão bloqueado pelo agente com confirmação da analista', 'O Watson agiu com a autorização da Camila das ' + sent + '. outras 4 compras retidas recusadas.', true)
+      ]),
+      undo: null,
+      toast: { kind: 'ok', title: 'Cartão final 4821 bloqueado pelo Watson', sub: this.hm(m) + ' · o Valdir não reconheceu a compra. Você autorizou às ' + sent + '.', act: 'caso' }
+    });
+  }
+
+  fuiEu() { if (this.state.c.st === 'aguard') this.setState({ phone: 'bio' }); }
+
+  bioOk() {
+    const s = this.state, m = s.t;
+    if (s.c.st !== 'aguard') return;
+    const sent = this.sentAt();
+    const evs = [
+      this.ev(m, 'resp', 'Associado respondeu: "Sim, fui eu"', 'Valdir, no app.', false),
+      this.ev(m, 'bio', 'Biometria confirmada no celular', 'Digital conferida pelo próprio aparelho.', false)
+    ];
+    const notifs = s.notifs.filter(n => n.k !== 'alerta');
+    if (s.trocado || !s.autoLib) {
+      evs.push(s.trocado
+        ? this.ev(m, 'warn', 'Watson não liberou sozinho: aparelho trocado há 2 dias', 'Troca recente de aparelho é sinal de troca de chip. O caso voltou para a Camila.', true)
+        : this.ev(m, 'warn', 'Caso devolvido para a analista', 'A Camila pediu para decidir a liberação.', true));
+      this.setState({
+        phone: 'aviso', aviso: 'analise', notifs: notifs,
+        c: { st: 'volta', por: '', motivo: s.trocado ? 'troca' : 'manual' },
+        eventos: s.eventos.concat(evs), undo: null,
+        toast: { kind: 'warn', title: 'Caso #4821 voltou para você', sub: s.trocado ? 'O Valdir disse "Sim, fui eu", mas o aparelho foi trocado há 2 dias. Confira antes de liberar.' : 'O Valdir confirmou com biometria. A liberação é sua.', act: 'caso' }
+      });
+    } else {
+      evs.push(this.ev(m, 'lib', 'Compra liberada pelo agente com confirmação da analista', 'O Watson agiu com a autorização da Camila das ' + sent + '.', true));
+      this.setState({
+        phone: 'aviso', aviso: 'liberado', notifs: notifs,
+        c: { st: 'lib', por: 'agente', motivo: '' },
+        eventos: s.eventos.concat(evs), undo: null,
+        toast: { kind: 'ok', title: 'Compra de R$ 2.349,90 liberada pelo Watson', sub: this.hm(m) + ' · o Valdir confirmou com biometria. Você autorizou às ' + sent + '.', act: 'caso' }
+      });
+    }
+  }
+
+  pessoa() {
+    const s = this.state, m = s.t;
+    if (s.c.st !== 'aguard') return;
+    this.setState({
+      phone: 'aviso', aviso: 'pessoa', notifs: s.notifs.filter(n => n.k !== 'alerta'),
+      c: { st: 'volta', por: '', motivo: 'pessoa' },
+      eventos: s.eventos.concat([
+        this.ev(m, 'resp', 'Associado pediu para falar com uma pessoa', 'Valdir, no app.', false),
+        this.ev(m, 'warn', 'Caso devolvido para a analista', 'O Watson abriu um atendimento no chat do app. A compra segue pausada.', true)
+      ]),
+      undo: null,
+      toast: { kind: 'warn', title: 'Caso #4821 voltou para você', sub: 'O Valdir pediu para falar com uma pessoa. A compra segue pausada.', act: 'caso' }
+    });
+  }
+
+  abrirNotif(n) {
+    const s = this.state;
+    if (n.k === 'alerta') {
+      if (s.c.st === 'aguard') this.setState({ phone: 'alerta' });
+      return;
+    }
+    this.setState({ phone: 'aviso', aviso: n.av, notifs: s.notifs.filter(x => x !== n) });
+  }
+
+  reenviarQuadro() {
+    const s = this.state, m = s.t;
+    const undo = this.snap();
+    this.setState({ reenv: true, reenvT: this.hm(m), t: m + 1, undo: undo,
+      toast: { kind: 'ok', title: 'Aviso de compra reenviado a 4 associados', sub: this.hm(m) + ' · #4774, #4860, #4790 e #4812. As compras seguem pausadas.', act: 'undo' } });
+  }
+
+  desagrupar() {
+    const undo = this.snap();
+    this.setState({ desag: true, undo: undo,
+      toast: { kind: 'info', title: '3 alertas separados em 3 casos', sub: '#5107, #5108 e #5109 voltaram para a etapa Novo.', act: 'undo' } });
+  }
+
+  renderVals() {
+    const s = this.state || this.preset('t1', false);
+    const st = s.c.st, por = s.c.por, motivo = s.c.motivo;
+    const agora = this.hm(s.t);
+    const sent = this.sentAt();
+    const self = this;
+    const resolvido = st === 'bloq' || st === 'lib';
+    const porTxt = por === 'agente' ? 'Watson' : 'você';
+
+    const RISK = {
+      alto: { rcls: 'tag tag-red', rt: 'Alto', bar: '#da1e28', ic: 'high' },
+      medio: { rcls: 'tag tag-warm', rt: 'Médio', bar: '#f1c21b', ic: 'warn' },
+      baixo: { rcls: 'tag tag-green', rt: 'Baixo', bar: '#24a148', ic: 'check' }
+    };
+    const riskOf = (k) => Object.assign({ rcls: RISK[k].rcls, rt: RISK[k].rt, bar: RISK[k].bar }, this.pre('r', RISK[k].ic));
+
+    const ST = {
+      novo: { est: 'Novo', ic: 'dot', tag: 'tag tag-blue', tagT: 'Novo · com você' },
+      aguard: { est: 'Aguardando associado · aviso ' + sent, ic: 'clock', tag: 'tag tag-cool', tagT: 'Aguardando o Valdir desde ' + sent },
+      volta: { est: 'Voltou para você', ic: 'warn', tag: 'tag tag-warm', tagT: 'Voltou para você' },
+      bloq: { est: 'Bloqueado · ' + porTxt, ic: 'lock', tag: 'tag tag-gray', tagT: 'Resolvido · cartão bloqueado' },
+      lib: { est: 'Liberado · ' + porTxt, ic: 'check', tag: 'tag tag-green', tagT: 'Resolvido · compra liberada' }
+    };
+    const cur = ST[st];
+    const openCaso = () => this.go('caso');
+
+    // ---------- Fila ----------
+    const late = s.reenv ? { est: 'Aviso reenviado às ' + s.reenvT, ic: 'send' } : { est: 'Aguardando associado', ic: 'clock' };
+    const row = (id, assoc, valor, estab, canal, score, r, est, eic, fila, extra) => Object.assign(
+      { id: id, assoc: assoc, valor: valor, estab: estab, canal: canal, score: score, est: est, fila: fila, late: false, grp: false, link: false, noLink: true, cls: '', open: openCaso },
+      riskOf(r), this.pre('e', eic), extra || {});
+    const rows = [row('#4821', 'Valdir B.', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos', 'Online', '0,92', 'alto', cur.est, cur.ic, '2 min', { link: true, noLink: false, cls: 'sel' })];
+    if (s.desag) {
+      rows.push(row('#5107', 'Rosa M.', 'R$ 1.190,00', 'Loja Exemplo Games', 'Online', '0,89', 'alto', 'Novo', 'dot', '3 min'));
+      rows.push(row('#5108', 'Rosa M.', 'R$ 640,00', 'Loja Exemplo Games', 'Online', '0,86', 'alto', 'Novo', 'dot', '3 min'));
+      rows.push(row('#5109', 'Rosa M.', 'R$ 150,00', 'Streaming Demo', 'Online', '0,41', 'baixo', 'Novo', 'dot', '3 min'));
+    } else {
+      rows.push(row('#5107', 'Rosa M.', 'R$ 1.980,00', 'Loja Exemplo Games e mais 2', 'Online', '0,89', 'alto', 'Novo', 'dot', '3 min', { grp: true }));
+    }
+    rows.push(row('#4835', 'Joana P.', 'R$ 2.450,00', 'Agropecuária Modelo', 'Presencial', '0,81', 'alto', 'Novo', 'dot', '9 min'));
+    rows.push(row('#4774', 'Rita S.', 'R$ 1.540,00', 'Loja Exemplo Celulares', 'Online', '0,79', 'alto', late.est, late.ic, '31 min', { late: !s.reenv }));
+    rows.push(row('#4842', 'Caio R.', 'R$ 389,90', 'Viagens Fictícias', 'Online', '0,78', 'alto', 'Novo', 'dot', '12 min'));
+    rows.push(row('#4790', 'Ivo T.', 'R$ 860,00', 'Farmácia Modelo', 'Online', '0,76', 'alto', late.est, late.ic, '24 min', { late: !s.reenv }));
+    rows.push(row('#4812', 'Pedro A.', 'R$ 3.200,00', 'Máquinas Exemplo', 'Online', '0,68', 'medio', late.est, late.ic, '22 min', { late: !s.reenv }));
+    rows.push(row('#4860', 'Sônia L.', 'R$ 45,00', 'Streaming Demo', 'Online', '0,61', 'medio', late.est, late.ic, '27 min', { late: !s.reenv }));
+    rows.push(row('#4799', 'Lúcia F.', 'R$ 5.400,00', 'Concessionária Fictícia', 'Presencial', '0,83', 'alto', 'Em análise · Camila', 'person', '11 min'));
+    rows.push(row('#4808', 'Nilo G.', 'R$ 610,00', 'Loja Teste Online', 'Online', '0,64', 'medio', 'Em análise · Bruna', 'person', '33 min'));
+
+    const abertos = 128 + (s.desag ? 2 : 0) - (resolvido ? 1 : 0);
+    const kpi = (l, v, n, ic) => Object.assign({ l: l, v: v, n: n }, this.ic(ic));
+    const kpis = [
+      kpi('Alertas abertos', String(abertos), '14 a mais na última hora', 'clock'),
+      kpi('Risco alto', '23', '9 de cartão não presente', 'high'),
+      kpi('Aguardando associado', String(7 + (st === 'aguard' ? 1 : 0)), s.reenv ? 'Aviso reenviado a 4 às ' + s.reenvT : '4 sem resposta há mais de 20 min', s.reenv ? 'send' : 'warn'),
+      kpi('Resolvidos pelo Watson com o associado', String(12 + (resolvido && por === 'agente' ? 1 : 0)), 'Hoje, com a sua autorização', 'check')
+    ];
+
+    // ---------- Quadro ----------
+    const card = (id, valor, loja, score, r, s1, s2, est, eic, extra) => Object.assign(
+      { id: id, valor: valor, loja: loja, score: score, s1: s1, s2: s2, est: est, cls: 'kc', aria: 'Caso ' + id.replace('#', ''), link: false, noLink: true, open: openCaso },
+      riskOf(r), this.pre('e', eic), extra || {});
+    const c4821 = (est, eic) => card('#4821', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos · online', '0,92', 'alto', 'Rajada: 5 em 7 min', 'Longe de casa', est, eic, { cls: 'kc cur', aria: 'Caso 4821, ' + cur.est, link: true, noLink: false });
+    const novoTop = st === 'novo' ? [c4821('2 min na fila', 'clock')] : [];
+    const novoRest = [];
+    if (s.desag) {
+      novoRest.push(card('#5107', 'R$ 1.190,00', 'Loja Exemplo Games · online', '0,89', 'alto', 'Rajada', 'Longe de casa', '3 min na fila', 'clock'));
+      novoRest.push(card('#5108', 'R$ 640,00', 'Loja Exemplo Games · online', '0,86', 'alto', 'Rajada', 'Não presente', '3 min na fila', 'clock'));
+      novoRest.push(card('#5109', 'R$ 150,00', 'Streaming Demo · assinatura', '0,41', 'baixo', 'Recorrente', 'Mensal', '3 min na fila', 'clock'));
+    }
+    novoRest.push(card('#4835', 'R$ 2.450,00', 'Agropecuária Modelo · presencial', '0,81', 'alto', 'Valor alto', 'Horário atípico', '9 min na fila', 'clock'));
+    novoRest.push(card('#4842', 'R$ 389,90', 'Viagens Fictícias · online', '0,78', 'alto', 'Dispositivo novo', 'Não presente', '12 min na fila', 'clock'));
+    const lateCard = (id, valor, loja, score, r, s1, s2, min) => card(id, valor, loja, score, r, s1, s2, s.reenv ? 'Reenviado às ' + s.reenvT : 'Sem resposta há ' + min, s.reenv ? 'send' : 'warn');
+    const aguardList = [];
+    if (st === 'aguard') aguardList.push(c4821('Aviso enviado às ' + sent + ' · o Watson acompanha', 'send'));
+    aguardList.push(lateCard('#4774', 'R$ 1.540,00', 'Loja Exemplo Celulares · online', '0,79', 'alto', 'Longe de casa', 'Horário atípico', '31 min'));
+    aguardList.push(lateCard('#4860', 'R$ 45,00', 'Streaming Demo · online', '0,61', 'medio', 'Não presente', 'Dispositivo novo', '27 min'));
+    aguardList.push(lateCard('#4790', 'R$ 860,00', 'Farmácia Modelo · online', '0,76', 'alto', 'Horário atípico', 'Longe de casa', '24 min'));
+    aguardList.push(lateCard('#4812', 'R$ 3.200,00', 'Máquinas Exemplo · online', '0,68', 'medio', 'Valor alto', 'Loja nova', '22 min'));
+    const voltaCurto = { troca: 'aparelho trocado', pessoa: 'pediu uma pessoa', manual: 'liberação com você', revertido: 'bloqueio revertido' };
+    const analiseList = [];
+    if (st === 'volta') analiseList.push(c4821('Voltou para você · ' + (voltaCurto[motivo] || ''), 'warn'));
+    analiseList.push(card('#4799', 'R$ 5.400,00', 'Concessionária Fictícia · presencial', '0,83', 'alto', 'Valor alto', 'Longe de casa', 'Camila · 11 min', 'person'));
+    analiseList.push(card('#4808', 'R$ 610,00', 'Loja Teste Online · online', '0,64', 'medio', 'Rajada', 'Não presente', 'Bruna · 33 min', 'person'));
+    const res = (id, valor, loja, desfecho, ic, quem, hora, extra) => Object.assign({ id: id, valor: valor, loja: loja, desfecho: desfecho, quem: quem, hora: hora, cls: 'kc', aria: 'Caso ' + id.replace('#', '') + ', ' + desfecho, link: false, noLink: true, open: openCaso }, this.pre('e', ic), extra || {});
+    const resolvList = [];
+    if (resolvido) {
+      const quem = st === 'bloq'
+        ? (por === 'agente' ? 'Watson · Valdir negou no app' : 'Camila bloqueou')
+        : (por === 'agente' ? 'Watson · Valdir confirmou com biometria' : 'Camila liberou');
+      const evLast = s.eventos.length ? s.eventos[s.eventos.length - 1].h : agora;
+      resolvList.push(res('#4821', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos', st === 'bloq' ? 'Bloqueado' : 'Liberado', st === 'bloq' ? 'lock' : 'checkLine', quem, evLast, { cls: 'kc cur', link: true, noLink: false }));
+    }
+    resolvList.push(res('#4753', 'R$ 1.249,90', 'Eletro Demo Online', 'Bloqueado', 'lock', 'Watson · associado negou no app', '02:42'));
+    resolvList.push(res('#4748', 'R$ 230,00', 'Mercado Modelo', 'Liberado', 'checkLine', 'Watson · associado confirmou', '02:15'));
+    resolvList.push(res('#4731', 'R$ 980,00', 'Agropecuária Exemplo', 'Liberado', 'checkLine', 'Camila liberou', '01:50'));
+    const colWic = s.reenv ? 'send' : 'warn';
+
+    // ---------- Caso ----------
+    const just = 'Rajada de 5 tentativas online em 7 min a partir das 03:14, a 760 km da última compra presencial, em Chapecó (SC). Valor 6 vezes acima da média online do associado, em navegador nunca visto.' + (s.trocado ? ' Aparelho do app trocado há 2 dias.' : '');
+    const evIc = { base: 'high', send: 'send', resp: 'person', bio: 'bio', bloq: 'lockRed', lib: 'check', warn: 'warn', unlock: 'unlock' };
+    const allEv = [{ h: '03:14', kind: 'base', t: 'Compra retida pelo motor de risco', d: 'Score 0,92, acima do limite de 0,85. Caso aberto na fila da Camila.', ai: false }].concat(s.eventos);
+    const eventosView = allEv.map((e, i) => Object.assign({ h: e.h, t: e.t, d: e.d, ai: e.ai, cls: i > 0 && i === allEv.length - 1 ? 'ev new' : 'ev' }, this.ic(evIc[e.kind])));
+
+    let sn = null;
+    if (st === 'aguard') sn = { cls: 'ntf', ic: 'info', title: 'Aguardando o Valdir desde ' + sent, text: 'A compra segue pausada. Se ele não reconhecer, o Watson bloqueia. ' + this.regraLib(s.autoLib, s.trocado) + ' Sem resposta em 20 min, o caso volta para você.' };
+    if (st === 'volta') {
+      const T = {
+        troca: ['Voltou para você: aparelho trocado há 2 dias', 'O Valdir tocou "Sim, fui eu" e passou na biometria, mas o aparelho foi trocado há 2 dias. O Watson não liberou sozinho. Confira com ele por outro canal antes de liberar.'],
+        pessoa: ['Voltou para você: o Valdir pediu uma pessoa', 'O Watson abriu um atendimento no chat do app. A compra segue pausada.'],
+        manual: ['Voltou para você: o Valdir confirmou', 'Ele tocou "Sim, fui eu" e passou na biometria. Você pediu para decidir a liberação.'],
+        revertido: ['Voltou para você: bloqueio revertido', 'Você desbloqueou o cartão. A compra segue pausada até a sua decisão.']
+      }[motivo] || ['Voltou para você', ''];
+      sn = { cls: 'ntf warn', ic: 'warn', title: T[0], text: T[1] };
+    }
+    if (st === 'bloq') sn = { cls: 'ntf ok', ic: 'check', title: 'Caso resolvido · cartão bloqueado', text: por === 'agente' ? 'Pelo Watson, com a sua autorização das ' + sent + ', depois que o Valdir tocou "Não reconheço". Ele já vê no app que o cartão está protegido.' : 'Por você. O Watson avisou o Valdir no app, sem pedir resposta.' };
+    if (st === 'lib') sn = { cls: 'ntf ok', ic: 'check', title: 'Caso resolvido · compra liberada', text: por === 'agente' ? 'Pelo Watson, com a sua autorização das ' + sent + ', depois da biometria do Valdir.' : 'Por você. O Watson avisou o Valdir no app.' };
+    const snIc = sn ? sn.ic : 'info';
+
+    const decTxt = {
+      novo: 'O Watson recomenda; quem decide é você',
+      aguard: 'O Watson acompanha a resposta do Valdir',
+      volta: 'A decisão é sua',
+      bloq: 'Caso encerrado',
+      lib: 'Caso encerrado'
+    }[st];
+
+    const fatores = [
+      { n: '1', t: 'Rajada: 5 tentativas em 7 minutos', d: 'Ele faz, em média, 1 compra por dia', w: '92%', p: '+0,31' },
+      { n: '2', t: 'Longe de casa: 760 km da última compra', d: 'Comprou presencialmente em Chapecó (SC) há 9 h', w: '78%', p: '+0,24' },
+      { n: '3', t: 'Valor 6 vezes acima da média online', d: 'Média de compras online: R$ 380,00', w: '64%', p: '+0,17' },
+      { n: '4', t: 'Horário atípico: 03:14', d: 'Nenhuma compra de madrugada em 12 meses', w: '40%', p: '+0,11' },
+      { n: '5', t: 'Navegador nunca visto', d: 'Primeiro uso deste dispositivo no cartão', w: '28%', p: '+0,06' }
+    ];
+    const perfil = [
+      { k: 'Associado', v: 'Valdir B. (fictício), desde 2006' },
+      { k: 'Mora em', v: 'Chapecó (SC)' },
+      { k: 'Compras online', v: '2 em 2026 · média R$ 380,00' },
+      { k: 'Contato preferido', v: 'Aviso de compra no app · responde em ~2 min' },
+      { k: 'Últimos avisos de compra', v: 'Respondeu 3 de 3' },
+      { k: 'Aparelho do app', v: s.trocado ? 'Trocado há 2 dias' : 'O mesmo desde 2023' }
+    ];
+
+    // ---------- Watson: coordenação ----------
+    let co = null;
+    if (st === 'aguard') co = { when: sent, title: 'Aguardando o Valdir (#4821)', text: 'Enviei o aviso de compra ao app às ' + sent + '. Se ele tocar "Não reconheço", bloqueio o cartão na hora. ' + this.regraLib(s.autoLib, s.trocado), status: 'Ele costuma responder em ~2 min. Sem resposta em 20 min, devolvo o caso para você.', ic: 'clock' };
+    if (st === 'bloq' && por === 'agente') co = { when: agora, title: 'Bloqueei o cartão final 4821', text: 'O Valdir tocou "Não reconheço" às ' + agora + '. Bloqueei como você autorizou às ' + sent + ' e recusei as outras 4 compras retidas. Ele já vê no app que o cartão está protegido.', status: 'Feito com a sua autorização. Está na linha do tempo do caso.', ic: 'check', rev: true };
+    if (st === 'lib' && por === 'agente') co = { when: agora, title: 'Liberei a compra do #4821', text: 'O Valdir tocou "Sim, fui eu" e confirmou com a digital às ' + agora + '. Liberei os R$ 2.349,90 como você autorizou às ' + sent + '.', status: 'Feito com a sua autorização. Está na linha do tempo do caso.', ic: 'check' };
+    if (st === 'volta') {
+      const V = {
+        troca: ['Não liberei o #4821: precisa de você', 'O Valdir tocou "Sim, fui eu" e passou na biometria, mas o aparelho dele foi trocado há 2 dias. É o padrão de troca de chip, então não liberei sozinho. Sugiro confirmar pelo telefone fixo do cadastro antes de liberar.'],
+        pessoa: ['O Valdir pediu para falar com uma pessoa', 'Abri um atendimento no chat do app e devolvi o #4821 para você. A compra segue pausada.'],
+        manual: ['O Valdir confirmou o #4821', 'Ele passou na biometria. Como você pediu, a liberação ficou com você.'],
+        revertido: ['Desbloqueei o cartão final 4821', 'Você reverteu o meu bloqueio. Avisei o Valdir no app e o caso está com você.']
+      }[motivo] || ['O #4821 voltou para você', ''];
+      co = { when: agora, title: V[0], text: V[1], status: 'Caso devolvido para você às ' + agora + '.', ic: 'warn' };
+    }
+    if ((st === 'bloq' || st === 'lib') && por === 'analista') co = { when: agora, title: 'Avisei o Valdir no app', text: st === 'bloq' ? 'Você bloqueou o cartão final 4821. Mandei o aviso ao Valdir, sem pedir resposta. Ele pode pedir um cartão novo pelo app.' : 'Você liberou a compra do #4821. Mandei o aviso ao Valdir.', status: 'Registrado na linha do tempo do caso.', ic: 'check' };
+    const coIc = co ? co.ic : 'info';
+
+    // ---------- Recomendação no caso ----------
+    const recWhy = s.trocado
+      ? ['Os fatores 1 a 3 somam +0,72 no score.', 'O aparelho do app foi trocado há 2 dias: um "Sim, fui eu" sozinho não basta.', 'O que eu não sei: se foi o Valdir que trocou de celular.']
+      : ['Os fatores 1 a 3 somam +0,72 no score.', 'O Valdir respondeu os 3 últimos avisos de compra em cerca de 2 min.', 'O que eu não sei: se ele emprestou o cartão. Só ele pode dizer.'];
+    const recTitle = s.trocado ? 'Perguntar ao Valdir, mas decidir você se ele confirmar' : 'Perguntar ao Valdir no app; se ele não reconhecer, eu bloqueio na hora';
+    const recFeitaTxt = st === 'novo' ? '' : (s.eventos.some(e => e.kind === 'send' && e.t.indexOf('enviado') >= 0) ? 'Aceita por você às ' + sent : 'Você decidiu sem perguntar ao associado');
+
+    // ---------- Celular ----------
+    const A = s.aviso ? this.avisos()[s.aviso] : this.avisos().analise;
+    const alertaN = s.notifs.filter(n => n.k === 'alerta');
+    const notifs = s.notifs.map(n => Object.assign({}, n, { open: () => this.abrirNotif(n) }));
+
+    // ---------- Contexto do Watson ----------
+    const CTX = {
+      fila: ['Fila de casos', 'Leio os casos abertos, os filtros ativos e o que o Valdir e outros associados respondem no app.', 'Pergunte sobre a fila', ['Quais casos passam do prazo em 10 min?', 'Mostre só rajadas', 'Resuma o meu turno']],
+      caso: ['Caso #4821', 'Leio os fatores do score, o perfil do associado e cada resposta dele no app. Não consulto nada fora deste caso sem você pedir.', 'Pergunte sobre este caso', ['Por que 0,92?', 'O que muda se ele confirmar?', 'Compare com o histórico']],
+      quadro: ['Quadro do processo', 'Leio as 4 etapas, quem está com cada caso e quem ainda não respondeu no app. Procuro gargalos e agrupamentos.', 'Pergunte sobre o quadro', ['Onde o prazo vai estourar primeiro?', 'Por que agrupou o #5107?', 'Previsão para o fim do turno']]
+    }[s.tela];
+
+    const toast = s.toast;
+    const toastIc = toast ? ({ ok: 'check', warn: 'warn', info: 'info' }[toast.kind]) : 'info';
+    const hints = {
+      t1: 'T1 · Camila: na fila, abra o caso de maior risco, entenda por que é suspeito e bloqueie o cartão com justificativa. O celular do Valdir mostra o aviso que o Watson manda.',
+      t2: 'T2 · Camila: no quadro, veja os casos que aguardam o associado e reenvie o aviso de compra, ou desfaça o agrupamento errado do #5107. O #4821 já está com o Valdir.',
+      t3: 'T3 · Valdir: no celular, abra a notificação e responda. "Não reconheço" bloqueia em um toque; "Sim, fui eu" pede a digital. Veja o console mudar ao mesmo tempo.'
+    };
+
+    const k2 = this.pre('k2', s.reenv ? 'send' : 'warn');
+    return Object.assign({
+      // dicas e dicionário
+      tipFCaso: this.tipList('f-caso', 'caso'), tipFAg: this.tipList('f-ag', 'aguard'), tipFTempo: this.tipList('f-tempo', 'tempo'),
+      tipFAlerta: this.tipList('f-alerta', 'alerta'), tipFScore: this.tipList('f-score', 'score'),
+      tipCCaso: this.tipList('c-caso', 'caso'), tipCAlerta: this.tipList('c-alerta', 'alerta'), tipCScore: this.tipList('c-score', 'score', true),
+      tipCAg: this.tipList('c-ag', 'aguard'), tipCConf: this.tipList('c-conf', 'conf', true),
+      tipQCaso: this.tipList('q-caso', 'caso'), tipQScore: this.tipList('q-score', 'score'), tipQAlerta: this.tipList('q-alerta', 'alerta'), tipQAg: this.tipList('q-ag', 'aguard'),
+      snAg: st === 'aguard',
+      dictOpen: s.dict, dictExp: String(s.dict), dictBtnCls: s.dict ? 'hdr-act on' : 'hdr-act',
+      toggleDict: () => this.setState({ dict: !s.dict, dictTerm: s.dict ? '' : s.dictTerm, tip: '' }),
+      closeDict: () => this.setState({ dict: false, dictTerm: '' }),
+      dictList: this.glossario().map(g => Object.assign({}, g, { cls: g.k === s.dictTerm ? 'dict-i on' : 'dict-i' })),
+      k1n: '14 a mais na última hora', k2v: String(7 + (st === 'aguard' ? 1 : 0)),
+      k2n: s.reenv ? 'Aviso reenviado a 4 às ' + s.reenvT : '4 sem resposta há mais de 20 min',
+      k4v: String(12 + (resolvido && por === 'agente' ? 1 : 0)),
+      porque: !!s.porque, porqueExp: String(!!s.porque), togglePorque: () => this.setState({ porque: !s.porque }),
+
+      // faixa do protótipo
+      t1Cls: s.tarefa === 't1' ? 'on' : '', t2Cls: s.tarefa === 't2' ? 'on' : '', t3Cls: s.tarefa === 't3' ? 'on' : '',
+      t1On: String(s.tarefa === 't1'), t2On: String(s.tarefa === 't2'), t3On: String(s.tarefa === 't3'),
+      trocAria: String(s.trocado), swCls: s.trocado ? 'sw-t on' : 'sw-t',
+      hint: hints[s.tarefa] + (s.trocado ? ' Cenário ligado: aparelho trocado há 2 dias (trocar o cenário reinicia a tarefa).' : ''),
+      setT1: () => this.setState(this.preset('t1', s.trocado)),
+      setT2: () => this.setState(this.preset('t2', s.trocado)),
+      setT3: () => this.setState(this.preset('t3', s.trocado)),
+      reiniciar: () => this.setState(this.preset(s.tarefa, s.trocado)),
+      toggleTroc: () => this.setState(this.preset(s.tarefa, !s.trocado)),
+
+      // navegação
+      agora: agora,
+      isFila: s.tela === 'fila', isCaso: s.tela === 'caso', isQuadro: s.tela === 'quadro',
+      goFila: () => this.go('fila'), goQuadro: () => this.go('quadro'), goCaso: openCaso,
+      agentOpen: s.agentOpen, agentClosed: !s.agentOpen,
+      toggleAgent: () => this.setState({ agentOpen: !s.agentOpen }),
+
+      // fila
+      abertos: String(abertos), kpis: kpis, rows: rows,
+      rank: [
+        { n: '1', id: '#4821', v: 'R$ 2.349,90', d: 'Rajada de 5 tentativas em 7 min, longe de casa' },
+        { n: '2', id: '#5107', v: 'R$ 1.980,00', d: '3 alertas do mesmo cartão, agrupados' },
+        { n: '3', id: '#4774', v: 'R$ 1.540,00', d: 'Associado sem resposta há 31 min' }
+      ],
+
+      // quadro
+      qResumo: (st === 'aguard' ? 'o #4821 está com o Valdir desde ' + sent + '; eu acompanho a resposta. ' : '') + '4 associados estão sem resposta há mais de 20 min. ' + (s.desag ? 'Você separou o #5107 em 3 casos.' : 'Agrupei 3 alertas do cartão final 4417 no #5107.'),
+      novoTop: novoTop, novoRest: novoRest, grpShow: !s.desag, desagShow: s.desag,
+      novoCount: String(novoTop.length + novoRest.length + (s.desag ? 0 : 1) + 8),
+      aguardList: aguardList, aguardCount: String(aguardList.length + 3),
+      colW: s.reenv ? 'Aviso reenviado a 4 associados às ' + s.reenvT : '4 sem resposta há mais de 20 min',
+      reenvBtn: !s.reenv, reenvDone: s.reenv, reenvTxt: 'Reenviado por você às ' + s.reenvT + '. Aviso aqui quando responderem.',
+      analiseList: analiseList, analiseCount: String(analiseList.length),
+      resolvList: resolvList, resolvCount: String(31 + (resolvido ? 1 : 0)),
+      reenviarQuadro: () => this.reenviarQuadro(), desagrupar: () => this.desagrupar(),
+      reagrupar: () => this.setState({ desag: false, undo: null, toast: { kind: 'info', title: '3 alertas reagrupados no caso #5107', sub: 'O agrupamento do Watson voltou.', act: '' } }),
+
+      // caso
+      trocado: s.trocado, naoTrocado: !s.trocado,
+      caseTagCls: cur.tag, caseTagT: cur.tagT,
+      meta: [
+        { k: 'Horário', v: 'Hoje, 03:14' },
+        { k: 'Onde', v: 'São Paulo (SP), online' },
+        { k: 'Costuma comprar', v: 'Chapecó (SC)' },
+        { k: 'Dispositivo da compra', v: 'Navegador nunca visto' }
+      ],
+      snShow: !!sn, snCls: sn ? sn.cls : 'ntf', snTitle: sn ? sn.title : '', snText: sn ? sn.text : '',
+      decTxt: decTxt,
+      actNovo: st === 'novo', actAguard: st === 'aguard', actVolta: st === 'volta', actFim: resolvido, actFimRev: st === 'bloq' && por === 'agente',
+      just: just, eventosView: eventosView, fatores: fatores, perfil: perfil,
+      bloqExtra: st === 'aguard' ? 'O aviso de compra enviado às ' + sent + ' deixa de valer.' : '',
+      openPerg: () => this.setState({ modal: 'perg' }), openBloq: () => this.setState({ modal: 'bloq' }),
+      closeModal: () => this.setState({ modal: '' }),
+      mPerg: s.modal === 'perg', mBloq: s.modal === 'bloq',
+      autoLibAria: String(s.autoLib), cbCls: s.autoLib ? 'cb on' : 'cb',
+      libRegra: s.trocado ? 'Pede a digital do celular, mas o caso volta para você: o Watson não libera sozinho com aparelho trocado.' : (s.autoLib ? 'Pede a digital do celular e, se ela confirmar, o Watson libera a compra.' : 'Pede a digital do celular e devolve o caso para você liberar.'),
+      toggleAutoLib: () => this.setState({ autoLib: !s.autoLib }),
+      enviarAlerta: () => this.enviarAlerta(), reenviar4821: () => this.reenviar4821(),
+      bloquear: () => this.bloquear(), liberar: () => this.liberar(), reverterAgente: () => this.reverterAgente(),
+
+      // Watson
+      ctxTela: CTX[0], ctxDesc: CTX[1], askPh: CTX[2], chips: CTX[3],
+      coordShow: !!co, coordWhen: co ? co.when : '', coordTitle: co ? co.title : '', coordText: co ? co.text : '', coordStatus: co ? co.status : '',
+      coordBtnCaso: !!co && s.tela !== 'caso', coordRev: !!(co && co.rev),
+      recShow: !s.recDesc, recDescShow: s.recDesc, recNovo: st === 'novo', recFeita: st !== 'novo',
+      recTitle: recTitle, recWhy: recWhy, recFeitaTxt: recFeitaTxt,
+      descartarRec: () => this.setState({ recDesc: true }), reverterRec: () => this.setState({ recDesc: false }),
+
+      // toast
+      toastOn: !!toast, toastCls: toast ? (toast.kind === 'info' ? 'toast' : 'toast ' + toast.kind) : 'toast',
+      toastTitle: toast ? toast.title : '', toastSub: toast ? toast.sub : '',
+      toastUndo: !!(toast && toast.act === 'undo' && s.undo), toastCaso: !!(toast && toast.act === 'caso' && s.tela !== 'caso'),
+      desfazer: () => this.setState(Object.assign({}, this.state.undo || {}, { undo: null, toast: null })),
+      closeToast: () => this.setState({ toast: null }),
+      toastVerCaso: () => this.setState({ tela: 'caso', toast: null, modal: '', tip: '' }),
+
+      // celular
+      phLock: s.phone === 'lock', phAlerta: s.phone === 'alerta', phBio: s.phone === 'bio', phAviso: s.phone === 'aviso',
+      notifs: notifs, notifsEmpty: notifs.length === 0,
+      alertaH: alertaN.length ? alertaN[0].h : sent,
+      det: [
+        { k: 'Valor', v: 'R$ 2.349,90', cls: 'big' },
+        { k: 'Loja', v: 'Loja Exemplo Eletrônicos (internet)', cls: '' },
+        { k: 'Cidade', v: 'São Paulo (SP)', cls: '' },
+        { k: 'Horário', v: 'Hoje, 03:14', cls: '' }
+      ],
+      avTitle: A.title, avBody: A.body, avSteps: A.steps,
+      phHome: () => this.setState({ phone: 'lock' }),
+      fuiEu: () => this.fuiEu(), naoReconheco: () => this.naoReconheco(), pessoa: () => this.pessoa(),
+      bioOk: () => this.bioOk(), bioCancel: () => this.setState({ phone: 'alerta' })
+    },
+    k2, this.pre('st', cur.ic), this.pre('sn', snIc), this.pre('ck', coIc), this.pre('cw', colWic), this.pre('tk', toastIc), this.pre('av', A.icon));
+  }
+}
+</script>
+</body>
+</html>

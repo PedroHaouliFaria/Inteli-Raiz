@@ -29,7 +29,7 @@
 | Alvo | `feedback_label` (fraude confirmada) |
 | Fraudes | **146 (0,09%)**, ou seja, menos de 1 a cada 1.000 transações |
 
-> ⚠️ **Limitação:** as orientações do case descrevem 900 mil linhas e 900 fraudes. O arquivo disponível tem 160 mil, e todas as conclusões abaixo valem para esse recorte. Ao obter a base completa, basta rodar os notebooks novamente.
+> **Limitação:** as orientações do case descrevem 900 mil linhas e 900 fraudes. O arquivo disponível tem 160 mil, e todas as conclusões abaixo valem para esse recorte. Ao obter a base completa, basta rodar os notebooks novamente.
 
 **Objetivo da EDA.** Não era só "olhar os dados". Queríamos responder três perguntas:
 1. **O que diferencia uma fraude de uma compra legítima?** São os insights para o modelo e para o agente explicar o risco.
@@ -119,7 +119,7 @@ O gráfico acima mede o quanto cada variável, **sozinha**, separa fraude de leg
 
 **Decisão:** não usamos esses scores como feature, porque o modelo só copiaria um modelo existente. Eles viram o **baseline**: a régua contra a qual vamos comparar a nossa solução.
 
-> 💡 **Insight principal da etapa:** *detectar* a fraude já é um problema quase resolvido nesta base. **O diferencial está no que acontece depois do alerta:** explicar o motivo, falar com o associado e decidir entre bloquear, pedir confirmação ou liberar. É aí que entra a IA agêntica.
+> **Insight principal da etapa:** *detectar* a fraude já é um problema quase resolvido nesta base. **O diferencial está no que acontece depois do alerta:** explicar o motivo, falar com o associado e decidir entre bloquear, pedir confirmação ou liberar. É aí que entra a IA agêntica.
 
 ---
 

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Wireframe C · Quadro de risco</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#393939}a:hover{color:#161616}
+.b{border:1px solid #8d8d8d;background:#fff;box-sizing:border-box}
+.ph{background:#e0e0e0}
+.l{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#525252;margin:0}
+.ann{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#161616;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.btn{border:1px solid #393939;background:#fff;font:inherit;font-size:13px;padding:10px 16px;min-height:44px}
+.btn.p{background:#393939;color:#fff}
+.chip{display:inline-flex;align-items:center;border:1px solid #8d8d8d;background:#f4f4f4;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#393939;padding:2px 8px;margin:0}
+.flt{display:inline-flex;align-items:center;gap:6px;border:1px solid #8d8d8d;background:#fff;padding:0 10px;min-height:32px;box-sizing:border-box;font-size:13px;color:#393939;text-decoration:none}
+.flt.on{background:#393939;color:#fff;border-color:#393939}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 960px; box-sizing: border-box; background: #f4f4f4; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; display: flex; flex-direction: column">
+  <header class="b" style="min-height: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 8px 16px; border-width: 0 0 1px 0">
+    <div class="ph" style="width: 96px; height: 20px"></div>
+    <p class="l">WATSON · PREVENÇÃO · QUADRO</p>
+    <div style="flex-grow: 1"></div>
+    <div class="b" style="flex: 0 1 280px; min-width: 0; height: 32px; display: flex; align-items: center; gap: 8px; padding: 0 10px">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#525252" stroke-width="1.5"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l4 4"></path></svg>
+      <p class="l">Buscar associado, cartão, caso</p>
+    </div>
+    <div class="ph" style="width: 32px; height: 32px; border-radius: 50%"></div>
+  </header>
+
+  <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px 24px 0">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+      <span class="ann">1</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#393939" stroke-width="1.5"><path d="M2 3h12l-4.5 5.5V13l-3 1.5V8.5z"></path></svg>
+      <p class="l">FILTROS</p>
+      <a class="flt" href="#">Risco: alto e médio <span>▾</span></a>
+      <span style="display: inline-flex">
+        <a class="flt" href="#">Todos os canais</a>
+        <a class="flt" href="#" style="border-left-width: 0">Presente</a>
+        <a class="flt on" href="#">Não presente</a>
+      </span>
+      <a class="flt" href="#">Valor: acima de R$ 300 <span>▾</span></a>
+      <a class="flt" href="#">Agrupar mesmo cartão: ligado</a>
+      <div style="flex-grow: 1"></div>
+      <a href="#" style="font-size: 13px">Limpar filtros</a>
+    </div>
+
+    <div class="b" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 16px; border-left: 4px solid #161616">
+      <span class="ann">2</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#161616" stroke-width="1.5"><rect x="3" y="5" width="14" height="11" rx="2"></rect><path d="M10 2v3M7 10h0.01M13 10h0.01M7 13h6"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 320px; min-width: 0">
+        <p class="l">RESUMO DO AGENTE WATSON · ATUALIZADO HÁ 1 MIN</p>
+        <p style="margin: 0; font-size: 15px"><strong>12 casos novos; 3 parecem a mesma rajada.</strong> Juntei os 3 alertas do cartão •••• 4417 em um só caso (R$ 1.980,00 em 7 min). Sugiro começar por ele.</p>
+      </div>
+      <a class="btn" href="#">Abrir o grupo</a>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px 24px 24px; flex-grow: 1; align-items: stretch">
+    <section style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column">
+      <div style="overflow-x: auto; flex-grow: 1">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 12px; min-width: 1000px; height: 100%">
+
+          <div class="b" style="background: #f4f4f4; display: flex; flex-direction: column; gap: 8px; padding: 10px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 2px 2px 6px; border-bottom: 2px solid #161616">
+              <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Novo · alto risco</p>
+              <p class="l">12</p>
+            </div>
+            <sc-for list="{{novo}}" as="c" hint-placeholder-count="5">
+              <a href="#" class="b" style="display: flex; gap: 10px; padding: 10px; text-decoration: none; color: #161616; background: {{c.bg}}; border: {{c.border}}">
+                <div style="width: 4px; align-self: stretch; background: {{c.bar}}"></div>
+                <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+                  <div style="display: {{c.grpDisplay}}; align-items: center; gap: 6px">
+                    <span class="ann">3</span>
+                    <p class="l" style="color: #161616; font-weight: 600">{{c.grp}}</p>
+                  </div>
+                  <div style="display: flex; align-items: baseline; gap: 8px">
+                    <p style="margin: 0; font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                    <p class="l" style="color: #161616">{{c.score}}</p>
+                  </div>
+                  <p style="margin: 0; font-size: 13px; color: #393939">{{c.estab}}</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                    <span class="chip">{{c.s1}}</span>
+                    <span class="chip">{{c.s2}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#525252" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 4v4l3 2"></path></svg>
+                    <p class="l">{{c.tempo}}</p>
+                  </div>
+                </div>
+              </a>
+            </sc-for>
+            <a href="#" style="font-size: 13px; padding: 4px 2px">Ver mais 7 casos</a>
+          </div>
+
+          <div class="b" style="background: #f4f4f4; display: flex; flex-direction: column; gap: 8px; padding: 10px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 2px 2px 6px; border-bottom: 2px solid #8d8d8d">
+              <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Aguardando associado</p>
+              <p class="l">3</p>
+            </div>
+            <sc-for list="{{aguardando}}" as="c" hint-placeholder-count="3">
+              <a href="#" class="b" style="display: flex; gap: 10px; padding: 10px; text-decoration: none; color: #161616">
+                <div style="width: 4px; align-self: stretch; background: {{c.bar}}"></div>
+                <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+                  <div style="display: flex; align-items: baseline; gap: 8px">
+                    <p style="margin: 0; font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                    <p class="l" style="color: #161616">{{c.score}}</p>
+                  </div>
+                  <p style="margin: 0; font-size: 13px; color: #393939">{{c.estab}}</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                    <span class="chip">{{c.s1}}</span>
+                    <span class="chip">{{c.s2}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#525252" stroke-width="1.5"><rect x="4" y="1.5" width="8" height="13" rx="1.5"></rect><path d="M7 12h2"></path></svg>
+                    <p class="l">{{c.tempo}}</p>
+                  </div>
+                </div>
+              </a>
+            </sc-for>
+          </div>
+
+          <div class="b" style="background: #f4f4f4; display: flex; flex-direction: column; gap: 8px; padding: 10px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 2px 2px 6px; border-bottom: 2px solid #8d8d8d">
+              <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Em análise</p>
+              <p class="l">2</p>
+            </div>
+            <sc-for list="{{analise}}" as="c" hint-placeholder-count="2">
+              <a href="#" class="b" style="display: flex; gap: 10px; padding: 10px; text-decoration: none; color: #161616">
+                <div style="width: 4px; align-self: stretch; background: {{c.bar}}"></div>
+                <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+                  <div style="display: flex; align-items: baseline; gap: 8px">
+                    <p style="margin: 0; font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                    <p class="l" style="color: #161616">{{c.score}}</p>
+                  </div>
+                  <p style="margin: 0; font-size: 13px; color: #393939">{{c.estab}}</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 4px">
+                    <span class="chip">{{c.s1}}</span>
+                    <span class="chip">{{c.s2}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <div class="ph" style="width: 16px; height: 16px; border-radius: 50%"></div>
+                    <p class="l">{{c.tempo}}</p>
+                  </div>
+                </div>
+              </a>
+            </sc-for>
+          </div>
+
+          <div class="b" style="background: #f4f4f4; display: flex; flex-direction: column; gap: 8px; padding: 10px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 2px 2px 6px; border-bottom: 2px solid #c6c6c6">
+              <p style="margin: 0; font-weight: 600; font-size: 14px; flex-grow: 1">Resolvido hoje</p>
+              <p class="l">31</p>
+            </div>
+            <sc-for list="{{resolvido}}" as="c" hint-placeholder-count="3">
+              <a href="#" class="b" style="display: flex; gap: 10px; padding: 10px; text-decoration: none; color: #161616">
+                <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+                  <div style="display: flex; align-items: baseline; gap: 8px">
+                    <p style="margin: 0; font-size: 16px; font-weight: 600; flex-grow: 1">{{c.valor}}</p>
+                    <span class="chip" style="background: #fff; border-color: #393939">{{c.desfecho}}</span>
+                  </div>
+                  <p style="margin: 0; font-size: 13px; color: #393939">{{c.estab}}</p>
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#525252" stroke-width="1.5"><path d="M3 8.5l3 3 7-7"></path></svg>
+                    <p class="l">{{c.tempo}}</p>
+                  </div>
+                </div>
+              </a>
+            </sc-for>
+            <a href="#" style="font-size: 13px; padding: 4px 2px">Ver todos os 31</a>
+          </div>
+
+        </div>
+      </div>
+      <p class="l" style="padding-top: 8px">ARRASTE O CARTÃO ENTRE COLUNAS OU USE AS AÇÕES DO PAINEL · ROLAGEM HORIZONTAL EM TELAS PEQUENAS</p>
+    </section>
+
+    <aside class="b" style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 16px 20px; border-left: 2px solid #161616">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="ann">4</span>
+        <p class="l" style="flex-grow: 1">CASO #5107 · GRUPO DE 3 ALERTAS · NÃO PRESENTE</p>
+        <a href="#" aria-label="Fechar painel" style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#393939" stroke-width="1.5"><path d="M3 3l10 10M13 3L3 13"></path></svg>
+        </a>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+        <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 180px">
+          <p style="margin: 0; font-size: 22px; font-weight: 600">R$ 1.980,00</p>
+          <p style="margin: 0; font-size: 13px; color: #393939">Loja Exemplo Eletrônicos (fictícia) · cartão crédito •••• 4417 · associado V. B. (fictício)</p>
+        </div>
+        <div class="b" style="width: 104px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center"><p class="l">ALTO RISCO</p><p style="margin: 0; font-size: 20px; font-weight: 600">0,94</p></div>
+      </div>
+
+      <div class="b" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+        <p style="margin: 0; font-weight: 600; font-size: 13px">Resumo · 3 compras agrupadas</p>
+        <sc-for list="{{grupo}}" as="g" hint-placeholder-count="3">
+          <div style="display: flex; gap: 12px; border-top: 1px solid #e0e0e0; padding-top: 6px">
+            <p class="l" style="width: 44px">{{g.h}}</p>
+            <p style="margin: 0; font-size: 13px; flex-grow: 1">{{g.t}}</p>
+            <p class="l" style="color: #161616">{{g.v}}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <p style="margin: 0; font-weight: 600; font-size: 13px">Por que é suspeito</p>
+        <sc-for list="{{fatores}}" as="f" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <p class="l">{{f.t}}</p>
+            <div style="height: 8px; background: #e0e0e0"><div style="height: 8px; width: {{f.w}}; background: #6f6f6f"></div></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div class="b" style="padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #f4f4f4">
+        <p style="margin: 0; font-weight: 600; font-size: 13px">Recomendação do agente</p>
+        <p style="margin: 0; font-size: 14px">Bloquear o cartão •••• 4417 e enviar alerta no app do associado. As 3 compras somam R$ 1.980,00 em 7 min, a cerca de 640 km de onde ele costuma comprar.</p>
+        <p class="l">CONFIANÇA ▮▮▮▮▯ · A DECISÃO FINAL É SUA</p>
+      </div>
+
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <a class="btn p" href="#">Bloquear cartão</a>
+        <a class="btn" href="#">Perguntar ao associado</a>
+        <a class="btn" href="#">Liberar</a>
+        <a class="btn" href="#">Escalar</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <p class="l">JUSTIFICATIVA GERADA PELO AGENTE · EDITÁVEL</p>
+        <div class="b" style="padding: 10px; display: flex; flex-direction: column; gap: 6px; min-height: 72px">
+          <div class="ph" style="height: 10px; width: 95%"></div>
+          <div class="ph" style="height: 10px; width: 88%"></div>
+          <div class="ph" style="height: 10px; width: 52%"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const alto = '#161616', medio = '#8d8d8d';
+    const card = (valor, estab, score, s1, s2, tempo, extra) => Object.assign({
+      valor, estab, score, s1, s2, tempo,
+      bar: score.indexOf('ALTO') === 0 ? alto : medio,
+      bg: '#ffffff', border: '1px solid #8d8d8d',
+      grp: '', grpDisplay: 'none'
+    }, extra || {});
+    return {
+      novo: [
+        card('R$ 1.980,00', 'Loja Exemplo Eletrônicos', 'ALTO · 0,94', 'rajada', 'distância', '4 MIN NA FILA',
+          { grp: '3 ALERTAS DO MESMO CARTÃO', grpDisplay: 'flex', bg: '#e0e0e0', border: '2px solid #161616' }),
+        card('R$ 2.450,00', 'Agropecuária Modelo Ltda.', 'ALTO · 0,81', 'valor alto', 'horário', '9 MIN NA FILA'),
+        card('R$ 389,90', 'Viagens Fictícias S.A.', 'ALTO · 0,78', 'dispositivo novo', 'não presente', '12 MIN NA FILA'),
+        card('R$ 74,50', 'Posto Exemplo BR-000', 'ALTO · 0,72', 'teste de cartão', 'rajada', '15 MIN NA FILA',
+          { grp: '2 ALERTAS DO MESMO CARTÃO', grpDisplay: 'flex' }),
+        card('R$ 1.120,00', 'Marketplace Demo', 'ALTO · 0,70', 'distância', 'horário', '21 MIN NA FILA')
+      ],
+      aguardando: [
+        card('R$ 860,00', 'Farmácia Modelo', 'ALTO · 0,76', 'horário', 'distância', 'ALERTA NO APP HÁ 6 MIN'),
+        card('R$ 3.200,00', 'Máquinas Exemplo Ltda.', 'MÉDIO · 0,68', 'valor alto', 'loja nova', 'ALERTA NO APP HÁ 18 MIN'),
+        card('R$ 45,00', 'Streaming Demo', 'MÉDIO · 0,61', 'não presente', 'dispositivo novo', 'ALERTA NO APP HÁ 27 MIN')
+      ],
+      analise: [
+        card('R$ 5.400,00', 'Concessionária Fictícia', 'ALTO · 0,83', 'valor alto', 'distância', 'COM CAMILA · 11 MIN'),
+        card('R$ 610,00', 'Loja Teste Online', 'MÉDIO · 0,64', 'rajada', 'não presente', 'COM OUTRA ANALISTA · 33 MIN')
+      ],
+      resolvido: [
+        { valor: 'R$ 1.249,90', estab: 'Eletro Demo Online', desfecho: 'BLOQUEADO', tempo: '08:42 · ASSOCIADO NEGOU NO APP' },
+        { valor: 'R$ 230,00', estab: 'Mercado Modelo', desfecho: 'LIBERADO', tempo: '08:15 · ASSOCIADO CONFIRMOU' },
+        { valor: 'R$ 980,00', estab: 'Agropecuária Exemplo', desfecho: 'LIBERADO', tempo: '07:50 · ANALISTA LIBEROU' }
+      ],
+      grupo: [
+        { h: '03:05', t: 'Compra online · São Paulo, SP', v: 'R$ 590,00' },
+        { h: '03:08', t: 'Compra online · São Paulo, SP', v: 'R$ 640,00' },
+        { h: '03:12', t: 'Compra online · São Paulo, SP', v: 'R$ 750,00' }
+      ],
+      fatores: [
+        { t: 'RAJADA: 3 COMPRAS EM 7 MIN', w: '92%' },
+        { t: 'DISTÂNCIA: ~640 KM DO HABITUAL', w: '80%' },
+        { t: 'HORÁRIO ATÍPICO: MADRUGADA', w: '58%' },
+        { t: 'VALOR 4× A MÉDIA DO ASSOCIADO', w: '46%' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

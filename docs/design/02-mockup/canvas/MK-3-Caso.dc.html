@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mockup 3 · Caso com agente sempre presente</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&amp;family=IBM+Plex+Sans:wght@300;400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.wt{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-hover-01:#e8e8e8;--layer-selected-01:#e0e0e0;--layer-selected-inverse:#161616;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-strong-01:#8d8d8d;--border-inverse:#161616;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--link-primary:#0f62fe;--icon-primary:#161616;--icon-secondary:#525252;--interactive:#0f62fe;--focus:#0f62fe;--button-primary:#0f62fe;--button-tertiary:#0f62fe;--button-danger:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-warning-edge:#8e6a00;--support-info:#0043ce;--notification-info-bg:#edf5ff;--notification-warning-bg:#fcf4d6;--tag-red-bg:#ffd7d9;--tag-red-text:#a2191f;--tag-gray-bg:#e0e0e0;--tag-gray-text:#161616;--tag-blue-bg:#d0e2ff;--tag-blue-text:#0043ce;--tag-green-bg:#a7f0ba;--tag-green-text:#0e6027;--tag-warm-bg:#e5e0df;--tag-warm-text:#3c3838;--tag-cool-bg:#dde1e6;--tag-cool-text:#343a3f;--ai-border-strong:#4589ff;--ai-border-subtle:#a6c8ff;--ai-aura-start:rgba(69,137,255,0.10);--ai-aura-end:rgba(255,255,255,0);position:relative;box-sizing:border-box;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;letter-spacing:0.16px;display:flex;flex-direction:column}
+.wt *{box-sizing:border-box}
+.wt p,.wt h1,.wt h2,.wt h3,.wt ul,.wt ol,.wt dl,.wt dd{margin:0}
+.wt ul,.wt ol{padding:0;list-style:none}
+.wt a{color:var(--link-primary)}
+.wt button{font-family:'IBM Plex Sans',Arial,sans-serif;letter-spacing:0.16px}
+.wt :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.wt input::placeholder,.wt textarea::placeholder{color:var(--text-helper)}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0}
+.skip{position:absolute;left:-9999px;top:8px;z-index:10;background:var(--layer-01);padding:12px 16px;color:var(--link-primary);border:2px solid var(--focus)}
+.skip:focus{left:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* UI shell */
+.shell{height:48px;flex-shrink:0;display:flex;align-items:center;background:var(--layer-01);border-bottom:1px solid var(--border-subtle-01)}
+.hbtn{width:48px;height:48px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;padding:0;color:var(--icon-primary);cursor:pointer;flex-shrink:0;text-decoration:none}
+.hbtn:hover{background:var(--layer-hover-01)}
+.brand{display:flex;align-items:center;height:48px;padding:0 32px 0 8px;font-size:14px;color:var(--text-primary);text-decoration:none;white-space:nowrap}
+.brand b{font-weight:600;margin-right:4px}
+.shell-sp{flex-grow:1}
+.body-row{display:flex;flex-wrap:wrap;flex-grow:1;align-items:stretch}
+.snav{flex:0 0 48px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);display:flex;flex-direction:column;padding-top:8px}
+.snav a{width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--icon-secondary);border-left:3px solid transparent;text-decoration:none}
+.snav a:hover{background:var(--layer-hover-01)}
+.snav a.on{background:var(--layer-selected-01);border-left-color:var(--interactive);color:var(--icon-primary)}
+.main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px;padding:24px 24px 32px}
+
+/* page header + content switcher */
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.phead-t{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.h1{font-size:28px;line-height:36px;font-weight:400}
+.sub{font-size:14px;color:var(--text-secondary)}
+.cs{display:inline-flex;height:40px}
+.cs a{display:inline-flex;align-items:center;gap:8px;min-width:128px;padding:0 16px;border:1px solid var(--border-inverse);color:var(--text-secondary);text-decoration:none;font-size:14px;background:transparent}
+.cs a+a{border-left:0}
+.cs a:first-child{border-radius:4px 0 0 4px}
+.cs a:last-child{border-radius:0 4px 4px 0}
+.cs a.on{background:var(--layer-selected-inverse);color:var(--text-on-color)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;padding:0 16px;font-size:14px;line-height:18px;border:1px solid transparent;border-radius:0;text-decoration:none;cursor:pointer;white-space:nowrap;background:transparent}
+.btn-lg{min-height:48px}
+.btn-sm{min-height:32px;padding:0 12px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-danger{background:var(--button-danger);color:var(--text-on-color)}
+.btn-tertiary{border-color:var(--button-tertiary);color:var(--button-tertiary)}
+.btn-ghost{color:var(--link-primary);padding:0 12px;justify-content:flex-start;gap:8px}
+.btn-ghost-n{color:var(--text-primary);padding:0 12px;justify-content:flex-start;gap:8px}
+.ibtn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer;flex-shrink:0;text-decoration:none}
+.ibtn:hover{background:var(--layer-hover-01)}
+.ibtn-sm{width:32px;height:32px}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;white-space:nowrap}
+.tag-red{background:var(--tag-red-bg);color:var(--tag-red-text)}
+.tag-gray{background:var(--tag-gray-bg);color:var(--tag-gray-text)}
+.tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue-text)}
+.tag-green{background:var(--tag-green-bg);color:var(--tag-green-text)}
+.tag-warm{background:var(--tag-warm-bg);color:var(--tag-warm-text)}
+.tag-cool{background:var(--tag-cool-bg);color:var(--tag-cool-text)}
+.tag-outline{background:var(--layer-01);color:var(--text-primary);border:1px solid var(--border-strong-01)}
+
+/* Carbon for AI: só identifica conteúdo gerado pelo agente */
+.ai{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 4px;border:1px solid var(--ai-border-strong);border-radius:4px;background:linear-gradient(to top,var(--ai-aura-start),var(--layer-01));color:var(--text-primary);font-size:12px;line-height:1;font-weight:600;cursor:pointer;flex-shrink:0;letter-spacing:0}
+.ai-box{background:linear-gradient(to top,var(--ai-aura-start) 0%,var(--ai-aura-end) 50%),var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.revert{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;background:transparent;color:var(--icon-primary);padding:0;cursor:pointer}
+
+/* status */
+.st{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.st svg{flex-shrink:0}
+
+/* tiles */
+.tile{background:var(--layer-01);padding:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.kpi{display:flex;flex-direction:column;gap:8px}
+.kpi-l{font-size:14px;color:var(--text-secondary)}
+.kpi-v{font-size:32px;line-height:40px;font-weight:300}
+.kpi-n{font-size:12px;line-height:16px;color:var(--text-secondary);display:flex;align-items:center;gap:4px}
+
+/* agent rail: Pergunte ao Watson, presente em todas as telas */
+.agent{flex:1 1 360px;min-width:0;background:var(--layer-01);border-left:1px solid var(--border-subtle-01);display:flex;flex-direction:column}
+.ag-head{display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 8px 8px 16px;border-bottom:1px solid var(--border-subtle-01)}
+.ag-title{display:flex;align-items:center;gap:8px;flex-grow:1;min-width:0}
+.ag-title h2{font-size:16px;line-height:22px;font-weight:600}
+.ag-ctx{display:flex;flex-direction:column;gap:8px;padding:12px 16px;background:var(--layer-02);border-bottom:1px solid var(--border-subtle-01)}
+.ag-ctx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ag-ctx-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-ctx p.d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-body{flex-grow:1;display:flex;flex-direction:column;gap:16px;padding:16px}
+.msg{display:flex;flex-direction:column;gap:12px;padding:16px}
+.msg-head{display:flex;align-items:center;gap:8px}
+.msg-who{font-size:12px;line-height:16px;font-weight:600;color:var(--text-primary)}
+.msg-when{font-size:12px;line-height:16px;color:var(--text-secondary);margin-left:auto}
+.msg-t{font-size:16px;line-height:22px;font-weight:600}
+.msg p.tx{font-size:14px;line-height:20px}
+.why{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border-subtle-01);padding-top:8px}
+.why-btn{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0;border:0;background:transparent;color:var(--link-primary);font-size:14px;cursor:pointer;align-self:flex-start}
+.why-body{display:flex;flex-direction:column;gap:8px;padding-left:24px;font-size:14px;line-height:20px;color:var(--text-secondary)}
+.why-body ul{display:flex;flex-direction:column;gap:4px}
+.why-body li{display:flex;gap:8px}
+.why-body li::before{content:'';width:4px;height:4px;background:var(--text-secondary);margin-top:8px;flex-shrink:0}
+.msg-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.done{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-primary)}
+.fb{display:flex;align-items:center;gap:0;margin-left:-8px}
+.fb-l{font-size:12px;color:var(--text-secondary);padding:0 8px}
+.umsg{align-self:flex-end;max-width:85%;background:var(--layer-accent-01);padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.umsg .who{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ag-foot{display:flex;flex-direction:column;gap:12px;padding:16px;border-top:1px solid var(--border-subtle-01)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--border-strong-01);border-radius:16px;background:var(--layer-01);color:var(--text-primary);font-size:14px;cursor:pointer;text-decoration:none}
+.ask{display:flex;align-items:stretch}
+.ask input{flex-grow:1;min-width:0;height:48px;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:0 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;color:var(--text-primary)}
+.ask .ibtn{width:48px;height:48px;background:var(--field-02);border-bottom:1px solid var(--border-strong-01);color:var(--link-primary)}
+.disc{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.cb{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01);color:var(--layer-01);flex-shrink:0}
+.cb.on{background:var(--icon-primary);color:var(--text-on-color)}
+.ai-inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 8px 8px 16px}
+.bcrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.bc{display:flex;align-items:center;gap:8px;font-size:14px}
+.bc li{display:flex;align-items:center;gap:8px}
+.bc a{text-decoration:none}
+.bc li+li::before{content:'/';color:var(--text-secondary)}
+.bcrow .sp{flex-grow:1}
+.bcrow a.nx{font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;min-height:32px}
+.ch{display:flex;flex-direction:column;gap:16px;padding:16px 16px 0}
+.ch-top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.ch-l{flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ch-eb{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.ch-t{font-size:28px;line-height:36px;font-weight:400}
+.ch-s{font-size:14px;color:var(--text-secondary)}
+.ch-tags{display:flex;flex-wrap:wrap;gap:8px}
+.score{flex:0 0 216px;display:flex;flex-direction:column;gap:8px;padding:16px;background:var(--layer-02)}
+.score-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.score-v{display:flex;align-items:baseline;gap:8px}
+.score-v b{font-size:42px;line-height:50px;font-weight:300}
+.score-v span{font-size:14px;color:var(--text-secondary)}
+.meter{position:relative;height:8px;background:var(--layer-accent-01)}
+.meter i{position:absolute;left:0;top:0;bottom:0;background:var(--support-error)}
+.meter .mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text-primary)}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));border-top:1px solid var(--border-subtle-01)}
+.meta div{display:flex;flex-direction:column;gap:4px;padding:12px 16px 16px 0}
+.meta dt{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.meta dd{font-size:14px;color:var(--text-primary)}
+.row2{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch}
+.dec{flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.sec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec-h h2{font-size:16px;line-height:22px;font-weight:600}
+.sec-h .sp{flex-grow:1}
+.sec-d{font-size:14px;color:var(--text-secondary)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.fld{display:flex;flex-direction:column;gap:8px}
+.fld-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fld-h label{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-h .ed{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-h .sp{flex-grow:1}
+.fld textarea{width:100%;min-height:88px;resize:vertical;border:0;border-bottom:1px solid var(--border-strong-01);background:var(--field-02);padding:12px 16px;font-family:'IBM Plex Sans',Arial,sans-serif;font-size:14px;line-height:20px;color:var(--text-primary)}
+.fld-f{display:flex;gap:16px;font-size:12px;line-height:16px;color:var(--text-secondary)}
+.fld-f .sp{flex-grow:1}
+.perfil{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.pl{display:flex;flex-direction:column}
+.pl div{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid var(--border-subtle-01)}
+.pl dt{font-size:14px;color:var(--text-secondary)}
+.pl dd{font-size:14px;color:var(--text-primary);text-align:right}
+.row3{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch}
+.fat{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.fx{display:flex;gap:12px;padding:6px 0;border-top:1px solid var(--border-subtle-01)}
+.fx-n{width:16px;font-size:12px;line-height:20px;color:var(--text-secondary);flex-shrink:0}
+.fx-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.fx-t{font-size:14px;line-height:20px;font-weight:600}
+.fx-d{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.bar{height:4px;background:var(--layer-accent-01)}
+.bar i{display:block;height:4px;background:var(--text-secondary)}
+.fx-p{width:48px;text-align:right;font-size:14px;line-height:20px;flex-shrink:0}
+.tl{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.tli{display:flex;gap:12px}
+.tli-r{width:16px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.tli-d{width:12px;height:12px;border-radius:6px;border:2px solid var(--text-primary);margin-top:4px;flex-shrink:0}
+.tli-ln{width:1px;flex-grow:1;background:var(--border-strong-01)}
+.tli-b{flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:2px 8px 12px}
+.tli-h{display:flex;align-items:center;gap:8px}
+.tli-h p{font-size:14px;line-height:20px;flex-grow:1}
+.tli-s{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.rec{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--layer-01);border:1px solid var(--ai-border-subtle)}
+.rec-l{font-size:12px;line-height:16px;color:var(--text-secondary)}
+.rec-t{font-size:16px;line-height:22px;font-weight:600}
+.conf{display:flex;align-items:center;gap:8px;font-size:12px;line-height:16px;color:var(--text-primary)}
+.conf-s{display:flex;gap:2px}
+.conf-s i{display:block;width:16px;height:4px;background:var(--text-primary)}
+.conf-s i.o{background:var(--layer-accent-01)}
+.src{font-size:12px;line-height:16px;color:var(--text-secondary)}
+</style>
+</helmet>
+<div class="wt" style="width: 100%; min-height: 1100px">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="shell">
+    <button class="hbtn" type="button" aria-label="Abrir menu de navegação">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+    </button>
+    <a class="brand" href="#"><b>Watson</b> · Prevenção a fraudes</a>
+    <div class="shell-sp"></div>
+    <button class="hbtn" type="button" aria-label="Buscar associado, cartão ou caso">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="M12.5 12.5l4.5 4.5"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Notificações">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 14V9a5 5 0 0 1 10 0v5l1.5 1.5h-13z"></path><path d="M8 17.5h4"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Perfil de Camila Rocha">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="7" r="3.5"></circle><path d="M3.5 17.5c0.8-3.2 3.3-5 6.5-5s5.7 1.8 6.5 5"></path></svg>
+    </button>
+    <button class="hbtn" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h3v3H3zM8.5 3h3v3h-3zM14 3h3v3h-3zM3 8.5h3v3H3zM8.5 8.5h3v3h-3zM14 8.5h3v3h-3zM3 14h3v3H3zM8.5 14h3v3h-3zM14 14h3v3h-3z"></path></svg>
+    </button>
+  </header>
+  <div class="body-row">
+    <nav class="snav" aria-label="Navegação lateral recolhida">
+      <a class="on" href="#" aria-label="Alertas (página atual)" aria-current="page" title="Alertas">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5h2M8 5h9M3 10h2M8 10h9M3 15h2M8 15h9"></path></svg>
+      </a>
+      <a href="#" aria-label="Casos encerrados" title="Casos encerrados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 5.5h5l1.5 2h8.5v9h-15z"></path></svg>
+      </a>
+      <a href="#" aria-label="Associados" title="Associados">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="2.5"></circle><path d="M2.5 16c0.5-2.7 2.2-4 4.5-4s4 1.3 4.5 4"></path><circle cx="14" cy="7.5" r="2"></circle><path d="M13 12c2.2 0 3.7 1.2 4.3 3.5"></path></svg>
+      </a>
+      <a href="#" aria-label="Monitoramento do modelo" title="Monitoramento do modelo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 17h14M4.5 13l3.5-4 3 2.5 5-6"></path></svg>
+      </a>
+      <a href="#" aria-label="Relatórios" title="Relatórios">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 2.5h7l3 3v12H5z"></path><path d="M8 9h4M8 12h4"></path></svg>
+      </a>
+    </nav>
+    <main id="conteudo" class="main">
+      <div class="bcrow">
+        <nav aria-label="Trilha de navegação">
+          <ol class="bc">
+            <li><a href="#">Fila</a></li>
+            <li aria-current="page">Caso #4821</li>
+          </ol>
+        </nav>
+        <span class="sp"></span>
+        <a class="nx" href="#">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"></path></svg>
+          Caso anterior
+        </a>
+        <a class="nx" href="#">
+          Próximo da ordem sugerida: #5107
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"></path></svg>
+        </a>
+      </div>
+
+      <section class="tile ch" style="padding-bottom: 0" aria-labelledby="ch-t">
+        <div class="ch-top">
+          <div class="ch-l">
+            <p class="ch-eb mono">Caso #4821 · crédito · cartão não presente · aberto há 3 min</p>
+            <h1 class="ch-t" id="ch-t">R$ 2.349,90 · Loja Exemplo Eletrônicos</h1>
+            <p class="ch-s">Valdir B. (fictício) · cartão de crédito final 4821 · associado desde 2006</p>
+            <div class="ch-tags">
+              <span class="tag tag-red"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l6.5 6.5L8 14.5 1.5 8z" fill="#da1e28"></path><path d="M8 4.8v3.6M8 10.8v0.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path></svg>Risco alto</span>
+              <span class="tag tag-blue"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z" fill="#0f62fe"></path></svg>Novo · com você</span>
+              <span class="tag tag-cool">Online</span>
+              <span class="tag tag-cool">Rajada: 5 tentativas</span>
+            </div>
+          </div>
+          <div class="score" role="group" aria-label="Score de risco 0,92 de 1,00, acima do limite de bloqueio 0,85">
+            <p class="score-l">Score de risco</p>
+            <p class="score-v"><b>0,92</b><span>de 1,00</span></p>
+            <div class="meter" aria-hidden="true"><i style="width: 92%"></i><span class="mk" style="left: 85%"></span></div>
+            <p class="score-l">Limite de bloqueio: 0,85</p>
+          </div>
+        </div>
+        <dl class="meta">
+          <sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
+            <div><dt>{{m.k}}</dt><dd>{{m.v}}</dd></div>
+          </sc-for>
+        </dl>
+      </section>
+
+      <div class="row2">
+        <section class="tile dec" aria-labelledby="dec-t">
+          <div class="sec-h">
+            <h2 id="dec-t">Sua decisão</h2>
+            <span class="sp"></span>
+            <span class="sec-d">O Watson recomenda; quem decide é você</span>
+          </div>
+          <div class="acts">
+            <a class="btn btn-danger btn-lg" href="#">
+              Bloquear cartão
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 6 0v2"></path></svg>
+            </a>
+            <a class="btn btn-tertiary btn-lg" href="#">
+              Perguntar ao associado
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3h11v8h-6l-3 2.5V11h-2z"></path></svg>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7"></rect><path d="M5 7V5a3 3 0 0 1 5.8-1"></path></svg>
+              Liberar compra
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12L12 4M6 4h6v6"></path></svg>
+              Escalar
+            </a>
+          </div>
+          <div class="fld">
+            <div class="fld-h">
+              <label for="just">Justificativa para a auditoria</label>
+              <button class="ai" type="button" aria-label="IA: rascunho escrito pelo Watson a partir dos fatores 1 a 3">IA</button>
+              <span class="ed">· editada por você</span>
+              <span class="sp"></span>
+              <button class="btn btn-ghost btn-sm" type="button">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6h6a3.5 3.5 0 0 1 0 7H6"></path><path d="M6.5 3.5L4 6l2.5 2.5"></path></svg>
+                Reverter para o texto do Watson
+              </button>
+            </div>
+            <textarea id="just" rows="3">Rajada de 5 tentativas online em 7 min (03:14 a 03:21), a 760 km da última compra presencial, em Chapecó (SC). Valor 6 vezes acima da média online do associado. Alerta enviado no app às 03:15, sem resposta até agora.</textarea>
+            <div class="fld-f">
+              <span>Rascunho do Watson; você acrescentou a última frase. Vai para a auditoria.</span>
+              <span class="sp"></span>
+              <span class="mono">231/500</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="tile perfil" aria-labelledby="pf-t">
+          <div class="sec-h">
+            <h2 id="pf-t">Perfil do associado</h2>
+            <span class="sp"></span>
+            <a href="#" style="font-size: 14px; text-decoration: none">Ver cadastro</a>
+          </div>
+          <dl class="pl">
+            <sc-for list="{{perfil}}" as="p" hint-placeholder-count="6">
+              <div><dt>{{p.k}}</dt><dd>{{p.v}}</dd></div>
+            </sc-for>
+          </dl>
+        </section>
+      </div>
+
+      <div class="row3">
+        <section class="tile fat" aria-labelledby="fx-t">
+          <div class="sec-h">
+            <h2 id="fx-t">Por que o score é 0,92</h2>
+            <button class="ai" type="button" aria-label="IA: explicação do modelo de risco">IA</button>
+            <span class="sp"></span>
+            <span class="sec-d">Peso no score</span>
+          </div>
+          <sc-for list="{{fatores}}" as="f" hint-placeholder-count="5">
+            <div class="fx">
+              <span class="fx-n mono">{{f.n}}</span>
+              <div class="fx-b">
+                <p class="fx-t">{{f.t}}</p>
+                <p class="fx-d">{{f.d}}</p>
+                <div class="bar" aria-hidden="true"><i style="width: {{f.w}}"></i></div>
+              </div>
+              <span class="fx-p mono">{{f.p}}</span>
+            </div>
+          </sc-for>
+          <div class="fx">
+            <span class="fx-n mono">−</span>
+            <div class="fx-b">
+              <p class="fx-t">Reduz o risco: já comprou online antes</p>
+              <p class="fx-d">2 compras online legítimas em 2026</p>
+            </div>
+            <span class="fx-p mono">−0,03</span>
+          </div>
+          <p class="fx-d" style="border-top: 1px solid var(--border-subtle-01); padding-top: 8px">Base do modelo para cartão não presente: +0,06. Soma: 0,92.</p>
+        </section>
+
+        <section class="tile tl" aria-labelledby="tl-t">
+          <div class="sec-h">
+            <h2 id="tl-t">Linha do tempo do cartão</h2>
+            <span class="sp"></span>
+            <a href="#" style="font-size: 14px; text-decoration: none">Ver 12 meses</a>
+          </div>
+          <ol>
+            <sc-for list="{{tl}}" as="t" hint-placeholder-count="6">
+              <li class="tli">
+                <div class="tli-r" aria-hidden="true"><span class="tli-d" style="background: {{t.dot}}"></span><span class="tli-ln"></span></div>
+                <div class="tli-b" style="background: {{t.bg}}">
+                  <div class="tli-h">
+                    <p><span class="mono">{{t.h}}</span> · <span style="font-weight: {{t.fw}}">{{t.v}}</span></p>
+                    <span class="{{t.tagCls}}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{t.i1}}" fill="{{t.f}}" stroke="{{t.s}}" stroke-width="1"></path><path d="{{t.i2}}" fill="none" stroke="{{t.m}}" stroke-width="1.5" stroke-linecap="round"></path></svg>{{t.tag}}</span>
+                  </div>
+                  <p class="tli-s">{{t.loja}}</p>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+        </section>
+      </div>
+    </main>
+
+    <aside class="agent" aria-labelledby="ag-t">
+      <div class="ag-head">
+        <div class="ag-title">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4h14v10H9l-4 3v-3H3z"></path><path d="M7 9h0.01M10 9h0.01M13 9h0.01"></path></svg>
+          <h2 id="ag-t">Pergunte ao Watson</h2>
+          <button class="ai" type="button" aria-label="IA: o que é o Watson e como ele usa os dados desta tela">IA</button>
+        </div>
+        <button class="ibtn" type="button" aria-label="Histórico de conversas">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"></path><path d="M3 3v3.5h3.5"></path><path d="M10 6.5V10l2.5 1.5"></path></svg>
+        </button>
+        <button class="ibtn" type="button" aria-label="Recolher painel do Watson">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13"></rect><path d="M12.5 3.5v13M6.5 8l2 2-2 2"></path></svg>
+        </button>
+      </div>
+      <div class="ag-ctx">
+        <div class="ag-ctx-row">
+          <span class="ag-ctx-l">Contexto</span>
+          <span class="tag tag-cool">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"></path><circle cx="8" cy="8" r="2"></circle></svg>
+            {{ctxTela}}
+          </span>
+        </div>
+        <p class="d">{{ctxDesc}}</p>
+      </div>
+      <div class="ag-body">
+        <article class="ai-box msg" aria-label="Resumo e recomendação do Watson">
+          <div class="msg-head">
+            <span class="msg-who">Watson</span>
+            <button class="ai" type="button" aria-label="IA: resumo e recomendação gerados pelo Watson">IA</button>
+            <span class="msg-when">09:15</span>
+          </div>
+          <p class="tx">Parece fraude com cartão não presente: 5 tentativas em 7 min, de madrugada, a 760 km de onde o Valdir comprou ontem. O padrão lembra 38 fraudes confirmadas nos últimos 90 dias.</p>
+          <div class="rec">
+            <p class="rec-l">Recomendação</p>
+            <p class="rec-t">Bloquear o cartão e avisar o associado no app</p>
+            <p class="conf">
+              <span class="conf-s" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="o"></i></span>
+              Confiança alta · 87%
+            </p>
+          </div>
+          <div class="why">
+            <button class="why-btn" type="button" aria-expanded="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 6l4.5 4.5L12.5 6"></path></svg>
+              Por que estou sugerindo isso
+            </button>
+            <div class="why-body">
+              <ul>
+                <li>Os fatores 1 a 3 somam +0,72 no score.</li>
+                <li>4 tentativas seguintes já foram retidas; outras podem vir.</li>
+                <li>O que eu não sei: se o Valdir emprestou o cartão. Ele ainda não respondeu ao alerta.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="msg-act">
+            <button class="btn btn-tertiary btn-sm" type="button">Aceitar e preparar bloqueio</button>
+            <button class="btn btn-ghost btn-sm" type="button">Editar</button>
+            <button class="btn btn-ghost btn-sm" type="button">Descartar</button>
+          </div>
+          <div class="fb">
+            <span class="fb-l">Esta recomendação ajudou?</span>
+            <button class="ibtn ibtn-sm" type="button" aria-label="Recomendação útil">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></svg>
+            </button>
+            <button class="ibtn ibtn-sm" type="button" aria-label="Recomendação não útil">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><g transform="rotate(180 8 8)"><path d="M2 7h2.5v7H2zM4.5 7l3-5c1.2 0 1.8 0.8 1.6 2L8.6 6.5H13c0.8 0 1.4 0.8 1.2 1.6l-1.2 5c-0.2 0.6-0.7 0.9-1.3 0.9H4.5"></path></g></svg>
+            </button>
+          </div>
+        </article>
+
+        <div class="umsg">
+          <span class="who">Você · 09:16</span>
+          <p>Ele já comprou nessa loja antes?</p>
+        </div>
+
+        <article class="ai-box msg" aria-label="Resposta do Watson">
+          <div class="msg-head">
+            <span class="msg-who">Watson</span>
+            <button class="ai" type="button" aria-label="IA: resposta gerada pelo Watson">IA</button>
+            <span class="msg-when">09:16</span>
+          </div>
+          <p class="tx">Não. Nenhuma compra na Loja Exemplo Eletrônicos em 12 meses. As 2 compras online dele em 2026 foram em lojas de insumos agrícolas, de dia.</p>
+          <p class="src">Fonte: histórico do cartão final 4821, últimos 12 meses</p>
+        </article>
+      </div>
+      <div class="ag-foot">
+        <p class="ag-ctx-l">Perguntas sugeridas para esta tela</p>
+        <div class="chips">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <button class="chip" type="button">{{c}}</button>
+          </sc-for>
+        </div>
+        <div class="ask">
+          <input type="text" placeholder="{{askPh}}" aria-label="Escreva uma pergunta para o Watson">
+          <button class="ibtn" type="button" aria-label="Enviar pergunta">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 10l14-6.5L12 17l-2.5-5.5z"></path><path d="M9.5 11.5L17 3.5"></path></svg>
+          </button>
+        </div>
+        <p class="disc">O Watson sugere e explica; ele pode errar. Nada é bloqueado, liberado ou enviado sem a sua confirmação.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const TAG = {
+      retida: { tagCls: 'tag tag-warm', tag: 'Retida', i1: 'M8 1.8l6.6 11.7H1.4z', f: '#f1c21b', s: '#8e6a00', i2: 'M8 6v3.5M8 11.2v0.3', m: '#161616' },
+      caso: { tagCls: 'tag tag-blue', tag: 'Este caso', i1: 'M8 4a4 4 0 1 0 0 8a4 4 0 1 0 0-8z', f: '#0f62fe', s: '#0f62fe', i2: 'M8 8h0', m: 'none' },
+      normal: { tagCls: 'tag tag-gray', tag: 'Habitual', i1: 'M8 2a6 6 0 1 0 0 12a6 6 0 1 0 0-12z', f: 'none', s: '#525252', i2: 'M5.5 8.2l1.8 1.8 3.4-3.6', m: '#525252' }
+    };
+    const t = (h, v, loja, k) => Object.assign({
+      h, v, loja,
+      dot: k === 'normal' ? '#ffffff' : '#161616',
+      bg: k === 'caso' ? '#e0e0e0' : 'transparent',
+      fw: k === 'caso' ? '600' : '400'
+    }, TAG[k]);
+    return {
+      ctxTela: 'Caso #4821',
+      ctxDesc: 'Leio os fatores do score, a linha do tempo do cartão e o perfil do associado. Não consulto nada fora deste caso sem você pedir.',
+      askPh: 'Pergunte sobre este caso',
+      chips: ['Por que 0,92?', 'Compare com o histórico', 'Redija o alerta ao associado'],
+      meta: [
+        { k: 'Horário', v: 'Hoje, 03:14' },
+        { k: 'Onde', v: 'São Paulo (SP), online' },
+        { k: 'Costuma comprar', v: 'Chapecó (SC)' },
+        { k: 'Dispositivo', v: 'Navegador nunca visto' }
+      ],
+      perfil: [
+        { k: 'Associado', v: 'Valdir B. (fictício)' },
+        { k: 'Cidade', v: 'Chapecó (SC)' },
+        { k: 'Gasto mensal médio', v: 'R$ 3.900,00' },
+        { k: 'Compras online', v: '2 em 2026 · média R$ 380,00' },
+        { k: 'Canal de contato', v: 'Alerta no app' },
+        { k: 'Últimos alertas', v: 'Respondeu 3 de 3' }
+      ],
+      fatores: [
+        { n: '1', t: 'Rajada: 5 tentativas em 7 minutos', d: 'Ele faz, em média, 1 compra por dia', w: '92%', p: '+0,31' },
+        { n: '2', t: 'Longe de casa: 760 km da última compra', d: 'Comprou presencialmente em Chapecó (SC) há 9 h', w: '78%', p: '+0,24' },
+        { n: '3', t: 'Valor 6 vezes acima da média online', d: 'Média de compras online: R$ 380,00', w: '64%', p: '+0,17' },
+        { n: '4', t: 'Horário atípico: 03:14', d: 'Nenhuma compra de madrugada em 12 meses', w: '40%', p: '+0,11' },
+        { n: '5', t: 'Dispositivo nunca visto', d: 'Primeiro uso deste navegador no cartão', w: '28%', p: '+0,06' }
+      ],
+      tl: [
+        t('03:21', 'R$ 1.190,00', 'Loja Exemplo Games · online · São Paulo (SP)', 'retida'),
+        t('03:19', 'R$ 312,50', 'Loja Exemplo Moda · online · São Paulo (SP)', 'retida'),
+        t('03:18', 'R$ 640,00', 'Loja Exemplo Games · online · São Paulo (SP)', 'retida'),
+        t('03:16', 'R$ 899,00', 'Loja Exemplo Celulares · online · São Paulo (SP)', 'retida'),
+        t('03:14', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos · online · São Paulo (SP)', 'caso'),
+        t('Ontem, 17:40', 'R$ 4.210,00', 'Agropecuária Exemplo · presencial · Chapecó (SC)', 'normal')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mockup 1 · Fila de alertas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.g10{--background:#f4f4f4;--layer-01:#ffffff;--layer-02:#f4f4f4;--layer-accent-01:#e0e0e0;--layer-selected-01:#e0e0e0;--field-02:#f4f4f4;--border-subtle-01:#e0e0e0;--border-subtle-02:#c6c6c6;--border-strong-01:#8d8d8d;--border-inverse:#161616;--border-interactive:#0f62fe;--text-primary:#161616;--text-secondary:#525252;--text-helper:#6f6f6f;--text-on-color:#ffffff;--text-disabled:#c6c6c6;--link-primary:#0f62fe;--link-primary-hover:#0043ce;--icon-primary:#161616;--icon-secondary:#525252;--focus:#0f62fe;--button-primary:#0f62fe;--button-secondary:#393939;--button-tertiary:#0f62fe;--button-danger-primary:#da1e28;--support-error:#da1e28;--support-success:#24a148;--support-warning:#f1c21b;--support-info:#0043ce;--notification-background-info:#edf5ff;--notification-border-info:#a6c8ff;--tag-background-red:#ffd7d9;--tag-color-red:#a2191f;--tag-background-yellow:#fddc69;--tag-color-yellow:#483700;--tag-background-gray:#e0e0e0;--tag-color-gray:#161616;--tag-background-green:#a7f0ba;--tag-color-green:#0e6027;--tag-background-blue:#d0e2ff;--tag-color-blue:#0043ce;--ai-border:#4589ff;--ai-border-subtle:#a6c8ff;--ai-surface-end:#edf5ff;--shell-background:#161616;--shell-border:#393939;--shell-text:#f4f4f4;--shell-icon:#f4f4f4;background:var(--background);color:var(--text-primary);font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.g10 *{box-sizing:border-box}
+.skip{position:absolute;left:-10000px;top:0;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:0;width:auto;height:auto;padding:14px 16px;background:var(--layer-01);color:var(--link-primary);outline:2px solid var(--focus);outline-offset:-2px;z-index:10}
+.hdr{height:48px;flex:0 0 48px;display:flex;align-items:center;background:var(--shell-background);border-bottom:1px solid var(--shell-border)}
+.hdr-name{display:flex;align-items:center;height:47px;padding:0 32px 0 16px;color:var(--shell-text);text-decoration:none;font-size:14px;line-height:18px;letter-spacing:.1px;white-space:nowrap}
+.hdr-act{display:inline-flex;align-items:center;justify-content:center;width:48px;height:47px;border:0;padding:0;background:transparent;color:var(--shell-icon);cursor:pointer}
+.snav{flex:0 0 256px;background:var(--layer-01);border-right:1px solid var(--border-subtle-01);padding:16px 0;display:flex;flex-direction:column}
+.snav-link{display:flex;align-items:center;gap:12px;min-height:32px;padding:0 16px;color:var(--text-secondary);text-decoration:none;font-size:14px;line-height:18px;font-weight:600;letter-spacing:.16px}
+.snav-link svg{flex-shrink:0}
+.snav-link.cur{background:var(--layer-selected-01);color:var(--text-primary);box-shadow:inset 3px 0 0 var(--border-interactive)}
+.snav-div{height:1px;background:var(--border-subtle-01);margin:8px 16px}
+.lbl{margin:0;font-size:12px;line-height:16px;letter-spacing:.32px;color:var(--text-secondary)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:'IBM Plex Mono',Menlo,monospace}
+.cs{display:inline-flex}
+.cs-btn{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;min-width:128px;height:40px;padding:0 16px;border:1px solid var(--border-inverse);background:transparent;color:var(--text-secondary);font:inherit;font-size:14px;line-height:18px;letter-spacing:.16px;white-space:nowrap;cursor:pointer}
+.cs-btn.first{border-radius:4px 0 0 4px}
+.cs-btn.last{border-radius:0 4px 4px 0;border-left-width:0}
+.cs-btn.sel{background:var(--border-inverse);color:var(--text-on-color)}
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:32px;min-height:48px;padding:0 16px;border:1px solid transparent;border-radius:0;font:inherit;font-size:14px;line-height:18px;letter-spacing:.16px;text-decoration:none;white-space:nowrap;text-align:left;cursor:pointer}
+.btn svg{flex-shrink:0}
+.btn-md{min-height:40px}
+.btn-sm{min-height:32px;padding:0 12px;gap:8px}
+.btn-primary{background:var(--button-primary);color:var(--text-on-color)}
+.btn-ghost{background:transparent;color:var(--link-primary)}
+.btn-icon{width:48px;padding:0;justify-content:center;color:var(--icon-primary);background:transparent}
+.tag{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:12px;font-size:12px;line-height:16px;letter-spacing:.32px;white-space:nowrap}
+.tag svg{flex-shrink:0}
+.tile{background:var(--layer-01);padding:16px}
+.ai{display:inline-flex;align-items:center;justify-content:center;height:24px;min-width:24px;padding:0 6px;border:1px solid var(--ai-border);border-radius:4px;background:linear-gradient(0deg,var(--ai-surface-end),var(--layer-01));color:var(--text-primary);font:inherit;font-size:12px;line-height:16px;font-weight:600;cursor:pointer;flex-shrink:0}
+.ntf{display:flex;align-items:flex-start;background:var(--notification-background-info);border:1px solid var(--notification-border-info);border-left:3px solid var(--support-info)}
+.tb{display:flex;align-items:center;height:48px;background:var(--layer-01)}
+.tb-search{flex:1 1 240px;min-width:0;display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;background:var(--field-02);color:var(--icon-primary)}
+.tb-search input{flex:1 1 auto;min-width:0;border:0;background:transparent;font:inherit;font-size:14px;color:var(--text-primary);outline:none}
+.tb-search input::placeholder{color:var(--text-helper)}
+.dd{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 16px;border:0;background:transparent;font:inherit;font-size:14px;line-height:18px;color:var(--text-primary);white-space:nowrap;cursor:pointer}
+.dd .k{color:var(--text-secondary)}
+.dt{min-width:1104px}
+.dt-row{display:grid;grid-template-columns:48px 80px minmax(128px,1fr) 112px minmax(160px,1.4fr) 104px 72px 112px minmax(160px,1fr) 80px 48px;align-items:center}
+.dt-head{height:48px;background:var(--layer-accent-01)}
+.dt-th{display:flex;align-items:center;gap:8px;height:48px;padding:0 16px;font-size:14px;line-height:18px;font-weight:600;color:var(--text-primary);white-space:nowrap}
+.dt-td{display:flex;align-items:center;height:47px;padding:0 16px;font-size:14px;line-height:18px;min-width:0;white-space:nowrap;overflow:hidden}
+.dt-td .t{overflow:hidden;text-overflow:ellipsis}
+.num{justify-content:flex-end;text-align:right;font-variant-numeric:tabular-nums}
+.cbx{display:inline-block;width:16px;height:16px;border:1px solid var(--icon-primary);border-radius:2px;background:var(--layer-01)}
+.pg{display:flex;align-items:center;height:48px;border-top:1px solid var(--border-subtle-01);background:var(--layer-01);font-size:14px;line-height:18px;color:var(--text-secondary)}
+.pg-sel{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 16px;border:0;border-right:1px solid var(--border-subtle-01);background:transparent;font:inherit;font-size:14px;color:var(--text-primary);cursor:pointer}
+.pg-nav{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border:0;border-left:1px solid var(--border-subtle-01);background:transparent;color:var(--icon-primary);cursor:pointer}
+.pg-nav[disabled]{color:var(--text-disabled);cursor:not-allowed}
+</style>
+</helmet>
+<div class="g10" style="position: relative; width: 100%; min-height: 960px; display: flex; flex-direction: column">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="hdr" aria-label="Watson · Prevenção a fraudes">
+    <a class="hdr-name" href="#"><span style="font-weight: 400">Watson</span>&nbsp;<span style="font-weight: 600">Prevenção a fraudes</span></a>
+    <div style="flex: 1 1 auto"></div>
+    <button class="hdr-act" type="button" aria-label="Buscar associado, cartão ou caso">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.4 10.4L14 14"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Notificações, 3 novas">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 11V7a4 4 0 0 1 8 0v4l1.5 1.5h-11L4 11z"></path><path d="M6.5 14.5h3"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Camila Rocha, perfil e turno">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 14c.5-2.8 2.5-4.2 5-4.2s4.5 1.4 5 4.2"></path></svg>
+    </button>
+    <button class="hdr-act" type="button" aria-label="Trocar de aplicativo">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2" width="2.5" height="2.5"></rect><rect x="6.75" y="2" width="2.5" height="2.5"></rect><rect x="11.5" y="2" width="2.5" height="2.5"></rect><rect x="2" y="6.75" width="2.5" height="2.5"></rect><rect x="6.75" y="6.75" width="2.5" height="2.5"></rect><rect x="11.5" y="6.75" width="2.5" height="2.5"></rect><rect x="2" y="11.5" width="2.5" height="2.5"></rect><rect x="6.75" y="11.5" width="2.5" height="2.5"></rect><rect x="11.5" y="11.5" width="2.5" height="2.5"></rect></svg>
+    </button>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1 1 auto">
+    <nav class="snav" aria-label="Navegação principal">
+      <a class="snav-link cur" href="#" aria-current="page">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+        Alertas
+      </a>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2" y="2.5" width="12" height="3"></rect><path d="M3 5.5v8h10v-8M6.5 8.5h3"></path></svg>
+        Casos encerrados
+      </a>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="6" cy="5.5" r="2.3"></circle><path d="M1.8 13.5c.4-2.4 2-3.6 4.2-3.6s3.8 1.2 4.2 3.6M10.5 3.4a2.3 2.3 0 0 1 0 4.3M12 9.9c1.2.4 2 1.6 2.2 3.6"></path></svg>
+        Associados
+      </a>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 14h12M3 11l3-4 3 2 4-5"></path></svg>
+        Monitoramento do modelo
+      </a>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 1.5h5l3 3v10H4z"></path><path d="M9 1.5v3h3M6 8h4M6 10.5h4"></path></svg>
+        Relatórios
+      </a>
+      <div class="snav-div" role="separator"></div>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4.5h6M11 4.5h3M2 11.5h3M8 11.5h6"></path><circle cx="9.5" cy="4.5" r="1.5"></circle><circle cx="6.5" cy="11.5" r="1.5"></circle></svg>
+        Regras e limites
+      </a>
+      <a class="snav-link" href="#">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="8" r="6.5"></circle><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.5"></path><path d="M8 11.4v.1" stroke-linecap="round" stroke-width="1.6"></path></svg>
+        Ajuda e atalhos
+      </a>
+    </nav>
+
+    <main id="conteudo" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 24px 32px 32px">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px">
+        <div style="flex: 1 1 320px; min-width: 0">
+          <h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">Alertas</h1>
+          <p style="margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">Turno da madrugada, 00:00 às 08:00 · atualizado às 03:18</p>
+        </div>
+        <div class="cs" role="tablist" aria-label="Modo de visualização">
+          <button class="cs-btn first sel" type="button" role="tab" aria-selected="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"></path></svg>
+            Fila
+          </button>
+          <button class="cs-btn last" type="button" role="tab" aria-selected="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="1.5" y="2" width="3.5" height="12"></rect><rect x="6.25" y="2" width="3.5" height="8"></rect><rect x="11" y="2" width="3.5" height="5"></rect></svg>
+            Quadro
+          </button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+        <div class="tile" style="display: flex; flex-direction: column; gap: 8px">
+          <p class="lbl">Alertas abertos</p>
+          <p style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">46</p>
+          <p class="lbl">21 novos na última hora</p>
+        </div>
+        <div class="tile" style="display: flex; flex-direction: column; gap: 8px">
+          <p class="lbl">Alto risco</p>
+          <p style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">12</p>
+          <p class="lbl" style="display: flex; align-items: center; gap: 4px; color: var(--tag-color-red)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.3"></circle><path d="M8 4.6v4.2"></path><path d="M8 11.2v.1" stroke-linecap="round" stroke-width="1.8"></path></svg>
+            3 parecem a mesma rajada
+          </p>
+        </div>
+        <div class="tile" style="display: flex; flex-direction: column; gap: 8px">
+          <p class="lbl">Tempo médio de decisão</p>
+          <p style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">1 min 48 s</p>
+          <p class="lbl" style="display: flex; align-items: center; gap: 4px; color: var(--tag-color-green)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.3"></circle><path d="M5 8.2l2 2 4-4"></path></svg>
+            Dentro da meta de 2 min
+          </p>
+        </div>
+        <div class="tile" style="display: flex; flex-direction: column; gap: 8px">
+          <p class="lbl">Aguardando associado</p>
+          <p style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 400">9</p>
+          <p class="lbl">Resposta média no app: 46 s</p>
+        </div>
+      </div>
+
+      <div class="ntf" role="status">
+        <div style="padding: 14px 12px 14px 13px; color: var(--support-info); display: flex">
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="8" cy="8" r="6.3"></circle><path d="M8 7.2v4.3"></path><path d="M8 4.8v.1" stroke-linecap="round" stroke-width="1.8"></path></svg>
+        </div>
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 12px 0">
+          <p style="margin: 0; font-size: 14px; line-height: 20px; font-weight: 600">3 alertas parecem a mesma rajada</p>
+          <button class="ai" type="button" aria-label="IA: o Watson agrupou estes alertas. Ver explicação">IA</button>
+          <p style="margin: 0; font-size: 14px; line-height: 20px">Casos #5105, #5106 e #5107 vêm do cartão final 4417 (Marta S.): R$ 1.980,00 em 7 min, todas online. Agrupar evita três análises do mesmo golpe.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0; padding: 8px 0 8px 16px; flex-shrink: 0">
+          <a class="btn btn-ghost btn-sm" href="#">Agrupar em um caso</a>
+        </div>
+        <button class="btn btn-icon" type="button" aria-label="Fechar notificação" style="min-height: 46px; width: 48px">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+        </button>
+      </div>
+
+      <section style="background: var(--layer-01); display: flex; flex-direction: column" aria-labelledby="titulo-fila">
+        <div style="padding: 16px 16px 24px">
+          <h2 id="titulo-fila" style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 400">Fila por prioridade</h2>
+          <p style="margin: 2px 0 0; font-size: 14px; line-height: 20px; color: var(--text-secondary)">Ordenada pelo score do Watson. Clique na linha para abrir o caso; J e K navegam pela fila.</p>
+        </div>
+
+        <div class="tb" role="toolbar" aria-label="Ferramentas da fila">
+          <label class="tb-search">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.4 10.4L14 14"></path></svg>
+            <input type="search" placeholder="Buscar por caso, associado ou estabelecimento" aria-label="Buscar na fila">
+          </label>
+          <button class="dd" type="button" aria-haspopup="listbox"><span class="k">Risco:</span> Todos
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+          </button>
+          <button class="dd" type="button" aria-haspopup="listbox"><span class="k">Canal:</span> Todos
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+          </button>
+          <button class="dd" type="button" aria-haspopup="listbox"><span class="k">Estado:</span> Abertos
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+          </button>
+          <button class="btn btn-icon" type="button" aria-label="Configurar colunas">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 4.5h6M11 4.5h3M2 11.5h3M8 11.5h6"></path><circle cx="9.5" cy="4.5" r="1.5"></circle><circle cx="6.5" cy="11.5" r="1.5"></circle></svg>
+          </button>
+          <a class="btn btn-primary" href="#">Abrir próximo caso
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg>
+          </a>
+        </div>
+
+        <div style="overflow-x: auto">
+          <div class="dt" role="table" aria-label="Fila de alertas, ordenada por score" aria-rowcount="47">
+            <div class="dt-row dt-head" role="row">
+              <div class="dt-th" role="columnheader"><span class="cbx" role="checkbox" aria-checked="false" tabindex="0" aria-label="Selecionar todos os casos da página"></span></div>
+              <div class="dt-th" role="columnheader">Caso</div>
+              <div class="dt-th" role="columnheader">Associado</div>
+              <div class="dt-th num" role="columnheader">Valor</div>
+              <div class="dt-th" role="columnheader">Estabelecimento</div>
+              <div class="dt-th" role="columnheader">Canal</div>
+              <div class="dt-th num" role="columnheader" aria-sort="descending">Score
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M8 2.5v11M4 9.5l4 4 4-4"></path></svg>
+              </div>
+              <div class="dt-th" role="columnheader">Risco</div>
+              <div class="dt-th" role="columnheader">Estado</div>
+              <div class="dt-th num" role="columnheader">Na fila</div>
+              <div class="dt-th" role="columnheader"><span class="vh">Ações</span></div>
+            </div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+              <div class="dt-row" role="row" aria-selected="{{r.sel}}" style="border-top: 1px solid var(--border-subtle-01); background: {{r.bg}}; color: {{r.fg}}; box-shadow: {{r.ring}}">
+                <div class="dt-td" role="cell"><span class="cbx" role="checkbox" aria-checked="false" tabindex="0" aria-label="{{r.cbxLabel}}"></span></div>
+                <div class="dt-td mono" role="cell"><a href="#" style="color: {{r.link}}">{{r.id}}</a></div>
+                <div class="dt-td" role="cell"><span class="t">{{r.nome}}</span></div>
+                <div class="dt-td num" role="cell">{{r.valor}}</div>
+                <div class="dt-td" role="cell"><span class="t">{{r.loja}}</span></div>
+                <div class="dt-td" role="cell">{{r.canal}}</div>
+                <div class="dt-td num mono" role="cell">{{r.score}}</div>
+                <div class="dt-td" role="cell">
+                  <span class="tag" style="background: {{r.tagBg}}; color: {{r.tagFg}}">
+                    <sc-if value="{{r.alto}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6"></circle><path d="M8 4.8v4"></path><path d="M8 11.1v.1" stroke-linecap="round" stroke-width="1.8"></path></svg></sc-if>
+                    <sc-if value="{{r.medio}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 2.2l6.3 11.3H1.7z" stroke-linejoin="round"></path><path d="M8 6.4v3.4"></path><path d="M8 11.7v.1" stroke-linecap="round" stroke-width="1.8"></path></svg></sc-if>
+                    <sc-if value="{{r.baixo}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6"></circle><path d="M5.2 8h5.6"></path></svg></sc-if>
+                    {{r.risco}}
+                  </span>
+                </div>
+                <div class="dt-td" role="cell"><span class="t">{{r.estado}}</span></div>
+                <div class="dt-td num" role="cell">{{r.tempo}}</div>
+                <div class="dt-td" role="cell" style="padding: 0">
+                  <button class="btn btn-icon" type="button" aria-label="{{r.menuLabel}}" style="min-height: 47px; color: {{r.fg}}">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M8 3.5v.1M8 8v.1M8 12.5v.1"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div class="pg" role="navigation" aria-label="Paginação da fila">
+          <span style="padding: 0 0 0 16px">Itens por página:</span>
+          <button class="pg-sel" type="button" aria-label="Itens por página, 8">8
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+          </button>
+          <span style="padding: 0 16px">1–8 de 46 itens</span>
+          <div style="flex: 1 1 auto"></div>
+          <button class="pg-sel" type="button" aria-label="Página 1" style="border-left: 1px solid var(--border-subtle-01); border-right: 0">1
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 6l4 4 4-4"></path></svg>
+          </button>
+          <span style="padding: 0 16px 0 0">de 6 páginas</span>
+          <button class="pg-nav" type="button" aria-label="Página anterior" disabled="disabled">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M10 4L6 8l4 4"></path></svg>
+          </button>
+          <button class="pg-nav" type="button" aria-label="Próxima página">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Tokens Carbon (g10). Os valores ficam aqui para os holes; o nome é o token.
+    const token = {
+      layer01: '#ffffff', layerSelected01: '#e0e0e0',
+      textPrimary: '#161616', textSecondary: '#525252',
+      linkPrimary: '#0f62fe', linkPrimaryHover: '#0043ce', focus: '#0f62fe',
+      tagBackgroundRed: '#ffd7d9', tagColorRed: '#a2191f',
+      tagBackgroundYellow: '#fddc69', tagColorYellow: '#483700',
+      tagBackgroundGray: '#e0e0e0', tagColorGray: '#161616'
+    };
+    const nivel = s => (s >= 0.8 ? 'alto' : s >= 0.5 ? 'medio' : 'baixo');
+    const tagDe = {
+      alto: { risco: 'Alto', tagBg: token.tagBackgroundRed, tagFg: token.tagColorRed },
+      medio: { risco: 'Médio', tagBg: token.tagBackgroundYellow, tagFg: token.tagColorYellow },
+      baixo: { risco: 'Baixo', tagBg: token.tagBackgroundGray, tagFg: token.tagColorGray }
+    };
+    const dados = [
+      ['#5107', 'Marta S.', 'R$ 750,00', 'Loja Exemplo Celulares', 'Online', 0.94, 'Novo', '4 min'],
+      ['#4821', 'Valdir B.', 'R$ 2.349,90', 'Loja Exemplo Eletrônicos', 'Online', 0.92, 'Novo', '3 min', true],
+      ['#5106', 'Marta S.', 'R$ 640,00', 'Loja Exemplo Games', 'Online', 0.90, 'Novo', '7 min'],
+      ['#5105', 'Marta S.', 'R$ 590,00', 'Loja Exemplo Moda', 'Online', 0.88, 'Novo', '9 min'],
+      ['#4790', 'Jorge P.', 'R$ 2.450,00', 'Agropecuária Modelo', 'Presencial', 0.81, 'Aguarda associado', '12 min'],
+      ['#4777', 'Ana L.', 'R$ 389,90', 'Viagens Fictícias', 'Online', 0.74, 'Em análise', '16 min'],
+      ['#4760', 'Rui C.', 'R$ 3.200,00', 'Máquinas Exemplo', 'Presencial', 0.66, 'Aguarda associado', '21 min'],
+      ['#4741', 'Lia M.', 'R$ 45,00', 'Streaming Demo', 'Online', 0.38, 'Novo', '33 min']
+    ];
+    return {
+      rows: dados.map(d => {
+        const n = nivel(d[5]);
+        const sel = d[8] === true;
+        return Object.assign({
+          id: d[0], nome: d[1], valor: d[2], loja: d[3], canal: d[4],
+          score: d[5].toFixed(2).replace('.', ','),
+          estado: d[6], tempo: d[7],
+          alto: n === 'alto', medio: n === 'medio', baixo: n === 'baixo',
+          sel: sel ? 'true' : 'false',
+          bg: sel ? token.layerSelected01 : token.layer01,
+          fg: sel ? token.textPrimary : token.textSecondary,
+          link: sel ? token.linkPrimaryHover : token.linkPrimary,
+          ring: sel ? 'inset 0 0 0 2px ' + token.focus : 'none',
+          cbxLabel: 'Selecionar caso ' + d[0],
+          menuLabel: 'Mais ações do caso ' + d[0]
+        }, tagDe[n]);
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

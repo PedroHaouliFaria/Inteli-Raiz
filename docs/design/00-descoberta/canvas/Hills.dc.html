@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cenário as-is, POV e Hills</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0f62fe}a:hover{color:#0043ce}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1040px; box-sizing: border-box; background: #ffffff; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; padding: 56px 80px; display: flex; flex-direction: column; gap: 28px">
+  <header style="display: flex; flex-direction: column; gap: 8px">
+    <p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.32px; color: #525252">00 DESCOBERTA · AS-IS SCENARIO MAP → POINT OF VIEW → HILLS</p>
+    <h1 style="margin: 0; font-size: 42px; line-height: 50px; font-weight: 300">Hoje, e para onde queremos ir</h1>
+  </header>
+
+  <section style="display: flex; flex-direction: column; gap: 12px">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 600">Cenário as-is · Camila trata um alerta</h2>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; background: #e0e0e0">
+      <sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+        <div style="background: #f4f4f4; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+          <p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #525252">{{s.n}}</p>
+          <p style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 600">{{s.t}}</p>
+          <p style="margin: 0; font-size: 13px; line-height: 18px; color: #393939">{{s.d}}</p>
+          <p style="margin: 0; font-size: 13px; line-height: 18px; color: #a2191f">Dor: {{s.pain}}</p>
+          <p style="margin: 0; font-size: 13px; line-height: 18px; color: #0043ce">Oportunidade: {{s.opp}}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{povs}}" as="p" hint-placeholder-count="2">
+      <div style="background: #f4f4f4; padding: 20px 24px; display: flex; flex-direction: column; gap: 6px">
+        <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.32px; color: #525252">POINT OF VIEW · {{p.who}}</p>
+        <p style="margin: 0; font-size: 18px; line-height: 26px; font-weight: 300">{{p.text}}</p>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
+    <h2 style="margin: 0; font-size: 16px; font-weight: 600">Hills · Who, What, Wow</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; flex-grow: 1">
+      <sc-for list="{{hills}}" as="h" hint-placeholder-count="3">
+        <div style="background: #161616; color: #f4f4f4; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #78a9ff">{{h.n}}</p>
+          <p style="margin: 0; font-size: 20px; line-height: 28px">{{h.title}}</p>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px">
+            <p style="margin: 0"><span style="color: #a8a8a8">Who · </span>{{h.who}}</p>
+            <p style="margin: 0"><span style="color: #a8a8a8">What · </span>{{h.what}}</p>
+            <p style="margin: 0"><span style="color: #a8a8a8">Wow · </span>{{h.wow}}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      steps: [
+        { n: '01', t: 'Recebe o alerta', d: 'Pega o próximo da fila por ordem de chegada.', pain: 'fila sem prioridade', opp: 'ordenar por risco × valor' },
+        { n: '02', t: 'Entende o caso', d: 'Vê o score do motor de regras.', pain: 'score sem porquê', opp: 'fatores explicáveis' },
+        { n: '03', t: 'Junta contexto', d: 'Abre transações, cadastro, dispositivo e localização.', pain: '4 a 5 sistemas', opp: 'uma tela de caso' },
+        { n: '04', t: 'Fala com o associado', d: 'Liga ou manda SMS.', pain: 'ninguém atende; parece golpe', opp: 'alerta no app, um toque' },
+        { n: '05', t: 'Decide', d: 'Bloqueia, libera ou escala.', pain: 'insegurança no sinal ambíguo', opp: 'recomendação com confiança' },
+        { n: '06', t: 'Registra', d: 'Escreve a justificativa à mão.', pain: 'retrabalho', opp: 'justificativa gerada e editável' }
+      ],
+      povs: [
+        { who: 'CAMILA', text: 'Precisa entender por que uma compra é suspeita e agir em minutos, porque os sinais estão espalhados em vários sistemas e 99,9% das transações são legítimas.' },
+        { who: 'VALDIR', text: 'Precisa confirmar ou negar uma compra com segurança e sem ligar para ninguém, porque não confia em contatos por telefone e só percebe o problema no balcão.' }
+      ],
+      hills: [
+        { n: 'HILL 1 · DECISÃO EXPLICADA', title: 'Decidir um alerta em uma única tela', who: 'Analista de prevenção', what: 'decide um alerta de alto risco vendo os fatores do risco e a recomendação do agente', wow: 'em menos de 2 minutos, sem abrir outro sistema' },
+        { n: 'HILL 2 · UM TOQUE', title: 'Confirmar a compra direto no app', who: 'Associado', what: 'confirma ou contesta uma compra suspeita no app', wow: 'em menos de 30 segundos, sem ligar e sabendo que a mensagem é legítima' },
+        { n: 'HILL 3 · SEM ATRITO', title: 'Quem é legítimo não fica travado', who: 'Associado comprando de verdade', what: 'tem a compra liberada assim que confirma', wow: 'sem recusa no balcão' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

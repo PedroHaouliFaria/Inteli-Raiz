@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mapas de empatia</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&amp;family=IBM+Plex+Mono&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0f62fe}a:hover{color:#0043ce}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1040px; box-sizing: border-box; background: #ffffff; color: #161616; font-family: 'IBM Plex Sans', Arial, sans-serif; padding: 64px 80px; display: flex; flex-direction: column; gap: 32px">
+  <header style="display: flex; flex-direction: column; gap: 8px">
+    <p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.32px; color: #525252">00 DESCOBERTA · EMPATHY MAP (IBM ENTERPRISE DESIGN THINKING)</p>
+    <h1 style="margin: 0; font-size: 42px; line-height: 50px; font-weight: 300">O que dizem, pensam, fazem e sentem</h1>
+  </header>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; flex-grow: 1">
+    <sc-for list="{{maps}}" as="m" hint-placeholder-count="2">
+      <section style="display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 400">{{m.name}}</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; background: #c6c6c6; flex-grow: 1">
+          <sc-for list="{{m.q}}" as="q" hint-placeholder-count="4">
+            <div style="background: #f4f4f4; padding: 20px; display: flex; flex-direction: column; gap: 10px">
+              <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.32px; color: #0f62fe">{{q.t}}</p>
+              <sc-for list="{{q.items}}" as="it" hint-placeholder-count="3">
+                <p style="margin: 0; background: #ffffff; padding: 10px 12px; font-size: 14px; line-height: 20px">{{it}}</p>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background: #161616; color: #f4f4f4; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px">
+          <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.32px; color: #a8a8a8">DOR CENTRAL</p>
+          <p style="margin: 0; font-size: 16px; line-height: 22px">{{m.pain}}</p>
+        </div>
+      </section>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      maps: [
+        { name: 'Camila · analista de prevenção', pain: 'Contexto espalhado e score sem explicação deixam a decisão lenta e insegura.', q: [
+          { t: 'DIZ', items: ['“De novo um alerta de padaria.”', '“Me mostra por que o score deu 0,9.”', '“Liguei, ninguém atendeu.”'] },
+          { t: 'PENSA', items: ['Se eu liberar e for fraude, a culpa é minha.', 'Ele nunca comprou online. Será que começou?', 'Estou copiando dado de um sistema para o outro.'] },
+          { t: 'FAZ', items: ['Alterna entre 4 ou 5 sistemas por caso.', 'Liga e manda SMS para o associado.', 'Escreve a justificativa à mão.'] },
+          { t: 'SENTE', items: ['Pressão por SLA e meta de perda.', 'Cansaço de falso positivo.', 'Satisfação ao pegar uma rajada a tempo.'] }
+        ]},
+        { name: 'Valdir · associado', pain: 'Não sabe em quem confiar e não entende o que está acontecendo com o cartão.', q: [
+          { t: 'DIZ', items: ['“Não fui eu que comprei isso!”', '“Por que bloquearam meu cartão?”', '“Minha filha que mexe nisso.”'] },
+          { t: 'PENSA', items: ['Será que essa mensagem é golpe?', 'Vou ter que ir até a agência.', 'Se eu clicar errado, perco dinheiro.'] },
+          { t: 'FAZ', items: ['Ignora ligação de número desconhecido.', 'Abre o app só quando chega notificação.', 'Pede ajuda à família.'] },
+          { t: 'SENTE', items: ['Medo de golpe.', 'Vergonha com o cartão recusado no balcão.', 'Alívio quando alguém resolve por ele.'] }
+        ]}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
