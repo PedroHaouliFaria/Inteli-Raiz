@@ -1,0 +1,35 @@
+# Pendências e Aceite
+
+**Versão:** 0.2 · **Data:** 28/10/2026 (corrigido após revisão do Codex)
+**Responsável:** Pessoa 4
+**Fontes:** inspeção frontend `212655c`; inspeção backend `b39bbb9` (staged em `../Inteli-Raiz-pessoa4`); plano `8942cc5` §§3–6.
+
+Cada pendência lista o achado, o impacto, a alteração solicitada de forma executável, o arquivo/componente, o responsável por função e o critério de encerramento. Divergência de código foi verificada contra a versão inspecionada; não reclassificar sem verificar a versão atual.
+
+Não marcar cards do grupo como concluídos a partir deste documento. D12 é revisado pela Pessoa 2; D11, pela Pessoa 3; D13, pela Pessoa 2 com validação técnica dos autores.
+
+---
+
+## Tabela de pendências
+
+| ID | Achado e evidência | Impacto | Alteração solicitada | Arquivo / componente | Responsável por função | Dependência | Teste de aceite | Estado |
+|---|---|---|---|---|---|---|---|---|
+| PEN-01 | **UI: 2 botões + biometria + mensagem de bloqueio de cartão** · `MemberPhone.jsx` (P4-OBS-01/02/03) · `store.jsx` (P4-OBS-07) | D12 não testável; D11 bloqueado; R03 e R11 violados pela interface | (1) Substituir `itWasMe`/`notMe` por `AUTHORIZE`/`DENY`/`UNSURE`; (2) remover tela `biometrics` e bloco `biometrics` do reducer; (3) alterar tela `protected` para: "A compra foi recusada na simulação. Seu cartão não foi bloqueado." | `watson/frontend/src/features/member-app/MemberPhone.jsx`; `watson/frontend/src/state/store.jsx` | Leonardo (frontend) | Nenhuma adicional | Pessoa 4 percorre os três cenários: sem tela de biometria em nenhum caso; tela de resultado `DENY` não menciona bloqueio de cartão nem promessa de novo cartão | identificado |
+| PEN-02 | **UI: link de atendimento sem ação** · `MemberPhone.jsx` linha 55 (P4-OBS-04) | Pedido de atendimento não funciona; R08 não testável; HIP-02 não verificável | Implementar ação para "Quero falar com alguém": chamar `POST /api/purchases/{case_id}/review`; exibir protocolo retornado; mostrar texto: "Sua solicitação foi registrada. Protocolo: {protocol}. Você ainda pode responder à compra enquanto o prazo não expirar."; **não mudar o status da compra** (permanece `AGUARDANDO_ASSOCIADO`) | `watson/frontend/src/features/member-app/MemberPhone.jsx`; `watson/frontend/src/api/` | Leonardo (frontend) | Nenhuma (endpoint já existe no backend `b39bbb9`) | Pessoa 4 clica em "Quero falar com alguém" e vê protocolo; os três botões de resposta continuam disponíveis; compra permanece `AGUARDANDO_ASSOCIADO` | identificado |
+| PEN-03 | **UI: sem chamadas à API; estado no reducer do browser** · `store.jsx` — todo o fluxo (P4-OBS-05) | R10 violado: recarga da página perde o estado; D11 não executável via interface | Substituir ações do reducer que mudam estado de negócio por chamadas à API: `GET /api/purchases/{case_id}` para carregar; `POST /api/confirmations/{challenge_id}/response` para responder; `GET /api/purchases/{case_id}/status` para verificar status | `watson/frontend/src/state/store.jsx`; `watson/frontend/src/api/` | Leonardo (frontend) | Nenhuma (rotas existem no backend `b39bbb9`) | Pessoa 4 recarrega a página após responder e vê o mesmo status retornado pela API | identificado |
+| PEN-04 | **`pydantic_ai` não declarado em nenhum extra do `pyproject.toml`** · `pyproject.toml` `b39bbb9` — `pydantic_ai` ausente de todos os extras | 15 testes falham com `ModuleNotFoundError: No module named 'pydantic_ai'`; R08 e P4-T12 não verificáveis | Adicionar `pydantic-ai` ao extra `.[dev]` ou criar extra `agent` e documentar no README: `pip install -e ".[dev,agent]"` | `watson/backend/pyproject.toml`; `watson/backend/README.md` | Lucas (backend) | Nenhuma | `pytest tests/integration/test_chat.py` passa sem erros de importação (ainda que com FunctionModel simulado) | identificado |
+| PEN-05 | **`scikit-learn` 1.6.1 ausente no `.[dev]`; `modelo_rf.joblib` existe mas não pôde ser carregado** · `pyproject.toml` `b39bbb9` — extra `risk` não está no `.[dev]`; `outputs/modelo_rf.joblib` presente na worktree `../Inteli-Raiz-pessoa4` | 2 testes de score ignorados (`SKIPPED`); R01/R07 não verificáveis ponta a ponta | Documentar no README: `pip install -e ".[dev,risk]"` para habilitar testes de score; não é preciso criar o arquivo — ele existe | `watson/backend/pyproject.toml`; `watson/backend/README.md` | Lucas (backend) | Nenhuma | `test_t007_score_approximately_0_9917` passa (não ignorado) ao instalar `.[dev,risk]` | identificado |
+| PEN-06 | **Isolamento entre associados verificado na API mas não testável pela interface** · frontend usa `caseId` fixo `'4821'`; sem tela de login/persona | R05 verificado nos testes de backend; sem sessão fictícia via interface | (1) Adicionar tela de seleção de persona usando `GET /api/session/personas`; (2) `MemberPhone.jsx` receber `case_id` da API em vez de valor fixo | `watson/frontend/src/features/member-app/MemberPhone.jsx`; nova tela de login/persona | Leonardo (frontend) | PEN-03 | Pessoa 4 faz login como C-ANA e como C-BRUNO e verifica que cada um vê apenas suas compras | identificado |
+| PEN-08 | **Texto de resultado `reviewing`: "Ela segue pausada e nada foi cobrado"** · `MemberPhone.jsx` linha 53 (P4-OBS-06) | Promessa operacional (não cobrado) fora do escopo do protótipo | Substituir por: "Registramos sua resposta. Um analista vai avaliar o caso. Protocolo: {protocol}." | `watson/frontend/src/features/member-app/MemberPhone.jsx` | Leonardo (frontend) | PEN-01 (fazer junto) | Tela pós-`UNSURE` não menciona "nada foi cobrado" nem "pausada" | identificado |
+| PEN-09 | **Tela de expiração ausente** · nenhum `screen='expired'` em `MemberPhone.jsx` (P4-OBS-08) | R04 não representado na interface; associado não vê o status `CONFIRMACAO_EXPIRADA` | Adicionar `screen='expired'` com texto: "O prazo para responder expirou. Nenhuma autorização foi feita. Você pode solicitar atendimento." | `watson/frontend/src/features/member-app/MemberPhone.jsx`; `watson/frontend/src/state/store.jsx` | Leonardo (frontend) | PEN-03 | Caso P4-T06 executável via interface com estado correto exibido | identificado |
+| PEN-10 | **Prazo não exibido na tela principal** · ausente em `MemberPhone.jsx` (P4-OBS-09) | Associado não sabe quando a confirmação expira; plano §5 exige exibir `expires_at` | Exibir prazo em formato legível: "Válida até {HH:MM}" abaixo da pergunta; usar `expires_at` retornado pela API | `watson/frontend/src/features/member-app/MemberPhone.jsx` | Leonardo (frontend) | PEN-03 | Prazo visível na tela principal quando status é `AGUARDANDO_ASSOCIADO` | identificado |
+
+---
+
+## Regras de encerramento
+
+- Uma pendência **não pode ser encerrada** pelo autor da alteração sem revisão de pelo menos uma pessoa diferente.
+- Pendências P0 (PEN-01 a PEN-03) devem ser resolvidas antes de declarar D11 executável.
+- PEN-04 e PEN-05 (P1) devem ser resolvidas antes de executar a condição B de D13 (agente com LLM real e score do modelo habilitados).
+- Cada encerramento exige: branch/commit da correção + evidência do teste de aceite passando + revisor identificado.
+- Reabrir qualquer teste de D11 que o aceite de uma pendência afete.
