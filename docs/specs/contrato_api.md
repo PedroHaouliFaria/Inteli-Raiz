@@ -251,7 +251,7 @@ Regras dos campos:
 - Se nenhuma regra disparar, `signals` vem vazio e `headline` diz: "Pedimos sua confirmação por precaução. Esta compra não tem um sinal de alerta específico." A tela não inventa um motivo.
 - Na lista (`GET /api/purchases`), `expires_at` só vem preenchido enquanto o status é `AGUARDANDO_ASSOCIADO`.
 - `signals` vêm de **regras** sobre os dados da compra (`source: "regra"`). O conjunto de regras é do dono dos sinais (Pedro R. na recomendação); este contrato fixa só o formato. Só vira sinal a feature com significado documentado: as de velocidade e distância (`cp_card_term_vel_1h` etc.) não têm definição na base e ficam de fora até alguém documentá-las.
-- **O score do modelo não aparece para o associado.** Ele não é probabilidade calibrada (§7 do plano), e "99% de chance de fraude" na tela induziria a decisão. O score fica na análise (§10), visível ao agente e à analista.
+- **O score do modelo não aparece para o associado.** Ele não é probabilidade calibrada (§7 do plano), e "99% de chance de fraude" na tela induziria a decisão. O score fica na análise gravada e aparece só para a analista (`GET /api/reviews`). O agente conversa com o associado, então também não recebe o score (§10).
 - Nunca aparecem: `feedback_label`, `customer_id`, `card_id` completo, renda, saldo ou limite.
 
 **404** `NOT_FOUND`, se a compra não existe ou é de outra pessoa.
@@ -545,25 +545,26 @@ class AgentDeps:
 
 As ferramentas **não recebem `case_id` nem `customer_id` do LLM**. Isso impede que um prompt peça a compra de outra pessoa (R05, R09).
 
-Análise (`avaliar_transacao`):
+Análise (`avaliar_transacao`), na versão que vai para o agente:
 
 ```json
 {
   "analysis_id": "A-007-v1",
-  "score": 0.9917,
-  "score_source": "modelo_local",
-  "model_version": "rf-2026-10-27",
+  "score_available": true,
   "decision": "SOLICITAR_CONFIRMACAO",
   "policy_version": "confirmacao-v2",
   "signals": [{"code": "MADRUGADA", "label": "Feita de madrugada, às 3h.", "source": "regra"}],
   "gaps": ["Nome do estabelecimento não disponível na base sintética."],
-  "evaluated_at": "2026-10-28T03:12:00Z",
-  "note": "Score de ranqueamento, não probabilidade calibrada. Não citar como porcentagem de fraude."
+  "evaluated_at": "2026-10-28T03:12:00Z"
 }
 ```
 
-- `score_source` ∈ `modelo_local`, `watsonx`, `regras` (§7 do plano: plano alternativo identificado).
+- O agente roda no chat do associado, e o que entra no contexto do LLM pode sair por injeção de prompt. Por isso a ferramenta **não** devolve `score`, `score_source` nem `model_version`: só se houve avaliação (`score_available`), a decisão da política, os sinais e as lacunas. O score completo fica na análise gravada e aparece só para a analista.
 - `decision` ∈ `LIBERAR`, `SOLICITAR_CONFIRMACAO`, `REVISAO`.
+
+Na análise gravada (vista pela analista):
+
+- `score_source` ∈ `modelo_local`, `watsonx`, `regras` (§7 do plano: plano alternativo identificado).
 - `score` é `null` quando `score_source` é `regras` sem modelo, ou quando a avaliação falhou.
 
 Instruções fixas do agente, além do prompt: não pressionar a autorização, não pedir senha, PIN ou número completo do cartão, não inventar nome de estabelecimento, não citar o score como porcentagem, não afirmar que um sinal causa a avaliação, e dizer que só os botões autorizam ou recusam.
