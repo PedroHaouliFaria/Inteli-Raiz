@@ -16,6 +16,9 @@ import BoardPage from '../features/board/BoardPage';
 import CasePage from '../features/case/CasePage';
 import ComingSoonPage from '../features/coming-soon/ComingSoonPage';
 import ModelLabPage from '../features/model-lab/ModelLabPage';
+import SessionGate, { useSession } from '../features/session/SessionGate.jsx';
+import AssociateApp from '../features/associate/AssociateApp.jsx';
+import AnalystApp from '../features/analyst/AnalystApp.jsx';
 
 // Alta fidelidade do protótipo 3 (ponta a ponta) com os chips do protótipo 2. Escolha do Leo (26/10/2026):
 // produto: o celular do associado abre num painel quando o Watson envia um aviso (variação 2);
@@ -162,7 +165,15 @@ function Shell() {
   );
 }
 
-export default function App() {
+function AppRouter() {
+  const session = useSession();
+  if (session?.role === 'ASSOCIADO') {
+    return <AssociateApp />;
+  }
+  if (session?.role === 'ANALISTA') {
+    return <AnalystApp />;
+  }
+  // Role desconhecido: mantém a Shell existente (legado)
   return (
     <WatsonProvider>
       <GlossaryProvider>
@@ -171,5 +182,13 @@ export default function App() {
         </RailProvider>
       </GlossaryProvider>
     </WatsonProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <SessionGate>
+      <AppRouter />
+    </SessionGate>
   );
 }
