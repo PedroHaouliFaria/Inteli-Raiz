@@ -55,6 +55,9 @@ class Settings(BaseSettings):
     # Limiar F2 do notebook 03: a partir dele o modelo considera a transação fraude.
     risk_decision_threshold: float = 0.817
 
+    # Endpoints de demonstração (§9): só registrados com DEMO_MODE=true
+    demo_mode: bool = False
+
 
 @lru_cache
 def get_settings() -> Settings:

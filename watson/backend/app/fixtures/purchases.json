@@ -112,5 +112,42 @@
       "primeira_compra_cartao": "0",
       "valor_vs_limite": "0.028410859415528275"
     }
+  },
+  {
+    "fixture_id": "falha_modelo",
+    "case_id": null,
+    "challenge_id": null,
+    "owner": "C-ANA",
+    "occurred_at": "2026-10-27T14:30:00Z",
+    "card_id": "CARD_SYN_0051234",
+    "features": {
+      "tipo_transacao": "credito",
+      "modalidade_transacao": "cartao_nao_presente",
+      "card_presence_flag": "N",
+      "card_type": "credito",
+      "card_brand": "BANDEIRA_A",
+      "mcc": "5411",
+      "amount_fees": "1.50",
+      "acceptor_risk": "40.0",
+      "acceptor_region": "SP",
+      "customer_risk_rating": "baixo",
+      "customer_presumed_income": "2000.00",
+      "customer_reported_income": "3000.00",
+      "customer_region": "SP",
+      "account_available_credit": "500.00",
+      "account_balance": "800.00",
+      "card_credit_limit": "5000.00",
+      "cardid_count_1m": "5.0",
+      "cp_card_term_vel_1h": "10.0",
+      "cp_card_prev_term_dist_1h": "20.0",
+      "digitalwallettoken_count_3m": "15.0",
+      "hora": "11",
+      "dia_semana": "1",
+      "madrugada": "0",
+      "cnp_credito": "1",
+      "valor_vs_media_cartao": "0.5",
+      "primeira_compra_cartao": "0",
+      "valor_vs_limite": "0.02"
+    }
   }
 ]

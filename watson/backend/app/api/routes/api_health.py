@@ -4,6 +4,7 @@ Diferente do antigo /health (mantido para compatibilidade), este:
 - Fica sob o prefixo /api
 - Inclui model.loaded, agent.configured, policy_version
 - Não expõe dado de pessoa
+- Não carrega o modelo do disco: lê o estado gravado no lifespan (app.risk.state).
 """
 from __future__ import annotations
 
@@ -18,21 +19,13 @@ router = APIRouter(tags=["api-health"])
 def api_health() -> ApiHealthResponse:
     """Saúde do serviço (§9 do contrato). Público, sem dado de pessoa."""
     from app.config import get_settings
+    import app.risk.state as risk_state
+
     settings = get_settings()
 
-    # Verifica se o modelo local está disponível
-    model_loaded = False
-    model_version: str | None = None
-    try:
-        import pathlib
-        from app.risk.models import LocalRiskModel
-        model_path = pathlib.Path(settings.risk_model_path)
-        if model_path.exists():
-            m = LocalRiskModel(model_path)
-            model_loaded = True
-            model_version = m.name
-    except Exception:
-        model_loaded = False
+    # Lê o estado do modelo gravado uma única vez no lifespan — sem instanciar o modelo
+    model_loaded = risk_state.model_loaded
+    model_version = risk_state.model_version
 
     # Verifica se o agente está configurado
     agent_configured = bool(settings.groq_api_key)

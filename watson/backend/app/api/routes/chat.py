@@ -6,6 +6,7 @@ POST /api/purchases/{case_id}/chat  — envia mensagem ao agente
 from __future__ import annotations
 
 import logging
+import math
 import re
 
 from fastapi import APIRouter, Depends
@@ -37,6 +38,44 @@ _GREETING_TEMPLATE = (
 )
 
 router = APIRouter(tags=["chat"])
+
+_SAFE_SCORE_MSG = (
+    "Não posso fornecer o score desta compra. "
+    "Para dúvidas, use os botões da tela ou peça uma revisão."
+)
+
+
+def _scrub_score(text: str, score: float | None) -> str:
+    """Remove o valor numérico do score da resposta do LLM.
+
+    Se o score gravado aparecer na resposta (ex.: por injeção de prompt),
+    substitui toda a resposta por uma mensagem segura e registra aviso.
+    Verifica o valor com até 4 casas decimais e representações percentuais.
+    """
+    if score is None:
+        return text
+
+    # Gera padrões a verificar: "0.9917", "99.17", "99%", "99,17%", etc.
+    patterns = set()
+    # Valor direto com até 4 casas
+    patterns.add(f"{score:.4f}")
+    patterns.add(f"{score:.3f}")
+    patterns.add(f"{score:.2f}")
+    # Como percentual
+    pct = score * 100
+    patterns.add(f"{pct:.2f}")
+    patterns.add(f"{pct:.1f}")
+    patterns.add(f"{math.floor(pct)}%")
+    patterns.add(f"{round(pct)}%")
+
+    for pat in patterns:
+        if pat in text:
+            logger.warning(
+                "Resposta do LLM continha o valor do score (%s) — substituída por mensagem segura.", pat
+            )
+            return _SAFE_SCORE_MSG
+
+    return text
 
 
 def _is_agent_configured() -> bool:
@@ -177,6 +216,10 @@ def post_chat(
             timeout=30.0,
         )
         reply_content = result_run.output
+
+        # Segunda camada de segurança: se o LLM escreveu o valor do score
+        # na resposta (injeção de prompt), substitui por mensagem segura.
+        reply_content = _scrub_score(reply_content, purchase.analysis_score)
 
         # Coleta tools_used a partir das mensagens do resultado
         for msg in result_run.all_messages():

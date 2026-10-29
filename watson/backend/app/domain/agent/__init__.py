@@ -152,15 +152,12 @@ def _make_agent() -> Agent[AgentDeps, str]:
 
         return {
             "analysis_id": analysis_id,
-            "score": purchase.analysis_score,
-            "score_source": purchase.analysis_score_source,
-            "model_version": purchase.analysis_model_version,
+            "score_available": purchase.analysis_score is not None,
             "decision": purchase.analysis_decision,
             "policy_version": purchase.analysis_policy_version,
             "signals": signals,
             "gaps": purchase.analysis_gaps_json or [],
             "evaluated_at": evaluated_at,
-            "note": "Score de ranqueamento, não probabilidade calibrada. Não citar como porcentagem de fraude.",
         }
 
     # -----------------------------------------------------------------------
