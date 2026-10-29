@@ -22,5 +22,7 @@
 
 ## Forma de trabalhar
 - Teste primeiro: escreva o teste, rode e mostre a falha, implemente, rode de novo e mostre a saída do pytest. Nunca diga que passou sem mostrar a saída.
-- Os 27 testes que já existem continuam passando.
+- Os testes que já existem continuam passando.
 - Termine o que foi pedido e pare. Não adiante passos seguintes.
+- Segurança (sessão, assinatura, hash, criptografia) sai de biblioteca consagrada, nunca de implementação própria. Se a biblioteca não estiver instalada e você não puder instalar, pare e diga qual pacote falta.
+- Teste de segurança prova o comportamento pedido. Ex.: prazo de sessão se testa com um cookie válido e assinado há mais de 8 h, não com um formato inválido.
