@@ -38,7 +38,7 @@ flowchart TD
 
 | Componente | Tecnologia | Papel | Estado |
 |---|---|---|---|
-| **Modelo RF** | scikit-learn 1.6 · Python 3.12 | Produz score (0–1) e probabilidade da classe fraude; carregado em `outputs/modelo_rf.joblib` no processo do backend | A serializar do notebook 03 |
+| **Modelo RF** | scikit-learn 1.6 · Python 3.12 | Produz score (0–1) para a classe fraude, sem garantia de calibração como probabilidade real; carregado em `outputs/modelo_rf.joblib` no processo do backend | A serializar do notebook 03 |
 | **Política de decisão** | Python (determinístico) | Transforma score em tratamento (`LIBERADA_SIMULACAO`, `AGUARDANDO_ASSOCIADO`, `REVISAO_PENDENTE`); limiares versionados e configuráveis | Planejada |
 | **Backend** | FastAPI · SQLAlchemy · SQLite | Valida sessão, vincula associado/compra, controla expiração, persiste estados/eventos, expõe API JSON; roda no mesmo processo do modelo | Planejado |
 | **Agente** | Pydantic AI · LLM externo (Groq/Gemini/Granite) | Consulta ferramentas, explica sinais, informa limites, solicita revisão quando necessário; não autoriza compras | Planejado |
@@ -63,11 +63,12 @@ sequenceDiagram
     Note over B,DB: Pré-condição: compra sintética criada (T-007)
 
     B->>M: avaliar(features de T-007)
-    M-->>B: {score: 0.97, sinais: [...], versão: "rf-v1"}
+    M-->>B: {score: 0.97, versão: "rf-v1"}
+    Note over B: Sinais descritivos são obtidos separadamente
     B->>Pol: decidir(score=0.97, policy_version="confirmacao-v2")
     Pol-->>B: AGUARDANDO_ASSOCIADO
     B->>DB: INSERT challenge CH-007 (status=AGUARDANDO_ASSOCIADO, expires_at=+15min)
-    B-->>F: challenge CH-007 com compra e motivo do alerta
+    B-->>F: challenge CH-007 com compra e sinais disponíveis
 
     A->>F: "Pode ser o nome da empresa na fatura?"
     F->>B: POST /chat {challenge_id: "CH-007", msg: "..."}
@@ -107,7 +108,7 @@ sequenceDiagram
 
 | Campo | Detalhe |
 |---|---|
-| **Finalidade** | Retornar score de fraude, sinais que contribuíram para o alerta e versão do modelo. |
+| **Finalidade** | Retornar score de fraude, sinais descritivos disponíveis e versão do modelo. Os sinais não comprovam contribuição para o score; uma explicação por característica exige método e validação específicos. |
 | **Entrada** | `case_id` — identificador da compra na sessão atual. |
 | **Saída** | `{score: float, sinais: list[str], lacunas: list[str], score_source: str, model_version: str}` |
 | **Autorização** | Acessível ao agente; dados disponíveis ao associado da sessão. Rótulo histórico de avaliação não exposto. |
@@ -166,7 +167,7 @@ sequenceDiagram
     "data": "2025-02-14T03:12:00Z",
     "cartao_parcial": "**** **** **** 1234"
   },
-  "motivo_alerta": "Compra de madrugada, cartão não presente, primeiro uso do cartão, estabelecimento de risco elevado."
+  "motivo_alerta": "A compra foi sinalizada. Dados disponíveis: madrugada, cartão não presente, primeiro uso do cartão e estabelecimento de risco elevado."
 }
 ```
 
@@ -243,7 +244,7 @@ stateDiagram-v2
     EM_AVALIACAO --> REVISAO_PENDENTE : falha ou fora da política
     AGUARDANDO_ASSOCIADO --> LIBERADA_SIMULACAO : AUTHORIZE (antes da expiração)
     AGUARDANDO_ASSOCIADO --> RECUSADA_SIMULACAO : DENY
-    AGUARDANDO_ASSOCIADO --> REVISAO_PENDENTE : UNSURE ou solicitar_revisao
+    AGUARDANDO_ASSOCIADO --> REVISAO_PENDENTE : UNSURE
     AGUARDANDO_ASSOCIADO --> CONFIRMACAO_EXPIRADA : prazo esgotado sem resposta
     LIBERADA_SIMULACAO --> [*]
     RECUSADA_SIMULACAO --> [*]
@@ -253,6 +254,7 @@ stateDiagram-v2
 
 **Regras de transição:**
 - Pedir atendimento (`talk_to_person`) → abre revisão sem registrar `UNSURE` nem encerrar a confirmação válida.
+- `solicitar_revisao` cria ou reaproveita uma revisão separada da confirmação; enquanto ela estiver válida, a confirmação permanece em `AGUARDANDO_ASSOCIADO` e o prazo continua correndo.
 - Resposta duplicada → retorna o resultado existente sem duplicar ação.
 - Resposta a versão antiga ou outra compra → rejeitar; orientar o associado a abrir a solicitação correta.
 - O agente nunca provoca transição de estado — apenas `solicitar_revisao` cria um caso de exceção.

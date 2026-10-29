@@ -28,7 +28,7 @@
 
 | Dimensão | Detalhe |
 |---|---|
-| **Saber** | Score e sinais da avaliação do modelo (`avaliar_transacao`); contexto da compra: valor, data, estabelecimento, cartão parcial (`consultar_compra`); estado atual da confirmação e próximos passos permitidos (`consultar_status`). |
+| **Saber** | Score do modelo e sinais descritivos disponíveis (`avaliar_transacao`); contexto da compra: valor, data, estabelecimento, cartão parcial (`consultar_compra`); estado atual da confirmação e próximos passos permitidos (`consultar_status`). |
 | **Decidir** | Consultar qual ferramenta usar para responder a dúvida; informar limite quando não houver contexto suficiente; solicitar revisão humana quando a dúvida não puder ser resolvida (`solicitar_revisao`). |
 | **Fazer** | Chamar ferramentas via injeção de dependência; retornar explicação fundamentada nos dados; nunca chamar `responder_confirmacao` — essa operação é exclusiva do controle da interface humana. |
 
@@ -38,7 +38,7 @@
 
 | Componente | Papel | Estado |
 |---|---|---|
-| **Modelo RF** | Produz score de fraude (0–1) e sinais; carregado em `outputs/modelo_rf.joblib` no processo do backend | Treinado e validado (notebooks 02/03); deploy no watsonx.ai testado em 27/10 como evidência |
+| **Modelo RF** | Produz score de fraude (0–1); sinais descritivos são apurados separadamente; modelo a carregar de `outputs/modelo_rf.joblib` no processo do backend | Treinado e avaliado em dados sintéticos (notebooks 02/03); deploy no watsonx.ai testado em 27/10 como evidência |
 | **Política de decisão** | Transforma score em tratamento: liberar, confirmar ou encaminhar para revisão; determinística, versionada e testável | Planejada (ver §3 do plano); limiares a definir na validação |
 | **Backend FastAPI + SQLAlchemy** | Valida sessão, vincula associado/compra, controla expiração, persiste estados/eventos, expõe API JSON | Planejado; contratos publicados em D10 |
 | **Agente Pydantic AI** | Recebe pergunta do associado, escolhe ferramenta, retorna explicação contextualizada | Planejado; provedor LLM a confirmar (Groq/Gemini/Granite) |
@@ -73,7 +73,7 @@
 
 | Dimensão | O que mede | Meta interna | Método de coleta |
 |---|---|---|---|
-| **Modelo** | PR-AUC no teste com proporção real; comparação com `fraud_score` baseline; versão e schema declarados | PR-AUC ≥ 0,80 sem features de velocidade (ou documentar limitação explicitamente) | Relatório reproduzível do notebook 03 |
+| **Modelo** | PR-AUC no teste com a proporção de fraudes da base sintética; comparação com `fraud_score` baseline; versão e schema declarados | Meta aspiracional: PR-AUC ≥ 0,80 sem features de velocidade. Resultado documentado: 0,146; meta não atingida | Relatório reproduzível do notebook 03; resultado exploratório, não validação em dados reais nem holdout intocado |
 | **Sistema** | Todos os cenários do §9 do plano passam; nenhuma falha crítica de autorização | 0 autorizações indevidas; 0 estados corrompidos | Bateria de testes automatizados (C25/C26) |
 | **Agente** | Ferramenta correta chamada para cada tipo de dúvida; explicação fiel ao dado retornado; limite declarado quando contexto falta | Rastro de ferramentas coerente com a resposta em todos os casos de teste | Inspeção de logs com ferramentas chamadas vs. resposta exibida |
 | **Experiência** | Conclusão da tarefa sem ajuda do moderador; compreensão da consequência da resposta | ≥ 3/5 participantes concluem sem ajuda; ≤ 1 decisão equivocada por sessão | Tarefas e perguntas de compreensão de D13 |
