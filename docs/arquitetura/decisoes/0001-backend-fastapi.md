@@ -1,6 +1,6 @@
 # 0001 · Backend em Python + FastAPI
 
-**Status:** aceita pelo Leo em 27/10/2026.
+**Status:** proposta pelo Leo em 27/10/2026 e incorporada ao plano no [alinhamento de 28/10](../../plano_implementacao.md#alinhamento-com-o-watson-2810).
 
 ## Contexto
 O backend serve a API do console e do app do associado, roda os agentes (watsonx.ai) e usa o modelo de risco, e precisa funcionar com PostgreSQL e com Db2.
