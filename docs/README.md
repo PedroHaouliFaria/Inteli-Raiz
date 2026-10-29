@@ -9,11 +9,13 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 | 01 | [Análise Exploratória](01_analise_exploratoria.md) | Linha de raciocínio, decisões e insights sobre os dados de transações |
 | 02 | [Base Balanceada](02_base_balanceada.md) | Construção das bases de treino/teste e as 7 features criadas a partir dos insights |
 | 03 | [Modelo](03_modelo.md) | Pipeline de pré-processamento, Random Forest, avaliação por PR-AUC e análise crítica dos resultados |
+| — | [Spec: teste de integração](specs/teste_integracao_orchestrate_wml.md) | Como provar que o Orchestrate consegue chamar o modelo no watsonx.ai |
 
 ## Plano de implementação proposto
 
 - [Plano revisado: confirmação de compras pelo associado](plano_implementacao.md).
-- [Versão em PDF](plano_implementacao.pdf).
+- [Direcional das entregas recomendadas nas aulas](direcional_entregas.md): 11 entregas, estruturas para preencher, instruções, fontes/templates, revisão e critérios de qualidade; inclui prototipação e validação como apoio.
+- [Versão em PDF — v2 de 23/10/2026](plano_implementacao.pdf). A ampliação de 27/10/2026 está no plano Markdown e no direcional acima; ainda não está incorporada a esse PDF.
 - [Spec do contrato da API JSON](specs/contrato_api.md): endpoints, estados, erros e exemplos de resposta para o backend e o front trabalharem em paralelo (etapa 2 do backlog).
 
 O sistema avalia a compra e decide o tratamento inicial; o associado autoriza, recusa ou informa dúvida, e o analista trata exceções. Ações financeiras são simuladas no MVP. A proposta inclui regras, arquitetura, requisitos, backlog e testes; não representa implementação concluída.
@@ -31,3 +33,7 @@ data/            dicionário e orientações do case
 ```
 
 > O CSV original (~290 MB) **não é versionado**. Para rodar os notebooks, coloque `case_transacoes_cartoes_sintetico_900k.csv` em `data/`. Para regerar as figuras desta documentação: `python scripts/gerar_figuras_docs.py`.
+
+## Pacote de pesquisa e compreensão do usuário (Pessoa 2)
+
+- [Pacote Pessoa 2 — Pesquisa e compreensão do associado](entregas/pessoa2/README.md): rascunho para revisão das entregas D02, D03 e D06, com registro de evidências/hipóteses e roteiro de pesquisa. **Estado:** rascunho — pesquisa com usuários não executada. Branch: `docs/pessoa2-pesquisa-associado` · 28/10/2026.
