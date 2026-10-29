@@ -34,6 +34,23 @@ class PurchaseRepository:
         conf = self._get_confirmation(purchase)
         return purchase, conf
 
+    def get_by_challenge_for_owner(
+        self, customer_id: str, challenge_id: str
+    ) -> tuple[Purchase, Confirmation] | None:
+        """Retorna (purchase, confirmation) pelo challenge_id se o dono bate.
+
+        Retorna None se o desafio não existe ou é de outra pessoa (R05).
+        """
+        stmt = select(Confirmation).where(Confirmation.challenge_id == challenge_id)
+        confirmation = self._session.execute(stmt).scalar_one_or_none()
+        if confirmation is None:
+            return None
+        # Carrega a compra e verifica propriedade
+        purchase = self._session.get(Purchase, confirmation.purchase_id)
+        if purchase is None or purchase.customer_id != customer_id:
+            return None
+        return purchase, confirmation
+
     def _get_confirmation(self, purchase: Purchase) -> Confirmation | None:
         stmt = select(Confirmation).where(Confirmation.purchase_id == purchase.id)
         return self._session.execute(stmt).scalar_one_or_none()

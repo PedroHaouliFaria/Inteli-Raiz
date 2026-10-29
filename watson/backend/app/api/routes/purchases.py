@@ -2,6 +2,7 @@
 
 GET /api/purchases              — lista de compras do associado
 GET /api/purchases/{case_id}    — detalhe de uma compra
+GET /api/purchases/{case_id}/status — status leve para polling
 """
 from __future__ import annotations
 
@@ -10,10 +11,18 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import AssociadoUser
 from app.api.errors import ApiError
-from app.api.schemas.purchases import PurchaseDetailResponse, PurchaseListResponse
+from app.api.schemas.purchases import (
+    PurchaseDetailResponse,
+    PurchaseListResponse,
+    PurchaseStatusResponse,
+)
 from app.db.repositories.purchases import PurchaseRepository
 from app.db.session import get_session
-from app.domain.cases.purchases import build_purchase_detail, build_purchase_list_item
+from app.domain.cases.purchases import (
+    build_purchase_detail,
+    build_purchase_list_item,
+    build_purchase_status,
+)
 
 router = APIRouter(prefix="/api/purchases", tags=["purchases"])
 
@@ -26,8 +35,28 @@ def list_purchases(
     """Lista as compras do associado da sessão, da mais recente para a mais antiga."""
     repo = PurchaseRepository(session)
     rows = repo.list_by_owner(persona.customer_id)
-    items = [build_purchase_list_item(p, c) for p, c in rows]
+    items = [build_purchase_list_item(p, c, session=session) for p, c in rows]
     return PurchaseListResponse(purchases=items, simulation=True)
+
+
+@router.get("/{case_id}/status", response_model=PurchaseStatusResponse)
+def get_purchase_status(
+    case_id: str,
+    persona: AssociadoUser,
+    session: Session = Depends(get_session),
+) -> PurchaseStatusResponse:
+    """Status leve da compra; chamado a cada ~5 s enquanto AGUARDANDO_ASSOCIADO."""
+    repo = PurchaseRepository(session)
+    result = repo.get_by_owner(persona.customer_id, case_id)
+    if result is None:
+        raise ApiError(
+            status_code=404,
+            code="NOT_FOUND",
+            message="O recurso solicitado não foi encontrado.",
+        )
+    purchase, confirmation = result
+    status_data = build_purchase_status(purchase, confirmation, session=session)
+    return PurchaseStatusResponse(**status_data, simulation=True)
 
 
 @router.get("/{case_id}", response_model=PurchaseDetailResponse)
@@ -49,5 +78,5 @@ def get_purchase(
             message="O recurso solicitado não foi encontrado.",
         )
     purchase, confirmation = result
-    detail = build_purchase_detail(purchase, confirmation)
+    detail = build_purchase_detail(purchase, confirmation, session=session)
     return PurchaseDetailResponse(**detail, simulation=True)

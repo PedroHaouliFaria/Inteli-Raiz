@@ -9,6 +9,15 @@ from app.api.schemas.common import SimulationTrue, UtcDatetime
 from app.api.schemas.purchases import AssociateResponse, PurchaseStatus, ResultInfo
 
 
+class ConfirmationResponseIn(BaseModel):
+    """Corpo do POST /api/confirmations/{challenge_id}/response."""
+
+    model_config = {"extra": "forbid"}
+
+    response: AssociateResponse
+    version: int
+
+
 class ConfirmationResponseOut(BaseModel):
     """POST /api/confirmations/{challenge_id}/response — 200."""
 

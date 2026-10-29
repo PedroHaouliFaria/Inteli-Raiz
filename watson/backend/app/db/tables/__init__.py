@@ -8,4 +8,4 @@ class Base(DeclarativeBase):
 
 
 # Importa todas as tabelas para que o Alembic as detecte automaticamente
-from app.db.tables.purchases import Purchase, Confirmation, Review, Event  # noqa: E402, F401
+from app.db.tables.purchases import Purchase, Confirmation, Review, Event, IdempotencyKey  # noqa: E402, F401

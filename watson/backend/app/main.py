@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.api.errors import add_error_handlers
-from app.api.routes import health, model_lab, purchases, session
+from app.api.routes import confirmations, health, model_lab, purchases, session
 from app.config import get_settings
 
 
@@ -54,6 +54,7 @@ def create_app() -> FastAPI:
     app.include_router(model_lab.router)
     app.include_router(session.router)
     app.include_router(purchases.router)
+    app.include_router(confirmations.router)
     return app
 
 

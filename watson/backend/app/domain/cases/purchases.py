@@ -5,10 +5,13 @@ para os schemas Pydantic.
 """
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 from decimal import Decimal
 
-from app.db.tables.purchases import Confirmation, Purchase
+from sqlalchemy.orm import Session
+
+from app.db.tables.purchases import Confirmation, Event, Purchase, Review
 from app.domain.signals.rules import compute_signals, mcc_label
 
 # Rótulos de status do associado (§3 do contrato)
@@ -50,6 +53,42 @@ _ALLOWED_RESPONSES = [
     {"response": "UNSURE", "label": "Estou em dúvida"},
 ]
 
+# Textos de result por estado terminal
+_RESULT_BY_RESPONSE = {
+    "AUTHORIZE": {
+        "title": "Compra autorizada na simulação",
+        "description": (
+            "Registramos que você reconhece e autoriza esta compra. "
+            "Nenhuma transação real foi feita."
+        ),
+        "next_steps": [],
+    },
+    "DENY": {
+        "title": "Compra recusada na simulação",
+        "description": (
+            "Registramos que você não reconhece esta compra. "
+            "Um analista vai revisar o caso. O cartão não foi bloqueado."
+        ),
+        # next_steps será montado dinamicamente com o protocolo
+    },
+    "UNSURE": {
+        "title": "Compra em revisão",
+        "description": (
+            "Registramos sua dúvida. Um analista vai analisar esta compra."
+        ),
+        # next_steps será montado dinamicamente com o protocolo
+    },
+}
+
+_RESULT_EXPIRADA = {
+    "title": "Prazo de resposta encerrado",
+    "description": (
+        "O prazo para responder a esta compra terminou. "
+        "Ela não foi autorizada. Se ela for sua, peça uma revisão."
+    ),
+    "next_steps": ["A compra não foi autorizada.", "Se ela for sua, peça uma revisão."],
+}
+
 
 def _cents_to_decimal_str(cents: int) -> str:
     """Converte centavos inteiros para string decimal com exatamente 2 casas."""
@@ -68,8 +107,127 @@ def _as_utc_naive(dt: datetime) -> datetime:
     return dt
 
 
-def build_purchase_list_item(purchase: Purchase, confirmation: Confirmation | None) -> dict:
-    """Monta o item da lista de compras (GET /api/purchases)."""
+def _now_utc_naive() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+# ---------------------------------------------------------------------------
+# Expiração
+# ---------------------------------------------------------------------------
+
+def check_and_expire(
+    purchase: Purchase,
+    confirmation: Confirmation | None,
+    session: Session,
+) -> bool:
+    """Verifica se a confirmação expirou e, se sim, grava a transição de estado.
+
+    Retorna True se expirou (e a transição foi gravada); False caso contrário.
+    A sessão SQL é modificada mas não commitada — quem chama deve commitar.
+    """
+    if purchase.status != "AGUARDANDO_ASSOCIADO":
+        return False
+    if confirmation is None:
+        return False
+
+    now = _now_utc_naive()
+    expires_at = _as_utc_naive(confirmation.expires_at)
+    if now <= expires_at:
+        return False
+
+    # Expirou: grava transição
+    from_status = purchase.status
+    purchase.status = "CONFIRMACAO_EXPIRADA"
+    purchase.version += 1
+    purchase.updated_at = now
+
+    event = Event(
+        purchase_id=purchase.id,
+        event_type="EXPIRE",
+        from_status=from_status,
+        to_status="CONFIRMACAO_EXPIRADA",
+        created_at=now,
+    )
+    session.add(event)
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Builders
+# ---------------------------------------------------------------------------
+
+def _build_review_summary(review: Review | None) -> dict | None:
+    if review is None:
+        return None
+    return {
+        "review_id": review.review_id,
+        "protocol": review.protocol,
+        "kind": review.kind,
+        "status": review.status,
+    }
+
+
+def _build_result(purchase: Purchase, review: Review | None) -> dict | None:
+    """Monta o bloco result para estados terminais."""
+    if purchase.status == "LIBERADA_SIMULACAO":
+        return {**_RESULT_BY_RESPONSE["AUTHORIZE"], "next_steps": []}
+
+    if purchase.status == "RECUSADA_SIMULACAO":
+        protocol = review.protocol if review else None
+        next_steps = []
+        if protocol:
+            next_steps = [
+                f"Guarde o protocolo {protocol}.",
+                "Você pode acompanhar o status nesta tela.",
+            ]
+        return {
+            "title": _RESULT_BY_RESPONSE["DENY"]["title"],
+            "description": _RESULT_BY_RESPONSE["DENY"]["description"],
+            "next_steps": next_steps,
+        }
+
+    if purchase.status == "REVISAO_PENDENTE":
+        protocol = review.protocol if review else None
+        next_steps = []
+        if protocol:
+            next_steps = [
+                f"Guarde o protocolo {protocol}.",
+                "Um analista vai analisar e entrar em contato.",
+            ]
+        return {
+            "title": _RESULT_BY_RESPONSE["UNSURE"]["title"],
+            "description": _RESULT_BY_RESPONSE["UNSURE"]["description"],
+            "next_steps": next_steps,
+        }
+
+    if purchase.status == "CONFIRMACAO_EXPIRADA":
+        return _RESULT_EXPIRADA.copy()
+
+    return None
+
+
+def _get_open_review(purchase: Purchase) -> Review | None:
+    """Retorna a primeira revisão aberta, ou None."""
+    for rev in purchase.reviews:
+        if rev.status == "ABERTA":
+            return rev
+    return None
+
+
+def build_purchase_list_item(
+    purchase: Purchase,
+    confirmation: Confirmation | None,
+    session: Session | None = None,
+) -> dict:
+    """Monta o item da lista de compras (GET /api/purchases).
+
+    Recebe session para poder gravar a transição de expiração, se necessário.
+    """
+    if session is not None:
+        expired = check_and_expire(purchase, confirmation, session)
+        if expired:
+            session.commit()
+
     # expires_at só quando AGUARDANDO_ASSOCIADO (§5)
     expires_at = None
     if purchase.status == "AGUARDANDO_ASSOCIADO" and confirmation is not None:
@@ -86,13 +244,17 @@ def build_purchase_list_item(purchase: Purchase, confirmation: Confirmation | No
     }
 
 
-def build_purchase_detail(purchase: Purchase, confirmation: Confirmation | None) -> dict:
-    """Monta o detalhe da compra (GET /api/purchases/{case_id}).
+def build_purchase_detail(
+    purchase: Purchase,
+    confirmation: Confirmation | None,
+    session: Session | None = None,
+) -> dict:
+    """Monta o detalhe da compra (GET /api/purchases/{case_id})."""
+    if session is not None:
+        expired = check_and_expire(purchase, confirmation, session)
+        if expired:
+            session.commit()
 
-    A expiração na leitura (verificar se venceu e gravar CONFIRMACAO_EXPIRADA)
-    entra na próxima sessão.
-    TODO(sessão 2): verificar expiração na leitura e gravar transição de estado
-    """
     features = purchase.features_json or {}
     signals = compute_signals(features)
 
@@ -142,6 +304,11 @@ def build_purchase_detail(purchase: Purchase, confirmation: Confirmation | None)
     else:
         confirmation_block = None
 
+    # review e result para estados terminais
+    open_review = _get_open_review(purchase)
+    review_summary = _build_review_summary(open_review)
+    result = _build_result(purchase, open_review)
+
     return {
         "case_id": purchase.case_id,
         "version": purchase.version,
@@ -150,7 +317,74 @@ def build_purchase_detail(purchase: Purchase, confirmation: Confirmation | None)
         "purchase": purchase_info,
         "alert": alert,
         "confirmation": confirmation_block,
-        "review": None,  # TODO(sessão 2): buscar revisão aberta
-        "result": None,  # TODO(sessão 2): montar result para status terminais
+        "review": review_summary,
+        "result": result,
         "policy_version": "confirmacao-v2",
+    }
+
+
+def build_purchase_status(
+    purchase: Purchase,
+    confirmation: Confirmation | None,
+    session: Session | None = None,
+) -> dict:
+    """Monta o status leve da compra (GET /api/purchases/{case_id}/status)."""
+    if session is not None:
+        expired = check_and_expire(purchase, confirmation, session)
+        if expired:
+            session.commit()
+
+    # seconds_remaining
+    now = _now_utc_naive()
+    seconds_remaining = 0
+    expires_at = None
+    if confirmation is not None:
+        expires_at = _as_utc_naive(confirmation.expires_at)
+        if purchase.status == "AGUARDANDO_ASSOCIADO":
+            diff = (expires_at - now).total_seconds()
+            seconds_remaining = max(0, math.floor(diff))
+        elif purchase.status == "CONFIRMACAO_EXPIRADA":
+            seconds_remaining = 0
+
+    # allowed_responses: só quando aguardando
+    allowed_responses: list[str] = []
+    if purchase.status == "AGUARDANDO_ASSOCIADO":
+        allowed_responses = ["AUTHORIZE", "DENY", "UNSURE"]
+
+    # review_protocol
+    open_review = _get_open_review(purchase)
+    review_protocol = open_review.protocol if open_review else None
+
+    # next_steps dependem do status
+    next_steps: list[str]
+    if purchase.status == "AGUARDANDO_ASSOCIADO":
+        next_steps = [
+            "Responda se reconhece a compra antes do prazo.",
+            'Se tiver dúvida, pergunte no chat ou escolha "Estou em dúvida".',
+        ]
+    elif purchase.status == "CONFIRMACAO_EXPIRADA":
+        next_steps = [
+            "A compra não foi autorizada.",
+            "Se ela for sua, peça uma revisão.",
+        ]
+    elif purchase.status == "LIBERADA_SIMULACAO":
+        next_steps = []
+    elif purchase.status in ("RECUSADA_SIMULACAO", "REVISAO_PENDENTE"):
+        if review_protocol:
+            next_steps = [f"Protocolo de revisão: {review_protocol}."]
+        else:
+            next_steps = ["Um analista vai analisar o caso."]
+    else:
+        next_steps = []
+
+    return {
+        "case_id": purchase.case_id,
+        "version": purchase.version,
+        "status": purchase.status,
+        "status_label": _STATUS_LABELS.get(purchase.status, purchase.status),
+        "expires_at": expires_at,
+        "seconds_remaining": seconds_remaining,
+        "allowed_responses": allowed_responses,
+        "review_protocol": review_protocol,
+        "next_steps": next_steps,
     }

@@ -123,42 +123,42 @@ def test_delete_session_then_get_401(client):
     assert r.status_code == 401
 
 # ---------------------------------------------------------------------------
-# Cookie sem timestamp (formato antigo) deve ser rejeitado com 401
+# Cookie TimestampSigner expirado deve ser rejeitado; cookie fresco aceito
 # ---------------------------------------------------------------------------
 
-def test_get_session_with_expired_cookie_401(client):
-    """Demonstra a vulnerabilidade: um cookie no formato HMAC-sem-timestamp
-    gerado pelo middleware antigo é aceito para sempre pelo servidor.
+def _make_session_cookie(persona_id: str, secret: str, age_seconds: float) -> str:
+    """Gera um cookie raiz_session no formato do SessionMiddleware (TimestampSigner).
 
-    Com o CookieSessionMiddleware atual → resposta 200 (FALHA esperada).
-    Com o SessionMiddleware do starlette → resposta 401 (formato inválido).
-
-    O teste usa _encode_session do middleware antigo para criar o cookie
-    diretamente, sem passar pelo login.
+    Patcha TimestampSigner.get_timestamp para fingir que o cookie foi assinado
+    `age_seconds` atrás (sem depender de internals do itsdangerous).
     """
     import json
-    import hmac as _hmac
-    import hashlib
-    import base64
+    import time
+    from base64 import b64encode
+    from unittest.mock import patch
+    from itsdangerous import TimestampSigner
 
-    SECRET = "test-secret-for-session"
+    signer = TimestampSigner(secret)
+    payload = b64encode(json.dumps({"persona_id": persona_id}).encode()).decode()
+    fake_ts = int(time.time() - age_seconds)
+    with patch.object(signer, "get_timestamp", return_value=fake_ts):
+        signed = signer.sign(payload)
+    return signed.decode()
 
-    def _b64url_encode(data: bytes) -> str:
-        return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
 
-    def _encode_old_session(secret: str, data: dict) -> str:
-        """Replica o formato do CookieSessionMiddleware: base64url(json).base64url(hmac)."""
-        payload = _b64url_encode(json.dumps(data, separators=(",", ":")).encode())
-        sig = _hmac.new(secret.encode(), payload.encode(), hashlib.sha256).digest()
-        return f"{payload}.{_b64url_encode(sig)}"
-
-    # Cookie HMAC sem timestamp – válido para sempre no middleware antigo
-    stale_cookie = _encode_old_session(SECRET, {"persona_id": "ana"})
-
-    client.cookies.set("raiz_session", stale_cookie)
+def test_get_session_with_expired_cookie_401(client):
+    """Cookie raiz_session válido mas assinado há 9 h (> 8 h de max_age) → 401."""
+    stale = _make_session_cookie("ana", "test-secret-for-session", age_seconds=9 * 3600)
+    client.cookies.set("raiz_session", stale)
     r = client.get("/api/session")
-    # Deve rejeitar: sem timestamp não há como garantir que a sessão não é antiga.
-    assert r.status_code == 401, (
-        "VULNERABILIDADE: cookie sem timestamp aceito como sessão válida"
-    )
+    assert r.status_code == 401
     assert r.json()["error"]["code"] == "NOT_AUTHENTICATED"
+
+
+def test_get_session_with_fresh_cookie_200(client):
+    """Cookie raiz_session válido e recém-assinado (agora) → 200."""
+    fresh = _make_session_cookie("ana", "test-secret-for-session", age_seconds=0)
+    client.cookies.set("raiz_session", fresh)
+    r = client.get("/api/session")
+    assert r.status_code == 200
+    assert r.json()["persona_id"] == "ana"

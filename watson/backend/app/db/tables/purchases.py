@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.tables import Base
@@ -117,3 +117,27 @@ class Event(Base):
     )
 
     purchase: Mapped["Purchase"] = relationship("Purchase", back_populates="events")
+
+
+class IdempotencyKey(Base):
+    """Registro de chave de idempotência para o endpoint de resposta (§6).
+
+    Garante que a mesma Idempotency-Key sempre devolve o mesmo resultado e
+    que uma chave com corpo diferente é rejeitada com 422.
+    """
+
+    __tablename__ = "idempotency_keys"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    key: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    # challenge_id que essa chave pertence (escopo por confirmação)
+    challenge_id: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    # hash do corpo (response + version) para detectar reutilização com corpo diferente
+    body_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    # resposta original serializada como JSON para o replay
+    response_json: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC).replace(tzinfo=None)
+    )
+
+    __table_args__ = (UniqueConstraint("key", "challenge_id", name="uq_idempotency_key_challenge"),)
