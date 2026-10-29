@@ -58,6 +58,9 @@ BY_NAME: dict[str, Feature] = {f.name: f for f in FEATURES}
 MISSING_CATEGORY = "nan"
 
 
+_VALID_BINARY = {0, 1, "0", "1"}
+
+
 def normalize(row: dict) -> dict:
     """Deixa uma transação no formato que o pipeline espera: numérico vazio = None, categórico vazio = "nan"."""
     missing = [name for name in FEATURE_NAMES if name not in row]
@@ -69,7 +72,14 @@ def normalize(row: dict) -> dict:
         if f.kind is FeatureKind.CATEGORICAL:
             out[f.name] = MISSING_CATEGORY if value is None or value == "" else str(value)
         elif f.kind is FeatureKind.BINARY:
-            out[f.name] = None if value is None else int(bool(value))
+            if value is None or value == "":
+                out[f.name] = None
+            elif value not in _VALID_BINARY:
+                raise ValueError(
+                    f"campo binário '{f.name}' aceita apenas 0, 1, '0', '1'; recebeu {value!r}"
+                )
+            else:
+                out[f.name] = int(value)
         else:
             out[f.name] = None if value is None or value == "" else float(value)
     return out

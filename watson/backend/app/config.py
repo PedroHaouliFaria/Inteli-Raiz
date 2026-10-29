@@ -15,6 +15,10 @@ class Settings(BaseSettings):
 
     database_url: str = "sqlite:///./watson.db"
     agent_provider: str = "simulated"
+    # Segredo obrigatório para assinar o cookie de sessão (§4 do contrato)
+    session_secret: str
+    # Cookie Secure só em produção; em dev (False) o cookie funciona em HTTP
+    session_secure: bool = False
     watsonx_url: str = "https://us-south.ml.cloud.ibm.com"
     watsonx_api_key: str = ""
     watsonx_project_id: str = ""
@@ -33,6 +37,16 @@ class Settings(BaseSettings):
     burst_window_minutes: int = 15
     burst_seed: int = 42
 
+    # Confirmação: prazo em segundos para o associado responder (padrão 15 min)
+    confirmation_ttl_seconds: int = 900
+
+    # LLM para o agente de chat (§7 e §10)
+    llm_model: str = "groq:openai/gpt-oss-120b"
+    groq_api_key: str = ""
+    # Limite de mensagens por compra em 10 min (§7)
+    chat_rate_limit_messages: int = 20
+    chat_rate_limit_window_seconds: int = 600
+
     # Modelo de risco: "local" lê o .joblib; "watsonx" chama o deployment online no watsonx.ai Runtime.
     risk_model_provider: str = "local"
     risk_model_path: str = str(REPO_ROOT / "outputs" / "modelo_rf.joblib")
@@ -40,6 +54,9 @@ class Settings(BaseSettings):
     risk_watsonx_deployment_id: str = ""
     # Limiar F2 do notebook 03: a partir dele o modelo considera a transação fraude.
     risk_decision_threshold: float = 0.817
+
+    # Endpoints de demonstração (§9): só registrados com DEMO_MODE=true
+    demo_mode: bool = False
 
 
 @lru_cache

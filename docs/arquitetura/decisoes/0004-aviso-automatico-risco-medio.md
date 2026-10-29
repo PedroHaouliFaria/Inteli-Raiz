@@ -1,6 +1,6 @@
 # 0004 · Aviso de compra automático no risco médio
 
-**Status:** aceita pelo Leo em 27/10/2026.
+**Status:** proposta pelo Leo em 27/10/2026, **substituída** pelo [alinhamento de 28/10](../../plano_implementacao.md#alinhamento-com-o-watson-2810). Enquanto não houver validação fora do conjunto de teste, todo caso avaliado vai para a confirmação do associado (política conservadora, §3 do plano). Os limiares desta proposta ficam configuráveis e desligados por padrão.
 
 ## Decisão
 Nos casos de risco médio, o agente envia o aviso de compra ao associado sem esperar a analista. A analista só entra nas exceções:

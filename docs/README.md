@@ -14,6 +14,7 @@ Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026
 
 - [Plano revisado: confirmação de compras pelo associado](plano_implementacao.md).
 - [Versão em PDF](plano_implementacao.pdf).
+- [Spec do contrato da API JSON](specs/contrato_api.md): endpoints, estados, erros e exemplos de resposta para o backend e o front trabalharem em paralelo (etapa 2 do backlog).
 
 O sistema avalia a compra e decide o tratamento inicial; o associado autoriza, recusa ou informa dúvida, e o analista trata exceções. Ações financeiras são simuladas no MVP. A proposta inclui regras, arquitetura, requisitos, backlog e testes; não representa implementação concluída.
 

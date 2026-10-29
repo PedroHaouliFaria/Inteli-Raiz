@@ -55,9 +55,9 @@ As pastas `data/`, `notebooks/`, `scripts/` e `outputs/` do time de dados (branc
 
 | # | Decisão | Status |
 |---|---|---|
-| [0001](decisoes/0001-backend-fastapi.md) | Backend em Python + FastAPI | aceita (27/10/2026) |
-| [0002](decisoes/0002-banco-trocavel.md) | Camada de dados trocável entre PostgreSQL e Db2 | aceita; banco de produção em aberto |
-| [0003](decisoes/0003-codigo-em-ingles.md) | Código e rotas em inglês | aceita (27/10/2026) |
-| [0004](decisoes/0004-aviso-automatico-risco-medio.md) | Agente envia o aviso sozinho no risco médio; analista só nas exceções | aceita (27/10/2026) |
+| [0001](decisoes/0001-backend-fastapi.md) | Backend em Python + FastAPI | incorporada ao plano (28/10) |
+| [0002](decisoes/0002-banco-trocavel.md) | Camada de dados trocável (SQLAlchemy); demonstração em SQLite | incorporada ao plano (28/10) |
+| [0003](decisoes/0003-codigo-em-ingles.md) | Código e rotas em inglês | incorporada ao plano (28/10) |
+| [0004](decisoes/0004-aviso-automatico-risco-medio.md) | Agente envia o aviso sozinho no risco médio; analista só nas exceções | substituída pela política conservadora do plano (28/10) |
 
 Documento original da proposta: https://claude.ai/artifact/QBiEv2MbGhirTkKeDU8Wow
