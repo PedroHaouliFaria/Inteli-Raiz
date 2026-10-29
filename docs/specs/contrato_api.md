@@ -247,6 +247,7 @@ Regras dos campos:
 - `merchant_name` é sempre `null` na base sintética, que não tem nome de estabelecimento. `merchant_display` usa a categoria do MCC. O agente não inventa um nome (§9 do plano).
 - `occurred_at` é sintético: a base só tem `hora` e `dia_semana`, então a fixture monta uma data coerente com eles.
 - `card.last4` sai dos 4 últimos dígitos do `card_id` sintético.
+- `channel` é `CARTAO_PRESENTE` ("Compra presencial") ou `CARTAO_NAO_PRESENTE` ("Compra online ou por telefone"), a partir de `modalidade_transacao`. T-003 e T-011 são presenciais.
 - Se nenhuma regra disparar, `signals` vem vazio e `headline` diz: "Pedimos sua confirmação por precaução. Esta compra não tem um sinal de alerta específico." A tela não inventa um motivo.
 - Na lista (`GET /api/purchases`), `expires_at` só vem preenchido enquanto o status é `AGUARDANDO_ASSOCIADO`.
 - `signals` vêm de **regras** sobre os dados da compra (`source: "regra"`). O conjunto de regras é do dono dos sinais (Pedro R. na recomendação); este contrato fixa só o formato. Só vira sinal a feature com significado documentado: as de velocidade e distância (`cp_card_term_vel_1h` etc.) não têm definição na base e ficam de fora até alguém documentá-las.
