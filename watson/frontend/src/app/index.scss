@@ -537,3 +537,447 @@ body {
 .watson-score-bar__marker { position: absolute; top: -0.4375rem; width: 4px; height: 1.5rem; background: var(--cds-text-primary); }
 .watson-score-bar__scale { position: relative; height: 1rem; margin-top: 0.25rem; color: var(--cds-text-secondary); }
 .watson-score-bar__scale span { position: absolute; top: 0; }
+
+// ---------------------------------------------------------------------------
+// Fluxo do associado (AssociateApp, PurchaseList, PurchaseDetail)
+// ---------------------------------------------------------------------------
+
+// Layout principal: sidebar fixa + área de conteúdo scrollável
+.associate-app {
+  display: flex;
+  min-height: calc(100vh - 3rem);
+  margin-top: 3rem; // altura do Header Carbon
+
+  @media (max-width: 48rem) {
+    flex-direction: column;
+  }
+}
+
+.associate-sidebar {
+  flex: 0 0 22rem;
+  width: 22rem;
+  border-right: 1px solid var(--cds-border-subtle-01);
+  background: var(--cds-layer-01);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  // Em telas estreitas a sidebar se torna parte do fluxo
+  @media (max-width: 48rem) {
+    flex: 0 0 100%;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--cds-border-subtle-01);
+  }
+}
+
+.associate-sidebar__header {
+  padding: 1.25rem 1rem 0.75rem;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  position: sticky;
+  top: 0;
+  background: var(--cds-layer-01);
+  z-index: 1;
+}
+
+.associate-content {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.5rem;
+
+  @media (max-width: 48rem) {
+    padding: 1rem;
+  }
+}
+
+.associate-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  color: var(--cds-text-secondary);
+}
+
+// Lista de compras
+.associate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.associate-list__empty {
+  padding: 1.5rem 1rem;
+  color: var(--cds-text-secondary);
+}
+
+.associate-list__item {
+  button {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 0;
+    border-bottom: 1px solid var(--cds-border-subtle-01);
+    background: transparent;
+    color: var(--cds-text-primary);
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+
+    &:hover { background: var(--cds-layer-hover-01); }
+    &:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+  }
+}
+
+.associate-list__item--active button {
+  background: var(--cds-layer-selected-01);
+  border-left: 3px solid var(--cds-interactive);
+  padding-left: calc(1rem - 3px);
+
+  &:hover { background: var(--cds-layer-selected-hover-01); }
+}
+
+.associate-list__main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.375rem;
+}
+
+.associate-list__merchant {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.associate-list__amount {
+  flex-shrink: 0;
+}
+
+.associate-list__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.associate-list__date {
+  color: var(--cds-text-helper);
+}
+
+// Detalhe da compra
+.associate-detail {
+  max-width: 48rem;
+}
+
+.associate-detail-loading,
+.associate-detail-error {
+  padding: 1rem;
+}
+
+.associate-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.associate-status-row {
+  margin-top: 0.25rem;
+}
+
+.associate-simulation-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--cds-layer-accent-01);
+  border-left: 3px solid var(--cds-border-interactive);
+  color: var(--cds-text-secondary);
+}
+
+.associate-expiry {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--cds-text-secondary);
+  white-space: nowrap;
+}
+
+.associate-purchase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem;
+}
+
+.associate-signals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  li { display: flex; gap: 0.5rem; }
+}
+
+.associate-next-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  li::before { content: '→ '; color: var(--cds-text-secondary); }
+}
+
+// Botões de confirmação
+.associate-confirmation-buttons {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.associate-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+// ---------------------------------------------------------------------------
+// Chat com o assistente (PurchaseChat)
+// ---------------------------------------------------------------------------
+
+.purchase-chat {
+  margin-top: 0;
+}
+
+.purchase-chat__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--cds-text-primary);
+}
+
+.purchase-chat__messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 24rem;
+  overflow-y: auto;
+  padding: 0.25rem 0;
+}
+
+.purchase-chat__bubble {
+  max-width: 85%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.purchase-chat__bubble--user {
+  align-self: flex-end;
+  background: var(--cds-layer-selected-01);
+  border-bottom-right-radius: 0.125rem;
+}
+
+.purchase-chat__bubble--assistant {
+  align-self: flex-start;
+  background: var(--cds-layer-02);
+  border-bottom-left-radius: 0.125rem;
+}
+
+.purchase-chat__bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.purchase-chat__bubble-role {
+  font-weight: 600;
+  color: var(--cds-text-secondary);
+}
+
+.purchase-chat__bubble-time {
+  color: var(--cds-text-helper);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
+
+.purchase-chat__bubble-text {
+  word-break: break-word;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.purchase-chat__tools {
+  margin-top: 0.375rem;
+  color: var(--cds-text-helper);
+  font-style: italic;
+}
+
+.purchase-chat__input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Revisão por analista (HumanReviewRequest)
+// ---------------------------------------------------------------------------
+
+.human-review {
+  margin-top: 0;
+}
+
+.human-review__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--cds-text-primary);
+}
+
+.human-review__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+// ---------------------------------------------------------------------------
+// Separador visual entre confirmação e serviços de suporte
+// ---------------------------------------------------------------------------
+
+.associate-detail__divider {
+  border: none;
+  border-top: 1px solid var(--cds-border-subtle-01);
+  margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Fluxo do analista (AnalystApp)
+// ---------------------------------------------------------------------------
+
+.analyst-app {
+  margin-top: 3rem; // altura do Header Carbon
+  padding: 1.5rem;
+
+  @media (max-width: 48rem) {
+    padding: 1rem;
+  }
+}
+
+.analyst-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+
+.analyst-simulation-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background: var(--cds-layer-accent-01);
+  border-left: 3px solid var(--cds-border-interactive);
+  color: var(--cds-text-secondary);
+}
+
+.analyst-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  color: var(--cds-text-secondary);
+}
+
+.analyst-reviews-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: 1rem;
+}
+
+// Card de cada revisão
+.analyst-review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.analyst-review-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.analyst-review-card__title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.analyst-review-card__protocol {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.analyst-review-card__meta {
+  color: var(--cds-text-secondary);
+}
+
+// Grade de campos do card
+.analyst-review-card__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 0.75rem 1.25rem;
+}
+
+.analyst-review-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  // Remove margem padrão do dl/dt/dd
+  dt, dd { margin: 0; }
+}
+
+.analyst-review-card__field--score {
+  grid-column: 1 / -1; // ocupa a linha inteira
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--cds-border-subtle-01);
+}
+
+.analyst-review-card__label {
+  color: var(--cds-text-helper);
+}
+
+.analyst-review-card__status-dd {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.analyst-review-card__score-dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.analyst-review-card__score-value {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.analyst-review-card__score-meta {
+  color: var(--cds-text-helper);
+  font-family: 'IBM Plex Mono', monospace;
+}
