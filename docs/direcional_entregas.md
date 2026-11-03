@@ -244,7 +244,7 @@ Para viabilidade, usar uma tabela de premissas: volume de casos, proporção env
 
 **Para elevar a qualidade:** construir a cadeia `evidência → necessidade → decisão → requisito → teste → resultado`, incluindo uma decisão revisada após o teste.
 
-**Liderança sugerida:** produto com equipe técnica; revisão cruzada de pesquisa e integração/testes. **Saída:** `entregas/09_estrutura_solucao.md`, referenciando o plano em vez de copiar tabelas que podem divergir. Alimenta D10–D13.
+**Liderança sugerida:** produto com equipe técnica; revisão cruzada de pesquisa e integração/testes. **Saída:** `docs/entregas/pessoa3/D09_estrutura_solucao.md`, referenciando o plano em vez de copiar tabelas que podem divergir. Alimenta D10–D13.
 
 ## D10 — Arquitetura técnica e limites de autonomia
 
@@ -282,7 +282,7 @@ Na ficha do agente, escrever objetivo, conhecimento permitido, instruções, fer
 
 **Para elevar a qualidade:** anexar uma sequência real de ferramentas e uma decisão técnica curta com alternativa, escolha, motivo e consequência. Comprovar isolamento entre dois associados fictícios e impossibilidade de autorização pelo agente.
 
-**Liderança sugerida:** backend/agente; revisão de dados/modelo e integração/testes. **Saída:** `entregas/10_arquitetura.md`, diagrama editável e contratos versionados. Depende de D09 e dos contratos; alimenta D11.
+**Liderança sugerida:** backend/agente; revisão de dados/modelo e integração/testes. **Saída:** `docs/entregas/pessoa3/D10_arquitetura.md`, diagrama editável e contratos versionados. Depende de D09 e dos contratos; alimenta D11.
 
 ## D11 — Fluxo principal do MVP e evidências ponta a ponta
 
@@ -388,7 +388,7 @@ Em D10, Pessoa 4 confere a legibilidade, a rastreabilidade e a possibilidade de 
 
 **Pacote final:** Pessoa 1 responde pelo texto de problema/solução e roteiro de apresentação; Pessoa 2 revisa a narrativa do usuário e os resultados de pesquisa; Pessoa 3 responde pela declaração tecnológica e instruções técnicas; Pessoa 4 consolida vídeo/links/índice e confere acesso. Cada uma das quatro pessoas entrega suas próprias evidências do Bob. O envio é realizado pelo líder cadastrado na plataforma, sem presumir que seja uma dessas funções específicas.
 
-O [plano operacional](../artifacts/planejamento/plano_15_dias.md) e o [backlog](../artifacts/planejamento/backlog.md) foram alinhados ao associado e à divisão em quatro pessoas. O plano mantém a correspondência dos antigos códigos A com as entregas D; os cards C preservam seus IDs, com descrições revisadas. Essa atualização de planejamento não representa execução ou conclusão dos cards.
+O [plano operacional](planejamento/plano_15_dias.md) e o [backlog](planejamento/backlog.md) foram alinhados ao associado e à divisão em quatro pessoas. O plano mantém a correspondência dos antigos códigos A com as entregas D; os cards C preservam seus IDs, com descrições revisadas. Essa atualização de planejamento não representa execução ou conclusão dos cards.
 
 **Sequência por dependência:** D01–D03 → D04 → D05–D08 → D09–D10. D12 começa após D06/D09; D11 avança com contratos e implementação. D13 pode começar no protótipo e deve verificar a aplicação integrada quando disponível. Resultados realimentam descoberta e valor; o trabalho é iterativo.
 
