@@ -131,6 +131,14 @@ export const postReview = (caseId, reason, details) =>
 /** GET /api/reviews — lista revisões abertas; requer sessão ANALISTA (§8 do contrato) */
 export const getReviews = () => request('/api/reviews');
 
+// ── Demonstração (§9 do contrato) ────────────────────────────────────────────
+
+/**
+ * POST /api/demo/reset — apaga compras, respostas, conversas e revisões e recarrega
+ * as fixtures iniciais com prazo novo. Só disponível com DEMO_MODE=true (204).
+ */
+export const resetDemo = () => request('/api/demo/reset', { method: 'POST' });
+
 // ── Confirmação (§6 do contrato) ──────────────────────────────────────────────
 
 /**

@@ -18,6 +18,7 @@ from app.api.schemas.session import (
     SessionLoginRequest,
     SessionResponse,
 )
+from app.config import get_settings
 from app.domain.personas import PERSONAS
 
 router = APIRouter(prefix="/api/session", tags=["session"])
@@ -33,6 +34,7 @@ def _persona_to_session_response(persona_id: str) -> SessionResponse:
         display_name=persona.display_name,
         role=persona.role,  # type: ignore[arg-type]
         simulation=True,
+        demo_mode=get_settings().demo_mode,
     )
 
 
