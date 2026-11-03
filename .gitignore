@@ -7,3 +7,9 @@
 # Python / Jupyter
 __pycache__/
 .ipynb_checkpoints/
+
+# Segredos locais (Bob e outras ferramentas)
+.env
+
+# Banco SQLite local e arquivos auxiliares de execução
+watson/backend/watson.db*

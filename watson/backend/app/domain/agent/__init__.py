@@ -56,10 +56,21 @@ def _make_agent() -> Agent[AgentDeps, str]:
 
     # Se não há GROQ_API_KEY, o agente fica sem modelo configurado.
     # A rota de chat detecta isso e retorna 503 AGENT_UNAVAILABLE.
-    model_str = settings.llm_model if settings.groq_api_key else None
+    # Quando a chave vem do .env via pydantic-settings, injete-a explicitamente:
+    # o provider não deve depender de a variável também existir em os.environ.
+    model = None
+    if settings.groq_api_key:
+        from pydantic_ai.models.groq import GroqModel
+        from pydantic_ai.providers.groq import GroqProvider
+
+        model_name = settings.llm_model.removeprefix("groq:")
+        model = GroqModel(
+            model_name,
+            provider=GroqProvider(api_key=settings.groq_api_key),
+        )
 
     agent: Agent[AgentDeps, str] = Agent(
-        model=model_str,
+        model=model,
         deps_type=AgentDeps,
         system_prompt=_SYSTEM_PROMPT,
         defer_model_check=True,
