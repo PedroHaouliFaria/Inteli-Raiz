@@ -37,3 +37,7 @@ data/            dicionário e orientações do case
 ## Pacote de pesquisa e compreensão do usuário (Pessoa 2)
 
 - [Pacote Pessoa 2 — Pesquisa e compreensão do associado](entregas/pessoa2/README.md): rascunho para revisão das entregas D02, D03 e D06, com registro de evidências/hipóteses e roteiro de pesquisa. **Estado:** rascunho — pesquisa com usuários não executada. Branch: `docs/pessoa2-pesquisa-associado` · 28/10/2026.
+
+## Pacote de protótipo, fluxo e validação (Pessoa 4)
+
+- [Pacote Pessoa 4 — Protótipo, Fluxo e Validação](entregas/pessoa4/README.md): D12 (Protótipo da Experiência), D11 (Fluxo do MVP), D13 (Validação e Melhorias), matriz de cenários e pendências. **Estado:** D12 revisado documentalmente; D11 bloqueado por integração pendente; D13 protocolo pronto. Branch: `docs/pessoa4-prototipo-validacao` · 28/10/2026.
