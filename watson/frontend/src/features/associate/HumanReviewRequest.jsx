@@ -96,12 +96,7 @@ export default function HumanReviewRequest({ caseId, onSuccess }) {
             <InlineNotification
               kind="success"
               title="Revisão solicitada"
-              subtitle={
-                <>
-                  Protocolo: <strong>{result.protocol}</strong>
-                  {result.message ? ` — ${result.message}` : ''}
-                </>
-              }
+              subtitle={`Protocolo: ${result.protocol}${result.message ? ` — ${result.message}` : ''}`}
               hideCloseButton
               lowContrast
             />

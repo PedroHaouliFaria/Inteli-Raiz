@@ -46,7 +46,7 @@ Regras fixas — nunca quebre nenhuma delas:
 class AgentDeps:
     customer_id: str   # da sessão — nunca do LLM
     case_id: str       # da URL do chat, já conferida contra o customer_id
-    db: Any            # Session do SQLAlchemy
+    db: Any            # Engine do SQLAlchemy — cada ferramenta abre a própria sessão
 
 
 def _make_agent() -> Agent[AgentDeps, str]:
@@ -82,19 +82,21 @@ def _make_agent() -> Agent[AgentDeps, str]:
     @agent.tool
     async def consultar_compra(ctx: RunContext[AgentDeps]) -> dict:
         """Retorna os dados da compra (purchase e alert) para que o assistente explique a situação."""
-        from sqlalchemy.orm import Session
+        from sqlalchemy.orm import sessionmaker
         from app.db.repositories.purchases import PurchaseRepository
         from app.domain.cases.purchases import build_purchase_detail
 
-        session: Session = ctx.deps.db
-        repo = PurchaseRepository(session)
-        result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
-        if result is None:
-            return {"error": "Compra não encontrada."}
-        purchase, confirmation = result
-        detail = build_purchase_detail(purchase, confirmation, session=session)
-        # Retorna apenas purchase e alert — sem score
-        return {"purchase": detail["purchase"], "alert": detail["alert"]}
+        Session = sessionmaker(bind=ctx.deps.db)
+        with Session() as session:
+            repo = PurchaseRepository(session)
+            result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
+            if result is None:
+                return {"error": "Compra não encontrada."}
+            purchase, confirmation = result
+            detail = build_purchase_detail(purchase, confirmation, session=session)
+            # Retorna apenas purchase e alert — sem score.
+            # A sessão é encerrada aqui; nenhuma transação fica aberta ao retornar ao LLM.
+            return {"purchase": detail["purchase"], "alert": detail["alert"]}
 
     # -----------------------------------------------------------------------
     # Ferramenta 2: consultar_status
@@ -102,17 +104,19 @@ def _make_agent() -> Agent[AgentDeps, str]:
     @agent.tool
     async def consultar_status(ctx: RunContext[AgentDeps]) -> dict:
         """Retorna o status atual da compra para que o assistente informe o associado."""
-        from sqlalchemy.orm import Session
+        from sqlalchemy.orm import sessionmaker
         from app.db.repositories.purchases import PurchaseRepository
         from app.domain.cases.purchases import build_purchase_status
 
-        session: Session = ctx.deps.db
-        repo = PurchaseRepository(session)
-        result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
-        if result is None:
-            return {"error": "Compra não encontrada."}
-        purchase, confirmation = result
-        return build_purchase_status(purchase, confirmation, session=session)
+        Session = sessionmaker(bind=ctx.deps.db)
+        with Session() as session:
+            repo = PurchaseRepository(session)
+            result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
+            if result is None:
+                return {"error": "Compra não encontrada."}
+            purchase, confirmation = result
+            # A sessão é encerrada aqui; nenhuma transação fica aberta ao retornar ao LLM.
+            return build_purchase_status(purchase, confirmation, session=session)
 
     # -----------------------------------------------------------------------
     # Ferramenta 3: avaliar_transacao
@@ -124,52 +128,54 @@ def _make_agent() -> Agent[AgentDeps, str]:
         ATENÇÃO: o score é um indicador de ranqueamento, não probabilidade de fraude.
         Não cite o score como porcentagem.
         """
-        from sqlalchemy.orm import Session
+        from sqlalchemy.orm import sessionmaker
         from sqlalchemy import select
         from app.db.tables.purchases import Purchase
         from app.domain.signals.rules import compute_signals
 
-        session: Session = ctx.deps.db
-        stmt = (
-            select(Purchase)
-            .where(
-                Purchase.case_id == ctx.deps.case_id,
-                Purchase.customer_id == ctx.deps.customer_id,
+        Session = sessionmaker(bind=ctx.deps.db)
+        with Session() as session:
+            stmt = (
+                select(Purchase)
+                .where(
+                    Purchase.case_id == ctx.deps.case_id,
+                    Purchase.customer_id == ctx.deps.customer_id,
+                )
             )
-        )
-        purchase = session.execute(stmt).scalar_one_or_none()
-        if purchase is None:
-            return {"error": "Compra não encontrada."}
+            purchase = session.execute(stmt).scalar_one_or_none()
+            if purchase is None:
+                return {"error": "Compra não encontrada."}
 
-        # Determina o analysis_id: A-<n>-v1
-        n = ctx.deps.case_id.replace("T-", "") if ctx.deps.case_id.startswith("T-") else ctx.deps.case_id
-        analysis_id = f"A-{n}-v1"
+            # Determina o analysis_id: A-<n>-v1
+            n = ctx.deps.case_id.replace("T-", "") if ctx.deps.case_id.startswith("T-") else ctx.deps.case_id
+            analysis_id = f"A-{n}-v1"
 
-        signals = []
-        if purchase.features_json:
-            try:
-                computed = compute_signals(purchase.features_json)
-                signals = [{"code": s.code, "label": s.label, "source": s.source} for s in computed]
-            except Exception:
-                pass
+            signals = []
+            if purchase.features_json:
+                try:
+                    computed = compute_signals(purchase.features_json)
+                    signals = [{"code": s.code, "label": s.label, "source": s.source} for s in computed]
+                except Exception:
+                    pass
 
-        evaluated_at = None
-        if purchase.analysis_evaluated_at:
-            from datetime import timezone
-            dt = purchase.analysis_evaluated_at
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=timezone.utc)
-            evaluated_at = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+            evaluated_at = None
+            if purchase.analysis_evaluated_at:
+                from datetime import timezone
+                dt = purchase.analysis_evaluated_at
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                evaluated_at = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        return {
-            "analysis_id": analysis_id,
-            "score_available": purchase.analysis_score is not None,
-            "decision": purchase.analysis_decision,
-            "policy_version": purchase.analysis_policy_version,
-            "signals": signals,
-            "gaps": purchase.analysis_gaps_json or [],
-            "evaluated_at": evaluated_at,
-        }
+            # A sessão é encerrada aqui; nenhuma transação fica aberta ao retornar ao LLM.
+            return {
+                "analysis_id": analysis_id,
+                "score_available": purchase.analysis_score is not None,
+                "decision": purchase.analysis_decision,
+                "policy_version": purchase.analysis_policy_version,
+                "signals": signals,
+                "gaps": purchase.analysis_gaps_json or [],
+                "evaluated_at": evaluated_at,
+            }
 
     # -----------------------------------------------------------------------
     # Ferramenta 4: solicitar_revisao
@@ -186,33 +192,36 @@ def _make_agent() -> Agent[AgentDeps, str]:
         DUVIDA_PROCESSO, OUTRO.
         Não muda o status da compra — o associado ainda pode responder pelos botões.
         """
-        from sqlalchemy.orm import Session
+        from sqlalchemy.orm import sessionmaker
         from app.db.repositories.purchases import PurchaseRepository
         from app.domain.reviews import create_or_get_review
-
-        session: Session = ctx.deps.db
-        repo = PurchaseRepository(session)
-        result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
-        if result is None:
-            return {"error": "Compra não encontrada."}
-        purchase, _ = result
-
-        # Normaliza reason: valores inválidos viram OUTRO (o LLM pode mandar valores fora do enum)
-        _valid_reasons = {"NAO_RECONHECE_ESTABELECIMENTO", "VALOR_DIFERENTE", "DUVIDA_PROCESSO", "OUTRO"}
-        normalized_reason = reason if reason in _valid_reasons else "OUTRO"
-        review_dict, _ = create_or_get_review(
-            session=session,
-            purchase=purchase,
-            reason=normalized_reason,
-            details=details or None,
-            created_by="AGENTE",
-        )
-        # Serializa created_at
         from app.api.schemas.common import _serialize_utc
-        created_at = review_dict.pop("created_at", None)
-        if created_at is not None:
-            review_dict["created_at"] = _serialize_utc(created_at)
-        return review_dict
+
+        Session = sessionmaker(bind=ctx.deps.db)
+        with Session() as session:
+            repo = PurchaseRepository(session)
+            result = repo.get_by_owner(ctx.deps.customer_id, ctx.deps.case_id)
+            if result is None:
+                return {"error": "Compra não encontrada."}
+            purchase, _ = result
+
+            # Normaliza reason: valores inválidos viram OUTRO (o LLM pode mandar valores fora do enum)
+            _valid_reasons = {"NAO_RECONHECE_ESTABELECIMENTO", "VALOR_DIFERENTE", "DUVIDA_PROCESSO", "OUTRO"}
+            normalized_reason = reason if reason in _valid_reasons else "OUTRO"
+            review_dict, _ = create_or_get_review(
+                session=session,
+                purchase=purchase,
+                reason=normalized_reason,
+                details=details or None,
+                created_by="AGENTE",
+            )
+            # create_or_get_review já commitou internamente; não há transação aberta aqui.
+            # Serializa created_at
+            created_at = review_dict.pop("created_at", None)
+            if created_at is not None:
+                review_dict["created_at"] = _serialize_utc(created_at)
+            # A sessão é encerrada aqui; nenhuma transação fica aberta ao retornar ao LLM.
+            return review_dict
 
     return agent
 

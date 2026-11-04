@@ -34,6 +34,7 @@ import { Renew, Logout } from '@carbon/icons-react';
 import { ApiError, getReviews, logout } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import { formatDate, formatMoney, statusMeta } from '../associate/utils.js';
+import DemoResetButton from '../associate/DemoResetButton.jsx';
 
 // ── Rótulos legíveis para enums do contrato ─────────────────────────────────
 
@@ -201,6 +202,9 @@ export default function AnalystApp() {
             >
               {session.display_name}
             </Tag>
+            {session.demo_mode && (
+              <DemoResetButton onReset={loadReviews} />
+            )}
             <HeaderGlobalAction
               aria-label="Atualizar lista de revisões"
               onClick={loadReviews}

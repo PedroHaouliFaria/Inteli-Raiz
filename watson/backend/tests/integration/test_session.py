@@ -158,3 +158,54 @@ def test_get_session_with_fresh_cookie_200(client):
     r = client.get("/api/session")
     assert r.status_code == 200
     assert r.json()["persona_id"] == "ana"
+
+# ---------------------------------------------------------------------------
+# demo_mode: campo presente no POST e GET /api/session (§4 do contrato)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture()
+def client_demo(tmp_path, monkeypatch):
+    """App com DEMO_MODE=true."""
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path}/test_demo.db")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("DEMO_MODE", "true")
+
+    from app.config import get_settings
+    from app.db.session import get_engine
+    get_settings.cache_clear()
+    get_engine.cache_clear()
+
+    from app.main import create_app
+    app = create_app()
+    with TestClient(app, raise_server_exceptions=True) as c:
+        yield c
+
+
+def test_post_session_demo_mode_true(client_demo):
+    """Com DEMO_MODE=true, POST /api/session devolve demo_mode: true."""
+    r = client_demo.post("/api/session", json={"persona_id": "ana"})
+    assert r.status_code == 200
+    assert r.json()["demo_mode"] is True
+
+
+def test_get_session_demo_mode_true(client_demo):
+    """Com DEMO_MODE=true, GET /api/session devolve demo_mode: true."""
+    client_demo.post("/api/session", json={"persona_id": "ana"})
+    r = client_demo.get("/api/session")
+    assert r.status_code == 200
+    assert r.json()["demo_mode"] is True
+
+
+def test_post_session_demo_mode_false(client):
+    """Sem DEMO_MODE (padrão false), POST /api/session devolve demo_mode: false."""
+    r = client.post("/api/session", json={"persona_id": "ana"})
+    assert r.status_code == 200
+    assert r.json()["demo_mode"] is False
+
+
+def test_get_session_demo_mode_false(client):
+    """Sem DEMO_MODE (padrão false), GET /api/session devolve demo_mode: false."""
+    client.post("/api/session", json={"persona_id": "ana"})
+    r = client.get("/api/session")
+    assert r.status_code == 200
+    assert r.json()["demo_mode"] is False

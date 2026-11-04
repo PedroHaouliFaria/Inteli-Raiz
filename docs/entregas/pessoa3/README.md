@@ -1,8 +1,8 @@
 # Pacote Pessoa 3 — Estrutura da solução e arquitetura
 
-**Versão:** 0.1 · **Data:** 29/10/2026
-**Responsável:** Pessoa 3
-**Revisores:** Pessoa 4 (D09/D10), autores técnicos (contratos e evidências)
+**Versão:** 0.1 · **Data:** 29/10/2026  
+**Responsável:** Pessoa 3  
+**Revisores:** Pessoa 4 (D09/D10), autores técnicos (contratos e evidências)  
 **Estado geral:** rascunho — documentação estrutural completa; implementação e integração pendentes.
 
 ---
