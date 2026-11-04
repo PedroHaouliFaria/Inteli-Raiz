@@ -4,7 +4,7 @@
 **Responsável:** Pessoa 1
 **Revisores:** Pessoa 2 (D01/D05), Pessoa 3 (D04/D08), Pessoa 4 (D07)
 **Branch de trabalho:** `docs/pessoa1-negocio-produto` (criada a partir de `develop`)
-**Estado geral:** rascunho — sem pesquisa com usuários executada; D04 aguarda brainstorming do grupo; D07 aguarda teste do pitch.
+**Estado geral:** rascunho — sem pesquisa com usuários executada; D04 aguarda brainstorming do grupo; D07 aguarda teste do pitch; Canvas de Proposta de Valor (D07-canvas) criado em 03/11/2026.
 
 ---
 
@@ -17,6 +17,7 @@
 | `D01_oportunidades.md` | D01 — Oportunidades de segurança e clareza | rascunho |
 | `D04_priorizacao.md` | D04 — Alternativas e decisão de prioridade | rascunho |
 | `D05_D07_D08_conceito_valor.md` | D05 — Conceito · D07 — Ideia · D08 — Proposta de valor/IA | rascunho |
+| `canvas_proposta_de_valor.md` | Canvas de Proposta de Valor (Osterwalder) — encaixe perfil × mapa de valor | rascunho |
 
 ---
 
@@ -111,7 +112,7 @@ Conforme [`docs/direcional_entregas.md`](../../direcional_entregas.md#organizaç
 
 ## 8. Checklist final
 
-- [x] Cinco entregas criadas com cabeçalho completo e estado "rascunho"
+- [x] Seis arquivos criados com cabeçalho completo e estado "rascunho"
 - [x] Nenhuma fala, número ou resultado inventado; toda afirmação relevante tem ID (FON/HIP/DEC)
 - [x] D04 compara ≥3 alternativas, incluindo uma sem agente (A: texto fixo), com os mesmos critérios
 - [x] D05 inclui caso em que o agente não sabe responder e encaminha para revisão (D05 §5 Cenário C)
