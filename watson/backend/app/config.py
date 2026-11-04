@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     notice_auto_close_on_it_was_me: bool = True
     notice_response_timeout_minutes: int = 10
 
-    # Tentativas simuladas de rajada (docs/dados/modelo-de-dados.md). Valores iniciais, ajustáveis pelo time.
+    # Tentativas simuladas de rajada (docs/04_dados_e_modelo/dados/linha-do-tempo.md). Valores iniciais, ajustáveis pelo time.
     burst_velocity_threshold: int = 10
     burst_max_attempts: int = 5
     burst_window_minutes: int = 15

@@ -1,4 +1,4 @@
-"""Gera as figuras usadas em docs/01_analise_exploratoria.md.
+"""Gera as figuras usadas em docs/04_dados_e_modelo/01_analise_exploratoria.md.
 
 Uso (na raiz do repositório):
     python scripts/gerar_figuras_docs.py
@@ -14,7 +14,7 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score
 
 ROOT = Path(__file__).resolve().parent.parent
-IMG = ROOT / "docs" / "assets"
+IMG = ROOT / "docs" / "04_dados_e_modelo" / "assets"
 IMG.mkdir(parents=True, exist_ok=True)
 
 # Paleta validada (dataviz default): azul = legítima, laranja = fraude

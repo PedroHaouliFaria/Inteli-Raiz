@@ -1,4 +1,4 @@
-// Fonte: docs/design/glossario.md (decisão do Leo, 26/10/2026)
+// Fonte: docs/02_ux_design/processo_design/glossario.md (decisão do Leo, 26/10/2026)
 export const GLOSSARY = {
   alert: {
     term: 'Alerta',
