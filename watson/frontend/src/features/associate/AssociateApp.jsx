@@ -23,7 +23,7 @@ import {
   Theme,
 } from '@carbon/react';
 import { Renew, Logout } from '@carbon/icons-react';
-import { ApiError, getPurchases, logout } from '../../api/client.js';
+import { ApiError, getPurchases } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import PurchaseList from './PurchaseList.jsx';
 import PurchaseDetail from './PurchaseDetail.jsx';
@@ -63,12 +63,9 @@ export default function AssociateApp() {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await logout();
-    } catch {
-      // Se o servidor falhar, recarrega a página para limpar o estado
+      await session.endSession();
     } finally {
-      // Força recarga completa para que SessionGate volte à tela de login
-      window.location.reload();
+      setLoggingOut(false);
     }
   };
 

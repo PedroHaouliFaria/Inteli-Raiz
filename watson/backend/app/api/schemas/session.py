@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 from app.api.schemas.common import SimulationTrue
 
@@ -64,4 +64,16 @@ class SessionLoginRequest(BaseModel):
 
     model_config = {"extra": "forbid"}
 
-    persona_id: str
+    email: str | None = Field(default=None, min_length=3, max_length=254)
+    password: str | None = Field(default=None, min_length=1, max_length=128)
+    # Temporário: permite que a suíte legada migre sem alterar os contratos
+    # dos demais domínios. A rota só aceita isto com flag explícita de teste.
+    persona_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_login_shape(self):
+        if self.email is not None and self.password is not None and self.persona_id is None:
+            return self
+        if self.persona_id is not None and self.email is None and self.password is None:
+            return self
+        raise ValueError("Informe e-mail e senha.")

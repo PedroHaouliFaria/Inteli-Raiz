@@ -9,15 +9,27 @@ services:
       POSTGRES_DB: watson
     ports: ["5432:5432"]
     volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U watson -d watson"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build:
       context: ..
       dockerfile: infra/docker/backend.Dockerfile
+    # Reaproveita SESSION_SECRET, GROQ_API_KEY e demais opções do desenvolvimento local.
+    # As opções abaixo substituem apenas o que muda dentro da rede do Compose.
+    env_file:
+      - ../backend/.env
     environment:
       DATABASE_URL: postgresql+psycopg://watson:watson@db:5432/watson
       AGENT_PROVIDER: simulated
       FRONTEND_ORIGIN: http://localhost:8080
+      # Mantém as confirmações utilizáveis entre apresentações; o padrão da
+      # aplicação continua sendo 15 minutos fora do ambiente de demonstração.
+      CONFIRMATION_TTL_SECONDS: 2592000
       RISK_MODEL_PATH: /risk/outputs/modelo_rf.joblib
       RISK_DATA_DIR: /risk/data/processed
     volumes:
@@ -25,16 +37,32 @@ services:
       - ../../outputs:/risk/outputs:ro
       - ../../data/processed:/risk/data/processed:ro
     ports: ["8000:8000"]
-    depends_on: [db]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   frontend:
     build:
       context: ..
       dockerfile: infra/docker/frontend.Dockerfile
       args:
-        VITE_API_URL: http://localhost:8000
+        # Rotas legadas também passam pelo Nginx e ficam na mesma origem do cookie.
+        VITE_API_URL: ""
     ports: ["8080:80"]
-    depends_on: [backend]
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      # Alpine pode resolver localhost como IPv6, enquanto o Nginx escuta IPv4.
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   db-data:

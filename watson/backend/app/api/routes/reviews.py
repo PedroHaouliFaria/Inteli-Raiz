@@ -14,7 +14,14 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import AnalistaUser, AssociadoUser
 from app.api.errors import ApiError
-from app.api.schemas.reviews import AnalysisSummary, ReviewListItem, ReviewListResponse, ReviewOut
+from app.api.schemas.reviews import (
+    AnalysisSummary,
+    ReviewDecisionRequest,
+    ReviewDecisionResponse,
+    ReviewListItem,
+    ReviewListResponse,
+    ReviewOut,
+)
 from app.db.repositories.purchases import PurchaseRepository
 from app.db.session import get_session
 from app.db.tables.purchases import Purchase, Review
@@ -101,7 +108,7 @@ def list_reviews(
 
     Associado recebe 403 FORBIDDEN_ROLE.
     """
-    stmt = select(Review).order_by(Review.id.desc())
+    stmt = select(Review).where(Review.status == "ABERTA").order_by(Review.id.desc())
     reviews = session.execute(stmt).scalars().all()
 
     items = []
@@ -134,3 +141,25 @@ def list_reviews(
         )
 
     return ReviewListResponse(reviews=items, simulation=True)
+
+
+@router.post(
+    "/api/reviews/{review_id}/decision",
+    response_model=ReviewDecisionResponse,
+)
+def decide_review(
+    review_id: str,
+    body: ReviewDecisionRequest,
+    analista: AnalistaUser,
+    session: Session = Depends(get_session),
+) -> ReviewDecisionResponse:
+    """Analista libera ou recusa a compra e encerra a revisão na simulação."""
+    from app.domain.reviews import resolve_review
+
+    result = resolve_review(
+        session=session,
+        review_id=review_id,
+        decision=body.decision,
+        analyst_id=analista.persona_id,
+    )
+    return ReviewDecisionResponse(**result, simulation=True)

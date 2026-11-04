@@ -41,23 +41,26 @@ def _logout(client):
 # GET /api/purchases — lista
 # ---------------------------------------------------------------------------
 
-def test_ana_list_contains_t007_and_t003_in_order(client):
-    """R: ana lista T-007 e T-003, nessa ordem (mais recente primeiro)."""
+def test_ana_list_contains_seed_cases_in_recent_first_order(client):
     _login(client, "ana")
     r = client.get("/api/purchases")
     assert r.status_code == 200
     data = r.json()
     assert data["simulation"] is True
     ids = [p["case_id"] for p in data["purchases"]]
-    assert ids == ["T-007", "T-003"]
+    assert len(ids) == 8
+    assert ids[:3] == ["T-012", "T-015", "T-016"]
+    assert {"T-007", "T-003", "T-023"}.issubset(ids)
 
 
-def test_bruno_list_contains_only_t011(client):
+def test_bruno_list_contains_seed_cases(client):
     _login(client, "bruno")
     r = client.get("/api/purchases")
     assert r.status_code == 200
     ids = [p["case_id"] for p in r.json()["purchases"]]
-    assert ids == ["T-011"]
+    assert len(ids) == 7
+    assert ids[:3] == ["T-013", "T-014", "T-017"]
+    assert "T-011" in ids
 
 
 def test_purchases_list_without_session_401(client):
@@ -241,4 +244,6 @@ def test_r10_second_app_sees_same_data_no_re_seed(db_path, monkeypatch):
         r2 = c2.get("/api/purchases")
         ids2 = [p["case_id"] for p in r2.json()["purchases"]]
 
-    assert ids1 == ids2 == ["T-007", "T-003"]
+    assert ids1 == ids2
+    assert len(ids1) == 8
+    assert {"T-007", "T-003", "T-023"}.issubset(ids1)

@@ -12,6 +12,7 @@ def client(tmp_path, monkeypatch):
     """App com SQLite temporário e SESSION_SECRET definido."""
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path}/test.db")
     monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("ALLOW_LEGACY_PERSONA_LOGIN", "false")
 
     # Reinicializa get_settings e get_engine para o SQLite do teste
     from app.config import get_settings
@@ -48,7 +49,7 @@ def test_personas_simulation_true(client):
 # ---------------------------------------------------------------------------
 
 def test_post_session_ana_returns_200_and_cookie(client):
-    r = client.post("/api/session", json={"persona_id": "ana"})
+    r = client.post("/api/session", json={"email": "ana@raiz.demo", "password": "Ana@123"})
     assert r.status_code == 200
     body = r.json()
     assert body["persona_id"] == "ana"
@@ -60,21 +61,36 @@ def test_post_session_ana_returns_200_and_cookie(client):
 
 
 def test_post_session_cookie_httponly_samesite_lax(client):
-    r = client.post("/api/session", json={"persona_id": "ana"})
+    r = client.post("/api/session", json={"email": "ana@raiz.demo", "password": "Ana@123"})
     cookie_header = r.headers.get("set-cookie", "").lower()
     assert "httponly" in cookie_header
     assert "samesite=lax" in cookie_header
 
 
-def test_post_session_unknown_persona_400(client):
-    r = client.post("/api/session", json={"persona_id": "inexistente"})
-    assert r.status_code == 400
-    assert r.json()["error"]["code"] == "INVALID_REQUEST"
+def test_post_session_invalid_credentials_401(client):
+    r = client.post("/api/session", json={"email": "ninguem@raiz.demo", "password": "errada"})
+    assert r.status_code == 401
+    assert r.json()["error"]["code"] == "AUTHENTICATION_FAILED"
+
+
+def test_post_session_wrong_password_uses_generic_error(client):
+    r = client.post("/api/session", json={"email": "ana@raiz.demo", "password": "errada"})
+    assert r.status_code == 401
+    assert r.json()["error"]["message"] == "E-mail ou senha inválidos."
+
+
+def test_post_session_legacy_persona_id_is_rejected(client):
+    r = client.post("/api/session", json={"persona_id": "ana"})
+    assert r.status_code == 401
+    assert r.json()["error"]["code"] == "AUTHENTICATION_FAILED"
 
 
 def test_post_session_extra_field_customer_id_400(client):
     """corpo com customer_id a mais deve ser rejeitado (§2: identidade nunca no corpo)."""
-    r = client.post("/api/session", json={"persona_id": "ana", "customer_id": "C-ANA"})
+    r = client.post(
+        "/api/session",
+        json={"email": "ana@raiz.demo", "password": "Ana@123", "customer_id": "C-ANA"},
+    )
     assert r.status_code == 400
 
 
@@ -96,7 +112,7 @@ def test_get_session_with_tampered_cookie_401(client):
 
 
 def test_get_session_after_login_200(client):
-    client.post("/api/session", json={"persona_id": "ana"})
+    client.post("/api/session", json={"email": "ana@raiz.demo", "password": "Ana@123"})
     r = client.get("/api/session")
     assert r.status_code == 200
     assert r.json()["persona_id"] == "ana"
@@ -107,13 +123,13 @@ def test_get_session_after_login_200(client):
 # ---------------------------------------------------------------------------
 
 def test_delete_session_returns_204(client):
-    client.post("/api/session", json={"persona_id": "ana"})
+    client.post("/api/session", json={"email": "ana@raiz.demo", "password": "Ana@123"})
     r = client.delete("/api/session")
     assert r.status_code == 204
 
 
 def test_delete_session_then_get_401(client):
-    client.post("/api/session", json={"persona_id": "ana"})
+    client.post("/api/session", json={"email": "ana@raiz.demo", "password": "Ana@123"})
     client.delete("/api/session")
     r = client.get("/api/session")
     assert r.status_code == 401

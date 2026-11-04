@@ -11,7 +11,8 @@
  * O valor é exibido como decimal — nunca convertido em percentual ou
  * "probabilidade de fraude".
  *
- * Ações de resolução/fechamento NÃO existem (contrato é somente leitura no v1).
+ * A analista pode liberar ou recusar a compra na simulação; a ação fecha a
+ * revisão, registra auditoria e remove o item da fila aberta.
  * Não tenta GET /api/purchases/{case_id} (rota vinculada à sessão do associado).
  * Sem estado mockado de src/state/store.jsx.
  */
@@ -31,7 +32,7 @@ import {
   Tile,
 } from '@carbon/react';
 import { Renew, Logout } from '@carbon/icons-react';
-import { ApiError, getReviews, logout } from '../../api/client.js';
+import { ApiError, getReviews, postReviewDecision } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import { formatDate, formatMoney, statusMeta } from '../associate/utils.js';
 
@@ -63,7 +64,7 @@ const REVIEW_STATUS_TAG = {
 
 // ── Componente de um item de revisão ────────────────────────────────────────
 
-function ReviewCard({ review }) {
+function ReviewCard({ review, busy, actionError, onDecision }) {
   const caseMeta = statusMeta(review.case_status);
   const reviewTagType = REVIEW_STATUS_TAG[review.status] ?? 'gray';
   const score = review.analysis?.score;
@@ -141,6 +142,35 @@ function ReviewCard({ review }) {
           </dd>
         </div>
       </dl>
+
+      {actionError && (
+        <InlineNotification
+          kind="error"
+          title="Não foi possível registrar a decisão"
+          subtitle={actionError}
+          hideCloseButton
+          lowContrast
+        />
+      )}
+
+      <div className="analyst-review-card__actions" aria-label={`Ações da revisão ${review.protocol}`}>
+        <Button
+          size="sm"
+          kind="primary"
+          disabled={busy}
+          onClick={() => onDecision(review, 'AUTHORIZE')}
+        >
+          Liberar compra
+        </Button>
+        <Button
+          size="sm"
+          kind="danger--tertiary"
+          disabled={busy}
+          onClick={() => onDecision(review, 'DENY')}
+        >
+          Recusar compra
+        </Button>
+      </div>
     </Tile>
   );
 }
@@ -154,6 +184,9 @@ export default function AnalystApp() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [actingReviewId, setActingReviewId] = useState(null);
+  const [actionError, setActionError] = useState(null);
+  const [decisionNotice, setDecisionNotice] = useState(null);
 
   const loadReviews = useCallback(async () => {
     setLoading(true);
@@ -172,14 +205,30 @@ export default function AnalystApp() {
     loadReviews();
   }, [loadReviews]);
 
+  const handleDecision = async (review, decision) => {
+    setActingReviewId(review.review_id);
+    setActionError(null);
+    setDecisionNotice(null);
+    try {
+      const result = await postReviewDecision(review.review_id, decision);
+      setReviews((current) => current.filter((item) => item.review_id !== review.review_id));
+      setDecisionNotice(result.message);
+    } catch (err) {
+      setActionError({
+        reviewId: review.review_id,
+        message: err instanceof ApiError ? err.message : 'Erro de rede ao registrar a decisão.',
+      });
+    } finally {
+      setActingReviewId(null);
+    }
+  };
+
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await logout();
-    } catch {
-      // Se o servidor falhar, recarrega a página para limpar o estado
+      await session.endSession();
     } finally {
-      window.location.reload();
+      setLoggingOut(false);
     }
   };
 
@@ -229,16 +278,26 @@ export default function AnalystApp() {
               className="cds--type-label-01"
               style={{ color: 'var(--cds-text-helper)', marginTop: '0.25rem' }}
             >
-              Simulação — Inteli Raiz · somente leitura no v1
+              Simulação — Inteli Raiz · decisões registradas com auditoria
             </p>
           </div>
           {/* Aviso de simulação visível */}
           <div className="analyst-simulation-badge" role="note" aria-label="Aviso de simulação">
             <span className="cds--type-label-01">
-              ⚠ Dados simulados. Nenhuma ação real disponível nesta versão.
+              ⚠ Dados e decisões simulados. Nenhuma ação financeira real é executada.
             </span>
           </div>
         </div>
+
+        {decisionNotice && (
+          <InlineNotification
+            kind="success"
+            title="Decisão registrada"
+            subtitle={decisionNotice}
+            onClose={() => { setDecisionNotice(null); return false; }}
+            lowContrast
+          />
+        )}
 
         {/* Estado: carregando */}
         {loading && (
@@ -277,7 +336,12 @@ export default function AnalystApp() {
           <div className="analyst-reviews-list" role="list" aria-label="Revisões">
             {reviews.map((rev) => (
               <div key={rev.review_id} role="listitem">
-                <ReviewCard review={rev} />
+                <ReviewCard
+                  review={rev}
+                  busy={actingReviewId === rev.review_id}
+                  actionError={actionError?.reviewId === rev.review_id ? actionError.message : null}
+                  onDecision={handleDecision}
+                />
               </div>
             ))}
           </div>

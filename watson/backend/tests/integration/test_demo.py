@@ -281,8 +281,8 @@ def test_demo_reset_returns_204(client):
     assert r.status_code == 204
 
 
-def test_demo_reset_restores_ana_to_t007_and_t003(client):
-    """Reset volta a lista da ana a T-007 e T-003 aguardando."""
+def test_demo_reset_restores_all_seed_purchases_for_ana(client):
+    """Reset remove compras extras e restaura as oito fixtures da Ana."""
     _login_ana(client)
     # Cria compra extra
     client.post("/api/demo/purchases", json={"fixture_id": "fraude_supermercado_madrugada"})
@@ -295,8 +295,9 @@ def test_demo_reset_restores_ana_to_t007_and_t003(client):
     ids = [p["case_id"] for p in r2.json()["purchases"]]
     assert "T-007" in ids
     assert "T-003" in ids
-    # Não tem compras extras (só as do seed)
-    assert len(ids) == 2
+    # Não tem compras extras (só as oito fixtures da Ana no seed ampliado)
+    assert len(ids) == 8
+    assert {"T-012", "T-015", "T-016", "T-019", "T-020", "T-023"}.issubset(ids)
 
 
 def test_demo_reset_requires_session(client):
