@@ -1,91 +1,93 @@
-﻿# Backlog ÔÇö Confirma├º├úo de compras pelo associado
+# Backlog — Confirmação de compras pelo associado
 
-**Revis├úo de 28/10/2026 ┬À Quatro pessoas ┬À Planejamento ainda n├úo executado.**
+**Revisão de 28/10/2026 · Quatro pessoas · Planejamento ainda não executado.**
 
-O [plano operacional](plano_15_dias.md) define recorte e sequ├¬ncia. O [direcional](../../docs/direcional_entregas.md) detalha D01ÔÇôD13 e sua matriz de respons├íveis/revisores. P1ÔÇôP4 significam Pessoa 1ÔÇô4. Os nomes ser├úo preenchidos pela equipe, sem reaproveitar automaticamente a forma├º├úo antiga de cinco integrantes.
+O [plano operacional](plano_15_dias.md) define recorte e sequência. O [direcional](../../artefatos/documentacao/direcional_entregas.md) detalha D01–D13 e sua matriz de responsáveis/revisores. P1–P4 significam Pessoa 1–4. Os nomes serão preenchidos pela equipe, sem reaproveitar automaticamente a formação antiga de cinco integrantes.
 
-Os IDs C01ÔÇôC32 foram preservados, mas descri├º├Áes, depend├¬ncias e responsabilidades foram revistas para o associado. Os c├│digos A antigos t├¬m correspond├¬ncia no plano operacional. Os **32 cards est├úo ativos e em Backlog**; C10, C13, C18 e C27 foram reativados para adaptar e integrar o frontend Watson j├í produzido por Leonardo no PR #7. Isso n├úo significa que o c├│digo foi integrado ou validado. Datas ser├úo acordadas ap├│s estimar esfor├ºo e disponibilidade; D01ÔÇôD13 s├úo IDs de entregas, n├úo dias do calend├írio.
+Os IDs C01–C32 foram preservados, mas descrições, dependências e responsabilidades foram revistas para o associado. Os códigos A antigos têm correspondência no plano operacional. Os **32 cards estão ativos e em Backlog**; C10, C13, C18 e C27 foram reativados para adaptar e integrar o frontend Watson já produzido por Leonardo no PR #7. Isso não significa que o código foi integrado ou validado. Datas serão acordadas após estimar esforço e disponibilidade; D01–D13 são IDs de entregas, não dias do calendário.
 
-Respons├ível ├® quem acompanha a conclus├úo e consolida a evid├¬ncia. Nos cards de implementa├º├úo, P3 coordena a escolha dos executores t├®cnicos e revisores habilitados; essa aloca├º├úo ├® requisito para iniciar e n├úo atribui todo o desenvolvimento a P3. Prot├│tipo de design e implementa├º├úo de front-end pr├│prio s├úo trabalhos distintos.
+Responsável é quem acompanha a conclusão e consolida a evidência. Nos cards de implementação, P3 coordena a escolha dos executores técnicos e revisores habilitados; essa alocação é requisito para iniciar e não atribui todo o desenvolvimento a P3. Protótipo de design e implementação de front-end próprio são trabalhos distintos.
 
-Leonardo ├® o executor t├®cnico definido para adaptar o frontend existente. P4 consolida D12 e as evid├¬ncias da experi├¬ncia; P2 revisa linguagem/usabilidade e P3 apoia contrato/integra├º├úo. Essa atribui├º├úo n├úo redefine os demais nomes de P1ÔÇôP4. Pedir atendimento e registrar `UNSURE` s├úo opera├º├Áes distintas, conforme ┬º3 do plano.
+Leonardo é o executor técnico definido para adaptar o frontend existente. P4 consolida D12 e as evidências da experiência; P2 revisa linguagem/usabilidade e P3 apoia contrato/integração. Essa atribuição não redefine os demais nomes de P1–P4. Pedir atendimento e registrar `UNSURE` são operações distintas, conforme §3 do plano.
 
-## 1. Descoberta, contratos e primeira integra├º├úo
+> **Atualização de 04/11/2026:** este documento preserva o planejamento histórico de 28/10. O estado atual dos artefatos e os próximos aceites estão no [índice único](../../artefatos/README.md) e na [matriz de pendências](../../artefatos/documentacao/criterios_e_pendencias.md). Cards planejados não comprovam execução.
 
-| Card | Entrega | Atividade e evid├¬ncia para concluir | Respons├ível | Revisor | Depend├¬ncia |
+## 1. Descoberta, contratos e primeira integração
+
+| Card | Entrega | Atividade e evidência para concluir | Responsável | Revisor | Dependência |
 |---|---|---|---|---|---|
-| C01 | D01 | Registrar problema, associado priorit├írio, fontes, hip├│teses e perguntas de pesquisa | P1 | P2 | Nenhuma |
-| C02 | D01/D04 | Comparar alternativas, reunir achados e publicar decis├úo de prioridade com crit├®rios | P1 | P3 | C01; achados de C03 para fechar |
-| C03 | D02/D03/D06 | Produzir empatia, jornada atual e persona; comparar atual/futuro e manter fontes/hip├│teses | P2 | P1 | C01 inicial; C02 para cen├írio futuro final |
-| C04 | D09/D10 | Reproduzir contagens da base, alvo, aus├¬ncias e tipos; registrar vers├úo e diverg├¬ncia 900k/160k | P3 | P4, com revis├úo t├®cnica dos n├║meros | Nenhuma; executor t├®cnico definido |
-| C05 | D09/D10 | Auditar disponibilidade temporal, features, madrugada, nulos, classes e parti├º├Áes com positivos | P3 | Outro autor t├®cnico a definir | C04 |
-| C06 | D10/D11 | Comprovar acesso ao Bob, execu├º├úo do backend/modelo local e configura├º├úo do LLM; conferir viabilidade da interface Watson com sess├úo, compra e resposta expl├¡cita | P3 | P4 | Nenhuma; executor t├®cnico definido |
-| C07 | D09/D10 | Publicar arquitetura, contratos, estados e exemplos de compra/an├ílise/confirma├º├úo/resposta/erro | P3 | P4 | C01 inicial, C04 inicial; C06 para fechar viabilidade |
-| C08 | D05/D07/D08 | Consolidar conceito, ideia e valor/IA com ado├º├úo, custos e hip├│teses declarados | P1 | P3 | C01, C02 inicial, C03 inicial |
-| C09 | D12 | Revisar o prot├│tipo existente: compra, alerta, tr├¬s respostas e ajuda separada; incluir erro e expira├º├úo | P4 | P2 | C03 inicial, C07 inicial |
-| C10 | D12/Frontend Watson | Adaptar React + Carbon existente para o associado: tr├¬s respostas, atendimento separado, estados e console de exce├º├Áes; sem promessa de bloqueio do cart├úo ou biometria obrigat├│ria | P4; execu├º├úo: Leonardo | P2 | C09, C07; c├│digo do PR #7 dispon├¡vel |
-| C11 | D09/D11 | Executar baseline/candidato inicial com atributos aprovados e avalia├º├úo de valida├º├úo reproduz├¡vel | P3 | Outro autor t├®cnico a definir | C05 |
-| C12 | D10/D11 | Implementar ferramentas, pol├¡tica, persist├¬ncia e resposta humana autenticada; demonstrar isolamento de fun├º├Áes | P3 | Outro autor t├®cnico a definir | C06, C07; avalia├º├úo inicial de C11 |
-| C13 | D10/D11/D12 | Integrar frontend Watson ├á API: sess├úo, detalhe/status da compra, resposta idempotente, chat e pedido de revis├úo; substituir mocks no fluxo principal e demonstrar estado ap├│s recarga | P4; execu├º├úo: Leonardo, com backend | P3 | C10, C12, C06 |
-| C14 | D11 | Reproduzir primeira integra├º├úo: compra ÔåÆ pol├¡tica ÔåÆ confirma├º├úo ÔåÆ resposta ÔåÆ estado persistido | P4 | P3 | C06, C11, C12, C13 |
+| C01 | D01 | Registrar problema, associado prioritário, fontes, hipóteses e perguntas de pesquisa | P1 | P2 | Nenhuma |
+| C02 | D01/D04 | Comparar alternativas, reunir achados e publicar decisão de prioridade com critérios | P1 | P3 | C01; achados de C03 para fechar |
+| C03 | D02/D03/D06 | Produzir empatia, jornada atual e persona; comparar atual/futuro e manter fontes/hipóteses | P2 | P1 | C01 inicial; C02 para cenário futuro final |
+| C04 | D09/D10 | Reproduzir contagens da base, alvo, ausências e tipos; registrar versão e divergência 900k/160k | P3 | P4, com revisão técnica dos números | Nenhuma; executor técnico definido |
+| C05 | D09/D10 | Auditar disponibilidade temporal, features, madrugada, nulos, classes e partições com positivos | P3 | Outro autor técnico a definir | C04 |
+| C06 | D10/D11 | Comprovar acesso ao Bob, execução do backend/modelo local e configuração do LLM; conferir viabilidade da interface Watson com sessão, compra e resposta explícita | P3 | P4 | Nenhuma; executor técnico definido |
+| C07 | D09/D10 | Publicar arquitetura, contratos, estados e exemplos de compra/análise/confirmação/resposta/erro | P3 | P4 | C01 inicial, C04 inicial; C06 para fechar viabilidade |
+| C08 | D05/D07/D08 | Consolidar conceito, ideia e valor/IA com adoção, custos e hipóteses declarados | P1 | P3 | C01, C02 inicial, C03 inicial |
+| C09 | D12 | Revisar o protótipo existente: compra, alerta, três respostas e ajuda separada; incluir erro e expiração | P4 | P2 | C03 inicial, C07 inicial |
+| C10 | D12/Frontend Watson | Adaptar React + Carbon existente para o associado: três respostas, atendimento separado, estados e console de exceções; sem promessa de bloqueio do cartão ou biometria obrigatória | P4; execução: Leonardo | P2 | C09, C07; código do PR #7 disponível |
+| C11 | D09/D11 | Executar baseline/candidato inicial com atributos aprovados e avaliação de validação reproduzível | P3 | Outro autor técnico a definir | C05 |
+| C12 | D10/D11 | Implementar ferramentas, política, persistência e resposta humana autenticada; demonstrar isolamento de funções | P3 | Outro autor técnico a definir | C06, C07; avaliação inicial de C11 |
+| C13 | D10/D11/D12 | Integrar frontend Watson à API: sessão, detalhe/status da compra, resposta idempotente, chat e pedido de revisão; substituir mocks no fluxo principal e demonstrar estado após recarga | P4; execução: Leonardo, com backend | P3 | C10, C12, C06 |
+| C14 | D11 | Reproduzir primeira integração: compra → política → confirmação → resposta → estado persistido | P4 | P3 | C06, C11, C12, C13 |
 
-**Revis├úo da primeira integra├º├úo:** verificar estados, v├¡nculo da compra, resposta expl├¡cita e chamadas reais. Enquanto C06 n├úo comprovar uma interface compat├¡vel, registrar a depend├¬ncia; um chat sem controle humano seguro n├úo conclui C14.
+**Revisão da primeira integração:** verificar estados, vínculo da compra, resposta explícita e chamadas reais. Enquanto C06 não comprovar uma interface compatível, registrar a dependência; um chat sem controle humano seguro não conclui C14.
 
-## 2. Avalia├º├úo e vers├úo candidata
+## 2. Avaliação e versão candidata
 
-| Card | Entrega | Atividade e evid├¬ncia para concluir | Respons├ível | Revisor | Depend├¬ncia |
+| Card | Entrega | Atividade e evidência para concluir | Responsável | Revisor | Dependência |
 |---|---|---|---|---|---|
-| C15 | D13 | Conduzir primeira rodada no prot├│tipo ou MVP; registrar perfil, vers├úo, tarefas e dificuldades | P4, com P2 na modera├º├úo | P2 | C09; C14 quando avaliar a aplica├º├úo integrada |
-| C16 | D09/D11 | Avaliar candidato/limiar na valida├º├úo, comparar baseline e features de velocidade; registrar avalia├º├úo final independente e limites | P3 | Outro autor t├®cnico a definir | C11 |
-| C17 | D10/D11 | Tratar dados ausentes, falhas, expira├º├úo e resposta duplicada/concorrente; comprovar explica├º├úo fiel | P3 | Outro autor t├®cnico a definir | C12, C14 |
-| C18 | D12/D13/Frontend Watson | Corrigir textos, navega├º├úo, teclado/foco e estados a partir do teste; comprovar que atendimento n├úo responde ├á compra nem prorroga o prazo | P4; execu├º├úo: Leonardo | P2 | C13, C15 |
-| C19 | D08 | Atualizar custos e valor com cen├írios conservador/base e resultados dispon├¡veis; separar hip├│tese de medi├º├úo | P1 | P3 | C08; C15/C16 para incorporar resultados |
-| C20 | D10/D11 | Integrar pacote versionado de modelo/preparo/pol├¡tica e conferir respostas humanas, estados e persist├¬ncia | P3 | Outro autor t├®cnico a definir | C16, C17 |
-| C21 | D06/D12 | Revisar prot├│tipo e experi├¬ncia implementada contra a jornada; registrar textos e pend├¬ncias | P4 | P2 | C09, C18, C20 |
-| C22 | D09/D10/D11 | Identificar vers├úo candidata: dados, features, modelo, pol├¡tica, contratos e interface | P3 | P4 | C20, C21 |
-| C23 | Pacote final | Criar ├¡ndice e roteiro de tr├¬s minutos, distribuindo trechos e evid├¬ncias pelas quatro pessoas | P1 | P4 | C19 inicial, C21 |
+| C15 | D13 | Conduzir primeira rodada no protótipo ou MVP; registrar perfil, versão, tarefas e dificuldades | P4, com P2 na moderação | P2 | C09; C14 quando avaliar a aplicação integrada |
+| C16 | D09/D11 | Avaliar candidato/limiar na validação, comparar baseline e features de velocidade; registrar avaliação final independente e limites | P3 | Outro autor técnico a definir | C11 |
+| C17 | D10/D11 | Tratar dados ausentes, falhas, expiração e resposta duplicada/concorrente; comprovar explicação fiel | P3 | Outro autor técnico a definir | C12, C14 |
+| C18 | D12/D13/Frontend Watson | Corrigir textos, navegação, teclado/foco e estados a partir do teste; comprovar que atendimento não responde à compra nem prorroga o prazo | P4; execução: Leonardo | P2 | C13, C15 |
+| C19 | D08 | Atualizar custos e valor com cenários conservador/base e resultados disponíveis; separar hipótese de medição | P1 | P3 | C08; C15/C16 para incorporar resultados |
+| C20 | D10/D11 | Integrar pacote versionado de modelo/preparo/política e conferir respostas humanas, estados e persistência | P3 | Outro autor técnico a definir | C16, C17 |
+| C21 | D06/D12 | Revisar protótipo e experiência implementada contra a jornada; registrar textos e pendências | P4 | P2 | C09, C18, C20 |
+| C22 | D09/D10/D11 | Identificar versão candidata: dados, features, modelo, política, contratos e interface | P3 | P4 | C20, C21 |
+| C23 | Pacote final | Criar índice e roteiro de três minutos, distribuindo trechos e evidências pelas quatro pessoas | P1 | P4 | C19 inicial, C21 |
 
-**Revis├úo da candidata:** evid├¬ncias devem corresponder ao mesmo fluxo e ├ás mesmas vers├Áes. Priorizar corre├º├Áes; recursos adicionais n├úo entram automaticamente.
+**Revisão da candidata:** evidências devem corresponder ao mesmo fluxo e às mesmas versões. Priorizar correções; recursos adicionais não entram automaticamente.
 
-## 3. Valida├º├úo final, reprodu├º├úo e envio
+## 3. Validação final, reprodução e envio
 
-| Card | Entrega | Atividade e evid├¬ncia para concluir | Respons├ível | Revisor | Depend├¬ncia |
+| Card | Entrega | Atividade e evidência para concluir | Responsável | Revisor | Dependência |
 |---|---|---|---|---|---|
-| C24 | D13 | Completar teste de compreens├úo e matriz requisito/teste/evid├¬ncia; comparar fluxo b├ísico/agente e retestar ajustes | P4, com P2 na modera├º├úo | P2 | C22, C15 |
-| C25 | D09/D11 | Executar verifica├º├Áes cr├¡ticas de dados/modelo na candidata e anexar resultados reproduz├¡veis | P3 | Outro autor t├®cnico a definir | C22 |
-| C26 | D10/D11/D13 | Corrigir/revalidar integra├º├úo, acesso cruzado, autoriza├º├úo, expira├º├úo, duplica├º├úo, falhas e persist├¬ncia | P3; autores corrigem suas partes | P4; revis├úo t├®cnica quando necess├íria | C22; achados de C24 |
-| C27 | D11/D12/D13/Frontend Watson | Corrigir e retestar a interface na candidata: tr├¬s respostas, ajuda separada, expira├º├úo, conflitos, falha do chat e recarga; guardar resultados da vers├úo corrigida | P4; execu├º├úo: Leonardo | P2, com P3 na integra├º├úo | C22; achados de C24 |
-| C28 | D11/Pacote final | Documentar execu├º├úo, tecnologias e limites; P4 reproduz o guia produzido por P3 | P3 | P4 | C22, C25, C26, C27 para aceite |
-| C29 | Pacote final | Conferir evid├¬ncias do Bob das quatro pessoas e consolidar ├¡ndice/links; cada uma fornece suas capturas | P4 | P3 | Capturas de cada integrante ao longo do trabalho |
-| C30 | D07/D08/Pacote final | Fechar declara├º├Áes de problema/solu├º├úo e narrativa com resultados, fontes e limites | P1 | P2 | C19, C23, C24 |
-| C31 | Pacote final | Gravar/editar v├¡deo de tr├¬s minutos na candidata; todos fornecem os trechos acordados | P4 | P1 | C24ÔÇôC30 |
-| C32 | Pacote final | Conferir acesso, links, v├¡deo e vers├Áes; entregar ao l├¡der formal e guardar confirma├º├úo de envio | P4; envio pelo l├¡der cadastrado | P1 | C28ÔÇôC31 |
+| C24 | D13 | Completar teste de compreensão e matriz requisito/teste/evidência; comparar fluxo básico/agente e retestar ajustes | P4, com P2 na moderação | P2 | C22, C15 |
+| C25 | D09/D11 | Executar verificações críticas de dados/modelo na candidata e anexar resultados reproduzíveis | P3 | Outro autor técnico a definir | C22 |
+| C26 | D10/D11/D13 | Corrigir/revalidar integração, acesso cruzado, autorização, expiração, duplicação, falhas e persistência | P3; autores corrigem suas partes | P4; revisão técnica quando necessária | C22; achados de C24 |
+| C27 | D11/D12/D13/Frontend Watson | Corrigir e retestar a interface na candidata: três respostas, ajuda separada, expiração, conflitos, falha do chat e recarga; guardar resultados da versão corrigida | P4; execução: Leonardo | P2, com P3 na integração | C22; achados de C24 |
+| C28 | D11/Pacote final | Documentar execução, tecnologias e limites; P4 reproduz o guia produzido por P3 | P3 | P4 | C22, C25, C26, C27 para aceite |
+| C29 | Pacote final | Conferir evidências do Bob das quatro pessoas e consolidar índice/links; cada uma fornece suas capturas | P4 | P3 | Capturas de cada integrante ao longo do trabalho |
+| C30 | D07/D08/Pacote final | Fechar declarações de problema/solução e narrativa com resultados, fontes e limites | P1 | P2 | C19, C23, C24 |
+| C31 | Pacote final | Gravar/editar vídeo de três minutos na candidata; todos fornecem os trechos acordados | P4 | P1 | C24–C30 |
+| C32 | Pacote final | Conferir acesso, links, vídeo e versões; entregar ao líder formal e guardar confirmação de envio | P4; envio pelo líder cadastrado | P1 | C28–C31 |
 
-**Revis├úo de envio:** reproduzir a demonstra├º├úo, verificar permiss├Áes e conferir a plataforma. C32 conclui com confirma├º├úo do envio, n├úo com a exist├¬ncia de um rascunho.
+**Revisão de envio:** reproduzir a demonstração, verificar permissões e conferir a plataforma. C32 conclui com confirmação do envio, não com a existência de um rascunho.
 
 ## Regras de uso do quadro
 
-1. Manter IDs C01ÔÇôC32; associar cada card ├ás entregas D correspondentes e aos requisitos do plano.
-2. Registrar executor t├®cnico e revisor habilitado antes de iniciar cards de implementa├º├úo; distribuir trabalho conforme compet├¬ncia e disponibilidade.
-3. Vers├Áes iniciais permitem preparar trabalho dependente; registrar o que precisa estar fechado para o aceite.
-4. Anexar resultado, evid├¬ncia, vers├úo e revis├úo. N├úo marcar integra├º├úo como conclu├¡da por existir apenas um mock ou diagrama.
-5. Corrigir o documento afetado junto da mudan├ºa de decis├úo/contrato. Reabrir testes atingidos.
-6. Usar C10/C13/C18/C27 para adaptar, integrar e validar o frontend Watson existente. N├úo declarar o fluxo integrado com mocks; C14 depende de C13 e o aceite final inclui C27.
+1. Manter IDs C01–C32; associar cada card às entregas D correspondentes e aos requisitos do plano.
+2. Registrar executor técnico e revisor habilitado antes de iniciar cards de implementação; distribuir trabalho conforme competência e disponibilidade.
+3. Versões iniciais permitem preparar trabalho dependente; registrar o que precisa estar fechado para o aceite.
+4. Anexar resultado, evidência, versão e revisão. Não marcar integração como concluída por existir apenas um mock ou diagrama.
+5. Corrigir o documento afetado junto da mudança de decisão/contrato. Reabrir testes atingidos.
+6. Usar C10/C13/C18/C27 para adaptar, integrar e validar o frontend Watson existente. Não declarar o fluxo integrado com mocks; C14 depende de C13 e o aceite final inclui C27.
 
 ## Modelo para copiar ao criar um card
 
 ```text
-ID / t├¡tulo:
+ID / título:
 Entregas Dxx / requisitos Rxx:
-Respons├ível pela entrega:
-Executor(es), quando houver implementa├º├úo:
+Responsável pela entrega:
+Executor(es), quando houver implementação:
 Revisor:
 Prazo acordado:
 Objetivo:
-Entradas e depend├¬ncias:
+Entradas e dependências:
 Resultado esperado:
-Crit├®rios de aceite:
-Evid├¬ncia / link / vers├úo / commit:
-Impedimento e a├º├úo:
+Critérios de aceite:
+Evidência / link / versão / commit:
+Impedimento e ação:
 Estado:
 ```

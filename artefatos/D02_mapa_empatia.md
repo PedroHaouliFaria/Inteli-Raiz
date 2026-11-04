@@ -1,18 +1,21 @@
 # D02 — Mapa de Empatia do Associado
 
-**ID:** D02  
-**Versão:** 0.1 · 28/10/2026  
-**Responsável:** Pessoa 2  
-**Revisor principal:** Pessoa 1  
-**Estado:** rascunho para revisão — pesquisa com usuários não executada  
-**Origem:** base de Leonardo (`origin/watson` hash `212655c`, `docs/design/00-descoberta/mapas-de-empatia.md` e `personas.md`); revisão por Pessoa 2 conforme plano vigente (`origin/develop` `8942cc5`)
+**ID:** D02\
+**Versão:** 0.2 · **Data:** 04/11/2026\
+**Responsável:** Pesquisa\
+**Revisor principal:** Produto\
+**Estado:** rascunho para revisão — pesquisa com usuários não executada\
+**Origem:** base de Leonardo (`origin/watson` hash `212655c`, `docs/design/00-descoberta/mapas-de-empatia.md` e `personas.md`); revisão por Pesquisa conforme plano vigente (`origin/develop` `8942cc5`)
+
+> **Consolidação de 04/11/2026:** conteúdo documental/hipotético preservado; revisão cruzada pendente. Fontes com hash referem-se àquela versão. Registro comum em [evidências e hipóteses](documentacao/evidencias_e_hipoteses.md).
+> **Decisão sustentada:** informação antes da resposta, consequências claras e desfecho visível.
 
 ---
 
 ## 1. Situação delimitada
 
-**Contexto de uso:** associado recebe uma solicitação de confirmação de compra no aplicativo. A compra foi sinalizada pelo sistema e aguarda sua resposta.  
-**Objetivo da pessoa:** entender o que aconteceu, decidir se reconhece ou não a compra e saber o que ocorre depois da sua resposta.  
+**Contexto de uso:** associado recebe uma solicitação de confirmação de compra no aplicativo. A compra foi sinalizada pelo sistema e aguarda sua resposta.\
+**Objetivo da pessoa:** entender o que aconteceu, decidir se reconhece ou não a compra e saber o que ocorre depois da sua resposta.\
 **Marcação:** todo o conteúdo abaixo é hipótese de trabalho ou interpretação derivada de fontes documentais, salvo identificação explícita de observação. Nenhum participante foi entrevistado nesta versão.
 
 ---
@@ -109,9 +112,13 @@ Estas tensões são hipóteses de projeto. A pesquisa pode invalidá-las, orden�
 ## 6. O que ainda precisa de pesquisa
 
 - Frequência e contexto de recebimento do alerta (campo, madrugada, balcão).
+
 - O que o associado faz primeiro quando não reconhece uma compra (liga, ignora, responde no app, pede ajuda a alguém).
+
 - Qual resposta gera mais dúvida ou medo de consequência negativa.
+
 - Se a distinção entre "recusa da compra" e "bloqueio do cartão" é compreendida sem explicação.
+
 - Se o associado entende que pode ainda responder à confirmação após pedir atendimento.
 
-Ver `roteiro_pesquisa.md` para as perguntas correspondentes.
+Ver [roteiro de pesquisa](documentacao/roteiro_pesquisa.md) para as perguntas correspondentes.

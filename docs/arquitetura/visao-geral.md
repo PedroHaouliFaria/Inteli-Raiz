@@ -2,6 +2,8 @@
 
 Aprovada pelo Leo em 27/10/2026. O código fica em `watson/`, a documentação em `docs/`, e o backend é Python + FastAPI com o banco trocável entre PostgreSQL e Db2.
 
+> **Revisão de estrutura em 04/11/2026:** os artefatos estão em [artefatos/](../../artefatos/README.md). O inventário atual de componentes, política e contratos está em [D09](../../artefatos/D09_estrutura_solucao.md) e [D10](../../artefatos/D10_arquitetura.md). Esta visão preserva decisões originais; o runtime atual de demo usa SQLite e chat Pydantic AI/Groq, sem presumir serviços externos executados.
+
 ## Camadas
 
 1. **Frontend** (`watson/frontend`): React + Carbon. Só conversa com a API, por HTTP + JSON, seguindo o contrato OpenAPI que o backend gera.
@@ -14,7 +16,8 @@ Aprovada pelo Leo em 27/10/2026. O código fica em `watson/`, a documentação e
 
 ```
 (raiz do repositório)
-├── docs/                          ← documentação, em português
+├── artefatos/                     ← D01–D13, documentação comum e evidências
+├── docs/                          ← apoio técnico, em português
 │   ├── design/                    ← Design Thinking: descoberta, wireframe, mockup, protótipo, alta fidelidade
 │   ├── dados/                     ← levantamento e modelo de dados
 │   └── arquitetura/               ← esta visão geral e as decisões (decisoes/)
