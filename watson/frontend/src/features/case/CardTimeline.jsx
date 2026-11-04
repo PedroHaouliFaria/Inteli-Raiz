@@ -8,7 +8,7 @@ const formatWhen = (iso) => {
   return { date: `${day}/${month}`, time };
 };
 
-// Rajada como indicador (docs/dados/linha-do-tempo.md): o case traz só o contador, não as compras.
+// Rajada como indicador (docs/04_dados_e_modelo/dados/linha-do-tempo.md): o case traz só o contador, não as compras.
 export function BurstIndicator({ velocity1h }) {
   if (velocity1h == null) return null;
   const strong = velocity1h >= 10;

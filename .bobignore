@@ -3,7 +3,7 @@ notebooks/
 data/*.csv
 data/*.xlsx
 outputs/*.joblib
-docs/design/
+docs/02_ux_design/processo_design/
 watson/backend/.venv/
 watson/frontend/node_modules/
 **/__pycache__/

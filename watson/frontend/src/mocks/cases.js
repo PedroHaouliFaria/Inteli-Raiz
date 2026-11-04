@@ -1,5 +1,5 @@
 // Dados fictícios, inspirados nos sinais do case de prevenção (rajada, distância, horário, valor, cartão não presente).
-// Linha do tempo (docs/dados/linha-do-tempo.md): no case a rajada só existe como contador (velocity1h, de
+// Linha do tempo (docs/04_dados_e_modelo/dados/linha-do-tempo.md): no case a rajada só existe como contador (velocity1h, de
 // cp_card_term_vel_1h), então cardHistory traz as compras reais do cartão e, quando velocity1h ≥ 10, até 5
 // tentativas simuladas (simulated: true) nos 15 min antes da compra, com valor de 0,3 a 1,5× o real.
 export const CASES = [
