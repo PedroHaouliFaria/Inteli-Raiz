@@ -6,14 +6,16 @@ O nome `plano_15_dias.md` foi mantido para preservar os links existentes. A orga
 
 **Objetivo:** entregar uma prova de conceito de IA agêntica que ajude o associado a entender e responder a uma compra sinalizada, com resultado registrado e revisão humana das exceções. Dados e ações financeiras são simulados.
 
+> **Atualização de 04/11/2026:** este documento preserva o planejamento histórico de 28/10. O estado atual dos artefatos e os próximos aceites estão no [índice único](../../artefatos/README.md) e na [matriz de pendências](../../artefatos/documentacao/criterios_e_pendencias.md). Cards planejados não comprovam execução.
+
 ## 1. Como usar os documentos
 
 | Documento | Papel |
 |---|---|
 | [Plano de implementação](../../docs/plano_implementacao.md) | Define produto, política, estados, contratos, requisitos e testes |
-| [Direcional das entregas](../../docs/direcional_entregas.md) | Explica D01–D13: conteúdo, produção, revisão, fontes e critérios de qualidade |
+| [Direcional das entregas](../../artefatos/documentacao/direcional_entregas.md) | Explica D01–D13: conteúdo, produção, revisão, fontes e critérios de qualidade |
 | [Backlog](backlog.md) | Transforma o plano em cards C01–C32, com responsáveis e dependências |
-| [Catálogo dos materiais](artefatos_materiais_contexto.md) | Identifica entregas recomendadas e pacote obrigatório da IBM |
+| [Catálogo dos materiais](../../artefatos/documentacao/fontes_e_exigencias_ibm.md) | Identifica entregas recomendadas e pacote obrigatório da IBM |
 
 Este documento organiza a execução; não substitui o detalhamento dos requisitos ou das entregas. Os cards são planejamento e não evidência de implementação concluída.
 
@@ -45,7 +47,7 @@ Usar Pessoa 1–4 até a equipe informar os nomes. Esses rótulos não reaprovei
 | Pessoa 3 | D09 Estrutura; D10 Arquitetura | Consolida contratos, dados/modelo e estado real das integrações; revisa D04/D08/D11 | Declaração tecnológica e instruções técnicas |
 | Pessoa 4 | D11 Registro do Fluxo; D12 Protótipo; D13 Validação | Organiza reprodução, evidências, testes e correções com os autores | Vídeo, índice, links e conferência de acesso |
 
-A [matriz por entrega](../../docs/direcional_entregas.md#organização-em-quatro-pessoas-responsáveis-sequência-e-revisão) define o revisor principal e o resultado para aceite. Liderar o documento não significa desenvolver sozinho os componentes associados. Pessoa 3 coordena a definição dos executores técnicos; cada card de implementação só fica pronto para iniciar quando executor e revisor com competência técnica estiverem identificados. Pessoa 4 registra e testa o fluxo entregue pelos autores técnicos.
+A [matriz por entrega](../../artefatos/documentacao/direcional_entregas.md#responsáveis-sequência-e-revisão) define o revisor principal e o resultado para aceite. Liderar o documento não significa desenvolver sozinho os componentes associados. Pessoa 3 coordena a definição dos executores técnicos; cada card de implementação só fica pronto para iniciar quando executor e revisor com competência técnica estiverem identificados. Pessoa 4 registra e testa o fluxo entregue pelos autores técnicos.
 
 Para o frontend Watson, Leonardo já é o executor técnico; Pessoa 4 mantém a consolidação de D12/D11/D13, Pessoa 2 revisa usabilidade e Pessoa 3 apoia integração. Essa atribuição específica não redefine a identidade das quatro funções.
 
@@ -100,7 +102,7 @@ Não transportar estimativas de horas da equipe de cinco pessoas. Acordar dispon
 - Registrar mudanças de contrato e atualizar consumidores, documentação e evidências na mesma versão.
 - Para pesquisa: fonte e implicação; para design: percurso e estados; para negócio: premissas e evidência; para programação: execução e verificações relevantes.
 
-O [direcional](../../docs/direcional_entregas.md) relaciona as entregas aos quatro critérios IBM. As tarefas recomendadas apoiam a qualidade; checkpoint e envio final continuam sendo as entregas obrigatórias, conforme o guia. Conferir situação, campos e prazo vigente na plataforma antes da submissão.
+O [direcional](../../artefatos/documentacao/direcional_entregas.md) relaciona as entregas aos quatro critérios IBM. As tarefas recomendadas apoiam a qualidade; checkpoint e envio final continuam sendo as entregas obrigatórias, conforme o guia. Conferir situação, campos e prazo vigente na plataforma antes da submissão.
 
 ## 8. Correspondência com a proposta anterior
 

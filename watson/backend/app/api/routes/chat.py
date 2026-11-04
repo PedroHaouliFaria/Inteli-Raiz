@@ -24,7 +24,7 @@ from app.api.schemas.chat import (
 )
 from app.db.repositories.chat import ChatRepository
 from app.db.repositories.purchases import PurchaseRepository
-from app.db.session import get_session
+from app.db.session import get_engine, get_session
 
 logger = logging.getLogger(__name__)
 
@@ -191,6 +191,15 @@ def post_chat(
     session.commit()
     session.refresh(user_msg)
 
+    # Captura os dados necessários em variáveis locais e encerra a transação.
+    # Regra: nenhuma transação fica aberta enquanto o código espera o LLM.
+    user_msg_id = user_msg.message_id
+    user_msg_role = user_msg.role
+    user_msg_content = user_msg.content
+    user_msg_created_at = user_msg.created_at
+    analysis_score = purchase.analysis_score
+    session.close()  # libera a conexão e encerra o BEGIN IMMEDIATE
+
     # Se o agente não está configurado → 503
     if not _is_agent_configured():
         raise ApiError(
@@ -200,7 +209,10 @@ def post_chat(
             {"retry_after_seconds": 30},
         )
 
-    # Chama o agente
+    # Chama o agente — passa o engine para que cada ferramenta abra a sua própria
+    # sessão de curta duração e não mantenha nenhuma transação aberta entre as
+    # idas e voltas ao LLM.
+    engine = get_engine()
     tools_used: list[str] = []
     reply_content: str
     try:
@@ -208,7 +220,7 @@ def post_chat(
         deps = AgentDeps(
             customer_id=persona.customer_id,
             case_id=case_id,
-            db=session,
+            db=engine,
         )
         result_run = chat_agent.run_sync(
             body.message,
@@ -219,7 +231,7 @@ def post_chat(
 
         # Segunda camada de segurança: se o LLM escreveu o valor do score
         # na resposta (injeção de prompt), substitui por mensagem segura.
-        reply_content = _scrub_score(reply_content, purchase.analysis_score)
+        reply_content = _scrub_score(reply_content, analysis_score)
 
         # Coleta tools_used a partir das mensagens do resultado
         for msg in result_run.all_messages():
@@ -239,33 +251,50 @@ def post_chat(
             {"retry_after_seconds": 30},
         ) from exc
 
-    # Salva a resposta do assistente
-    assistant_msg = chat_repo.save_message(
-        purchase=purchase,
-        role="assistant",
-        content=reply_content,
-        tools_used=tools_used,
-    )
-    session.commit()
-    session.refresh(assistant_msg)
+    # Salva a resposta do assistente numa sessão nova (a anterior foi fechada).
+    from sqlalchemy.orm import sessionmaker as _sessionmaker
+    from sqlalchemy import select as _select
+    from app.db.tables.purchases import Purchase as _Purchase
+    NewSession = _sessionmaker(bind=engine)
+    with NewSession() as new_session:
+        # Recarrega a compra para verificar revisão criada pelo agente
+        purchase_fresh = new_session.execute(
+            _select(_Purchase).where(
+                _Purchase.case_id == case_id,
+                _Purchase.customer_id == persona.customer_id,
+            )
+        ).scalar_one()
 
-    # Verifica se o agente criou uma revisão nesta rodada
-    session.refresh(purchase)
-    review_protocol = _get_open_review_protocol(purchase)
+        new_chat_repo = ChatRepository(new_session)
+        assistant_msg = new_chat_repo.save_message(
+            purchase=purchase_fresh,
+            role="assistant",
+            content=reply_content,
+            tools_used=tools_used,
+        )
+        new_session.commit()
+        new_session.refresh(assistant_msg)
+
+        # Captura dados antes de encerrar a sessão
+        assistant_msg_id = assistant_msg.message_id
+        assistant_msg_role = assistant_msg.role
+        assistant_msg_content = assistant_msg.content
+        assistant_msg_created_at = assistant_msg.created_at
+        review_protocol = _get_open_review_protocol(purchase_fresh)
 
     return ChatPostResponse(
         case_id=case_id,
         user_message=ChatUserMessageOut(
-            message_id=user_msg.message_id,
-            role=user_msg.role,
-            content=user_msg.content,
-            created_at=user_msg.created_at,
+            message_id=user_msg_id,
+            role=user_msg_role,
+            content=user_msg_content,
+            created_at=user_msg_created_at,
         ),
         reply=ChatReplyMessageOut(
-            message_id=assistant_msg.message_id,
-            role=assistant_msg.role,
-            content=assistant_msg.content,
-            created_at=assistant_msg.created_at,
+            message_id=assistant_msg_id,
+            role=assistant_msg_role,
+            content=assistant_msg_content,
+            created_at=assistant_msg_created_at,
             tools_used=tools_used,
         ),
         review_protocol=review_protocol,

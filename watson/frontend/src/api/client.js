@@ -141,6 +141,14 @@ export const postReviewDecision = (reviewId, decision) =>
     body: { decision },
   });
 
+// ── Demonstração (§9 do contrato) ────────────────────────────────────────────
+
+/**
+ * POST /api/demo/reset — apaga compras, respostas, conversas e revisões e recarrega
+ * as fixtures iniciais com prazo novo. Só disponível com DEMO_MODE=true (204).
+ */
+export const resetDemo = () => request('/api/demo/reset', { method: 'POST' });
+
 // ── Confirmação (§6 do contrato) ──────────────────────────────────────────────
 
 /**

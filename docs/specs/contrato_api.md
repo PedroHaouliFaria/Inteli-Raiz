@@ -128,8 +128,10 @@ Dois associados permitem testar acesso cruzado (R05). A analista existe só para
 **200** + `Set-Cookie: raiz_session=...`
 
 ```json
-{"persona_id": "ana", "display_name": "Ana Souza (fictícia)", "role": "ASSOCIADO", "simulation": true}
+{"persona_id": "ana", "display_name": "Ana Souza (fictícia)", "role": "ASSOCIADO", "simulation": true, "demo_mode": false}
 ```
+
+`demo_mode` repete o `DEMO_MODE` do servidor. Com `true`, o front mostra o botão de recomeçar a demonstração (§9).
 
 **401** `AUTHENTICATION_FAILED` para e-mail inexistente ou senha incorreta, sempre com a mesma mensagem. O login antigo por `persona_id` fica desabilitado fora da suíte legada de testes.
 
@@ -557,6 +559,8 @@ Existem só com `DEMO_MODE=true`. Servem para o vídeo e para outra pessoa repro
 **201** com o mesmo corpo de `GET /api/purchases/{case_id}`. Se o modelo falhar, a compra vai para `REVISAO_PENDENTE` com revisão `FALHA_AVALIACAO`, e a resposta inclui `"warning": "SCORE_UNAVAILABLE"`. Score inventado nunca (R09).
 
 **`POST /api/demo/reset`**: apaga compras, respostas, conversas e revisões e recarrega as fixtures iniciais. **204**.
+
+As confirmações do seed vencem `CONFIRMATION_TTL_SECONDS` depois que o servidor sobe (15 min por padrão). Num ambiente hospedado elas já estão vencidas quando alguém abre o link. Por isso, com `demo_mode: true` na sessão, o cabeçalho das duas telas (associado e analista) tem o botão **Recomeçar demonstração**. Ele pede confirmação na própria tela, chama o reset e recarrega a lista. Sem `DEMO_MODE`, o botão não aparece.
 
 ## 10. Agente: ferramentas e dependências
 

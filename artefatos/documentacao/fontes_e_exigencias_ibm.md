@@ -1,6 +1,6 @@
 # Artefatos identificados nos materiais de contexto
 
-Conferência inicial em 20/10/2026, com organização atualizada em 27/10/2026. Os nomes abaixo vêm dos PDFs locais da pasta `contexto/`; a divisão em pilares serve apenas para facilitar a organização. As semanas são as do programa IBM. A produção das entregas segue o [direcional](../../docs/direcional_entregas.md), agora dividido entre quatro pessoas e centrado no associado.
+Conferência inicial em 20/10/2026, com organização atualizada em 27/10/2026. Os nomes abaixo vêm dos PDFs locais da pasta `contexto/`; a divisão em pilares serve apenas para facilitar a organização. As semanas são as do programa IBM. A produção das entregas segue o [direcional](direcional_entregas.md), organizado em uma pasta única por entrega e centrado no associado.
 
 ## 1. Entregas nomeadas nos slides de desenvolvimento
 
@@ -39,19 +39,30 @@ Na mesma página, o guia esclarece que as tarefas semanais são recomendadas e q
 
 ## 4. Como isso muda a organização proposta
 
-- Os códigos D01–D11 do direcional correspondem às 11 entregas nomeadas nos slides; D12/D13 organizam prototipação e validação como apoio. Os códigos A01–A12 anteriores foram substituídos, com correspondência no [plano operacional](plano_15_dias.md).
+- Os códigos D01–D11 do direcional correspondem às 11 entregas nomeadas nos slides; D12/D13 organizam prototipação e validação como apoio. Os códigos A01–A12 anteriores foram substituídos, com correspondência no [plano operacional](../../docs/planejamento/plano_15_dias.md).
+
 - Pesquisa, concepção, proposta de valor, estrutura da solução, arquitetura e fluxo funcional têm correspondência direta com os materiais.
+
 - EDA, contrato de dados e relatório de modelo são desdobramentos técnicos úteis ao case Sicredi. As orientações do dataset sugerem EDA, qualidade, validação temporal, prevenção de vazamento, métricas para desbalanceamento e avaliação de custo; não os definem como entregas oficiais separadas do programa.
+
 - O projeto aproveita o frontend React + Carbon do Watson, produzido por Leonardo no PR #7, para adaptação e integração ao associado. C10/C13/C18/C27 estão ativos. Protótipo e fluxo integrado têm aceites distintos: sessão, vínculo da compra, três respostas, ajuda separada e resultado persistido precisam ser comprovados. A adaptação é decisão do projeto; a aula não exige essa stack.
+
 - A documentação de reprodução e os registros de avaliação apoiam as declarações e a demonstração final. Esforço e datas serão acordados conforme a disponibilidade das quatro pessoas; as estimativas antigas de 15 dias não são compromissos atuais.
+
 - Pessoa 1 lidera negócio/produto; Pessoa 2, pesquisa/usuário; Pessoa 3, estrutura/arquitetura; Pessoa 4, protótipo/evidências/validação. O direcional contém apoio, revisão e aceite por entrega. Os nomes e os executores da implementação serão definidos pela equipe.
 
 ## 5. Fontes e páginas conferidas
 
 - **S1:** [Primeira sessão de Design Thinking](../../contexto/First%20DT%20Session%20deck.pdf), p.28, 38, 40 e 60.
+
 - **S2:** [Segunda sessão de Design Thinking](../../contexto/Updated_Second%20Session%20DT%20and%20AI%20Agents_BR_Saulo%20%281%29%20%281%29.pdf), p.47, 54 e 63.
+
 - **S3:** [Empreendedorismo em IA](../../contexto/Updated_Deck_Empreendedorismo_IA_PT_v9.pdf), p.17 e 22.
+
 - **S4:** [Primeira sessão técnica](../../contexto/1st%20Technical%20session-Prototyping%20AI%20Solutions%20with%20IBM%20AI%20Technologies%20%E2%80%93%20Technical%20Session_updated.pdf), p.29.
+
 - **S5:** Segunda sessão técnica, arquivo cujo nome começa por `sessão 2 IBM Agentic AI Technologies`, p.22, na [pasta de contexto](../../contexto/).
+
 - **Guia:** [Guia IBM](../../contexto/2H26%20GuideBob_IBM%20SkillsBuild_AI%20Experiential%20Learning%20Lab%20BR.pdf), p.13 e 30-31.
+
 - **Dataset:** [Orientações do case Sicredi](../../data/Orientacoes_case_prevencao_sicredi.txt), seção “Uso pedagógico sugerido”.

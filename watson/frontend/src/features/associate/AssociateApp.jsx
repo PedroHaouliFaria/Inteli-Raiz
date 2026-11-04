@@ -27,6 +27,7 @@ import { ApiError, getPurchases } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import PurchaseList from './PurchaseList.jsx';
 import PurchaseDetail from './PurchaseDetail.jsx';
+import DemoResetButton from './DemoResetButton.jsx';
 
 export default function AssociateApp() {
   const session = useSession();
@@ -84,6 +85,14 @@ export default function AssociateApp() {
             >
               {session.display_name}
             </Tag>
+            {session.demo_mode && (
+              <DemoResetButton
+                onReset={() => {
+                  setSelectedId(null);
+                  loadPurchases();
+                }}
+              />
+            )}
             <HeaderGlobalAction
               aria-label="Atualizar lista de compras"
               onClick={loadPurchases}

@@ -2,13 +2,15 @@
 
 **Revisão de 28/10/2026 · Quatro pessoas · Planejamento ainda não executado.**
 
-O [plano operacional](plano_15_dias.md) define recorte e sequência. O [direcional](../../docs/direcional_entregas.md) detalha D01–D13 e sua matriz de responsáveis/revisores. P1–P4 significam Pessoa 1–4. Os nomes serão preenchidos pela equipe, sem reaproveitar automaticamente a formação antiga de cinco integrantes.
+O [plano operacional](plano_15_dias.md) define recorte e sequência. O [direcional](../../artefatos/documentacao/direcional_entregas.md) detalha D01–D13 e sua matriz de responsáveis/revisores. P1–P4 significam Pessoa 1–4. Os nomes serão preenchidos pela equipe, sem reaproveitar automaticamente a formação antiga de cinco integrantes.
 
 Os IDs C01–C32 foram preservados, mas descrições, dependências e responsabilidades foram revistas para o associado. Os códigos A antigos têm correspondência no plano operacional. Os **32 cards estão ativos e em Backlog**; C10, C13, C18 e C27 foram reativados para adaptar e integrar o frontend Watson já produzido por Leonardo no PR #7. Isso não significa que o código foi integrado ou validado. Datas serão acordadas após estimar esforço e disponibilidade; D01–D13 são IDs de entregas, não dias do calendário.
 
 Responsável é quem acompanha a conclusão e consolida a evidência. Nos cards de implementação, P3 coordena a escolha dos executores técnicos e revisores habilitados; essa alocação é requisito para iniciar e não atribui todo o desenvolvimento a P3. Protótipo de design e implementação de front-end próprio são trabalhos distintos.
 
 Leonardo é o executor técnico definido para adaptar o frontend existente. P4 consolida D12 e as evidências da experiência; P2 revisa linguagem/usabilidade e P3 apoia contrato/integração. Essa atribuição não redefine os demais nomes de P1–P4. Pedir atendimento e registrar `UNSURE` são operações distintas, conforme §3 do plano.
+
+> **Atualização de 04/11/2026:** este documento preserva o planejamento histórico de 28/10. O estado atual dos artefatos e os próximos aceites estão no [índice único](../../artefatos/README.md) e na [matriz de pendências](../../artefatos/documentacao/criterios_e_pendencias.md). Cards planejados não comprovam execução.
 
 ## 1. Descoberta, contratos e primeira integração
 

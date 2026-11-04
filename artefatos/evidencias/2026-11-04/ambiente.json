@@ -1,0 +1,23 @@
+{
+  "python": "3.12.5",
+  "packages": {
+    "pytest": "9.2.0",
+    "fastapi": "0.162.0",
+    "sqlalchemy": "2.1.6",
+    "pydantic-ai-slim": "2.63.0",
+    "scikit-learn": "1.6.1",
+    "httpx": "0.28.1"
+  },
+  "code_commit": "f741a35790468c35dc137b1097ea4d1a55eb4704",
+  "date": "2026-11-04",
+  "source": "watson/backend do checkout dedicado; PYTHONPATH apontando para este diretório",
+  "environment": "venv existente reutilizada apenas como interpretador e dependências; aplicação importada da árvore atual",
+  "command": "PYTHONPATH=\"$PWD\" <python-do-ambiente> -m pytest tests -q",
+  "result": "207 passed, 1 warning in 31.46s",
+  "limits": [
+    "Sem chamada a LLM externo real; agente testado com modelos controlados",
+    "Não executa interface por navegador nem validação com participantes",
+    "Sem novo treino, deploy watsonx.ai ou medição financeira"
+  ],
+  "model_sha256": "be2a9ee7c59b0f187d2dd24623606289fab7753a3d545bcbb29ba160b938c967"
+}

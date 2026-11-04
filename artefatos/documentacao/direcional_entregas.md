@@ -1,6 +1,6 @@
 # Direcional de entregas — Da descoberta à confirmação de compras
 
-**Versão 1 · 27/10/2026 · Complemento do [plano de implementação](plano_implementacao.md).**
+**Versão 1.1 · organização revisada em 04/11/2026; conteúdo-base de 27/10/2026 · Complemento do [plano de implementação](../../docs/plano_implementacao.md).**
 
 Este guia transforma as entregas recomendadas das aulas em trabalhos que a equipe consegue produzir, revisar e demonstrar. O recorte vigente é o assistente de confirmação de compras pelo associado. O analista participa das exceções. Ações financeiras são simuladas.
 
@@ -79,7 +79,7 @@ O IBM Bob pode ajudar a organizar notas, questionar premissas, criar alternativa
 
 **Para elevar a qualidade:** incluir evidência que contrarie a ideia inicial e registrar a mudança de decisão gerada por ela. Comparar alternativas pela mesma necessidade, com fontes, evitando uma lista de concorrentes sem análise.
 
-**Liderança sugerida:** produto/negócios; revisão de pesquisa/design. **Saída sugerida:** `entregas/01_oportunidades.md`. Alimenta D02–D04 e D08.
+**Liderança sugerida:** produto/negócios; revisão de pesquisa/design. **Saída sugerida:** `artefatos/D01_oportunidades.md`. Alimenta D02–D04 e D08.
 
 ## D02 — Mapa de empatia do associado diante de uma compra suspeita
 
@@ -97,7 +97,7 @@ O IBM Bob pode ajudar a organizar notas, questionar premissas, criar alternativa
 
 **Para elevar a qualidade:** mostrar onde o comportamento difere do que a pessoa declara e investigar o motivo. Preservar diferenças relevantes entre participantes em vez de produzir um “usuário médio” sem contexto.
 
-**Liderança sugerida:** pesquisa/design; revisão de produto. **Saída:** mural exportado ou seção `entregas/02_empatia.md`. Depende de D01 e das notas de pesquisa; alimenta D06 e D12.
+**Liderança sugerida:** pesquisa/design; revisão de produto. **Saída:** mural exportado ou seção `artefatos/D02_mapa_empatia.md`. Depende de D01 e das notas de pesquisa; alimenta D06 e D12.
 
 ## D03 — Jornada atual: do alerta à resolução da dúvida
 
@@ -117,7 +117,7 @@ O IBM Bob pode ajudar a organizar notas, questionar premissas, criar alternativa
 
 **Para elevar a qualidade:** adicionar uma faixa de bastidores com atendimento e prevenção a fraudes, identificando o que depende de confirmação do domínio. Mostrar qual passagem gera retrabalho para ambos os lados.
 
-**Liderança sugerida:** pesquisa/design; revisão de produto e, se disponível, pessoa do domínio. **Saída:** `entregas/03_cenario_atual.md` e jornada visual. Alimenta D04, D06 e a comparação de D13.
+**Liderança sugerida:** pesquisa/design; revisão de produto e, se disponível, pessoa do domínio. **Saída:** `artefatos/D03_cenario_atual.md` e jornada visual. Alimenta D04, D06 e a comparação de D13.
 
 ## D04 — Alternativas de solução e decisão de prioridade
 
@@ -141,7 +141,7 @@ Os três primeiros critérios vêm da aula; viabilidade e risco são complemento
 
 **Para elevar a qualidade:** verificar se a direção vencedora depende de uma premissa frágil. Registrar o experimento que poderia inverter a escolha e qual alternativa assumiria seu lugar.
 
-**Liderança sugerida:** produto facilita; toda a equipe participa; pesquisa/design revisa a ligação com D01–D03. **Saída:** `entregas/04_priorizacao.md`. Alimenta D05 e D08.
+**Liderança sugerida:** produto facilita; toda a equipe participa; pesquisa/design revisa a ligação com D01–D03. **Saída:** `artefatos/D04_priorizacao.md`. Alimenta D05 e D08.
 
 ## D05 — Conceito da solução: confirmação assistida de compras
 
@@ -157,7 +157,7 @@ Os três primeiros critérios vêm da aula; viabilidade e risco são complemento
 
 **Para elevar a qualidade:** mostrar um antes/depois concreto em que uma pergunta contextual muda o encaminhamento permitido, mantendo a autorização humana explícita.
 
-**Liderança sugerida:** produto; revisão de pesquisa/design e backend/agente. **Saída:** seção própria em `entregas/05_conceito_valor.md`. Alimenta D07–D10.
+**Liderança sugerida:** produto; revisão de pesquisa/design e backend/agente. **Saída:** `artefatos/D05_conceito_solucao.md`. Alimenta D07–D10.
 
 ## D06 — Persona e transformação da experiência do associado
 
@@ -180,7 +180,7 @@ Os três primeiros critérios vêm da aula; viabilidade e risco são complemento
 
 **Para elevar a qualidade:** testar um contexto de maior dificuldade, como uso por teclado ou baixa familiaridade digital, e mostrar qual decisão mudou após observação.
 
-**Liderança sugerida:** pesquisa/design; revisão de produto. **Saída:** `entregas/06_persona_cenarios.md` e quadro atual/futuro. Alimenta D09, D12 e D13.
+**Liderança sugerida:** pesquisa/design; revisão de produto. **Saída:** `artefatos/D06_persona_e_cenarios.md` e quadro atual/futuro. Alimenta D09, D12 e D13.
 
 ## D07 — Ideia preliminar: assistente de confirmação de compras
 
@@ -192,7 +192,7 @@ Os três primeiros critérios vêm da aula; viabilidade e risco são complemento
 
 **Para concluir:** a descrição coincide com D05 e com o fluxo implementável. **Para elevar a qualidade:** ter uma versão de aproximadamente 30 segundos que preserve o limite de simulação e explique a utilidade antes das tecnologias.
 
-**Liderança sugerida:** produto/negócios; revisão de comunicação e pesquisa/design. **Saída:** seção em `entregas/05_conceito_valor.md`. Alimenta o roteiro final.
+**Liderança sugerida:** produto/negócios; revisão de comunicação e pesquisa/design. **Saída:** `artefatos/D07_ideia.md`. Alimenta o roteiro final.
 
 ## D08 — Proposta de valor e necessidade de IA agêntica
 
@@ -222,7 +222,7 @@ Para viabilidade, usar uma tabela de premissas: volume de casos, proporção env
 
 **Para elevar a qualidade:** medir se a ajuda contextual melhora compreensão sem aumentar autorizações equivocadas no exercício. Valor das transações sinalizadas não equivale a perdas evitadas.
 
-**Liderança sugerida:** produto/negócios; revisão de pesquisa/design, dados/modelo e backend/agente. **Saída:** seção em `entregas/05_conceito_valor.md`. Depende de D01, D04 e D05; é atualizada após D13.
+**Liderança sugerida:** produto/negócios; revisão de pesquisa/design, dados/modelo e backend/agente. **Saída:** `artefatos/D08_proposta_valor_ia.md`. Depende de D01, D04 e D05; é atualizada após D13.
 
 ## D09 — Estrutura da solução e critérios de sucesso
 
@@ -244,7 +244,7 @@ Para viabilidade, usar uma tabela de premissas: volume de casos, proporção env
 
 **Para elevar a qualidade:** construir a cadeia `evidência → necessidade → decisão → requisito → teste → resultado`, incluindo uma decisão revisada após o teste.
 
-**Liderança sugerida:** produto com equipe técnica; revisão cruzada de pesquisa e integração/testes. **Saída:** `entregas/09_estrutura_solucao.md`, referenciando o plano em vez de copiar tabelas que podem divergir. Alimenta D10–D13.
+**Liderança sugerida:** produto com equipe técnica; revisão cruzada de pesquisa e integração/testes. **Saída:** `artefatos/D09_estrutura_solucao.md`, referenciando o plano em vez de copiar tabelas que podem divergir. Alimenta D10–D13.
 
 ## D10 — Arquitetura técnica e limites de autonomia
 
@@ -282,7 +282,7 @@ Na ficha do agente, escrever objetivo, conhecimento permitido, instruções, fer
 
 **Para elevar a qualidade:** anexar uma sequência real de ferramentas e uma decisão técnica curta com alternativa, escolha, motivo e consequência. Comprovar isolamento entre dois associados fictícios e impossibilidade de autorização pelo agente.
 
-**Liderança sugerida:** backend/agente; revisão de dados/modelo e integração/testes. **Saída:** `entregas/10_arquitetura.md`, diagrama editável e contratos versionados. Depende de D09 e dos contratos; alimenta D11.
+**Liderança sugerida:** backend/agente; revisão de dados/modelo e integração/testes. **Saída:** `artefatos/D10_arquitetura.md`, diagrama editável e contratos versionados. Depende de D09 e dos contratos; alimenta D11.
 
 ## D11 — Fluxo principal do MVP e evidências ponta a ponta
 
@@ -305,7 +305,7 @@ Na ficha do agente, escrever objetivo, conhecimento permitido, instruções, fer
 
 **Para elevar a qualidade:** demonstrar também um caso de falha e sua recuperação; apresentar latência medida, identificação das versões e evidência de que o agente foi útil numa dúvida contextual.
 
-**Liderança sugerida:** integração/testes, com autores técnicos; revisão de produto e pesquisa/design. **Saída:** `entregas/11_fluxo_mvp.md` com instruções e evidências. Depende de D10 e da implementação; alimenta D13 e a demonstração final.
+**Liderança sugerida:** integração/testes, com autores técnicos; revisão de produto e pesquisa/design. **Saída:** `artefatos/D11_fluxo_mvp.md` com instruções e evidências. Depende de D10 e da implementação; alimenta D13 e a demonstração final.
 
 ## D12 — Protótipo da experiência e decisões de interface
 
@@ -319,7 +319,7 @@ Revisar leitura em celular, teclado, foco visível, rótulos claros e status com
 
 **Para concluir:** uma pessoa percorre o cenário e compreende a consequência de cada resposta. **Para elevar a qualidade:** registrar pelo menos uma comparação de alternativas de texto/interação e a razão da escolha após teste.
 
-**Liderança sugerida:** Pessoa 4 consolida D12; Leonardo adapta e integra o frontend Watson existente, com revisão de Pessoa 2 em pesquisa/usabilidade e apoio de backend em contrato/integração. Os cards C10/C13/C18/C27 estão ativos; isso não redefine os demais papéis da matriz. **Saída:** `entregas/12_prototipo.md` com acesso ao protótipo. Depende de D06 e D09; alimenta D13 e a implementação.
+**Liderança sugerida:** Integração e validação consolida D12; Leonardo adapta e integra o frontend Watson existente, com revisão de Pesquisa em pesquisa/usabilidade e apoio de backend em contrato/integração. Os cards C10/C13/C18/C27 estão ativos; isso não redefine os demais papéis da matriz. **Saída:** `artefatos/D12_prototipo_experiencia.md` com acesso ao protótipo. Depende de D06 e D09; alimenta D13 e a implementação.
 
 ## D13 — Validação da experiência e registro de melhorias
 
@@ -341,54 +341,28 @@ Revisar leitura em celular, teclado, foco visível, rótulos claros e status com
 
 **Para elevar a qualidade:** mostrar uma cadeia completa `observação → problema → alteração → reteste`, incluindo resultado que não melhorou. O piloto revela problemas e sinais de valor; não comprova redução de perdas financeiras nem generaliza a todos os associados.
 
-**Liderança sugerida:** pesquisa/validação; revisão de produto e integração/testes. **Saída:** `entregas/13_validacao.md` e evidências anonimizadas. Depende de D12 para teste de design e D11 para teste do MVP. Atualiza D01, D06, D08 e D09 conforme os achados.
+**Liderança sugerida:** pesquisa/validação; revisão de produto e integração/testes. **Saída:** `artefatos/D13_validacao_melhorias.md` e evidências anonimizadas. Depende de D12 para teste de design e D11 para teste do MVP. Atualiza D01, D06, D08 e D09 conforme os achados.
 
-## Organização em quatro pessoas: responsáveis, sequência e revisão
+## Responsáveis, sequência e revisão
 
-A divisão abaixo organiza a produção e a revisão das entregas em quatro pessoas. Substituir Pessoa 1–4 pelos nomes do grupo; os rótulos não pressupõem quem saiu da formação anterior. Esta matriz prevalece sobre as sugestões de liderança por função em cada seção. O responsável consolida a entrega e responde pelo seu aceite; recebe contribuições dos demais.
+A organização física é única: [artefatos/](../README.md), sem pastas por pessoa. Responsável consolida a entrega e recebe apoio; revisor deve ser outra pessoa. A equipe confirma os nomes, sem presumir dedicação ou redefinir papéis pessoais. Os rótulos por função substituem a antiga divisão Pessoa 1–4 na navegação.
 
-| Pessoa | Frente principal | Entregas sob sua responsabilidade | Primeiro trabalho concreto |
-|---|---|---|---|
-| Pessoa 1 | Negócios, produto e narrativa | D01 Oportunidades; D04 Priorização; D05 Conceito; D07 Ideia; D08 Proposta de valor/IA | Abrir D01 com problema, fontes, hipóteses e perguntas; preparar a discussão de alternativas de D04 |
-| Pessoa 2 | Pesquisa e compreensão do usuário | D02 Empatia; D03 Cenário Atual; D06 Persona e Cenários | Preparar roteiro de pesquisa e organizar as notas compartilhadas; desenhar a primeira jornada com hipóteses identificadas |
-| Pessoa 3 | Estrutura da solução e arquitetura | D09 Estrutura; D10 Arquitetura | Conferir contratos e componentes do plano; relacionar requisitos, ferramentas, dados e testes |
-| Pessoa 4 | Protótipo, evidências do fluxo e validação | D11 Registro do Fluxo MVP; D12 Protótipo; D13 Validação | Esboçar o percurso de confirmação a partir do plano e preparar tarefas/perguntas do piloto com Pessoa 2 |
+| Entregas | Responsável por função | Revisão principal |
+|---|---|---|
+| D01, D05 | Produto | Pesquisa |
+| D04, D08 | Produto | Arquitetura, com equipe |
+| D07 | Produto | Integração e validação |
+| D02, D06 | Pesquisa | Produto |
+| D03 | Pesquisa | Integração e validação |
+| D09, D10 | Arquitetura | Integração e validação; autor técnico distinto quando necessário |
+| D11 | Integração e validação | Arquitetura e executor independente |
+| D12, D13 | Integração e validação | Pesquisa |
 
-Pessoa 1 reúne mais IDs porque ideia, conceito e proposta de valor compartilham conteúdo. Pessoa 3 tem menos IDs, mas concentra a especificação técnica. Pessoa 4 concentra trabalho de produção visual e teste. Distribuir o esforço por complexidade e disponibilidade, não pelo número de documentos.
+Leonardo permanece como executor técnico do frontend já identificado no plano. Essa atribuição não torna o responsável documental autor de toda a implementação. Cada autor fornece correções e evidências de sua parte.
 
-Esta divisão cobre os artefatos deste direcional. Em D11, Pessoa 4 organiza o roteiro, reproduz o fluxo e consolida evidências; os autores técnicos precisam fornecer e corrigir a implementação executável. A liderança documental de Pessoa 3 não atribui automaticamente todo o desenvolvimento a ela. Leonardo é o executor da adaptação/integração do frontend Watson em C10/C13/C18/C27; Pessoa 4 consolida a entrega e Pessoa 2 revisa a experiência. Essa atribuição técnica não pressupõe a identidade dos outros papéis.
+**Passagens:** descoberta e hipóteses → comparação de alternativas → conceito/valor → estrutura e experiência → execução e validação → narrativa/pacote final. Os documentos devem compartilhar a mesma base de evidências. O [registro único](evidencias_e_hipoteses.md) mantém IDs; a [matriz de aceite](criterios_e_pendencias.md) controla pendências, revisores e evidências.
 
-### Matriz de responsabilidade e revisão por entrega
-
-| Entrega | Responsável | Apoio necessário | Revisor principal | Saída para aceite |
-|---|---|---|---|---|
-| D01 Oportunidades | Pessoa 1 | Pessoa 2: pesquisa e fontes | Pessoa 2 | Fricção, evidências, lacunas e HMW/POV |
-| D02 Empatia | Pessoa 2 | Pessoa 1: recorte e necessidades | Pessoa 1 | Mapa com fonte/hipótese por achado e implicações de design |
-| D03 Cenário Atual | Pessoa 2 | Pessoa 1: contexto do problema | Pessoa 4 | Jornada em 4–6 etapas e ruptura prioritária |
-| D04 Priorização | Pessoa 1 | As quatro pessoas: alternativas; Pessoa 3: viabilidade | Pessoa 3 | Matriz comparável e justificativa da direção escolhida |
-| D05 Conceito | Pessoa 1 | Pessoa 3: capacidades e limites | Pessoa 2 | Conceito compreensível e cenário de uso |
-| D06 Persona e Cenários | Pessoa 2 | Pessoa 4: representação da experiência | Pessoa 1 | Perfil funcional e comparação do mesmo episódio atual/futuro |
-| D07 Ideia e Descrição | Pessoa 1 | Pessoa 2: linguagem do usuário | Pessoa 4 | Descrição curta coerente com conceito e fluxo |
-| D08 Valor e IA | Pessoa 1 | Pessoa 3: inteligência/custos; Pessoa 2: dor/evidência | Pessoa 3 | Uma página com valor, adoção, justificativa de IA e premissas |
-| D09 Estrutura | Pessoa 3 | Pessoa 1: escopo; Pessoa 2: sucesso para o usuário | Pessoa 4 | Requisitos ligados a necessidades, métricas e testes |
-| D10 Arquitetura | Pessoa 3 | Autores técnicos: contratos e evidências | Pessoa 4 | Diagrama, sequência, papéis, contratos, limites e falhas |
-| D11 Fluxo do MVP | Pessoa 4 | Pessoa 3 e autores técnicos: execução e correções | Pessoa 3 | Roteiro reproduzível, resultados e evidências da mesma versão |
-| D12 Protótipo | Pessoa 4 | Pessoa 2: jornada/textos; Pessoa 3: viabilidade | Pessoa 2 | Percurso testável com respostas e estados previstos |
-| D13 Validação | Pessoa 4 | Pessoa 2: recrutamento/moderação; demais: correções | Pessoa 2 | Achados, resultados, ajustes, reteste e limitações |
-
-Em D10, Pessoa 4 confere a legibilidade, a rastreabilidade e a possibilidade de reproduzir o fluxo; questões técnicas específicas devem receber revisão de outro autor técnico disponível. Em D11, a revisão técnica de Pessoa 3 complementa a reprodução independente feita por Pessoa 4. Ninguém encerra sua própria entrega sem revisão.
-
-### Passagens de trabalho entre as quatro pessoas
-
-1. **Descoberta:** Pessoas 1 e 2 produzem D01–D03 com a mesma base de evidências. Pessoa 3 prepara contratos/componentes em paralelo; Pessoa 4 prepara esboço e roteiro de teste.
-2. **Escolha:** Pessoa 1 facilita D04 com o grupo; Pessoa 2 consolida D06; Pessoa 1 fecha D05, D07 e D08 após a revisão da direção.
-3. **Estrutura e experiência:** Pessoa 3 consolida D09–D10 e entrega restrições/contratos a Pessoa 4, que refina D12 com Pessoa 2.
-4. **Teste e melhoria:** Pessoa 4 conduz a reprodução de D11 e consolida D13; Pessoa 2 modera sessões e registra observações. Cada autor corrige sua parte; Pessoa 4 verifica novamente o cenário afetado.
-5. **Consolidação:** Pessoa 1 atualiza a narrativa e o valor com os resultados; Pessoa 3 fecha a declaração técnica; Pessoa 4 reúne vídeo, índice e evidências; Pessoa 2 revisa clareza e fidelidade aos achados.
-
-**Pacote final:** Pessoa 1 responde pelo texto de problema/solução e roteiro de apresentação; Pessoa 2 revisa a narrativa do usuário e os resultados de pesquisa; Pessoa 3 responde pela declaração tecnológica e instruções técnicas; Pessoa 4 consolida vídeo/links/índice e confere acesso. Cada uma das quatro pessoas entrega suas próprias evidências do Bob. O envio é realizado pelo líder cadastrado na plataforma, sem presumir que seja uma dessas funções específicas.
-
-O [plano operacional](../artifacts/planejamento/plano_15_dias.md) e o [backlog](../artifacts/planejamento/backlog.md) foram alinhados ao associado e à divisão em quatro pessoas. O plano mantém a correspondência dos antigos códigos A com as entregas D; os cards C preservam seus IDs, com descrições revisadas. Essa atualização de planejamento não representa execução ou conclusão dos cards.
+O [backlog](../../docs/planejamento/backlog.md) e o [plano operacional](../../docs/planejamento/plano_15_dias.md) preservam o planejamento histórico. O estado atual está no índice e na matriz acima; planejamento não comprova execução.
 
 **Sequência por dependência:** D01–D03 → D04 → D05–D08 → D09–D10. D12 começa após D06/D09; D11 avança com contratos e implementação. D13 pode começar no protótipo e deve verificar a aplicação integrada quando disponível. Resultados realimentam descoberta e valor; o trabalho é iterativo.
 
@@ -433,13 +407,20 @@ Conferir os campos e a situação do checkpoint na plataforma, à qual o guia re
 
 ## Fontes verificadas e páginas de referência
 
-- **S1 — [Primeira sessão de Design Thinking](../contexto/First%20DT%20Session%20deck.pdf):** pp.28, 32, 36, 38, 40, 47, 51 e 60. Empatia, definição, ideação, prototipação, validação, atividade, papel do Bob e entregas.
-- **S2 — [Segunda sessão de Design Thinking](../contexto/Updated_Second%20Session%20DT%20and%20AI%20Agents_BR_Saulo%20%281%29%20%281%29.pdf):** pp.24–29, 35–45, 47, 54 e 63. Ideação, lentes do agente, HMW/POV, priorização, persona e entregas.
-- **S3 — [Empreendedorismo em IA](../contexto/Updated_Deck_Empreendedorismo_IA_PT_v9.pdf):** pp.5, 10–18 e 22. Ideia, saber/decidir/fazer, posicionamento, proposta de valor, necessidade de IA e pitch.
-- **S4 — [Primeira sessão técnica](../contexto/1st%20Technical%20session-Prototyping%20AI%20Solutions%20with%20IBM%20AI%20Technologies%20%E2%80%93%20Technical%20Session_updated.pdf):** pp.9–12, 27 e 29. Anatomia, tecnologias, workflow, estrutura e arquitetura.
-- **S5 — [Segunda sessão técnica](../contexto/sessa%CC%83o%202%20IBM%20Agentic%20AI%20Technologies%2C%20Innovative%20Architectures%20%26%20AI%20Depth%20%E2%80%93%20Technical%20SessionSession2_Deck_PT%20%281%29%20%281%29.pdf):** pp.19 e 22. Construir/testar/observar/refinar e fluxo ponta a ponta.
-- **G — [Guia IBM](../contexto/2H26%20GuideBob_IBM%20SkillsBuild_AI%20Experiential%20Learning%20Lab%20BR.pdf):** pp.5, 13–14, 30–31. Bob obrigatório/central, pacote final, rubrica e evidências de tarefas.
-- **C — [Desafios da indústria](../contexto/2026%20AI%20Experiential%20Learning%20Lab%20with%20Bob%20-%20Industry%20Challenges_Portuguese.pdf):** p.6 (Sicredi), pp.7–10 (arquétipos).
-- **Plano local — [Confirmação de compras](plano_implementacao.md):** §§1–6 (produto, regras e contratos), §8 (execução), §9 (testes) e §10 (demonstração).
+- **S1 — [Primeira sessão de Design Thinking](../../contexto/First%20DT%20Session%20deck.pdf):** pp.28, 32, 36, 38, 40, 47, 51 e 60. Empatia, definição, ideação, prototipação, validação, atividade, papel do Bob e entregas.
 
-**Estado desta entrega:** o direcional e as estruturas de produção foram criados. Pesquisa com pessoas, preenchimento final dos artefatos, protótipo, integração e testes permanecem atividades a executar e comprovar. Os exemplos identificados como hipóteses não devem ser apresentados como achados.
+- **S2 — [Segunda sessão de Design Thinking](../../contexto/Updated_Second%20Session%20DT%20and%20AI%20Agents_BR_Saulo%20%281%29%20%281%29.pdf):** pp.24–29, 35–45, 47, 54 e 63. Ideação, lentes do agente, HMW/POV, priorização, persona e entregas.
+
+- **S3 — [Empreendedorismo em IA](../../contexto/Updated_Deck_Empreendedorismo_IA_PT_v9.pdf):** pp.5, 10–18 e 22. Ideia, saber/decidir/fazer, posicionamento, proposta de valor, necessidade de IA e pitch.
+
+- **S4 — [Primeira sessão técnica](../../contexto/1st%20Technical%20session-Prototyping%20AI%20Solutions%20with%20IBM%20AI%20Technologies%20%E2%80%93%20Technical%20Session_updated.pdf):** pp.9–12, 27 e 29. Anatomia, tecnologias, workflow, estrutura e arquitetura.
+
+- **S5 — [Segunda sessão técnica](../../contexto/sessa%CC%83o%202%20IBM%20Agentic%20AI%20Technologies%2C%20Innovative%20Architectures%20%26%20AI%20Depth%20%E2%80%93%20Technical%20SessionSession2_Deck_PT%20%281%29%20%281%29.pdf):** pp.19 e 22. Construir/testar/observar/refinar e fluxo ponta a ponta.
+
+- **G — [Guia IBM](../../contexto/2H26%20GuideBob_IBM%20SkillsBuild_AI%20Experiential%20Learning%20Lab%20BR.pdf):** pp.5, 13–14, 30–31. Bob obrigatório/central, pacote final, rubrica e evidências de tarefas.
+
+- **C — [Desafios da indústria](../../contexto/2026%20AI%20Experiential%20Learning%20Lab%20with%20Bob%20-%20Industry%20Challenges_Portuguese.pdf):** p.6 (Sicredi), pp.7–10 (arquétipos).
+
+- **Plano local — [Confirmação de compras](../../docs/plano_implementacao.md):** §§1–6 (produto, regras e contratos), §8 (execução), §9 (testes) e §10 (demonstração).
+
+**Estado em 04/11/2026:** D01–D13 consolidados e revisados documentalmente; API/interface presentes no código; backend com 207 testes aprovados e log salvo. Revisão cruzada, ensaio UI independente, LLM real, pesquisa/piloto, reteste e submissão permanecem pendentes conforme matriz central. Exemplos hipotéticos não são achados.

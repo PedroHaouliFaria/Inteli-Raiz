@@ -1,11 +1,14 @@
 # D03 — Cenário Atual: do alerta à resolução da dúvida
 
-**ID:** D03  
-**Versão:** 0.1 · 28/10/2026  
-**Responsável:** Pessoa 2  
-**Revisor principal:** Pessoa 4  
-**Estado:** rascunho para revisão — cenário hipotético; canais, tempos e etapas não confirmados com associados ou com a Sicredi  
+**ID:** D03\
+**Versão:** 0.2 · **Data:** 04/11/2026\
+**Responsável:** Pesquisa\
+**Revisor principal:** Integração e validação\
+**Estado:** rascunho para revisão — cenário hipotético; canais, tempos e etapas não confirmados com associados ou com a Sicredi\
 **Origem:** cenário as-is do Leonardo (`origin/watson` `212655c`, `docs/design/00-descoberta/cenario-as-is.md`); revisado e expandido conforme plano vigente (`origin/develop` `8942cc5`)
+
+> **Consolidação de 04/11/2026:** conteúdo documental/hipotético preservado; revisão cruzada pendente. Fontes com hash referem-se àquela versão. Registro comum em [evidências e hipóteses](documentacao/evidencias_e_hipoteses.md).
+> **Decisão sustentada:** investigar confiança no canal e contexto insuficiente como ruptura prioritária.
 
 ---
 

@@ -49,6 +49,7 @@ class SessionResponse(BaseModel):
                 "display_name": "Ana Souza (fictícia)",
                 "role": "ASSOCIADO",
                 "simulation": True,
+                "demo_mode": False,
             }
         },
     }
@@ -57,6 +58,7 @@ class SessionResponse(BaseModel):
     display_name: str
     role: PersonaRole
     simulation: SimulationTrue
+    demo_mode: bool
 
 
 class SessionLoginRequest(BaseModel):
