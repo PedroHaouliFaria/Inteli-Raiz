@@ -4,6 +4,7 @@ Projeto da optativa IBM do Inteli: confirmação assistida de compras pelo assoc
 
 ## Comece aqui
 
+- **[Guia de uso da demonstração](docs/03_computacao/guia_de_uso.md):** preparação, Docker, credenciais, percurso associado–analista, reset e solução de problemas.
 - **[Documentação](docs/README.md):** índice por área e tabela das entregas D01–D13 com o estado de cada uma.
 - [O que falta concluir](docs/05_gestao/criterios_e_pendencias.md): revisões cruzadas, ensaio pela interface, pesquisa/piloto e pacote final.
 - [Como reproduzir o MVP](docs/03_computacao/D11_fluxo_mvp.md): preparação local, cenários e log dos 207 testes de backend aprovados em 04/11/2026.

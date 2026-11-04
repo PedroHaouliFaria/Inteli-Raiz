@@ -16,6 +16,8 @@ Documentação relacionada:
 
 ## Rodar tudo
 
+Para o roteiro completo, incluindo preparação do `.env`, credenciais, percurso de demonstração e solução de problemas, consulte o [guia de uso](../docs/03_computacao/guia_de_uso.md).
+
 ```bash
 # a partir de watson/
 docker compose -f infra/docker-compose.yml up --build
