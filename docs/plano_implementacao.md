@@ -4,7 +4,7 @@
 
 > **Mudança de 27/10: sem IBM Cloud em tempo de execução.** O orientador comunicou que o watsonx Orchestrate não está funcionando para muitos grupos e que a obrigatoriedade do IBM Cloud foi revogada. **Só o IBM Bob continua obrigatório.** O produto, a jornada, as regras e os contratos deste plano não mudam. Muda onde o agente e o modelo rodam: os dois passam para o nosso backend. As decisões técnicas estão no §4.
 
-**Complemento de execução:** o [Direcional de entregas — Da descoberta à confirmação de compras](direcional_entregas.md) detalha as 11 entregas recomendadas dos slides, com títulos, partes, passo a passo, fontes/templates, responsáveis por função e critérios de qualidade. Inclui prototipação e validação como apoio. A versão PDF disponível corresponde à v2 de 23/10/2026; as adições de entregas estão nesta versão Markdown e no direcional.
+**Complemento de execução:** o [Direcional de entregas — Da descoberta à confirmação de compras](../artefatos/documentacao/direcional_entregas.md) detalha as 11 entregas recomendadas dos slides, com títulos, partes, passo a passo, fontes/templates, responsáveis por função e critérios de qualidade. Inclui prototipação e validação como apoio. A versão PDF disponível corresponde à v2 de 23/10/2026; as adições de entregas estão nesta versão Markdown e no direcional.
 
 ## 1. A mudança e o fluxo final
 
@@ -257,11 +257,11 @@ Não pressionar o associado a autorizar. Não pedir senha, PIN ou dados completo
 
 **Primeiro:** grupo confirma este fluxo e nomeia responsáveis para dados/modelo, agente/integração, backend, front e validação. A divisão nominal anterior não implica atribuição automática das novas tarefas.
 
-**Divisão das entregas em quatro pessoas:** Pessoa 1 lidera negócios/produto (D01, D04, D05, D07, D08); Pessoa 2 lidera pesquisa/usuário (D02, D03, D06); Pessoa 3 lidera estrutura/arquitetura (D09, D10); Pessoa 4 lidera protótipo, registro do fluxo e validação (D11, D12, D13). A [matriz no direcional](direcional_entregas.md#organização-em-quatro-pessoas-responsáveis-sequência-e-revisão) define apoio, revisor e passagem de trabalho por entrega. Os nomes e a alocação da implementação são definidos pela equipe; liderar um artefato não significa implementar sozinho todos os componentes associados.
+**Organização atual das entregas:** todos os documentos estão em [artefatos/](../artefatos/README.md), por D01–D13. Produto, Pesquisa, Arquitetura e Integração/validação continuam como funções responsáveis; a [matriz no direcional](../artefatos/documentacao/direcional_entregas.md#responsáveis-sequência-e-revisão) define revisão e passagem de trabalho. A equipe confirma os nomes; liderar um artefato não significa implementar sozinho os componentes associados.
 
 ### 8.1. Entregas de negócio, design e estruturação
 
-As entregas recomendadas pelas aulas passam a integrar explicitamente o planejamento. O [direcional completo](direcional_entregas.md) contém instruções para produzir e revisar cada uma. IDs D01–D11 correspondem às entregas nomeadas nos slides; D12–D13 organizam atividades de prototipação e validação. Criar o direcional não significa que pesquisa, protótipo ou testes foram executados.
+As entregas recomendadas pelas aulas passam a integrar explicitamente o planejamento. O [direcional completo](../artefatos/documentacao/direcional_entregas.md) contém instruções para produzir e revisar cada uma. IDs D01–D11 correspondem às entregas nomeadas nos slides; D12–D13 organizam atividades de prototipação e validação. Criar o direcional não significa que pesquisa, protótipo ou testes foram executados.
 
 | Bloco | Entregas a produzir | Critério de passagem | Responsabilidade sugerida |
 |---|---|---|---|

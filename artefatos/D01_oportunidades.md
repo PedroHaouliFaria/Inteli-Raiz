@@ -1,11 +1,13 @@
 # D01 — Oportunidades de segurança e clareza na confirmação de compras
 
-**ID:** D01 · **Versão:** 0.1 · **Data:** 03/11/2026
-**Responsável:** Pessoa 1 · **Revisor principal:** Pessoa 2
+**ID:** D01 · **Versão:** 0.2 · **Data:** 04/11/2026
+**Responsável:** Produto · **Revisor principal:** Pesquisa
 **Estado:** rascunho
 **Fontes principais:** FON-01 (plano), FON-P1-01 (desafio Sicredi p.6), FON-04 (persona Valdir), FON-06 (cenário as-is), FON-08 (Hills/POV), FON-11 (desafio p.6)
 **Decisões que sustenta:** DEC-P1-01 (recorte); alimenta D02–D04 e D08
 **Depende de:** nenhuma · **Alimenta:** D02, D03, D04, D05, D08
+
+> **Consolidação de 04/11/2026:** conteúdo documental/hipotético preservado; revisão cruzada pendente. Fontes com hash referem-se àquela versão. Registro comum em [evidências e hipóteses](documentacao/evidencias_e_hipoteses.md).
 
 ---
 
@@ -45,11 +47,11 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 | FON-06 | Cenário as-is do Leonardo (`origin/watson` `212655c`) | Jornada hipotética de 5 etapas: sinal → entender a compra → tentar contato → descobrir bloqueio → resolução com esforço | Hipótese construída a partir do briefing; não confirmada com associados ou Sicredi | O bloqueio no balcão e a falta de canal direto são candidatos a ponto de ruptura, não fato confirmado |
 | FON-04 | Persona Valdir (Leonardo, `212655c`) | Frustração: passou vergonha no balcão; desconfiança de ligações de número desconhecido; usa app ao receber notificação | Protopersona hipotética — não entrevista executada | O app autenticado é o canal mais promissor; sinal de autenticidade importa |
 | FON-08 | Hills e POV do Leonardo | POV: Valdir precisa confirmar/contestar compra com segurança sem ligar; Hills: 30 s e 2 min (aspirações) | Metas de Hill são aspirações de design, não resultados medidos | POV sustenta a direção; tempos não são compromisso |
-| HIP-01 | Pessoa 2, D02 | Associado pode confundir "não reconheço" com "bloquear o cartão inteiro" | Hipótese — não confirmada | Texto de resultado precisa distinguir explicitamente "compra recusada" de "cartão bloqueado" |
-| HIP-03 | Pessoa 2, D02 | Nome do estabelecimento pode não ser reconhecido mesmo em compra legítima | Hipótese — frequência desconhecida | O agente precisa informar o limite quando não há vínculo verificável; não inventar |
-| HIP-04 | Pessoa 2, D02 | Associado desconfia de mensagens que imitam o banco | Hipótese — contexto de uso confirmado só em entrevista | Canal precisa ser identificável como app autenticado, com aviso de que nenhuma resposta é pedida por telefone |
+| HIP-01 | Pesquisa, D02 | Associado pode confundir "não reconheço" com "bloquear o cartão inteiro" | Hipótese — não confirmada | Texto de resultado precisa distinguir explicitamente "compra recusada" de "cartão bloqueado" |
+| HIP-03 | Pesquisa, D02 | Nome do estabelecimento pode não ser reconhecido mesmo em compra legítima | Hipótese — frequência desconhecida | O agente precisa informar o limite quando não há vínculo verificável; não inventar |
+| HIP-04 | Pesquisa, D02 | Associado desconfia de mensagens que imitam o banco | Hipótese — contexto de uso confirmado só em entrevista | Canal precisa ser identificável como app autenticado, com aviso de que nenhuma resposta é pedida por telefone |
 | FON-P1-01 | Desafio Sicredi, p.6 | O desafio cita "alerta preventivo" e "confirmação pelo associado" como direção | Definição do desafio acadêmico; não representa contrato com a Sicredi | Confirma que a direção de produto está alinhada ao desafio |
-| D03 §4 | Pessoa 2, D03 | Ponto de ruptura: associado não tem canal direto confiável para entender e resolver compra ambígua | Hipótese investigável — sustentada por FON-06 e HIP-04; não confirmada por entrevista | A ruptura é no reconhecimento + confiança no canal, não necessariamente no bloqueio no balcão |
+| D03 §4 | Pesquisa, D03 | Ponto de ruptura: associado não tem canal direto confiável para entender e resolver compra ambígua | Hipótese investigável — sustentada por FON-06 e HIP-04; não confirmada por entrevista | A ruptura é no reconhecimento + confiança no canal, não necessariamente no bloqueio no balcão |
 
 ---
 
@@ -62,7 +64,7 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 | N1 | Entender o que está sendo confirmado antes de responder | O nome do estabelecimento pode não ser reconhecido imediatamente; contexto adicional pode estar indisponível | HIP-03; FON-04 |
 | N2 | Confiar que a mensagem é legítima antes de interagir | Canal de alerta é indistinguível, em aparência, de mensagens de golpe | HIP-04; FON-04 |
 | N3 | Saber o que cada resposta causa antes de escolher | Consequência das três respostas não é visível antes da escolha; confusão entre "recusar compra" e "bloquear cartão" | HIP-01; HIP-05 |
-| N4 | Pedir ajuda sem perder a oportunidade de responder | O associado pode acreditar que pedir atendimento encerra a confirmação | HIP-02; DEC-05 (Pessoa 2) |
+| N4 | Pedir ajuda sem perder a oportunidade de responder | O associado pode acreditar que pedir atendimento encerra a confirmação | HIP-02; DEC-05 (Pesquisa) |
 | N5 | Ver o desfecho claramente após responder | Sem retorno de status, o associado não sabe se a situação foi resolvida | HIP-09; FON-04 |
 | N6 | Resolver sem precisar ligar para a central | A central pode ser de difícil acesso; ligação para número desconhecido é ignorada | HIP-07; HIP-08; FON-06 |
 
@@ -113,8 +115,11 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 **HMWs complementares** (derivadas das oportunidades acima):
 
 - Como poderíamos mostrar o contexto da compra de forma que o associado reconheça o estabelecimento — ou entenda quando a informação disponível é insuficiente?
+
 - Como poderíamos distinguir visualmente a mensagem legítima do app de comunicações externas?
+
 - Como poderíamos explicar o efeito de cada resposta sem aumentar o tempo e o esforço de quem já reconhece a compra?
+
 - Como poderíamos confirmar o desfecho de forma que o associado não precise ligar para saber o que aconteceu?
 
 Estas perguntas estão abertas a mais de uma solução tecnológica. Ver D04 para a comparação de alternativas.
@@ -142,13 +147,16 @@ O cenário as-is do Leonardo (FON-06) aponta o bloqueio no balcão como a ruptur
 
 A prioridade deixaria de ser "clareza sobre a compra" e passaria a ser "aviso antecipado antes do bloqueio". O produto precisaria atuar mais cedo na cadeia — no momento da transação, não depois — o que mudaria arquitetura, integração e o papel do associado no fluxo.
 
-**Por que ainda mantemos a direção atual:** a ruptura da Pessoa 2 (D03 §4) aponta para a indisponibilidade de canal confiável de entendimento como fricção mais fundamental, independentemente do bloqueio. Essa interpretação continua válida enquanto a pesquisa não confirmar o bloqueio padrão. Ver Lacuna 1 em D03 §5.
+**Por que ainda mantemos a direção atual:** a ruptura da Pesquisa (D03 §4) aponta para a indisponibilidade de canal confiável de entendimento como fricção mais fundamental, independentemente do bloqueio. Essa interpretação continua válida enquanto a pesquisa não confirmar o bloqueio padrão. Ver Lacuna 1 em D03 §5.
 
 ---
 
 ## 11. Alinhamento com outros artefatos
 
 - **POV/Hills do Leonardo (FON-08):** POV aproveitado; metas de tempo (30 s, 2 min) registradas como aspirações, não resultados.
-- **D02/D03 (Pessoa 2):** necessidades N1–N6 derivadas das tensões do mapa de empatia e do ponto de ruptura do cenário atual.
-- **D06 (Pessoa 2):** os seis cenários de D06 cobrem exatamente as hipóteses N1–N6 acima — confirmando que o POV, as necessidades e os cenários estão coerentes.
-- **D09 (Pessoa 3):** requisitos R01–R12 endereçam N1–N6; R03 (três respostas explícitas) e R02 (confirmação vinculada à compra) são os mais diretamente ligados às necessidades prioritárias.
+
+- **D02/D03 (Pesquisa):** necessidades N1–N6 derivadas das tensões do mapa de empatia e do ponto de ruptura do cenário atual.
+
+- **D06 (Pesquisa):** os seis cenários de D06 cobrem exatamente as hipóteses N1–N6 acima — confirmando que o POV, as necessidades e os cenários estão coerentes.
+
+- **D09 (Arquitetura):** requisitos R01–R12 endereçam N1–N6; R03 (três respostas explícitas) e R02 (confirmação vinculada à compra) são os mais diretamente ligados às necessidades prioritárias.

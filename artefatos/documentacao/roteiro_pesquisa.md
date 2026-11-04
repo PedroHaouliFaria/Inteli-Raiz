@@ -1,9 +1,9 @@
 # Roteiro de Pesquisa — Confirmação de compras pelo associado
 
-**Versão:** 0.1 · 28/10/2026  
-**Responsável pela execução:** Pessoa 2  
-**Estado:** pronto para uso — não executado nesta versão  
-**Estimativa de duração:** 15–20 minutos por conversa  
+**Versão:** 0.1 · 28/10/2026\
+**Responsável pela execução:** Pesquisa\
+**Estado:** pronto para uso — não executado nesta versão\
+**Estimativa de duração:** 15–20 minutos por conversa\
 **Proposta interna:** 2–3 conversas iniciais conforme acesso — esta quantidade é uma proposta de planejamento, não exigência oficial nem amostra representativa.
 
 > **Antes de começar:** este roteiro não foi testado com participantes ainda. Recomenda-se um ensaio com um colega da equipe antes da primeira sessão real para ajustar linguagem, ritmo e tempo.
@@ -38,25 +38,25 @@ Registrar se o participante é colega da equipe, parente, conhecido ou externo. 
 
 ### 3.1 Experiência com o alerta
 
-**P1.** "Conte a última vez em que você ficou em dúvida sobre uma compra no cartão ou recebeu uma confirmação de algum lugar. O que aconteceu?"  
+**P1.** "Conte a última vez em que você ficou em dúvida sobre uma compra no cartão ou recebeu uma confirmação de algum lugar. O que aconteceu?"\
 _Aprofundamento:_ "E aí, o que você fez primeiro?" / "Quanto tempo depois disso você soube o que tinha acontecido?"
 
-**P2.** "Qual foi a primeira informação que você viu e o que fez em seguida?"  
+**P2.** "Qual foi a primeira informação que você viu e o que fez em seguida?"\
 _Aprofundamento:_ "Isso apareceu no celular, num SMS, numa ligação?" / "Você foi em algum outro lugar para entender melhor?"
 
-**P3.** "Como você decidiu se aquela comunicação era confiável?"  
+**P3.** "Como você decidiu se aquela comunicação era confiável?"\
 _Aprofundamento:_ "Teve algo que te deixou mais tranquilo ou mais desconfiado?" / "Já aconteceu de desconfiar e a mensagem ser legítima mesmo?"
 
-**P4.** "O que ajudou ou faltou para você reconhecer a compra?"  
+**P4.** "O que ajudou ou faltou para você reconhecer a compra?"\
 _Aprofundamento:_ "O nome do estabelecimento estava claro?" / "Faltou alguma informação para você decidir?"
 
-**P5.** "Você procurou alguém ou mudou de canal? Como foi?"  
+**P5.** "Você procurou alguém ou mudou de canal? Como foi?"\
 _Aprofundamento:_ "Ligou para o banco? Quanto tempo esperou?" / "Alguém te ajudou — familiar, atendente?"
 
-**P6.** "Que consequência você esperava da sua resposta — ou do que fez?"  
+**P6.** "Que consequência você esperava da sua resposta — ou do que fez?"\
 _Aprofundamento:_ "O que você esperava ver depois?" / "Como imaginava que aquilo seria resolvido?"
 
-**P7.** "Como soube que o caso tinha terminado? Ficou alguma dúvida depois?"  
+**P7.** "Como soube que o caso tinha terminado? Ficou alguma dúvida depois?"\
 _Aprofundamento:_ "Veio alguma confirmação? Ou você só parou de receber mensagens?" / "Ficou satisfeito com o desfecho?"
 
 ---
@@ -73,7 +73,7 @@ Seguir as mesmas perguntas adaptadas para o cenário hipotético, anotando clara
 
 ## 4. Bloco B — Compreensão da proposta (apresentar só depois do Bloco A)
 
-> Apresentar um cenário controlado com textos representativos do produto. Se houver protótipo disponível (D12), usá-lo. Se não houver, descrever a situação oralmente ou por texto.  
+> Apresentar um cenário controlado com textos representativos do produto. Se houver protótipo disponível (D12), usá-lo. Se não houver, descrever a situação oralmente ou por texto.\
 > **Status deste bloco:** não executado até que o protótipo esteja disponível. Preparar o roteiro agora e executar quando D12 estiver acessível.
 
 ### Apresentação do cenário controlado
@@ -92,17 +92,17 @@ Observar e registrar: o que a pessoa faz primeiro, onde hesita, o que lê ou ign
 
 **Perguntas abertas — somente após a tarefa:**
 
-**C1.** "O que você entendeu que estava acontecendo com a compra?"  
+**C1.** "O que você entendeu que estava acontecendo com a compra?"\
 _Não usar palavras como 'bloqueio', 'cancelar' ou 'verificar' antes de a pessoa usá-las._
 
-**C2.** "O que você entendeu que aconteceria ao escolher cada uma das opções?"  
+**C2.** "O que você entendeu que aconteceria ao escolher cada uma das opções?"\
 _Deixar a pessoa descrever. Só pedir o efeito de uma opção específica se ela não mencionar espontaneamente._
 
 **C3.** "Você viu a opção de falar com alguém? O que você entendeu que essa opção faz?"
 
 **C4.** "Se você tivesse pedido para falar com alguém, ainda poderia ter respondido à pergunta sobre a compra depois? O que você acha?"
 
-**C5.** "O que você entendeu que aconteceria com o cartão se você escolhesse a opção de não reconhecer a compra?"  
+**C5.** "O que você entendeu que aconteceria com o cartão se você escolhesse a opção de não reconhecer a compra?"\
 _Registrar a resposta literal. Não confirmar nem corrigir durante a pergunta._
 
 **C6.** "O que o aplicativo sabia sobre essa compra? Teve alguma informação que você achou que estava faltando?"
@@ -288,7 +288,11 @@ Se houver apenas uma conversa disponível, priorizar:
 ## 9. Notas sobre o que este roteiro não faz
 
 - Não pede dados de cartão, credenciais, capturas de extratos ou informações bancárias identificáveis.
+
 - Não produz resultado de usabilidade só por ter sido revisado: execução real é necessária.
+
 - Não representa amostra representativa de associados Sicredi.
+
 - O Bloco B depende de protótipo (D12) para ter validade plena; sem protótipo, aplicar apenas com textos e registrar o limite.
+
 - Uma conversa com especialista do domínio responde perguntas de D03 (processo atual) mas não substitui entrevista com associados sobre experiência pessoal.
