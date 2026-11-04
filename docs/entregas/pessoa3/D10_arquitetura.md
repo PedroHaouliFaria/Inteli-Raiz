@@ -44,7 +44,7 @@ flowchart TD
 | **Agente** | Pydantic AI · LLM externo (Groq/Gemini/Granite) | Consulta ferramentas, explica sinais, informa limites, solicita revisão quando necessário; não autoriza compras | Planejado |
 | **Interface do associado** | React + Carbon (`watson/frontend`) | Mostra compra, alerta, pergunta, três respostas e campo de dúvida; lê API JSON; console de exceções limitado | Em adaptação (Leonardo, PR #7); cards C10/C13 |
 | **Bob IDE** | IBM Bob | Desenvolvimento, revisão, testes e documentação; sessões exportadas em `bob_sessions/` | Em uso; obrigatório |
-| **watsonx.ai** | IBM Cloud (evidência) | Deploy do modelo como prova de execução em nuvem; `score_source=watsonx` disponível; fora do runtime da demo | Testado em 27/10 |
+| **watsonx.ai** | IBM Cloud (evidência) | Deploy do modelo como prova de execução em nuvem IBM; `score_source=watsonx` disponível; fora do runtime da demo | Testado em 27/10 |
 
 ---
 
