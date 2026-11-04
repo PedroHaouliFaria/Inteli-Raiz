@@ -1,5 +1,7 @@
 # 04 · Alta fidelidade (em código)
 
+> **Situação em 04/11/2026 — legado no código.** Esta alta fidelidade virou o console antigo (fila, quadro, caso e celular `MemberPhone`), que continua no frontend como interface de reserva, com dados fixos de `src/mocks/` e sem ler o banco. A aplicação atual entra por `SessionGate` e abre `AssociateApp` (associado) ou `AnalystApp` (revisões da analista); está descrita em [D12](../../D12_prototipo_experiencia.md).
+
 Protótipo 3 (ponta a ponta em tempo real) com os chips de pergunta do protótipo 2, feito direto em React + Carbon (`@carbon/react`, tema g10, cabeçalho g100).
 
 - Versão clicável (privada, compartilhar pelo menu Share): https://claude.ai/artifact/HnhD256hVacK5soMm5i3oU

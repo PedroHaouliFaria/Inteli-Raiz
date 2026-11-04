@@ -1,5 +1,7 @@
 # 01 · Wireframe (Make, baixa fidelidade)
 
+> **Situação em 04/11/2026 — histórico.** Os wireframes desenham o console da analista (fila, caso, quadro) e o aviso "Foi você?" no celular. Na direção vigente o associado está no centro e a analista só trata exceções; o percurso atual está em [D12](../../D12_prototipo_experiencia.md). **Continua valendo como referência:** a priorização por impacto humano × necessidade de inteligência e o cuidado com o peso visual igual entre as respostas.
+
 ## Técnicas aplicadas
 1. **Big Idea Vignettes** (toolkit IBM): geramos ideias rápidas a partir dos Hills.
 2. **Prioritization Grid**: impacto humano × viabilidade, com o critério extra do curso "necessidade de inteligência" (raciocínio, autonomia, coordenação).

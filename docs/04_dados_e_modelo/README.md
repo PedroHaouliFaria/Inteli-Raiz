@@ -14,6 +14,4 @@ As figuras ficam em [assets/](assets/) e são geradas por `python scripts/gerar_
 
 ## Dados na aplicação
 
-A pasta [dados/](dados/README.md) explica que dados a aplicação guarda e como eles saem do CSV do case até a tela: levantamento, modelo relacional, linha do tempo do cartão e uso na aplicação.
-
-> Esses documentos foram escritos quando a analista era a usuária principal. O modelo de dados continua válido para o backend, mas termos como "caso da analista" se referem hoje às exceções.
+A pasta [dados/](dados/README.md) explica que dados a aplicação guarda e como chegam à tela: levantamento por necessidade, as 6 tabelas do banco, o caminho das fixtures até o app do associado e o histórico do trabalho de dados. Revisada em 04/11 para o fluxo atual.

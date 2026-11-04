@@ -17,7 +17,7 @@ Como a solução funciona por dentro: componentes, agente, contratos, testes e r
 |---|---|
 | [Visão geral](arquitetura/visao-geral.md) | Camadas, árvore do repositório e regras de dependência |
 | [Contrato da API](specs/contrato_api.md) | Endpoints, estados, erros e exemplos |
-| [Teste watsonx.ai (histórico)](specs/teste_integracao_orchestrate_wml.md) | Evidência do deploy do modelo no watsonx.ai (24/10); o Orchestrate saiu do escopo em 27/10 |
+| [Teste watsonx.ai (histórico)](specs/teste_integracao_orchestrate_wml.md) | Evidência do deploy do modelo no watsonx.ai; o Orchestrate saiu do escopo em 27/10 |
 
 Decisões de arquitetura (ADR):
 

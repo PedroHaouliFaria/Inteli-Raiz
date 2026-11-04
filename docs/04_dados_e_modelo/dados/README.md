@@ -1,24 +1,19 @@
-# Watson · Dados
+# Dados da aplicação
 
-Quais dados o Watson precisa guardar e como organizá-los num banco. Tudo aqui é **proposta para discussão** (v0.5, 27/10/2026: nomes em inglês; aviso automático no risco médio; rajada como indicador, com tentativas simuladas marcadas).
+Que dados a aplicação de confirmação de compras guarda, de onde vêm e como chegam à tela. **Revisão:** 04/11/2026, alinhada ao [plano](../../05_gestao/plano_implementacao.md) e ao código em `watson/backend/`.
 
-| Arquivo | O que tem | Status |
+| Arquivo | O que tem | Estado |
 |---|---|---|
-| [levantamento-de-dados.md](levantamento-de-dados.md) | Cada dado ligado à necessidade de uma persona ou tela, e o que aproveitamos (ou descartamos) das 297 colunas do case | pronto para revisão |
-| [modelo-de-dados.md](modelo-de-dados.md) | Modelo relacional inicial: diagrama, entidades, atributos, relações, regras e decisões em aberto | pronto para revisão |
-| [como-os-dados-ja-foram-usados.md](como-os-dados-ja-foram-usados.md) | O que o time já fez com o case na branch `develop`: EDA, base balanceada, modelo Random Forest e integração com o watsonx | pronto para revisão |
-| [linha-do-tempo.md](linha-do-tempo.md) | Se o case permite montar a linha do tempo de um cartão: colunas, transações por cartão e o problema das rajadas | pronto para revisão |
-| [uso-dos-dados-na-aplicacao.md](uso-dos-dados-na-aplicacao.md) | Caminho do CSV do case até a tela: carga, recorte, score, simulação, API e frontend | pronto para revisão |
+| [levantamento-de-dados.md](levantamento-de-dados.md) | Cada dado ligado a uma necessidade do associado ou da analista, e o que aproveitamos das 297 colunas do case | atualizado |
+| [modelo-de-dados.md](modelo-de-dados.md) | As 6 tabelas do banco, estados da compra e regras garantidas | atualizado (descreve o código) |
+| [uso-dos-dados-na-aplicacao.md](uso-dos-dados-na-aplicacao.md) | Caminho das fixtures até a tela: modelo, política, API e telas | atualizado |
+| [como-os-dados-ja-foram-usados.md](como-os-dados-ja-foram-usados.md) | Histórico do trabalho de dados: EDA, base balanceada, modelo e teste no watsonx.ai | histórico + seções 4–5 atualizadas |
+| [linha-do-tempo.md](linha-do-tempo.md) | Se o case permite montar a linha do tempo de um cartão; rajadas | análise válida; recomendações de tela eram do console antigo |
 
 ## Resumo em uma linha
-Três blocos: **Origem** (associado, conta, cartão, estabelecimento, dispositivo, transação; só leitura), **Risco** (versão do modelo, score, fatores explicáveis) e **Análise** (alerta, caso, recomendação do agente, eventos do caso, decisão da analista, aviso de compra ao associado, desfecho e auditoria). Termos alinhados ao [glossário](../../02_ux_design/processo_design/glossario.md).
+A compra (linha real da base de teste, sem rótulo) é avaliada pelo modelo local, vira um **pedido de confirmação** ao associado e termina **liberada, recusada, em revisão ou expirada** — tudo simulado e registrado em eventos.
 
 ## Fontes
-- Descoberta: [../design/00-descoberta/](../../02_ux_design/processo_design/00-descoberta/README.md)
-- Wireframes (escolhido: B com a fila da A e o quadro da C): [../design/01-wireframe/](../../02_ux_design/processo_design/01-wireframe/README.md)
+- Contrato da API: [contrato_api.md](../../03_computacao/specs/contrato_api.md)
+- Arquitetura atual: [D10](../../03_computacao/D10_arquitetura.md)
 - Case Sicredi no repositório: `data/dicionario_dados_case_prevencao_sicredi.xlsx` e `data/Orientacoes_case_prevencao_sicredi.txt`
-
-## Próximos passos sugeridos
-1. Time responde às decisões em aberto do modelo.
-2. Escrever o DDL (script de criação das tabelas) e um script de carga do case.
-3. Diagrama visual no estilo IBM (Carbon) para a apresentação.

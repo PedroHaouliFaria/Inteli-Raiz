@@ -17,4 +17,4 @@ Quem é o associado, como é a experiência hoje, como deve ser e como vamos tes
 
 A pasta [processo_design/](processo_design/README.md) guarda o caminho do Design Thinking feito pelo Leonardo: descoberta, wireframes, mockups, protótipos, alta fidelidade e laboratório do modelo, além do [glossário](processo_design/glossario.md).
 
-> **Atenção:** parte desse material foi feita quando a **analista** era a usuária principal (fila, quadro e tela de caso). A direção vigente coloca o **associado** no centro e deixa a analista nas exceções. Use o material como histórico e referência visual; o que vale para a experiência atual está em D02, D03, D06 e D12.
+Esse processo começou quando a **analista** era a usuária principal. Cada etapa tem no topo um aviso do que continua valendo; o [glossário](processo_design/glossario.md) já está atualizado para o fluxo do associado.

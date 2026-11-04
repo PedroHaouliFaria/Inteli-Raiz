@@ -1,5 +1,7 @@
 # Dá para traçar a linha do tempo de um cartão com os dados do case?
 
+> **Situação em 04/11/2026:** a análise dos dados abaixo continua válida. As recomendações de tela ("tela do caso", rajada simulada) eram para o console da analista, que hoje é só uma interface de reserva com dados fixos. O fluxo atual do associado mostra uma compra por vez, com sinais simples, e **não** exibe linha do tempo nem rajada. A simulação de rajada (`app/simulation/burst.py`) segue no código, mas fora do fluxo principal.
+
 > Fontes: dicionário do case; saídas do `notebooks/01_eda.ipynb` (branch `develop`), rodado sobre o CSV bruto de 160 mil linhas; e contagem própria em `data/processed/teste_proporcao_real.csv`. Não li o CSV bruto diretamente, porque ele só existe no PC do time.
 
 ## Resposta curta
@@ -42,4 +44,4 @@ Ou seja, o "5 tentativas em 7 min" do wireframe **não existe como 5 linhas** no
 2. **Rajada como indicador, não como linhas:** um destaque do tipo "47 tentativas deste cartão no terminal na última hora" lido de `cp_card_term_vel_1h`, com a origem indicada.
 3. **Se a demo precisar das linhas da rajada:** a simulação gera tentativas sintéticas recusadas ou retidas, coerentes com o contador, e marca cada uma como gerada (`card_transaction.is_simulated`). Assim a tela fica igual ao wireframe sem fingir que veio do case.
 
-**Decisão (Leo, 27/10/2026):** aplicar as três opções. A regra ficou no [modelo de dados](modelo-de-dados.md), na seção "Rajada: indicador e tentativas simuladas".
+**Decisão (Leo, 27/10/2026):** aplicar as três opções. A regra da simulação ficou em `watson/backend/app/simulation/burst.py` (limite de 10 tentativas por hora, até 5 tentativas geradas em 15 minutos, semente fixa).

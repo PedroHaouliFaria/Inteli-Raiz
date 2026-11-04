@@ -1,4 +1,4 @@
-"""Tentativas simuladas de rajada (docs/04_dados_e_modelo/dados/modelo-de-dados.md, seção "Rajada: indicador e tentativas simuladas").
+"""Tentativas simuladas de rajada (docs/04_dados_e_modelo/dados/linha-do-tempo.md, decisão de 27/10/2026).
 
 No case, a rajada só existe como contador (`cp_card_term_vel_1h` → `velocity_1h`), não como linhas.
 Para a demo mostrar a rajada na linha do tempo, geramos tentativas anteriores no mesmo cartão,

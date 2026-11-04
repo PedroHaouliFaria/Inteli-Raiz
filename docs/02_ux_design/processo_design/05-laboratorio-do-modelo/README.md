@@ -1,5 +1,7 @@
 # Laboratório do modelo
 
+> **Situação em 04/11/2026 — implementado.** O Laboratório do modelo (versão B "E se?") existe no backend (rotas `/model-lab/*`) e no frontend. Hoje ele só abre pela interface antiga, não pelas telas de associado e analista. Serve para a equipe explorar o modelo; não faz parte do fluxo do associado.
+
 Pedido do Leo em 27/10/2026: uma aba de ambiente experimental onde submetemos uma transação e vemos o que o modelo de risco inferiu (score, faixa baixa/média/alta e os sinais que mais pesaram). Não gera alerta, caso nem aviso.
 
 | Versão | Ideia | Canvas |

@@ -1,5 +1,7 @@
 # 02 · Mockup (Reflect → Make, Carbon)
 
+> **Situação em 04/11/2026 — histórico.** Mockups do console da analista. **Continua valendo:** o estilo Carbon (IBM Plex, tokens, status com cor + ícone + texto), o selo de IA no conteúdo do agente, o aviso contra golpe e os critérios WCAG 2.2 AA. **Mudou:** as respostas do associado agora são três ("Reconheço e autorizo", "Não reconheço", "Estou em dúvida"), com "Quero falar com alguém" separado — ver [D12](../../D12_prototipo_experiencia.md).
+
 **Decisão do Playback 2 (26/10/2026, Leo):** versão 3 "Agente sempre presente" com o tema da versão 1 "Carbon g10 clássico".
 
 **Decisão do Playback 1 (26/10/2026, Leo):** B com a fila da A e o quadro da C para gerenciar o processo de análise.

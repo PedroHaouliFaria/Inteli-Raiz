@@ -1,5 +1,7 @@
 # 03 · Protótipo navegável (Make → Observe)
 
+> **Situação em 04/11/2026 — histórico.** Protótipos do fluxo da analista com o aviso ao associado. O percurso testável atual, centrado no associado, está em [D12](../../D12_prototipo_experiencia.md), e o protocolo de teste em [D13](../../D13_validacao_melhorias.md). As técnicas (walkthrough cognitivo, Feedback Grid) continuam úteis para D13.
+
 **Base:** mockup 3 "Agente sempre presente" com o tema g10 clássico da versão 1.
 
 ## Técnicas aplicadas

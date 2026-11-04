@@ -1,5 +1,7 @@
 # 00 · Descoberta (Observe → Reflect)
 
+> **Situação em 04/11/2026 — base histórica.** Esta descoberta foi feita quando a analista (Camila) era a usuária principal. **Continua valendo:** a protopersona do associado (Valdir), o mapa de empatia dele, as premissas e o POV/HMW. Eles foram revisados e são usados na versão vigente: [D02](../../D02_mapa_empatia.md), [D03](../../D03_cenario_atual.md) e [D06](../../D06_persona_e_cenarios.md). **Não vale mais:** Camila como protagonista, os dois botões ("Fui eu" / "Não reconheço"), biometria e troca de aparelho como regra do MVP, e promessas como "novo cartão" ou "nada foi cobrado".
+
 Antes de desenhar telas: quem são as pessoas, o que vivem hoje e para onde queremos levá-las.
 
 | Arquivo | Técnica IBM / UX |
