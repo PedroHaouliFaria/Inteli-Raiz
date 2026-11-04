@@ -124,4 +124,3 @@ docker compose -f infra/docker-compose.yml up -d --force-recreate backend fronte
 - [Contrato da API](specs/contrato_api.md)
 - [Dados usados pela aplicação](../04_dados_e_modelo/dados/uso-dos-dados-na-aplicacao.md)
 - [Infraestrutura Docker](../../watson/infra/README.md)
-
