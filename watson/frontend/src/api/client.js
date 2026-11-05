@@ -149,6 +149,8 @@ export const getAnalystPurchaseFlow = ({ customerId, status } = {}) => {
   return request(`/api/analyst/purchases${query ? `?${query}` : ''}`);
 };
 
+export const getAnalystDashboard = () => request('/api/analyst/dashboard');
+
 /** GET /api/reviews/{review_id} — detalhe sanitizado para decisão da analista. */
 export const getReview = (reviewId) =>
   request(`/api/reviews/${encodeURIComponent(reviewId)}`);

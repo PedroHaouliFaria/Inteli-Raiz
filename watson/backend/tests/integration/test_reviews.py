@@ -180,6 +180,30 @@ def test_associate_cannot_read_analyst_flow(client):
     assert response.json()["error"]["code"] == "FORBIDDEN_ROLE"
 
 
+def test_analyst_dashboard_aggregates_current_demo_data(client):
+    _login(client, "carla")
+    response = client.get("/api/analyst/dashboard")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["simulation"] is True
+    assert body["transaction_count"] == 35
+    assert body["customer_count"] == 2
+    assert float(body["total_amount"]["value"]) > 0
+    assert float(body["average_amount_per_customer"]["value"]) > 0
+    assert float(body["average_ticket"]["value"]) > 0
+    assert sum(item["transaction_count"] for item in body["status_breakdown"]) == 35
+    assert sum(item["transaction_count"] for item in body["daily_volume"]) == 35
+    assert sum(item["transaction_count"] for item in body["customer_breakdown"]) == 35
+    assert body["review_count"] == body["open_review_count"] + body["closed_review_count"]
+
+
+def test_associate_cannot_read_analyst_dashboard(client):
+    _login(client, "ana")
+    response = client.get("/api/analyst/dashboard")
+    assert response.status_code == 403
+    assert response.json()["error"]["code"] == "FORBIDDEN_ROLE"
+
+
 def test_reviews_list_includes_analysis(client):
     """GET /api/reviews traz analysis com score (pode ser null se modelo não disponível)."""
     # Cria revisão via DENY (abre PROTECAO)

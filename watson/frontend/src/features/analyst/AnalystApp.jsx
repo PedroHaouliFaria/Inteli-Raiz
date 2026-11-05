@@ -35,11 +35,17 @@ import {
 } from '@carbon/react';
 import { Renew, Logout } from '@carbon/icons-react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { ApiError, getAnalystPurchaseFlow, getReviews } from '../../api/client.js';
+import {
+  ApiError,
+  getAnalystDashboard,
+  getAnalystPurchaseFlow,
+  getReviews,
+} from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import { formatDate, formatMoney, statusMeta } from '../associate/utils.js';
 import { PurchaseStatusBadge } from '../associate/PurchaseStatus.jsx';
 import DemoResetButton from '../associate/DemoResetButton.jsx';
+import AnalystDashboard from './AnalystDashboard.jsx';
 
 // ── Rótulos legíveis para enums do contrato ─────────────────────────────────
 
@@ -287,6 +293,7 @@ export default function AnalystApp({ mode = 'open' }) {
 
   const [reviews, setReviews] = useState(null);
   const [flowData, setFlowData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -294,6 +301,7 @@ export default function AnalystApp({ mode = 'open' }) {
 
   const isHistory = mode === 'history';
   const isFlow = mode === 'flow';
+  const isDashboard = mode === 'dashboard';
   const decisionFilter = isHistory ? searchParams.get('decision') ?? '' : '';
   const customerFilter = isFlow ? searchParams.get('customer') ?? '' : '';
   const statusFilter = isFlow ? searchParams.get('status') ?? '' : '';
@@ -318,6 +326,10 @@ export default function AnalystApp({ mode = 'open' }) {
     setLoading(true);
     setError(null);
     try {
+      if (isDashboard) {
+        setDashboardData(await getAnalystDashboard());
+        return;
+      }
       if (isFlow) {
         const data = await getAnalystPurchaseFlow({
           customerId: customerFilter || undefined,
@@ -338,7 +350,7 @@ export default function AnalystApp({ mode = 'open' }) {
     } finally {
       setLoading(false);
     }
-  }, [customerFilter, decisionFilter, isFlow, isHistory, page, statusFilter]);
+  }, [customerFilter, decisionFilter, isDashboard, isFlow, isHistory, page, statusFilter]);
 
   useEffect(() => {
     loadContent();
@@ -390,10 +402,13 @@ export default function AnalystApp({ mode = 'open' }) {
         </Header>
       </Theme>
 
-      <main className="analyst-app" aria-label={isFlow ? 'Fluxo atual das compras' : 'Lista de revisões'}>
+      <main
+        className="analyst-app"
+        aria-label={isDashboard ? 'Dados e indicadores' : isFlow ? 'Fluxo atual das compras' : 'Lista de revisões'}
+      >
         <nav className="analyst-tabs" aria-label="Áreas do analista">
           <Button
-            kind={!isHistory && !isFlow ? 'primary' : 'ghost'}
+            kind={!isHistory && !isFlow && !isDashboard ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => navigate('/analyst/reviews/open')}
           >
@@ -413,13 +428,22 @@ export default function AnalystApp({ mode = 'open' }) {
           >
             Fluxo atual
           </Button>
+          <Button
+            kind={isDashboard ? 'primary' : 'ghost'}
+            size="sm"
+            onClick={() => navigate('/analyst/dashboard')}
+          >
+            Dados
+          </Button>
         </nav>
 
         {/* Cabeçalho da página */}
         <div className="analyst-page-header">
           <div>
             <h1 className="cds--type-heading-compact-02">
-              {isFlow
+              {isDashboard
+                ? 'Dados e indicadores'
+                : isFlow
                 ? 'Fluxo atual das compras'
                 : isHistory
                   ? 'Histórico de revisões'
@@ -429,7 +453,9 @@ export default function AnalystApp({ mode = 'open' }) {
               className="cds--type-label-01"
               style={{ color: 'var(--cds-text-helper)', marginTop: '0.25rem' }}
             >
-              {isFlow
+              {isDashboard
+                ? 'Visão consolidada da operação, com volume, clientes, status e revisões.'
+                : isFlow
                 ? 'Acompanhe todas as compras por associado, sem misturá-las à fila de decisão.'
                 : isHistory
                   ? 'Consulte revisões encerradas e as decisões registradas.'
@@ -521,7 +547,7 @@ export default function AnalystApp({ mode = 'open' }) {
         )}
 
         {/* Estado: vazio */}
-        {!isFlow && !loading && !error && reviews !== null && reviews.length === 0 && (
+        {!isFlow && !isDashboard && !loading && !error && reviews !== null && reviews.length === 0 && (
           <div className="analyst-empty-state" role="status">
             <p className="cds--type-body-01">
               {isHistory ? 'Nenhuma revisão encerrada para este filtro.' : 'Não há revisões pendentes no momento.'}
@@ -530,7 +556,7 @@ export default function AnalystApp({ mode = 'open' }) {
         )}
 
         {/* Lista de revisões */}
-        {!isFlow && !loading && !error && reviews !== null && reviews.length > 0 && (
+        {!isFlow && !isDashboard && !loading && !error && reviews !== null && reviews.length > 0 && (
           <div className="analyst-reviews-list" role="list" aria-label="Revisões">
             {reviews.map((rev) => (
               <div key={rev.review_id} role="listitem">
@@ -550,7 +576,11 @@ export default function AnalystApp({ mode = 'open' }) {
           <AnalystFlow data={flowData} />
         )}
 
-        {!isFlow && !loading && !error && pagination.totalPages > 1 && (
+        {isDashboard && !loading && !error && dashboardData && (
+          <AnalystDashboard data={dashboardData} />
+        )}
+
+        {!isFlow && !isDashboard && !loading && !error && pagination.totalPages > 1 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
             <Button kind="ghost" size="sm" disabled={page <= 1} onClick={() => updateHistoryQuery(decisionFilter, page - 1)}>
               Anterior

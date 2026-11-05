@@ -161,6 +161,52 @@ class AnalystFlowResponse(BaseModel):
     simulation: SimulationTrue
 
 
+class AnalystDashboardStatus(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    status: PurchaseStatus
+    label: str
+    transaction_count: int
+    total_amount: Money
+
+
+class AnalystDashboardDay(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    date: str
+    transaction_count: int
+    total_amount: Money
+
+
+class AnalystDashboardCustomer(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    customer_id: str
+    display_name: str
+    transaction_count: int
+    total_amount: Money
+    average_ticket: Money
+
+
+class AnalystDashboardResponse(BaseModel):
+    """GET /api/analyst/dashboard — indicadores agregados da demonstração."""
+
+    model_config = {"extra": "forbid"}
+
+    total_amount: Money
+    transaction_count: int
+    customer_count: int
+    average_amount_per_customer: Money
+    average_ticket: Money
+    review_count: int
+    open_review_count: int
+    closed_review_count: int
+    status_breakdown: list[AnalystDashboardStatus]
+    daily_volume: list[AnalystDashboardDay]
+    customer_breakdown: list[AnalystDashboardCustomer]
+    simulation: SimulationTrue
+
+
 class ReviewDecisionRequest(BaseModel):
     """Decisão da analista sobre uma revisão aberta."""
 

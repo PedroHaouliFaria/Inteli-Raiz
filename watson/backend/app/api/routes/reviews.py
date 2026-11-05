@@ -17,6 +17,10 @@ from sqlalchemy.orm import Session
 from app.api.deps import AnalistaUser, AssociadoUser
 from app.api.errors import ApiError
 from app.api.schemas.reviews import (
+    AnalystDashboardCustomer,
+    AnalystDashboardDay,
+    AnalystDashboardResponse,
+    AnalystDashboardStatus,
     AnalystFlowCustomer,
     AnalystFlowPurchase,
     AnalystFlowResponse,
@@ -291,6 +295,100 @@ def list_analyst_purchase_flow(
         customers=customers,
         status_counts=status_counts,
         total=len(filtered),
+        simulation=True,
+    )
+
+
+@router.get("/api/analyst/dashboard", response_model=AnalystDashboardResponse)
+def get_analyst_dashboard(
+    analista: AnalistaUser,
+    session: Session = Depends(get_session),
+):
+    """Agrega a massa corrente para a visão gerencial da analista."""
+    purchases = session.execute(
+        select(Purchase).order_by(Purchase.occurred_at.asc(), Purchase.id.asc())
+    ).scalars().all()
+    reviews = session.execute(select(Review)).scalars().all()
+
+    total_cents = sum(purchase.amount_cents for purchase in purchases)
+    customer_ids = {purchase.customer_id for purchase in purchases}
+    transaction_count = len(purchases)
+    customer_count = len(customer_ids)
+
+    status_groups: dict[str, dict[str, int]] = {}
+    day_groups: dict[str, dict[str, int]] = {}
+    customer_groups: dict[str, dict[str, int]] = {}
+    for purchase in purchases:
+        status_group = status_groups.setdefault(purchase.status, {"count": 0, "cents": 0})
+        status_group["count"] += 1
+        status_group["cents"] += purchase.amount_cents
+
+        date_key = purchase.occurred_at.date().isoformat()
+        day_group = day_groups.setdefault(date_key, {"count": 0, "cents": 0})
+        day_group["count"] += 1
+        day_group["cents"] += purchase.amount_cents
+
+        customer_group = customer_groups.setdefault(purchase.customer_id, {"count": 0, "cents": 0})
+        customer_group["count"] += 1
+        customer_group["cents"] += purchase.amount_cents
+
+    status_breakdown = [
+        AnalystDashboardStatus(
+            status=status,
+            label=_STATUS_LABELS.get(status, status),
+            transaction_count=group["count"],
+            total_amount={"value": _cents_to_str(group["cents"]), "currency": "BRL"},
+        )
+        for status, group in sorted(
+            status_groups.items(),
+            key=lambda item: item[1]["count"],
+            reverse=True,
+        )
+    ]
+    daily_volume = [
+        AnalystDashboardDay(
+            date=date_key,
+            transaction_count=group["count"],
+            total_amount={"value": _cents_to_str(group["cents"]), "currency": "BRL"},
+        )
+        for date_key, group in sorted(day_groups.items())
+    ]
+    customer_breakdown = [
+        AnalystDashboardCustomer(
+            customer_id=customer_id,
+            display_name=_customer_display(customer_id),
+            transaction_count=group["count"],
+            total_amount={"value": _cents_to_str(group["cents"]), "currency": "BRL"},
+            average_ticket={
+                "value": _cents_to_str(round(group["cents"] / group["count"])),
+                "currency": "BRL",
+            },
+        )
+        for customer_id, group in sorted(
+            customer_groups.items(),
+            key=lambda item: item[1]["cents"],
+            reverse=True,
+        )
+    ]
+
+    return AnalystDashboardResponse(
+        total_amount={"value": _cents_to_str(total_cents), "currency": "BRL"},
+        transaction_count=transaction_count,
+        customer_count=customer_count,
+        average_amount_per_customer={
+            "value": _cents_to_str(round(total_cents / customer_count)) if customer_count else "0.00",
+            "currency": "BRL",
+        },
+        average_ticket={
+            "value": _cents_to_str(round(total_cents / transaction_count)) if transaction_count else "0.00",
+            "currency": "BRL",
+        },
+        review_count=len(reviews),
+        open_review_count=sum(review.status == "ABERTA" for review in reviews),
+        closed_review_count=sum(review.status == "FECHADA" for review in reviews),
+        status_breakdown=status_breakdown,
+        daily_volume=daily_volume,
+        customer_breakdown=customer_breakdown,
         simulation=True,
     )
 
