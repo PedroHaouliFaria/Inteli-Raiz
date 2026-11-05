@@ -1,17 +1,23 @@
 # backend
 
-API do Watson em Python + FastAPI: regras de negócio, agentes (watsonx.ai) e acesso ao banco.
+API do Watson em Python + FastAPI: confirmação de compras, revisão humana, agente de chat Pydantic AI/Groq e persistência via SQLAlchemy.
 
 ```bash
 cd watson/backend
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev,postgres,risk]" # use ".[dev,db2]" para Db2, ".[watsonx]" para o agente real; "risk" roda o modelo de risco local
+pip install -e ".[dev,risk]"          # adicione postgres ao extra se configurar PostgreSQL
 cp .env.example .env                  # troque SESSION_SECRET; sem DATABASE_URL, usa SQLite
 uvicorn app.main:app --reload         # http://localhost:8000/docs
 pytest
 ```
 
 O chat integrado usa `GROQ_API_KEY`. Sem a chave, as compras e confirmações continuam funcionando, mas o chat responde `503 AGENT_UNAVAILABLE`. `WATSONX_API_KEY` é usada apenas pelo provider Watsonx e pelo deployment opcional do modelo de risco.
+
+## Fluxo integrado
+
+O associado entra por e-mail/senha fictícios, abre uma compra e responde AUTHORIZE, DENY ou UNSURE pelos controles da interface. Pedir atendimento é separado da resposta. A analista lista revisões e registra AUTHORIZE ou DENY em `POST /api/reviews/{review_id}/decision`; a compra e o histórico são atualizados na simulação. O agente consulta contexto e solicita revisão, sem responder à confirmação pelo associado.
+
+Para usar a aplicação completa, consulte o [guia de demonstração](../../docs/anexos/sistema/como-usar-a-demonstracao.md). O [contrato da API](../../docs/anexos/sistema/specs/contrato-da-api.md) detalha identidade, estados, erros e respostas.
 
 ## Login da demonstração
 
@@ -30,7 +36,8 @@ Os valores ficam em `.env` pelas variáveis `MOCK_<PESSOA>_EMAIL` e `MOCK_<PESSO
 | `app/api/routes/` | Camada HTTP: uma rota por recurso. Só recebe, valida e responde |
 | `app/api/schemas/` | Modelos Pydantic, o contrato com o frontend (OpenAPI em `/docs`) |
 | `app/domain/` | Regras do negócio (`cases`, `decisions`, `notices`, `audit`). Sem FastAPI e sem SQL |
-| `app/agents/` | Agentes do produto, com `providers/` (watsonx ou simulado), `prompts/` versionados e `tools/` só de leitura |
+| `app/domain/agent/` | Chat integrado Pydantic AI/Groq, contexto autorizado e ferramenta de revisão |
+| `app/agents/` | Providers, prompts e ferramentas do console legado; não representam o chat integrado atual |
 | `app/risk/` | Score em tempo de execução: carrega o modelo, calcula sinais e fatores |
 | `app/db/` | Camada trocável: `tables/`, `repositories/`, `session.py`, `types.py` e `migrations/` (Alembic) |
 | `app/simulation/` | Carga do case, chegada simulada de transações e aparelhos do app |

@@ -1,0 +1,114 @@
+{
+  "data_consulta": "2026-11-05",
+  "moeda_calculo": "BRL",
+  "natureza": "Orcamento de referencia para prototipo; nao sao despesas reais da equipe nem da Sicredi.",
+  "precos": {
+    "usd_brl": "5.4778",
+    "llm_model": "groq:openai/gpt-oss-120b",
+    "llm_usd_milhao_entrada": "0.15",
+    "llm_usd_milhao_saida": "0.60",
+    "vm_usd_mes": "24.00",
+    "backup_fracao_vm": "0.20",
+    "salario_atendimento_brl_mes": "2826.43",
+    "salario_desenvolvimento_brl_mes": "8458.30",
+    "bob_pro_usd_usuario_mes": "20.00"
+  },
+  "hipoteses": {
+    "fator_custo_pessoal": "2.0",
+    "horas_produtivas_mes": "160",
+    "manutencao_horas_mes": "4",
+    "construcao_horas_referencia": "160",
+    "construcao_horas_sensibilidade": [
+      "80",
+      "160",
+      "320"
+    ],
+    "bob_usuarios_construcao": "4",
+    "bob_meses_construcao": "1",
+    "bob_usuarios_manutencao": "1",
+    "atendimento_baseline_minutos": "5"
+  },
+  "cenarios": [
+    {
+      "nome": "Base",
+      "confirmacoes_mes": 1000,
+      "fracao_chat": "0.30",
+      "chamadas_sessao": 2,
+      "tokens_entrada_chamada": 1500,
+      "tokens_saida_chamada": 250,
+      "fracao_revisao": "0.10",
+      "minutos_revisao": 5
+    },
+    {
+      "nome": "Uso intenso",
+      "confirmacoes_mes": 1000,
+      "fracao_chat": "1.00",
+      "chamadas_sessao": 4,
+      "tokens_entrada_chamada": 1500,
+      "tokens_saida_chamada": 250,
+      "fracao_revisao": "0.30",
+      "minutos_revisao": 10
+    },
+    {
+      "nome": "Contexto longo",
+      "confirmacoes_mes": 1000,
+      "fracao_chat": "1.00",
+      "chamadas_sessao": 8,
+      "tokens_entrada_chamada": 10000,
+      "tokens_saida_chamada": 2000,
+      "fracao_revisao": "0.30",
+      "minutos_revisao": 10
+    }
+  ],
+  "fontes": [
+    {
+      "id": "FIN-FON-01",
+      "item": "Precos por milhao de tokens, modelo padrao do codigo",
+      "url": "https://console.groq.com/docs/models",
+      "valor": "USD 0.15 entrada; USD 0.60 saida"
+    },
+    {
+      "id": "FIN-FON-02",
+      "item": "VM Basic Regular: 4 GiB RAM, 2 vCPU, 80 GiB SSD",
+      "url": "https://www.digitalocean.com/pricing/droplets",
+      "valor": "USD 24/mes"
+    },
+    {
+      "id": "FIN-FON-03",
+      "item": "Backup semanal percentual",
+      "url": "https://docs.digitalocean.com/products/backups/details/pricing/",
+      "valor": "20% do custo da VM"
+    },
+    {
+      "id": "FIN-FON-04",
+      "item": "PTAX venda de 04/11/2026, ultima fechada consultada",
+      "url": "https://ptax.bcb.gov.br/ptax_internet/consultarUltimaCotacaoDolar.do",
+      "valor": "BRL 5.4778/USD"
+    },
+    {
+      "id": "FIN-FON-05",
+      "item": "Referencia de atendimento: piso publicado, nao salario da Sicredi ou de especialista antifraude",
+      "url": "https://sindinformatica.com.br/wp-content/uploads/2026/06/Termo-aditivo-SINTTEL-2026.pdf",
+      "valor": "BRL 2826.43/mes; p.2; registro GO000508/2026"
+    },
+    {
+      "id": "FIN-FON-06",
+      "item": "Media salarial de analista de desenvolvimento de sistemas, Brasil; pagina atualizada 08/10/2026",
+      "url": "https://www.salario.com.br/profissao/analista-de-desenvolvimento-de-sistemas-cbo-212405/",
+      "valor": "BRL 8458.30/mes; salario-base, sem encargos"
+    },
+    {
+      "id": "FIN-FON-07",
+      "item": "IBM Bob Pro, preco indicativo por usuario; quota sujeita a plano",
+      "url": "https://www.ibm.com/products/ai-coding-agent/pricing",
+      "valor": "a partir de USD 20/usuario/mes"
+    }
+  ],
+  "exclusoes": [
+    "Impostos, IOF, spread de pagamento e variacao cambial",
+    "Dominio, mensagens SMS/push pagas, excedentes de trafego/armazenamento",
+    "Integracao bancaria, certificacoes, seguranca e disponibilidade de producao",
+    "Horas reais de pesquisa, treinamento, retrabalho e implantacao ainda nao medidas",
+    "Bobcoins adicionais ou plano superior; consumo de Bob nao medido"
+  ]
+}
