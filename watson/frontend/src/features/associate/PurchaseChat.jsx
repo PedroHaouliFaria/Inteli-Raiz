@@ -85,7 +85,7 @@ export default function PurchaseChat({ caseId, onReviewProtocol }) {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(null);
 
-  const bottomRef = useRef(null);
+  const messagesRef = useRef(null);
 
   // Carrega (ou recarrega) o histórico
   const loadHistory = useCallback(async () => {
@@ -114,7 +114,8 @@ export default function PurchaseChat({ caseId, onReviewProtocol }) {
   // Rola para o fim quando chegam mensagens novas
   useEffect(() => {
     if (messages && messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      const el = messagesRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
     }
   }, [messages]);
 
@@ -196,6 +197,7 @@ export default function PurchaseChat({ caseId, onReviewProtocol }) {
 
           {/* Área de mensagens */}
           <div
+            ref={messagesRef}
             className="purchase-chat__messages"
             role="log"
             aria-live="polite"
@@ -238,7 +240,6 @@ export default function PurchaseChat({ caseId, onReviewProtocol }) {
               </div>
             )}
 
-            <div ref={bottomRef} aria-hidden />
           </div>
 
           {sendError && (
