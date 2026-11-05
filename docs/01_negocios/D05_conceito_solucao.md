@@ -8,23 +8,36 @@
 
 ---
 
+## Sumário
+
+- [1. Usuário e situação](#1-usuário-e-situação)
+- [2. Problema](#2-problema)
+- [3. Solução em uma frase](#3-solução-em-uma-frase)
+- [4. Capacidade nova](#4-capacidade-nova)
+- [5. Experiência em três momentos](#5-experiência-em-três-momentos)
+- [6. Papel do agente](#6-papel-do-agente)
+- [7. Limites](#7-limites)
+- [8. Dependências e hipóteses](#8-dependências-e-hipóteses)
+
+---
+
 ## 1. Usuário e situação
 
-**Usuário:** o associado do Sicredi que recebe uma solicitação de confirmação de uma compra sinalizada pelo sistema.
+<p align="justify">&ensp;&ensp; <strong>Usuário:</strong> o associado do Sicredi que recebe uma solicitação de confirmação de uma compra sinalizada pelo sistema.</p>
 
-**Situação:** o associado recebe uma notificação no app enquanto está em qualquer lugar — balcão, campo, madrugada. A compra tem valor real, mas o nome do estabelecimento pode ser irreconhecível. Ele precisa decidir se reconhece e autoriza, não reconhece ou está em dúvida — e saber o que acontece depois.
+<p align="justify">&ensp;&ensp; <strong>Situação:</strong> o associado recebe uma notificação no app enquanto está em qualquer lugar — balcão, campo, madrugada. A compra tem valor real, mas o nome do estabelecimento pode ser irreconhecível. Ele precisa decidir se reconhece e autoriza, não reconhece ou está em dúvida — e saber o que acontece depois.</p>
 
 ---
 
 ## 2. Problema
 
-Hipótese do cenário investigado: o associado pode não encontrar um canal que reconheça como confiável para entender a compra e registrar sua resposta. Canal incerto ou informação insuficiente podem provocar abandono, erro ou busca de atendimento. A existência e suficiência dos canais atuais da instituição não foram pesquisadas. (D01 §4–5; HIP-04; HIP-03)
+<p align="justify">&ensp;&ensp; Hipótese do cenário investigado: o associado pode não encontrar um canal que reconheça como confiável para entender a compra e registrar sua resposta. Canal incerto ou informação insuficiente podem provocar abandono, erro ou busca de atendimento. A existência e suficiência dos canais atuais da instituição não foram pesquisadas. (D01 §4–5; HIP-04; HIP-03)</p>
 
 ---
 
 ## 3. Solução em uma frase
 
-Um assistente no app que apresenta a compra sinalizada, ajuda o associado a esclarecer dúvidas com o contexto disponível e permite registrar autorização, recusa ou dúvida — com revisão humana das exceções.
+<p align="justify">&ensp;&ensp; Um assistente no app que apresenta a compra sinalizada, ajuda o associado a esclarecer dúvidas com o contexto disponível e permite registrar autorização, recusa ou dúvida — com revisão humana das exceções.</p>
 
 > Ponto de partida do plano (FON-01 §2). O modelo avalia sinais → a política define o tratamento → o agente consulta e explica → o associado responde explicitamente → o backend valida e registra.
 
@@ -32,9 +45,9 @@ Um assistente no app que apresenta a compra sinalizada, ajuda o associado a escl
 
 ## 4. Capacidade nova
 
-**O que o associado passa a conseguir:** resolver a confirmação com clareza diretamente no app — sem ligar para a central — mesmo quando o nome do estabelecimento é ambíguo, porque o assistente apresenta o contexto disponível e informa o limite quando não há informação verificável.
+<p align="justify">&ensp;&ensp; <strong>O que o associado passa a conseguir:</strong> resolver a confirmação com clareza diretamente no app — sem ligar para a central — mesmo quando o nome do estabelecimento é ambíguo, porque o assistente apresenta o contexto disponível e informa o limite quando não há informação verificável.</p>
 
-**O que não muda:** a resposta final é sempre do associado. O assistente não autoriza, não recusa e não informa dúvida por ele. Ações financeiras são simuladas.
+<p align="justify">&ensp;&ensp; <strong>O que não muda:</strong> a resposta final é sempre do associado. O assistente não autoriza, não recusa e não informa dúvida por ele. Ações financeiras são simuladas.</p>
 
 ---
 
@@ -88,9 +101,9 @@ Exemplos de resultado:
 
 ## 6. Papel do agente
 
-O agente consulta ferramentas para obter sinais, disponibilidade da avaliação, contexto da compra e status. Escolhe ferramentas e pode solicitar revisão; não decide a resposta à confirmação. A ferramenta atual não devolve o valor numérico do score. **Explica** com base apenas no que as ferramentas retornam. **Informa o limite** quando o contexto é insuficiente. **Solicita revisão** quando a dúvida não pode ser resolvida.
+<p align="justify">&ensp;&ensp; O agente consulta ferramentas para obter sinais, disponibilidade da avaliação, contexto da compra e status. Escolhe ferramentas e pode solicitar revisão; não decide a resposta à confirmação. A ferramenta atual não devolve o valor numérico do score. <strong>Explica</strong> com base apenas no que as ferramentas retornam. <strong>Informa o limite</strong> quando o contexto é insuficiente. <strong>Solicita revisão</strong> quando a dúvida não pode ser resolvida.</p>
 
-O agente **não pode:** autorizar, recusar ou registrar dúvida em nome do associado; inventar identidade de estabelecimento; pressionar o associado a autorizar; pedir senha, PIN ou dados completos do cartão. (FON-P1-03 §4)
+<p align="justify">&ensp;&ensp; O agente <strong>não pode:</strong> autorizar, recusar ou registrar dúvida em nome do associado; inventar identidade de estabelecimento; pressionar o associado a autorizar; pedir senha, PIN ou dados completos do cartão. (FON-P1-03 §4)</p>
 
 ---
 
@@ -127,4 +140,4 @@ O agente **não pode:** autorizar, recusar ou registrar dúvida em nome do assoc
 ---
 
 
-**Revisão necessária:** Pesquisa confere conceito/cenários; registro central de aceite identifica o estado da revisão cruzada.
+<p align="justify">&ensp;&ensp; <strong>Revisão necessária:</strong> Pesquisa confere conceito/cenários; registro central de aceite identifica o estado da revisão cruzada.</p>

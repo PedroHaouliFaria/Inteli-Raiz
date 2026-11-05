@@ -12,11 +12,23 @@
 
 ---
 
+## Sumário
+
+- [1. Situação delimitada](#1-situação-delimitada)
+- [2. Mapa principal](#2-mapa-principal)
+- [3. Lacunas de pesquisa](#3-lacunas-de-pesquisa)
+- [4. Implicações de design](#4-implicações-de-design)
+- [5. Hipóteses priorizadas](#5-hipóteses-priorizadas)
+
+---
+
 ## 1. Situação delimitada
 
-**Contexto de uso:** associado recebe uma solicitação de confirmação de compra no aplicativo. A compra foi sinalizada pelo sistema e aguarda sua resposta.\
-**Objetivo da pessoa:** entender o que aconteceu, decidir se reconhece ou não a compra e saber o que ocorre depois da sua resposta.\
-**Marcação:** todo o conteúdo abaixo é hipótese de trabalho ou interpretação derivada de fontes documentais, salvo identificação explícita de observação. Nenhum participante foi entrevistado nesta versão.
+<p align="justify">&ensp;&ensp; <strong>Contexto de uso:</strong> associado recebe uma solicitação de confirmação de compra no aplicativo. A compra foi sinalizada pelo sistema e aguarda sua resposta.</p>
+
+<p align="justify">&ensp;&ensp; <strong>Objetivo da pessoa:</strong> entender o que aconteceu, decidir se reconhece ou não a compra e saber o que ocorre depois da sua resposta.</p>
+
+<p align="justify">&ensp;&ensp; <strong>Marcação:</strong> todo o conteúdo abaixo é hipótese de trabalho ou interpretação derivada de fontes documentais, salvo identificação explícita de observação. Nenhum participante foi entrevistado nesta versão.</p>
 
 ---
 
@@ -84,7 +96,7 @@
 
 ## 4. Síntese: necessidades e tensões
 
-Com base nas hipóteses acima (não em pesquisa executada):
+<p align="justify">&ensp;&ensp; Com base nas hipóteses acima (não em pesquisa executada):</p>
 
 1. **Confiança no canal** — o associado precisa reconhecer a mensagem como legítima antes de interagir. A desconfiança em comunicações financeiras é a tensão mais estrutural.
 2. **Reconhecimento da compra** — mesmo compras legítimas podem ter nomes ambíguos. O sistema precisa apresentar o máximo de contexto disponível e comunicar quando não há informação verificável, sem inventar.
@@ -92,7 +104,7 @@ Com base nas hipóteses acima (não em pesquisa executada):
 4. **Independência de canal** — a necessidade de pedir ajuda não deve encerrar a possibilidade de resposta. O produto prevê isso (DEC-05), mas o associado precisa entender o status claramente.
 5. **Desfecho visível** — a ausência de retorno após a resposta pode criar sensação de que nada aconteceu.
 
-Estas tensões são hipóteses de projeto. A pesquisa pode invalidá-las, ordená-las de forma diferente ou revelar tensões não previstas.
+<p align="justify">&ensp;&ensp; Estas tensões são hipóteses de projeto. A pesquisa pode invalidá-las, ordená-las de forma diferente ou revelar tensões não previstas.</p>
 
 ---
 

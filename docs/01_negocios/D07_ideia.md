@@ -8,6 +8,15 @@
 
 ---
 
+## Sumário
+
+- [1. Ficha da ideia](#1-ficha-da-ideia)
+- [2. Versão de ~30 segundos (pitch falado)](#2-versão-de-30-segundos-pitch-falado)
+- [3. Mini-roteiro de teste da explicação](#3-mini-roteiro-de-teste-da-explicação)
+- [4. Coerência com D05 e D11/D12](#4-coerência-com-d05-e-d11d12)
+
+---
+
 ## 1. Ficha da ideia
 
 | Campo | Conteúdo |
@@ -45,18 +54,14 @@
 | "O agente pode autorizar a compra por você?" | Limite do agente está claro |
 | "Alguma transação financeira real acontece?" | Simulação está clara |
 
-**Estado:** pendente — não executado. Executar antes de fechar D07.
+<p align="justify">&ensp;&ensp; <strong>Estado:</strong> pendente — não executado. Executar antes de fechar D07.</p>
 
 ---
 
 ## 4. Coerência com D05 e D11/D12
 
-- D07 descreve o mesmo assistente de D05, em linguagem acessível.
+<p align="justify">&ensp;&ensp; D07 descreve o mesmo assistente de D05, em linguagem acessível. As três capacidades de D07 mapeiam para os momentos 1–3 de D05. D11 (Integração e validação) documenta o fluxo técnico que implementa essas capacidades; D12 (Integração e validação) documenta a interface.</p>
 
-- As três capacidades de D07 mapeiam para os momentos 1–3 de D05.
-
-- D11 (Integração e validação) documenta o fluxo técnico que implementa essas capacidades; D12 (Integração e validação) documenta a interface.
-
-- Fluxo integrado atual: SessionGate → AssociateApp → PurchaseDetail, com AUTHORIZE/DENY/UNSURE e API. A inspeção antiga de MemberPhone não descreve esse caminho; o legado permanece como referência visual, fora do aceite integrado.
+<p align="justify">&ensp;&ensp; Fluxo integrado atual: SessionGate → AssociateApp → PurchaseDetail, com AUTHORIZE/DENY/UNSURE e API. A inspeção antiga de MemberPhone não descreve esse caminho; o legado permanece como referência visual, fora do aceite integrado.</p>
 
 ---

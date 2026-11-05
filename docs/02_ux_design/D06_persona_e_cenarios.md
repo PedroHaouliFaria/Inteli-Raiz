@@ -12,6 +12,16 @@
 
 ---
 
+## Sumário
+
+- [1. Persona principal — Valdir (protopersona do associado)](#1-persona-principal--valdir-protopersona-do-associado)
+- [2. Ator secundário — Camila (analista, exceções)](#2-ator-secundário--camila-analista-exceções)
+- [3. Episódio de comparação: compra sinalizada com nome de estabelecimento ambíguo](#3-episódio-de-comparação-compra-sinalizada-com-nome-de-estabelecimento-ambíguo)
+- [4. Cenários estendidos](#4-cenários-estendidos)
+- [5. Hipóteses dos cenários](#5-hipóteses-dos-cenários)
+
+---
+
 ## 1. Persona principal — Valdir (protopersona do associado)
 
 > **Marcação:** Esta é uma **protopersona hipotética** construída a partir do material do Leonardo (FON-04) e ajustada ao foco atual no associado. Idade, profissão e detalhes contextuais são hipóteses que ajudam decisões de design; não representam perfil demográfico confirmado nem associado entrevistado.

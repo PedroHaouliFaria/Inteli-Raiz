@@ -11,11 +11,27 @@
 
 ---
 
+## Sumário
+
+- [1. Contexto do desafio e recorte](#1-contexto-do-desafio-e-recorte)
+- [2. Usuário prioritário e atores envolvidos](#2-usuário-prioritário-e-atores-envolvidos)
+- [3. Evidências do problema](#3-evidências-do-problema)
+- [4. Dores e necessidades](#4-dores-e-necessidades)
+- [5. Alternativas atuais](#5-alternativas-atuais)
+- [6. Oportunidades priorizadas](#6-oportunidades-priorizadas)
+- [7. POV](#7-pov)
+- [8. HMW — Como poderíamos…](#8-hmw--como-poderíamos)
+- [9. Hipóteses mais arriscadas](#9-hipóteses-mais-arriscadas)
+- [10. Evidência contrária e o que mudaria](#10-evidência-contrária-e-o-que-mudaria)
+- [11. Alinhamento com outros artefatos](#11-alinhamento-com-outros-artefatos)
+
+---
+
 ## 1. Contexto do desafio e recorte
 
-O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e intervir em possíveis fraudes relacionadas a compras com cartões, aumentando a segurança dos associados e reduzindo perdas para o Sicredi?" (FON-P1-01, p.6). O desafio menciona explicitamente "alerta preventivo e confirmação de compras pelo associado" como direção a explorar.
+<p align="justify">&ensp;&ensp; O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e intervir em possíveis fraudes relacionadas a compras com cartões, aumentando a segurança dos associados e reduzindo perdas para o Sicredi?" (FON-P1-01, p.6). O desafio menciona explicitamente "alerta preventivo e confirmação de compras pelo associado" como direção a explorar.</p>
 
-**Recorte deste produto (DEC-P1-01):** confirmação de compras pelo associado — não prevenção completa de fraudes, não mesa de análise antifraude.
+<p align="justify">&ensp;&ensp; <strong>Recorte deste produto (DEC-P1-01):</strong> confirmação de compras pelo associado — não prevenção completa de fraudes, não mesa de análise antifraude.</p>
 
 | Elemento | Definição para este projeto |
 |---|---|
@@ -37,6 +53,7 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 | **Instituição (Sicredi)** | Responsável pela adoção, custeio e política de uso | Reduzir esforço de atendimento em casos de dúvida; manter confiança do associado | Adoção depende de validação de eficácia que ainda não existe (HIP-P1-01) |
 
 > **Nota:** "associado" e "instituição" têm papéis separados — quem usa o produto é o associado; quem adotaria e pagaria seria a instituição. São necessidades e decisores diferentes. Ver D08 §3.
+
 
 ---
 
@@ -72,7 +89,7 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 
 ## 5. Alternativas atuais
 
-> Como a pessoa tenta resolver hoje e o que continua difícil. Conteúdo hipotético, derivado de D03 e das fontes documentais. Não confirmado com associados ou Sicredi.
+<p align="justify">&ensp;&ensp; Como a pessoa tenta resolver hoje e o que continua difícil. Conteúdo hipotético, derivado de D03 e das fontes documentais. Não confirmado com associados ou Sicredi.</p>
 
 | Alternativa atual | O que resolve | O que continua difícil |
 |---|---|---|
@@ -81,7 +98,7 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 | Descobrir o problema no balcão | — | Vergonha; necessidade de resolver presencialmente; cartão bloqueado sem aviso prévio (HIP-08) |
 | Ir à agência | Resolução humana completa | Esforço, deslocamento e tempo; desnecessário para casos que poderiam ser resolvidos pelo app |
 
-**Lacuna central (hipotética):** não existe hoje um canal direto, identificável como legítimo, que permita ao associado entender a compra, pedir ajuda contextual e registrar sua resposta explícita sem ligar para ninguém. O que existe exige esforço desproporcional ao risco.
+<p align="justify">&ensp;&ensp; <strong>Lacuna central (hipotética):</strong> não existe hoje um canal direto, identificável como legítimo, que permita ao associado entender a compra, pedir ajuda contextual e registrar sua resposta explícita sem ligar para ninguém. O que existe exige esforço desproporcional ao risco.</p>
 
 ---
 
@@ -94,7 +111,7 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 | O3 | Não saber o efeito de cada resposta antes de escolher | Tomar decisão consciente sem medo de consequência indesejada | Menos autorizações equivocadas; menos pedidos de ajuda por confusão | A explicação prévia do efeito muda o comportamento? (HIP-05) |
 | O4 | Não ter retorno claro após responder | Saber que o caso foi registrado e o próximo passo | Redução de contatos pós-resposta para confirmar o que aconteceu | O associado lê e entende a tela de resultado? (HIP-09) |
 
-**Prioridade:** O3 é a fricção de maior risco de erro no MVP (confundir recusa com bloqueio do cartão). O1 é onde o agente tem o papel mais diferenciado. O2 e O4 são necessárias para que O1 e O3 funcionem.
+<p align="justify">&ensp;&ensp; <strong>Prioridade:</strong> O3 é a fricção de maior risco de erro no MVP (confundir recusa com bloqueio do cartão). O1 é onde o agente tem o papel mais diferenciado. O2 e O4 são necessárias para que O1 e O3 funcionem.</p>
 
 ---
 
@@ -108,21 +125,18 @@ O desafio Sicredi propõe: "Como podemos utilizar IA Agêntica para prever e int
 
 ## 8. HMW — Como poderíamos…
 
-**HMW principal** (ponto de partida a verificar na pesquisa):
+<p align="justify">&ensp;&ensp; <strong>HMW principal</strong> (ponto de partida a verificar na pesquisa):</p>
 
 > "Como poderíamos ajudar o associado a decidir sobre uma compra sinalizada com clareza sobre o que está autorizando e sobre o próximo passo quando continua em dúvida?"
 
-**HMWs complementares** (derivadas das oportunidades acima):
+<p align="justify">&ensp;&ensp; <strong>HMWs complementares</strong> (derivadas das oportunidades acima):</p>
 
 - Como poderíamos mostrar o contexto da compra de forma que o associado reconheça o estabelecimento — ou entenda quando a informação disponível é insuficiente?
-
 - Como poderíamos distinguir visualmente a mensagem legítima do app de comunicações externas?
-
 - Como poderíamos explicar o efeito de cada resposta sem aumentar o tempo e o esforço de quem já reconhece a compra?
-
 - Como poderíamos confirmar o desfecho de forma que o associado não precise ligar para saber o que aconteceu?
 
-Estas perguntas estão abertas a mais de uma solução tecnológica. Ver D04 para a comparação de alternativas.
+<p align="justify">&ensp;&ensp; Estas perguntas estão abertas a mais de uma solução tecnológica. Ver D04 para a comparação de alternativas.</p>
 
 ---
 
@@ -139,15 +153,11 @@ Estas perguntas estão abertas a mais de uma solução tecnológica. Ver D04 par
 
 ## 10. Evidência contrária e o que mudaria
 
-**Evidência que contraria a ideia inicial:**
+<p align="justify">&ensp;&ensp; <strong>Evidência que contraria a ideia inicial:</strong> o cenário as-is do Leonardo (FON-06) aponta o bloqueio no balcão como a ruptura central. Se pesquisa confirmasse que o bloqueio automático é o processo padrão atual do Sicredi para todos os casos suspeitos, o ponto de ruptura mudaria: a intervenção mais importante seria <em>antes</em> do bloqueio, não depois do alerta chegar ao app.</p>
 
-O cenário as-is do Leonardo (FON-06) aponta o bloqueio no balcão como a ruptura central. Se pesquisa confirmasse que o bloqueio automático é o processo padrão atual do Sicredi para todos os casos suspeitos, o ponto de ruptura mudaria: a intervenção mais importante seria *antes* do bloqueio, não depois do alerta chegar ao app.
+<p align="justify">&ensp;&ensp; <strong>O que mudaria na solução:</strong> a prioridade deixaria de ser "clareza sobre a compra" e passaria a ser "aviso antecipado antes do bloqueio". O produto precisaria atuar mais cedo na cadeia — no momento da transação, não depois — o que mudaria arquitetura, integração e o papel do associado no fluxo.</p>
 
-**O que mudaria na solução:**
-
-A prioridade deixaria de ser "clareza sobre a compra" e passaria a ser "aviso antecipado antes do bloqueio". O produto precisaria atuar mais cedo na cadeia — no momento da transação, não depois — o que mudaria arquitetura, integração e o papel do associado no fluxo.
-
-**Por que ainda mantemos a direção atual:** a ruptura da Pesquisa (D03 §4) aponta para a indisponibilidade de canal confiável de entendimento como fricção mais fundamental, independentemente do bloqueio. Essa interpretação continua válida enquanto a pesquisa não confirmar o bloqueio padrão. Ver Lacuna 1 em D03 §5.
+<p align="justify">&ensp;&ensp; <strong>Por que ainda mantemos a direção atual:</strong> a ruptura da Pesquisa (D03 §4) aponta para a indisponibilidade de canal confiável de entendimento como fricção mais fundamental, independentemente do bloqueio. Essa interpretação continua válida enquanto a pesquisa não confirmar o bloqueio padrão. Ver Lacuna 1 em D03 §5.</p>
 
 ---
 
