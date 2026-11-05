@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   Header, HeaderName, HeaderMenuButton, HeaderGlobalBar, HeaderGlobalAction, SkipToContent,
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
@@ -169,10 +169,21 @@ function Shell() {
 function AppRouter() {
   const session = useSession();
   if (session?.role === 'ASSOCIADO') {
-    return <AssociateApp />;
+    return (
+      <Routes>
+        <Route path="/associate/purchases" element={<AssociateApp />} />
+        <Route path="/associate/purchases/:caseId" element={<AssociateApp />} />
+        <Route path="*" element={<Navigate to="/associate/purchases" replace />} />
+      </Routes>
+    );
   }
   if (session?.role === 'ANALISTA') {
-    return <AnalystApp />;
+    return (
+      <Routes>
+        <Route path="/analyst/reviews/open" element={<AnalystApp />} />
+        <Route path="*" element={<Navigate to="/analyst/reviews/open" replace />} />
+      </Routes>
+    );
   }
   // Um papel inesperado não deve ganhar acesso ao protótipo legado por fallback.
   return (

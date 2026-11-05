@@ -23,6 +23,7 @@ import {
   Theme,
 } from '@carbon/react';
 import { ArrowLeft, Renew, Logout } from '@carbon/icons-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ApiError, getPurchases } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import PurchaseList from './PurchaseList.jsx';
@@ -31,15 +32,20 @@ import DemoResetButton from './DemoResetButton.jsx';
 
 export default function AssociateApp() {
   const session = useSession();
+  const navigate = useNavigate();
+  const { caseId = null } = useParams();
 
   const [purchases, setPurchases] = useState(null);
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(caseId));
+  const [routeNotFound, setRouteNotFound] = useState(false);
 
   const detailRef = useRef(null);
+  const caseIdRef = useRef(caseId);
+  caseIdRef.current = caseId;
   // Rastreia se o painel de detalhe já foi aberto ao menos uma vez,
   // para não roubar foco no carregamento inicial da página.
   const detailEverOpenedRef = useRef(false);
@@ -54,6 +60,10 @@ export default function AssociateApp() {
       // Se a seleção atual não existir mais na lista nova, cai para a primeira.
       setSelectedId((atual) => {
         const ids = data.purchases.map((p) => p.case_id);
+        const requestedCaseId = caseIdRef.current;
+        if (requestedCaseId) {
+          return ids.includes(requestedCaseId) ? requestedCaseId : null;
+        }
         if (atual && ids.includes(atual)) return atual;
         return data.purchases[0]?.case_id ?? null;
       });
@@ -67,6 +77,22 @@ export default function AssociateApp() {
   useEffect(() => {
     loadPurchases();
   }, [loadPurchases]);
+
+  // A URL é uma entrada não confiável: só seleciona o caso depois de confirmar
+  // que ele veio da lista autorizada para a sessão atual.
+  useEffect(() => {
+    if (purchases === null) return;
+    if (!caseId) {
+      setRouteNotFound(false);
+      setMobileDetailOpen(false);
+      return;
+    }
+
+    const authorized = purchases.some((purchase) => purchase.case_id === caseId);
+    setRouteNotFound(!authorized);
+    setSelectedId(authorized ? caseId : null);
+    setMobileDetailOpen(true);
+  }, [caseId, purchases]);
 
   // Quando o detalhe abre no celular: rola para o topo e leva foco ao painel.
   useEffect(() => {
@@ -103,7 +129,7 @@ export default function AssociateApp() {
       <Theme theme="g100">
         <Header aria-label="Raiz · Confirmação de compras">
           <SkipToContent />
-          <HeaderName href="#" prefix="Raiz">Confirmação de compras</HeaderName>
+          <HeaderName href="/associate/purchases" prefix="Raiz">Confirmação de compras</HeaderName>
           <HeaderGlobalBar>
             <Tag
               size="sm"
@@ -118,6 +144,7 @@ export default function AssociateApp() {
                 onReset={() => {
                   setSelectedId(null);
                   setMobileDetailOpen(false);
+                  navigate('/associate/purchases', { replace: true });
                   loadPurchases();
                 }}
               />
@@ -181,7 +208,9 @@ export default function AssociateApp() {
               selectedId={selectedId}
               onSelect={(id) => {
                 setSelectedId(id);
+                setRouteNotFound(false);
                 setMobileDetailOpen(true);
+                navigate(`/associate/purchases/${encodeURIComponent(id)}`);
               }}
             />
           )}
@@ -195,14 +224,32 @@ export default function AssociateApp() {
             size="sm"
             renderIcon={ArrowLeft}
             className="associate-back-button"
-            onClick={() => setMobileDetailOpen(false)}
+            onClick={() => {
+              setMobileDetailOpen(false);
+              navigate('/associate/purchases');
+            }}
           >
             Voltar para a lista
           </Button>
           {/* Âncora de foco ao abrir o detalhe no celular */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
           <span ref={detailRef} tabIndex={-1} style={{ outline: 'none' }} />
-          {selectedId ? (
+          {routeNotFound ? (
+            <div className="associate-empty-state" role="status">
+              <h1 className="cds--type-heading-compact-02">Compra não encontrada</h1>
+              <p className="cds--type-body-01" style={{ marginTop: '0.5rem' }}>
+                Esta compra não está disponível para a sessão atual.
+              </p>
+              <Button
+                kind="ghost"
+                size="sm"
+                style={{ marginTop: '0.5rem' }}
+                onClick={() => navigate('/associate/purchases', { replace: true })}
+              >
+                Voltar para suas compras
+              </Button>
+            </div>
+          ) : selectedId ? (
             <PurchaseDetail
               key={selectedId}
               caseId={selectedId}

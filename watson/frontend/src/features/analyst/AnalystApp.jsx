@@ -239,7 +239,7 @@ export default function AnalystApp() {
       <Theme theme="g100">
         <Header aria-label="Raiz · Revisões">
           <SkipToContent />
-          <HeaderName href="#" prefix="Raiz">
+          <HeaderName href="/analyst/reviews/open" prefix="Raiz">
             Revisões
           </HeaderName>
           <HeaderGlobalBar>
