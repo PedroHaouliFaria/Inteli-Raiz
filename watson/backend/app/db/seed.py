@@ -1,7 +1,7 @@
 """Seed inicial do banco de dados (§11 do contrato).
 
-Cria cada compra em AGUARDANDO_ASSOCIADO (ou REVISAO_PENDENTE em falha),
-a confirmação com prazo de agora + CONFIRMATION_TTL_SECONDS e um evento SEED.
+Classifica cada compra pela política híbrida de risco (ou envia para revisão
+em caso de falha), cria a confirmação e registra um evento SEED.
 Fixtures com ``seed_review`` também garantem uma revisão demonstrativa idempotente,
 inclusive quando a compra já existe em um volume persistente.
 
@@ -38,10 +38,10 @@ _EXTRA_SEED_STATUSES = (
     "AGUARDANDO_ASSOCIADO",
     "AGUARDANDO_ASSOCIADO",
     "AGUARDANDO_ASSOCIADO",
-    "LIBERADA_SIMULACAO",
-    "LIBERADA_SIMULACAO",
-    "RECUSADA_SIMULACAO",
-    "RECUSADA_SIMULACAO",
+    "LIBERADA_AUTOMATICAMENTE",
+    "LIBERADA_AUTOMATICAMENTE",
+    "CONTESTACAO_ABERTA",
+    "CONTESTACAO_ABERTA",
     "REVISAO_PENDENTE",
     "REVISAO_PENDENTE",
 )
@@ -67,10 +67,18 @@ def _expanded_seed_fixtures(fixtures: list[dict]) -> list[dict]:
             item.pop("seed_review", None)
             occurred_at = datetime.fromisoformat(item["occurred_at"].replace("Z", "+00:00"))
             item["occurred_at"] = (occurred_at - timedelta(days=index)).isoformat().replace("+00:00", "Z")
-            if status == "REVISAO_PENDENTE":
+            if status in {"REVISAO_PENDENTE", "CONTESTACAO_ABERTA"}:
                 item["seed_review"] = {
-                    "reason": "DUVIDA_PROCESSO",
-                    "details": "Revisão fictícia pré-carregada para a demonstração.",
+                    "reason": (
+                        "NAO_RECONHECE_ESTABELECIMENTO"
+                        if status == "CONTESTACAO_ABERTA"
+                        else "DUVIDA_PROCESSO"
+                    ),
+                    "details": (
+                        "Contestação fictícia pré-carregada para a demonstração."
+                        if status == "CONTESTACAO_ABERTA"
+                        else "Revisão fictícia pré-carregada para a demonstração."
+                    ),
                     "created_by": "ASSOCIADO",
                 }
             expanded.append(item)
@@ -123,7 +131,13 @@ def _refresh_expired_seed_confirmation(
     )
 
 
-def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = None) -> None:
+def run_seed(
+    session: Session,
+    ttl_seconds: int = 900,
+    model_path: str | None = None,
+    auto_release_threshold: float = 0.20,
+    preventive_block_threshold: float = 0.817,
+) -> None:
     """Cria as fixtures iniciais se o banco estiver vazio. Idempotente.
 
     Fixtures com case_id=null são puladas (só entram via demo).
@@ -152,6 +166,8 @@ def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = 
                 case_id=fixture["case_id"],
                 challenge_id=fixture["challenge_id"],
                 is_seed=True,
+                auto_release_threshold=auto_release_threshold,
+                preventive_block_threshold=preventive_block_threshold,
             )
             seed_status = fixture.get("seed_status")
             if seed_status and seed_status != purchase.status:
@@ -160,10 +176,9 @@ def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = 
                 purchase.status = seed_status
                 purchase.version += 1
                 purchase.updated_at = now
-                if confirmation is not None and seed_status != "AGUARDANDO_ASSOCIADO":
+                if confirmation is not None and seed_status in {"CONTESTACAO_ABERTA", "REVISAO_PENDENTE"}:
                     confirmation.answered_response = {
-                        "LIBERADA_SIMULACAO": "AUTHORIZE",
-                        "RECUSADA_SIMULACAO": "DENY",
+                        "CONTESTACAO_ABERTA": "DENY",
                         "REVISAO_PENDENTE": "UNSURE",
                     }[seed_status]
                     confirmation.answered_at = now

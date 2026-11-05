@@ -46,6 +46,7 @@ const KIND_LABEL = {
   DUVIDA: 'Dúvida',
   PROTECAO: 'Proteção',
   FALHA_AVALIACAO: 'Falha na avaliação',
+  RISCO_ALTO: 'Risco alto',
 };
 
 const REASON_LABEL = {

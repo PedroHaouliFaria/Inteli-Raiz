@@ -84,10 +84,8 @@ def test_purchases_list_expires_at_only_when_aguardando(client):
     _login(client, "ana")
     r = client.get("/api/purchases")
     items = {p["case_id"]: p for p in r.json()["purchases"]}
-    # T-007 está AGUARDANDO_ASSOCIADO → expires_at não é null
-    assert items["T-007"]["expires_at"] is not None
-    # T-003 está AGUARDANDO_ASSOCIADO também (seed), mas checamos o campo
-    # via regra: qualquer item AGUARDANDO_ASSOCIADO tem expires_at
+    # Apenas a faixa intermediária tem prazo de confirmação.
+    assert any(p["status"] == "AGUARDANDO_ASSOCIADO" for p in items.values())
     for p in r.json()["purchases"]:
         if p["status"] == "AGUARDANDO_ASSOCIADO":
             assert p["expires_at"] is not None

@@ -9,7 +9,7 @@ from app.api.schemas.common import Money, SimulationTrue, UtcDatetime
 from app.api.schemas.purchases import PurchaseStatus
 
 
-ReviewKind = Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO"]
+ReviewKind = Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO", "RISCO_ALTO"]
 ReviewStatus = Literal["ABERTA", "FECHADA"]
 ReviewCreatedBy = Literal["ASSOCIADO", "AGENTE", "SISTEMA"]
 ReviewDecision = Literal["AUTHORIZE", "DENY"]

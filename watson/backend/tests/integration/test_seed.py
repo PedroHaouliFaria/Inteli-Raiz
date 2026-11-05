@@ -43,10 +43,10 @@ def test_seed_is_idempotent(tmp_session):
     assert len(confirmations) == 35
 
     events = tmp_session.execute(select(Event)).scalars().all()
-    assert len(events) == 47  # 35 SEED + 12 estados fictícios pré-carregados
+    assert len(events) == 53  # 35 SEED + 18 estados demonstrativos pré-carregados
 
     reviews = tmp_session.execute(select(Review)).scalars().all()
-    assert len(reviews) == 8  # quatro originais e quatro extras, sem duplicação
+    assert len(reviews) == 12  # quatro originais, quatro contestações e quatro dúvidas extras
 
 
 def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
@@ -54,7 +54,11 @@ def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
     reviews = tmp_session.execute(select(Review)).scalars().all()
     cases = {tmp_session.get(Purchase, review.purchase_id).case_id for review in reviews}
 
-    assert cases == {"T-003", "T-012", "T-016", "T-021", "T-109", "T-110", "T-209", "T-210"}
+    assert cases == {
+        "T-003", "T-012", "T-016", "T-021",
+        "T-107", "T-108", "T-109", "T-110",
+        "T-207", "T-208", "T-209", "T-210",
+    }
     assert all(review.status == "ABERTA" for review in reviews)
     assert all(review.created_by == "ASSOCIADO" for review in reviews)
 
@@ -92,9 +96,10 @@ def test_seed_purchases_have_demo_status_mix(tmp_session):
     for purchase in purchases:
         counts[purchase.status] = counts.get(purchase.status, 0) + 1
     assert counts == {
-        "AGUARDANDO_ASSOCIADO": 23,
-        "LIBERADA_SIMULACAO": 4,
-        "RECUSADA_SIMULACAO": 4,
+        "AGUARDANDO_ASSOCIADO": 8,
+        "LIBERADA_AUTOMATICAMENTE": 13,
+        "BLOQUEADA_PREVENTIVAMENTE": 6,
+        "CONTESTACAO_ABERTA": 4,
         "REVISAO_PENDENTE": 4,
     }
 

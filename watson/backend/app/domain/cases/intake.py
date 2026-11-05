@@ -62,7 +62,7 @@ def _score_features(features: dict, model_path: str) -> dict:
             "analysis_score_source": "modelo_local",
             "analysis_model_version": model.name,
             "analysis_decision": "SOLICITAR_CONFIRMACAO",
-            "analysis_policy_version": "confirmacao-v2",
+            "analysis_policy_version": "risco-hibrido-v1",
             "analysis_gaps_json": ["Nome do estabelecimento não disponível na base sintética."],
             "analysis_evaluated_at": now,
             "_score_failed": False,
@@ -74,7 +74,7 @@ def _score_features(features: dict, model_path: str) -> dict:
             "analysis_score_source": None,
             "analysis_model_version": None,
             "analysis_decision": None,
-            "analysis_policy_version": "confirmacao-v2",
+            "analysis_policy_version": "risco-hibrido-v1",
             "analysis_gaps_json": None,
             "analysis_evaluated_at": None,
             "_score_failed": True,
@@ -91,10 +91,13 @@ def receive_and_evaluate_purchase(
     case_id: str | None = None,
     challenge_id: str | None = None,
     is_seed: bool = False,
+    auto_release_threshold: float = 0.20,
+    preventive_block_threshold: float = 0.817,
 ) -> tuple[Purchase, Confirmation | None, bool]:
-    """Cria compra, roda modelo e aplica política conservadora.
+    """Cria compra, roda modelo e aplica a política híbrida de risco.
 
-    Política conservadora: todo caso avaliado vai para AGUARDANDO_ASSOCIADO.
+    Política híbrida: baixo risco é liberado automaticamente, risco
+    intermediário pede confirmação e alto risco é bloqueado preventivamente.
     Falha do modelo: REVISAO_PENDENTE + revisão FALHA_AVALIACAO created_by SISTEMA, score null.
 
     Retorna (purchase, confirmation_or_None, score_failed).
@@ -117,7 +120,7 @@ def receive_and_evaluate_purchase(
             "analysis_score_source": None,
             "analysis_model_version": None,
             "analysis_decision": None,
-            "analysis_policy_version": "confirmacao-v2",
+            "analysis_policy_version": "risco-hibrido-v1",
             "analysis_gaps_json": None,
             "analysis_evaluated_at": None,
             "_score_failed": True,
@@ -132,8 +135,16 @@ def receive_and_evaluate_purchase(
         # Política de falha: REVISAO_PENDENTE imediatamente; sem confirmação (§5)
         status = "REVISAO_PENDENTE"
     else:
-        # Política conservadora: todo caso avaliado → AGUARDANDO_ASSOCIADO
-        status = "AGUARDANDO_ASSOCIADO"
+        score = analysis["analysis_score"]
+        if score <= auto_release_threshold:
+            status = "LIBERADA_AUTOMATICAMENTE"
+            analysis["analysis_decision"] = "LIBERAR_AUTOMATICAMENTE"
+        elif score >= preventive_block_threshold:
+            status = "BLOQUEADA_PREVENTIVAMENTE"
+            analysis["analysis_decision"] = "BLOQUEAR_PREVENTIVAMENTE"
+        else:
+            status = "AGUARDANDO_ASSOCIADO"
+            analysis["analysis_decision"] = "SOLICITAR_CONFIRMACAO"
         if challenge_id is None:
             challenge_id = _next_challenge_id(session)
 

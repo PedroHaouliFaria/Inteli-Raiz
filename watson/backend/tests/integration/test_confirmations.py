@@ -22,11 +22,19 @@ def db_path(tmp_path):
     return str(tmp_path / "test.db")
 
 
-def _make_app(db_path: str, monkeypatch, ttl_seconds: int = 900):
+def _make_app(db_path: str, monkeypatch, ttl_seconds: int = 900, *, hybrid_policy: bool = False):
     """Cria um app com SQLite no db_path e TTL configurável."""
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
     monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
     monkeypatch.setenv("CONFIRMATION_TTL_SECONDS", str(ttl_seconds))
+    # Esta suíte exercita o fluxo intermediário de confirmação. Os testes da
+    # política híbrida cobrem separadamente liberação e bloqueio automáticos.
+    if not hybrid_policy:
+        monkeypatch.setenv("RISK_AUTO_RELEASE_THRESHOLD", "-1")
+        monkeypatch.setenv("RISK_DECISION_THRESHOLD", "2")
+    else:
+        monkeypatch.setenv("RISK_AUTO_RELEASE_THRESHOLD", "0.20")
+        monkeypatch.setenv("RISK_DECISION_THRESHOLD", "0.817")
 
     from app.config import get_settings
     from app.db.session import get_engine
@@ -53,6 +61,41 @@ def _logout(client):
     client.delete("/api/session")
 
 
+def test_hybrid_policy_allows_contesting_auto_release(db_path, monkeypatch):
+    app = _make_app(db_path, monkeypatch, hybrid_policy=True)
+    with TestClient(app, raise_server_exceptions=True) as c:
+        _login(c, "bruno")
+        detail = c.get("/api/purchases/T-011").json()
+        assert detail["status"] == "LIBERADA_AUTOMATICAMENTE"
+        assert [item["response"] for item in detail["confirmation"]["allowed_responses"]] == ["DENY"]
+
+        response = c.post(
+            "/api/confirmations/CH-011/response",
+            json={"response": "DENY", "version": detail["version"]},
+            headers={"Idempotency-Key": str(uuid.uuid4())},
+        )
+        assert response.status_code == 200
+        assert response.json()["status"] == "CONTESTACAO_ABERTA"
+        assert response.json()["review_protocol"] is not None
+
+
+def test_hybrid_policy_high_risk_recognition_waits_for_analyst(db_path, monkeypatch):
+    app = _make_app(db_path, monkeypatch, hybrid_policy=True)
+    with TestClient(app, raise_server_exceptions=True) as c:
+        _login(c, "ana")
+        detail = c.get("/api/purchases/T-007").json()
+        assert detail["status"] == "BLOQUEADA_PREVENTIVAMENTE"
+
+        response = c.post(
+            "/api/confirmations/CH-007/response",
+            json={"response": "AUTHORIZE", "version": detail["version"]},
+            headers={"Idempotency-Key": str(uuid.uuid4())},
+        )
+        assert response.status_code == 200
+        assert response.json()["status"] == "REVISAO_PENDENTE"
+        assert response.json()["review_protocol"] is not None
+
+
 # ---------------------------------------------------------------------------
 # R03: os três efeitos de resposta + revisão PROTECAO em DENY
 # ---------------------------------------------------------------------------
@@ -73,7 +116,7 @@ def test_r03_authorize_sets_liberada(client):
     assert body["simulation"] is True
 
 
-def test_r03_deny_sets_recusada_and_opens_protecao_review(client):
+def test_r03_deny_opens_contestacao_and_protecao_review(client):
     _login(client, "ana")
     idem = str(uuid.uuid4())
     r = client.post(
@@ -83,7 +126,7 @@ def test_r03_deny_sets_recusada_and_opens_protecao_review(client):
     )
     assert r.status_code == 200, r.text
     body = r.json()
-    assert body["status"] == "RECUSADA_SIMULACAO"
+    assert body["status"] == "CONTESTACAO_ABERTA"
     # deve haver um protocolo de revisão PROTECAO
     assert body["review_protocol"] is not None
     assert body["result"]["title"] is not None
@@ -442,7 +485,7 @@ def test_r10_second_app_preserves_status_and_response(db_path, monkeypatch):
             headers={"Idempotency-Key": idem},
         )
         assert r.status_code == 200
-        assert r.json()["status"] == "RECUSADA_SIMULACAO"
+        assert r.json()["status"] == "CONTESTACAO_ABERTA"
 
     # Segundo app — mesmo banco
     get_settings.cache_clear()
@@ -453,7 +496,7 @@ def test_r10_second_app_preserves_status_and_response(db_path, monkeypatch):
         r2 = c2.get("/api/purchases/T-007")
         assert r2.status_code == 200
         data = r2.json()
-        assert data["status"] == "RECUSADA_SIMULACAO"
+        assert data["status"] == "CONTESTACAO_ABERTA"
         assert data["confirmation"]["answered"]["response"] == "DENY"
 
 

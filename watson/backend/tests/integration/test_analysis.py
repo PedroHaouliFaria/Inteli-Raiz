@@ -54,8 +54,9 @@ def test_t007_score_approximately_0_9917(db_path, client):
         )
         assert p.analysis_score_source == "modelo_local"
         assert p.analysis_model_version is not None
-        assert p.analysis_decision == "SOLICITAR_CONFIRMACAO"
-        assert p.analysis_policy_version == "confirmacao-v2"
+        assert p.analysis_decision == "BLOQUEAR_PREVENTIVAMENTE"
+        assert p.analysis_policy_version == "risco-hibrido-v1"
+        assert p.status == "BLOQUEADA_PREVENTIVAMENTE"
     finally:
         session.close()
 
@@ -73,6 +74,8 @@ def test_t003_score_approximately_0_0089(db_path, client):
         assert abs(p.analysis_score - 0.0089) < 0.001, (
             f"score de T-003 esperado ≈ 0.0089, obtido {p.analysis_score}"
         )
+        assert p.analysis_decision == "LIBERAR_AUTOMATICAMENTE"
+        assert p.status == "LIBERADA_AUTOMATICAMENTE"
     finally:
         session.close()
 

@@ -151,6 +151,7 @@ function ReviewCard({ review }) {
           {review.kind === 'PROTECAO' && 'Revisão de proteção aberta. O cartão não foi bloqueado.'}
           {review.kind === 'DUVIDA' && 'Revisão de dúvida aberta. Um analista vai revisar este caso.'}
           {review.kind === 'FALHA_AVALIACAO' && 'O sistema não conseguiu avaliar esta compra. Um analista vai revisar.'}
+          {review.kind === 'RISCO_ALTO' && 'O reconhecimento foi encaminhado para validação por causa do risco alto.'}
         </p>
       </Stack>
     </Tile>
@@ -274,10 +275,10 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
     loadDetail();
   }, [caseId, loadDetail]);
 
-  // Polling a cada 5 s enquanto AGUARDANDO_ASSOCIADO
+  // Polling enquanto o associado ainda pode responder ou contestar.
   useEffect(() => {
     if (!detail) return;
-    if (detail.status !== 'AGUARDANDO_ASSOCIADO') return;
+    if (!['AGUARDANDO_ASSOCIADO', 'LIBERADA_AUTOMATICAMENTE', 'BLOQUEADA_PREVENTIVAMENTE'].includes(detail.status)) return;
 
     const id = setInterval(async () => {
       try {
@@ -429,7 +430,7 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
           submitting={submitting}
         />
 
-        {detail.status !== 'AGUARDANDO_ASSOCIADO' && detail.confirmation?.answered && (
+        {detail.confirmation?.allowed_responses.length === 0 && detail.confirmation?.answered && (
           <Tile>
             <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginBottom: '0.25rem' }}>
               Resposta registrada em

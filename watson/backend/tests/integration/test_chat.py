@@ -173,7 +173,7 @@ def test_r08_function_model_calls_consultar_compra(db_path, monkeypatch):
     with TestClient(app2) as c2:
         c2.post("/api/session", json={"persona_id": "ana"})
         r_status = c2.get("/api/purchases/T-007/status")
-    assert r_status.json()["status"] == "AGUARDANDO_ASSOCIADO"
+    assert r_status.json()["status"] == "BLOQUEADA_PREVENTIVAMENTE"
 
 
 # ---------------------------------------------------------------------------
@@ -207,7 +207,7 @@ def test_s9_authorize_in_chat_does_not_change_status(db_path, monkeypatch):
     with TestClient(app) as c2:
         c2.post("/api/session", json={"persona_id": "ana"})
         r_status = c2.get("/api/purchases/T-007/status")
-    assert r_status.json()["status"] == "AGUARDANDO_ASSOCIADO", (
+    assert r_status.json()["status"] == "BLOQUEADA_PREVENTIVAMENTE", (
         "O chat não deve mudar o status da compra"
     )
 
@@ -324,7 +324,7 @@ def test_r09_after_llm_503_confirmation_still_works(db_path, monkeypatch):
             headers={"Idempotency-Key": str(uuid.uuid4())},
         )
     assert r_confirm.status_code == 200, r_confirm.text
-    assert r_confirm.json()["status"] == "LIBERADA_SIMULACAO"
+    assert r_confirm.json()["status"] == "REVISAO_PENDENTE"
 
 
 # ---------------------------------------------------------------------------
@@ -426,7 +426,7 @@ def test_agent_solicitar_revisao_creates_review_with_created_by_agente(db_path, 
     with TestClient(app) as c2:
         c2.post("/api/session", json={"persona_id": "ana"})
         r_status = c2.get("/api/purchases/T-007/status")
-    assert r_status.json()["status"] == "AGUARDANDO_ASSOCIADO"
+    assert r_status.json()["status"] == "BLOQUEADA_PREVENTIVAMENTE"
 
     # created_by deve ser AGENTE
     c2.delete("/api/session")

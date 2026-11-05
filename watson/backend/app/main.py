@@ -33,7 +33,12 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     with Session() as session:
-        run_seed(session, ttl_seconds=settings.confirmation_ttl_seconds)
+        run_seed(
+            session,
+            ttl_seconds=settings.confirmation_ttl_seconds,
+            auto_release_threshold=settings.risk_auto_release_threshold,
+            preventive_block_threshold=settings.risk_decision_threshold,
+        )
 
     # Carrega o modelo de risco uma única vez
     try:

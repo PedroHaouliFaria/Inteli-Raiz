@@ -96,6 +96,8 @@ def demo_create_purchase(
         ttl_seconds=settings.confirmation_ttl_seconds,
         model_path=settings.risk_model_path,
         is_seed=False,
+        auto_release_threshold=settings.risk_auto_release_threshold,
+        preventive_block_threshold=settings.risk_decision_threshold,
     )
     session.commit()
     session.refresh(purchase)
@@ -142,6 +144,11 @@ def demo_reset(
     from app.config import get_settings
     settings = get_settings()
     from app.db.seed import run_seed
-    run_seed(session, ttl_seconds=settings.confirmation_ttl_seconds)
+    run_seed(
+        session,
+        ttl_seconds=settings.confirmation_ttl_seconds,
+        auto_release_threshold=settings.risk_auto_release_threshold,
+        preventive_block_threshold=settings.risk_decision_threshold,
+    )
 
     return Response(status_code=204)

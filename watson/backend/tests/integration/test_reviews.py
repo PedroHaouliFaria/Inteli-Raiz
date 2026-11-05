@@ -71,7 +71,7 @@ def test_create_review_returns_201(client):
     assert body["kind"] == "DUVIDA"
     assert body["created_by"] == "ASSOCIADO"
     # Revisão NÃO muda o status da compra
-    assert body["case_status"] == "AGUARDANDO_ASSOCIADO"
+    assert body["case_status"] == "BLOQUEADA_PREVENTIVAMENTE"
 
 
 def test_second_review_returns_200_existing(client):

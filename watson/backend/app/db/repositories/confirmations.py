@@ -18,11 +18,11 @@ from sqlalchemy.orm import Session
 
 from app.db.tables.purchases import Confirmation, Event, IdempotencyKey, Purchase, Review
 
-# Mapeamento de resposta → status final (§6 do contrato)
-_STATUS_BY_RESPONSE: dict[str, str] = {
-    "AUTHORIZE": "LIBERADA_SIMULACAO",
-    "DENY": "RECUSADA_SIMULACAO",
-    "UNSURE": "REVISAO_PENDENTE",
+# Respostas disponíveis conforme a decisão inicial do modelo.
+_RESPONSES_BY_STATUS: dict[str, set[str]] = {
+    "AGUARDANDO_ASSOCIADO": {"AUTHORIZE", "DENY", "UNSURE"},
+    "LIBERADA_AUTOMATICAMENTE": {"DENY"},
+    "BLOQUEADA_PREVENTIVAMENTE": {"AUTHORIZE", "DENY", "UNSURE"},
 }
 
 # Rótulos dos botões (mesmo que _ALLOWED_RESPONSES em domain/cases/purchases.py)
@@ -33,13 +33,6 @@ _RESPONSE_LABELS: dict[str, str] = {
 }
 
 # Tipo de revisão aberta por resposta (§6)
-_REVIEW_KIND_BY_RESPONSE: dict[str, str | None] = {
-    "AUTHORIZE": None,
-    "DENY": "PROTECAO",
-    "UNSURE": "DUVIDA",
-}
-
-
 def _now() -> datetime:
     return datetime.now(UTC).replace(tzinfo=None)
 
@@ -173,7 +166,8 @@ class ConfirmationRepository:
                 },
             )
 
-        if purchase.status != "AGUARDANDO_ASSOCIADO":
+        allowed_responses = _RESPONSES_BY_STATUS.get(purchase.status, set())
+        if response not in allowed_responses:
             # Pode ter sido respondida antes
             if confirmation.answered_response is not None:
                 if confirmation.answered_response == response:
@@ -197,7 +191,7 @@ class ConfirmationRepository:
             raise ApiError(
                 409,
                 "NOT_AWAITING_RESPONSE",
-                "Esta compra não está aguardando resposta.",
+                "Esta compra não aceita essa resposta no estado atual.",
                 {"status": purchase.status},
             )
 
@@ -212,8 +206,23 @@ class ConfirmationRepository:
 
         # 4. Grava a resposta em transação
         answered_at = now
-        new_status = _STATUS_BY_RESPONSE[response]
         from_status = purchase.status
+        if response == "DENY":
+            # O relato do associado abre contestação; somente a analista pode
+            # transformar isso em recusa definitiva.
+            new_status = "CONTESTACAO_ABERTA"
+            review_kind = "PROTECAO"
+        elif response == "UNSURE":
+            new_status = "REVISAO_PENDENTE"
+            review_kind = "DUVIDA"
+        elif from_status == "BLOQUEADA_PREVENTIVAMENTE":
+            # Mesmo reconhecida, uma compra de alto risco continua bloqueada
+            # até a decisão humana final.
+            new_status = "REVISAO_PENDENTE"
+            review_kind = "RISCO_ALTO"
+        else:
+            new_status = "LIBERADA_SIMULACAO"
+            review_kind = None
 
         # Atualiza Purchase
         purchase.status = new_status
@@ -236,13 +245,12 @@ class ConfirmationRepository:
         )
         self._session.add(event)
 
-        # Revisão (DENY → PROTECAO, UNSURE → DUVIDA ou reaproveita)
+        # Revisão para contestação, dúvida ou reconhecimento de alto risco.
         review: Review | None = None
-        review_kind = _REVIEW_KIND_BY_RESPONSE[response]
         if review_kind is not None:
-            # Verifica se já há revisão aberta (UNSURE pode reaproveitar)
+            # Reaproveita uma revisão aberta para não duplicar a fila.
             existing_review = self._get_open_review(purchase)
-            if existing_review is not None and response == "UNSURE":
+            if existing_review is not None:
                 review = existing_review
             else:
                 review = Review(
@@ -250,7 +258,7 @@ class ConfirmationRepository:
                     purchase_id=purchase.id,
                     protocol=_next_protocol(self._session),
                     kind=review_kind,
-                    reason="OUTRO",
+                    reason="OUTRO" if response != "DENY" else "NAO_RECONHECE_ESTABELECIMENTO",
                     status="ABERTA",
                     created_by="SISTEMA",
                     created_at=answered_at,
