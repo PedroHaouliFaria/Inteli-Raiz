@@ -131,14 +131,24 @@ export const postReview = (caseId, reason, details) =>
     body: { reason, ...(details ? { details } : {}) },
   });
 
-/** GET /api/reviews — lista revisões abertas; requer sessão ANALISTA (§8 do contrato) */
-export const getReviews = () => request('/api/reviews');
+/** GET /api/reviews — lista paginada de revisões; requer sessão ANALISTA. */
+export const getReviews = ({ status = 'ABERTA', decision, from, to, page = 1, pageSize = 20 } = {}) => {
+  const params = new URLSearchParams({ status, page: String(page), page_size: String(pageSize) });
+  if (decision) params.set('decision', decision);
+  if (from) params.set('from', from);
+  if (to) params.set('to', to);
+  return request(`/api/reviews?${params.toString()}`);
+};
 
-/** Analista encerra uma revisão liberando ou recusando a compra na simulação. */
-export const postReviewDecision = (reviewId, decision) =>
+/** GET /api/reviews/{review_id} — detalhe sanitizado para decisão da analista. */
+export const getReview = (reviewId) =>
+  request(`/api/reviews/${encodeURIComponent(reviewId)}`);
+
+/** Analista encerra uma revisão com justificativa obrigatória. */
+export const postReviewDecision = (reviewId, decision, justification) =>
   request(`/api/reviews/${encodeURIComponent(reviewId)}/decision`, {
     method: 'POST',
-    body: { decision },
+    body: { decision, justification },
   });
 
 // ── Demonstração (§9 do contrato) ────────────────────────────────────────────

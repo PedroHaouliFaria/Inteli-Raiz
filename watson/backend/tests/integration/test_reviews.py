@@ -7,6 +7,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 
+JUSTIFICATION = "Dados conferidos no detalhe e decisão registrada pela analista."
+
+
 @pytest.fixture()
 def db_path(tmp_path):
     return str(tmp_path / "test.db")
@@ -122,6 +125,9 @@ def test_analista_can_list_reviews(client):
     assert body["simulation"] is True
     assert isinstance(body["reviews"], list)
     assert len(body["reviews"]) >= 1
+    assert body["page"] == 1
+    assert body["page_size"] == 20
+    assert body["total"] >= 1
     rev = body["reviews"][0]
     assert "review_id" in rev
     assert "analysis" in rev
@@ -177,6 +183,36 @@ def _create_t007_review(client):
     return review_id
 
 
+def test_analyst_can_get_sanitized_review_detail(client):
+    review_id = _create_t007_review(client)
+
+    response = client.get(f"/api/reviews/{review_id}")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["review_id"] == review_id
+    assert body["purchase"]["case_id"] == "T-007"
+    assert len(body["purchase"]["card_last4"]) == 4
+    assert "analysis" in body
+    assert "timeline" in body
+    serialized = response.text
+    assert "features_json" not in serialized
+    assert "customer_id" not in serialized
+    assert "chat" not in serialized.lower()
+
+
+def test_review_detail_access_and_not_found(client):
+    review_id = _create_t007_review(client)
+    client.delete("/api/session")
+    _login(client, "ana")
+    assert client.get(f"/api/reviews/{review_id}").status_code == 403
+
+    client.delete("/api/session")
+    _login(client, "carla")
+    missing = client.get("/api/reviews/REV-INEXISTENTE")
+    assert missing.status_code == 404
+    assert missing.json()["error"]["code"] == "NOT_FOUND"
+
+
 @pytest.mark.parametrize(
     ("decision", "expected_status"),
     [
@@ -189,12 +225,15 @@ def test_analyst_decision_closes_review_and_updates_purchase(client, decision, e
 
     response = client.post(
         f"/api/reviews/{review_id}/decision",
-        json={"decision": decision},
+        json={"decision": decision, "justification": JUSTIFICATION},
     )
     assert response.status_code == 200, response.text
     body = response.json()
     assert body["review_status"] == "FECHADA"
     assert body["case_status"] == expected_status
+    assert body["justification"] == JUSTIFICATION
+    assert body["decided_by"] == "Carla Reis, analista (fictícia)"
+    assert body["decided_at"].endswith("Z")
     assert body["simulation"] is True
 
     # A revisão fechada sai da fila aberta.
@@ -213,14 +252,14 @@ def test_analyst_decision_records_audit_event(client):
     review_id = _create_t007_review(client)
     response = client.post(
         f"/api/reviews/{review_id}/decision",
-        json={"decision": "AUTHORIZE"},
+        json={"decision": "AUTHORIZE", "justification": JUSTIFICATION},
     )
     assert response.status_code == 200
 
     from sqlalchemy import select
     from sqlalchemy.orm import Session
     from app.db.session import get_engine
-    from app.db.tables.purchases import Event, Purchase
+    from app.db.tables.purchases import Event, Purchase, Review
 
     with Session(get_engine()) as session:
         purchase = session.execute(select(Purchase).where(Purchase.case_id == "T-007")).scalar_one()
@@ -233,16 +272,77 @@ def test_analyst_decision_records_audit_event(client):
         assert event.to_status == "LIBERADA_SIMULACAO"
         assert event.payload["review_id"] == review_id
         assert event.payload["analyst_id"] == "carla"
+        assert event.payload["justification"] == JUSTIFICATION
+        review = session.execute(select(Review).where(Review.review_id == review_id)).scalar_one()
+        assert review.decision == "AUTHORIZE"
+        assert review.decision_reason == JUSTIFICATION
+        assert review.decided_by == "carla"
+        assert review.decided_at is not None
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"decision": "AUTHORIZE"},
+        {"decision": "AUTHORIZE", "justification": "curta"},
+        {"decision": "DENY", "justification": " " * 20},
+        {"decision": "DENY", "justification": "x" * 501},
+    ],
+)
+def test_analyst_decision_requires_valid_justification(client, payload):
+    review_id = _create_t007_review(client)
+    response = client.post(f"/api/reviews/{review_id}/decision", json=payload)
+    assert response.status_code == 400
+    assert response.json()["error"]["code"] == "INVALID_REQUEST"
 
 
 def test_closed_review_cannot_be_decided_twice(client):
     review_id = _create_t007_review(client)
-    first = client.post(f"/api/reviews/{review_id}/decision", json={"decision": "DENY"})
+    first = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": "DENY", "justification": JUSTIFICATION},
+    )
     assert first.status_code == 200
 
-    second = client.post(f"/api/reviews/{review_id}/decision", json={"decision": "AUTHORIZE"})
+    second = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": "AUTHORIZE", "justification": JUSTIFICATION},
+    )
     assert second.status_code == 409
     assert second.json()["error"]["code"] == "REVIEW_ALREADY_CLOSED"
+
+
+def test_closed_review_appears_in_filtered_paginated_history(client):
+    review_id = _create_t007_review(client)
+    decided = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": "DENY", "justification": JUSTIFICATION},
+    )
+    assert decided.status_code == 200
+
+    history = client.get("/api/reviews?status=FECHADA&decision=DENY&page=1&page_size=1")
+    assert history.status_code == 200, history.text
+    body = history.json()
+    assert body["total"] == 1
+    assert body["total_pages"] == 1
+    item = body["reviews"][0]
+    assert item["review_id"] == review_id
+    assert item["decision"] == "DENY"
+    assert item["decision_reason"] == JUSTIFICATION
+    assert item["decided_by"] == "Carla Reis, analista (fictícia)"
+    assert item["decided_at"].endswith("Z")
+
+    no_matches = client.get("/api/reviews?status=FECHADA&decision=AUTHORIZE")
+    assert no_matches.status_code == 200
+    assert no_matches.json()["total"] == 0
+    assert no_matches.json()["reviews"] == []
+
+
+def test_review_list_rejects_invalid_pagination(client):
+    _login(client, "carla")
+    response = client.get("/api/reviews?page_size=101")
+    assert response.status_code == 400
+    assert response.json()["error"]["code"] == "INVALID_REQUEST"
 
 
 def test_associate_cannot_decide_review(client):
@@ -252,7 +352,7 @@ def test_associate_cannot_decide_review(client):
 
     response = client.post(
         f"/api/reviews/{review_id}/decision",
-        json={"decision": "AUTHORIZE"},
+        json={"decision": "AUTHORIZE", "justification": JUSTIFICATION},
     )
     assert response.status_code == 403
     assert response.json()["error"]["code"] == "FORBIDDEN_ROLE"

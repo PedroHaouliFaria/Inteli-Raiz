@@ -25,6 +25,8 @@ import {
   HeaderName,
   InlineLoading,
   InlineNotification,
+  Select,
+  SelectItem,
   SkipToContent,
   Stack,
   Tag,
@@ -32,7 +34,8 @@ import {
   Tile,
 } from '@carbon/react';
 import { Renew, Logout } from '@carbon/icons-react';
-import { ApiError, getReviews, postReviewDecision } from '../../api/client.js';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { ApiError, getReviews } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import { formatDate, formatMoney, statusMeta } from '../associate/utils.js';
 import DemoResetButton from '../associate/DemoResetButton.jsx';
@@ -63,9 +66,14 @@ const REVIEW_STATUS_TAG = {
   FECHADA: 'gray',
 };
 
+const DECISION_LABEL = {
+  AUTHORIZE: 'Autorizada',
+  DENY: 'Recusada',
+};
+
 // ── Componente de um item de revisão ────────────────────────────────────────
 
-function ReviewCard({ review, busy, actionError, onDecision }) {
+function ReviewCard({ review, onOpen }) {
   const caseMeta = statusMeta(review.case_status);
   const reviewTagType = REVIEW_STATUS_TAG[review.status] ?? 'gray';
   const score = review.analysis?.score;
@@ -98,6 +106,23 @@ function ReviewCard({ review, busy, actionError, onDecision }) {
           <dt className="cds--type-label-01 analyst-review-card__label">Associado</dt>
           <dd className="cds--type-body-compact-01">{review.customer_display_name}</dd>
         </div>
+
+        {review.status === 'FECHADA' && (
+          <>
+            <div className="analyst-review-card__field">
+              <dt className="cds--type-label-01 analyst-review-card__label">Decisão</dt>
+              <dd className="cds--type-body-compact-01">{DECISION_LABEL[review.decision] ?? review.decision}</dd>
+            </div>
+            <div className="analyst-review-card__field">
+              <dt className="cds--type-label-01 analyst-review-card__label">Responsável</dt>
+              <dd className="cds--type-body-compact-01">{review.decided_by ?? 'Não informado'}</dd>
+            </div>
+            <div className="analyst-review-card__field">
+              <dt className="cds--type-label-01 analyst-review-card__label">Encerrada em</dt>
+              <dd className="cds--type-body-compact-01">{review.decided_at ? formatDate(review.decided_at) : 'Não informado'}</dd>
+            </div>
+          </>
+        )}
         <div className="analyst-review-card__field">
           <dt className="cds--type-label-01 analyst-review-card__label">Caso</dt>
           <dd className="cds--type-body-compact-01">{review.case_id}</dd>
@@ -144,32 +169,13 @@ function ReviewCard({ review, busy, actionError, onDecision }) {
         </div>
       </dl>
 
-      {actionError && (
-        <InlineNotification
-          kind="error"
-          title="Não foi possível registrar a decisão"
-          subtitle={actionError}
-          hideCloseButton
-          lowContrast
-        />
-      )}
-
       <div className="analyst-review-card__actions" aria-label={`Ações da revisão ${review.protocol}`}>
         <Button
           size="sm"
           kind="primary"
-          disabled={busy}
-          onClick={() => onDecision(review, 'AUTHORIZE')}
+          onClick={() => onOpen(review.review_id)}
         >
-          Liberar compra
-        </Button>
-        <Button
-          size="sm"
-          kind="danger--tertiary"
-          disabled={busy}
-          onClick={() => onDecision(review, 'DENY')}
-        >
-          Recusar compra
+          Ver detalhes
         </Button>
       </div>
     </Tile>
@@ -178,51 +184,51 @@ function ReviewCard({ review, busy, actionError, onDecision }) {
 
 // ── Componente principal ─────────────────────────────────────────────────────
 
-export default function AnalystApp() {
+export default function AnalystApp({ mode = 'open' }) {
   const session = useSession();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [actingReviewId, setActingReviewId] = useState(null);
-  const [actionError, setActionError] = useState(null);
-  const [decisionNotice, setDecisionNotice] = useState(null);
+  const [pagination, setPagination] = useState({ total: 0, totalPages: 0 });
+
+  const isHistory = mode === 'history';
+  const decisionFilter = isHistory ? searchParams.get('decision') ?? '' : '';
+  const parsedPage = Number.parseInt(searchParams.get('page') ?? '1', 10);
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+
+  const updateHistoryQuery = (nextDecision, nextPage) => {
+    const params = new URLSearchParams();
+    if (nextDecision) params.set('decision', nextDecision);
+    if (nextPage > 1) params.set('page', String(nextPage));
+    setSearchParams(params);
+  };
 
   const loadReviews = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getReviews();
+      const data = await getReviews({
+        status: isHistory ? 'FECHADA' : 'ABERTA',
+        decision: isHistory ? decisionFilter || undefined : undefined,
+        page,
+      });
       setReviews(data.reviews);
+      setPagination({ total: data.total, totalPages: data.total_pages });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Erro de rede ao carregar revisões.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [decisionFilter, isHistory, page]);
 
   useEffect(() => {
     loadReviews();
   }, [loadReviews]);
-
-  const handleDecision = async (review, decision) => {
-    setActingReviewId(review.review_id);
-    setActionError(null);
-    setDecisionNotice(null);
-    try {
-      const result = await postReviewDecision(review.review_id, decision);
-      setReviews((current) => current.filter((item) => item.review_id !== review.review_id));
-      setDecisionNotice(result.message);
-    } catch (err) {
-      setActionError({
-        reviewId: review.review_id,
-        message: err instanceof ApiError ? err.message : 'Erro de rede ao registrar a decisão.',
-      });
-    } finally {
-      setActingReviewId(null);
-    }
-  };
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -274,10 +280,29 @@ export default function AnalystApp() {
       </Theme>
 
       <main className="analyst-app" aria-label="Lista de revisões">
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+          <Button
+            kind={!isHistory ? 'primary' : 'ghost'}
+            size="sm"
+            onClick={() => navigate('/analyst/reviews/open')}
+          >
+            Pendentes
+          </Button>
+          <Button
+            kind={isHistory ? 'primary' : 'ghost'}
+            size="sm"
+            onClick={() => navigate('/analyst/reviews/history')}
+          >
+            Histórico
+          </Button>
+        </div>
+
         {/* Cabeçalho da página */}
         <div className="analyst-page-header">
           <div>
-            <h1 className="cds--type-heading-compact-02">Fila de revisões</h1>
+            <h1 className="cds--type-heading-compact-02">
+              {isHistory ? 'Histórico de revisões' : 'Fila de revisões'}
+            </h1>
             <p
               className="cds--type-label-01"
               style={{ color: 'var(--cds-text-helper)', marginTop: '0.25rem' }}
@@ -293,14 +318,19 @@ export default function AnalystApp() {
           </div>
         </div>
 
-        {decisionNotice && (
-          <InlineNotification
-            kind="success"
-            title="Decisão registrada"
-            subtitle={decisionNotice}
-            onClose={() => { setDecisionNotice(null); return false; }}
-            lowContrast
-          />
+        {isHistory && (
+          <div style={{ maxWidth: '18rem', marginBottom: '1rem' }}>
+            <Select
+              id="history-decision-filter"
+              labelText="Filtrar por decisão"
+              value={decisionFilter}
+              onChange={(event) => updateHistoryQuery(event.target.value, 1)}
+            >
+              <SelectItem value="" text="Todas" />
+              <SelectItem value="AUTHORIZE" text="Autorizadas" />
+              <SelectItem value="DENY" text="Recusadas" />
+            </Select>
+          </div>
         )}
 
         {/* Estado: carregando */}
@@ -331,7 +361,9 @@ export default function AnalystApp() {
         {/* Estado: vazio */}
         {!loading && !error && reviews !== null && reviews.length === 0 && (
           <div className="analyst-empty-state" role="status">
-            <p className="cds--type-body-01">Não há revisões no momento.</p>
+            <p className="cds--type-body-01">
+              {isHistory ? 'Nenhuma revisão encerrada para este filtro.' : 'Não há revisões pendentes no momento.'}
+            </p>
           </div>
         )}
 
@@ -342,12 +374,32 @@ export default function AnalystApp() {
               <div key={rev.review_id} role="listitem">
                 <ReviewCard
                   review={rev}
-                  busy={actingReviewId === rev.review_id}
-                  actionError={actionError?.reviewId === rev.review_id ? actionError.message : null}
-                  onDecision={handleDecision}
+                  onOpen={(reviewId) => navigate(
+                    `/analyst/reviews/${encodeURIComponent(reviewId)}`,
+                    { state: { returnTo: `${location.pathname}${location.search}` } },
+                  )}
                 />
               </div>
             ))}
+          </div>
+        )}
+
+        {!loading && !error && pagination.totalPages > 1 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+            <Button kind="ghost" size="sm" disabled={page <= 1} onClick={() => updateHistoryQuery(decisionFilter, page - 1)}>
+              Anterior
+            </Button>
+            <span className="cds--type-label-01">
+              Página {page} de {pagination.totalPages} · {pagination.total} registros
+            </span>
+            <Button
+              kind="ghost"
+              size="sm"
+              disabled={page >= pagination.totalPages}
+              onClick={() => updateHistoryQuery(decisionFilter, page + 1)}
+            >
+              Próxima
+            </Button>
           </div>
         )}
       </main>

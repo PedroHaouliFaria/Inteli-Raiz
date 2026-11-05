@@ -475,9 +475,14 @@ Pedido de revisão humana. Quem chama: o botão de ajuda do front e o serviço p
 - `case_status` mostra que a revisão não mudou o estado (§3).
 - **404** se a compra é de outra pessoa.
 
-### `GET /api/reviews` (analista)
+### `GET /api/reviews?status=&decision=&from=&to=&page=&page_size=` (analista)
 
-Lista mínima de exceções (§4 do plano: "visão de exceções"). Só sessão `ANALISTA`; associado recebe **403** `FORBIDDEN_ROLE`.
+Lista paginada de exceções (§4 do plano: "visão de exceções"). Só sessão
+`ANALISTA`; associado recebe **403** `FORBIDDEN_ROLE`. `status` aceita `ABERTA`
+(padrão) ou `FECHADA`; `decision` aceita `AUTHORIZE` ou `DENY`; `from` e `to`
+são datas ISO 8601. `page` começa em 1 e `page_size` usa 20 por padrão, com
+máximo de 100. Pendentes são ordenadas das mais antigas para as mais recentes;
+o histórico, da decisão mais recente para a mais antiga.
 
 ```json
 {
@@ -494,28 +499,101 @@ Lista mínima de exceções (§4 do plano: "visão de exceções"). Só sessão 
       "case_status": "RECUSADA_SIMULACAO",
       "customer_display_name": "Ana Souza (fictícia)",
       "amount": {"value": "149.58", "currency": "BRL"},
-      "analysis": {"score": 0.9917, "score_source": "modelo_local", "model_version": "rf-2026-10-27"}
+      "analysis": {"score": 0.9917, "score_source": "modelo_local", "model_version": "rf-2026-10-27"},
+      "decision": null,
+      "decision_reason": null,
+      "decided_by": null,
+      "decided_at": null
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 1,
+  "total_pages": 1,
+  "simulation": true
+}
+```
+
+Em itens encerrados, `decision`, `decision_reason`, `decided_by` e `decided_at`
+são preenchidos. Registros históricos anteriores que não possuam esses dados
+continuam com campos nulos; a API não reconstrói valores inexistentes.
+
+### `GET /api/reviews/{review_id}` (analista)
+
+Retorna o detalhe sanitizado que deve ser consultado antes da decisão. Só sessão
+`ANALISTA`; associado recebe **403** e identificador inexistente recebe **404**.
+
+```json
+{
+  "review_id": "REV-12",
+  "protocol": "RZ-20261028-0012",
+  "kind": "PROTECAO",
+  "reason": "OUTRO",
+  "details": null,
+  "status": "ABERTA",
+  "created_by": "SISTEMA",
+  "created_at": "2026-10-28T03:15:42Z",
+  "decision": null,
+  "decision_reason": null,
+  "decided_by": null,
+  "decided_at": null,
+  "purchase": {
+    "case_id": "T-007",
+    "customer_display_name": "Ana Souza (fictícia)",
+    "amount": {"value": "149.58", "currency": "BRL"},
+    "occurred_at": "2026-10-25T06:12:00Z",
+    "merchant_category": "Supermercado",
+    "channel": "CARTAO_NAO_PRESENTE",
+    "channel_label": "Compra online ou por telefone",
+    "card_last4": "2938"
+  },
+  "analysis": {"score": 0.9917, "score_source": "modelo_local", "model_version": "rf-2026-10-27"},
+  "signals": [{"code": "CARTAO_NAO_PRESENTE", "label": "Feita sem o cartão físico (online ou por telefone)."}],
+  "associate_response": {"response": "DENY", "answered_at": "2026-10-28T03:15:42Z"},
+  "timeline": [
+    {
+      "event_type": "ANALYST_DECISION",
+      "label": "Decisão da analista registrada",
+      "from_status": "REVISAO_PENDENTE",
+      "to_status": "RECUSADA_SIMULACAO",
+      "created_at": "2026-10-28T03:20:00Z"
     }
   ],
   "simulation": true
 }
 ```
 
+O endpoint não retorna chat, `customer_id`, número completo do cartão,
+`features_json` ou payload bruto dos eventos. Em revisão encerrada, os quatro
+campos de decisão são preenchidos; `decided_by` contém o nome de exibição, não o
+identificador interno da analista.
+
 ### `POST /api/reviews/{review_id}/decision` (analista)
 
 Encerra uma revisão aberta e aplica uma decisão exclusivamente na simulação. Só sessão `ANALISTA`.
 
 ```json
-{"decision": "AUTHORIZE"}
+{
+  "decision": "AUTHORIZE",
+  "justification": "Dados da compra e resposta do associado conferidos no detalhe."
+}
 ```
 
-`decision` ∈ `AUTHORIZE`, `DENY`. A primeira leva a compra para `LIBERADA_SIMULACAO`; a segunda para `RECUSADA_SIMULACAO`. Em ambos os casos, a revisão passa para `FECHADA`, a versão da compra é incrementada e um evento `ANALYST_DECISION` é gravado.
+`decision` ∈ `AUTHORIZE`, `DENY`. `justification` é obrigatória e, depois da
+remoção de espaços externos, deve conter entre 10 e 500 caracteres. A primeira
+decisão leva a compra para `LIBERADA_SIMULACAO`; a segunda para
+`RECUSADA_SIMULACAO`. Em ambos os casos, a revisão passa para `FECHADA`, a versão
+da compra é incrementada e um evento `ANALYST_DECISION` é gravado com a
+justificativa.
 
 ```json
 {
   "review_id": "REV-12",
   "case_id": "T-007",
   "decision": "AUTHORIZE",
+  "justification": "Dados da compra e resposta do associado conferidos no detalhe.",
+  "decided_by": "Carla Reis, analista (fictícia)",
+  "decided_at": "2026-10-28T03:20:00Z",
   "review_status": "FECHADA",
   "case_status": "LIBERADA_SIMULACAO",
   "message": "Compra liberada na simulação e revisão encerrada.",
@@ -524,6 +602,7 @@ Encerra uma revisão aberta e aplica uma decisão exclusivamente na simulação.
 ```
 
 - **409** `REVIEW_ALREADY_CLOSED` se outra decisão já encerrou a revisão.
+- **400** `INVALID_REQUEST` se a justificativa estiver ausente ou fora do limite.
 - A fila de `GET /api/reviews` contém somente revisões abertas.
 - Nenhuma ação financeira, bloqueio ou autorização real é executada.
 

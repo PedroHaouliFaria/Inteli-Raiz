@@ -25,10 +25,13 @@ def test_alembic_upgrade_creates_tables(tmp_path):
     from sqlalchemy import create_engine, inspect
 
     engine = create_engine(f"sqlite:///{db_path}")
-    tables = inspect(engine).get_table_names()
+    inspector = inspect(engine)
+    tables = inspector.get_table_names()
+    review_columns = {column["name"] for column in inspector.get_columns("reviews")}
     engine.dispose()
 
     assert "purchases" in tables, f"Tabela purchases não criada. Tabelas: {tables}"
     assert "confirmations" in tables, f"Tabela confirmations não criada. Tabelas: {tables}"
     assert "reviews" in tables, f"Tabela reviews não criada. Tabelas: {tables}"
     assert "events" in tables, f"Tabela events não criada. Tabelas: {tables}"
+    assert {"decision", "decision_reason", "decided_by", "decided_at"} <= review_columns

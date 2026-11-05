@@ -5,11 +5,13 @@ GET  /api/reviews                      — analista lista revisões abertas
 """
 from __future__ import annotations
 
+import math
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends
-from sqlalchemy import select
+from fastapi import APIRouter, Body, Depends, Query
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import AnalistaUser, AssociadoUser
@@ -18,15 +20,17 @@ from app.api.schemas.reviews import (
     AnalysisSummary,
     ReviewDecisionRequest,
     ReviewDecisionResponse,
+    ReviewDetailResponse,
     ReviewListItem,
     ReviewListResponse,
     ReviewOut,
 )
 from app.db.repositories.purchases import PurchaseRepository
 from app.db.session import get_session
-from app.db.tables.purchases import Purchase, Review
+from app.db.tables.purchases import Confirmation, Event, Purchase, Review
 from app.domain.personas import PERSONAS
 from app.domain.reviews import create_or_get_review
+from app.domain.signals.rules import compute_signals, mcc_label
 
 router = APIRouter(tags=["reviews"])
 
@@ -92,23 +96,77 @@ def _cents_to_str(cents: int) -> str:
     return format(value.quantize(Decimal("0.01")), "f")
 
 
+def _utc_naive(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value
+    return value.astimezone(UTC).replace(tzinfo=None)
+
+
 def _customer_display(customer_id: str) -> str:
     for persona in PERSONAS.values():
         if persona.customer_id == customer_id:
             return persona.display_name
-    return customer_id
+    return "Associado fictício"
+
+
+def _persona_display(persona_id: str | None) -> str | None:
+    if persona_id is None:
+        return None
+    persona = PERSONAS.get(persona_id)
+    return persona.display_name if persona is not None else "Analista"
+
+
+_CHANNEL_LABELS = {
+    "CARTAO_NAO_PRESENTE": "Compra online ou por telefone",
+    "CARTAO_PRESENTE": "Compra presencial",
+}
+
+_EVENT_LABELS = {
+    "SEED": "Compra registrada",
+    "ANSWER": "Resposta do associado registrada",
+    "EXPIRE": "Prazo de confirmação encerrado",
+    "REVIEW_REQUESTED": "Revisão humana solicitada",
+    "ANALYST_DECISION": "Decisão da analista registrada",
+    "MODEL_EVALUATED": "Análise do modelo registrada",
+}
 
 
 @router.get("/api/reviews", response_model=ReviewListResponse)
 def list_reviews(
     analista: AnalistaUser,
     session: Session = Depends(get_session),
+    status: str = Query("ABERTA", pattern="^(ABERTA|FECHADA)$"),
+    decision: str | None = Query(None, pattern="^(AUTHORIZE|DENY)$"),
+    from_date: datetime | None = Query(None, alias="from"),
+    to_date: datetime | None = Query(None, alias="to"),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
 ):
-    """Lista revisões abertas para o analista (§8).
+    """Lista revisões pendentes ou encerradas com filtros e paginação.
 
     Associado recebe 403 FORBIDDEN_ROLE.
     """
-    stmt = select(Review).where(Review.status == "ABERTA").order_by(Review.id.desc())
+    filters = [Review.status == status]
+    if decision is not None:
+        filters.append(Review.decision == decision)
+
+    date_column = Review.decided_at if status == "FECHADA" else Review.created_at
+    if from_date is not None:
+        filters.append(date_column >= _utc_naive(from_date))
+    if to_date is not None:
+        filters.append(date_column <= _utc_naive(to_date))
+
+    total = session.execute(
+        select(func.count()).select_from(Review).where(*filters)
+    ).scalar_one()
+    order = Review.created_at.asc() if status == "ABERTA" else Review.decided_at.desc()
+    stmt = (
+        select(Review)
+        .where(*filters)
+        .order_by(order, Review.id.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
     reviews = session.execute(stmt).scalars().all()
 
     items = []
@@ -137,10 +195,100 @@ def list_reviews(
                 customer_display_name=_customer_display(purchase.customer_id),
                 amount={"value": _cents_to_str(purchase.amount_cents), "currency": purchase.currency},
                 analysis=analysis,
+                decision=rev.decision,
+                decision_reason=rev.decision_reason,
+                decided_by=_persona_display(rev.decided_by),
+                decided_at=rev.decided_at,
             )
         )
 
-    return ReviewListResponse(reviews=items, simulation=True)
+    return ReviewListResponse(
+        reviews=items,
+        page=page,
+        page_size=page_size,
+        total=total,
+        total_pages=math.ceil(total / page_size) if total else 0,
+        simulation=True,
+    )
+
+
+@router.get("/api/reviews/{review_id}", response_model=ReviewDetailResponse)
+def get_review(
+    review_id: str,
+    analista: AnalistaUser,
+    session: Session = Depends(get_session),
+) -> ReviewDetailResponse:
+    """Retorna o detalhe sanitizado antes da decisão da analista."""
+    review = session.execute(
+        select(Review).where(Review.review_id == review_id)
+    ).scalar_one_or_none()
+    if review is None:
+        raise ApiError(404, "NOT_FOUND", "O recurso solicitado não foi encontrado.")
+
+    purchase = session.get(Purchase, review.purchase_id)
+    if purchase is None:
+        raise ApiError(404, "NOT_FOUND", "O recurso solicitado não foi encontrado.")
+
+    confirmation = session.execute(
+        select(Confirmation)
+        .where(Confirmation.purchase_id == purchase.id)
+        .order_by(Confirmation.id.desc())
+    ).scalars().first()
+    associate_response = None
+    if confirmation and confirmation.answered_response and confirmation.answered_at:
+        associate_response = {
+            "response": confirmation.answered_response,
+            "answered_at": confirmation.answered_at,
+        }
+
+    events = session.execute(
+        select(Event).where(Event.purchase_id == purchase.id).order_by(Event.id.asc())
+    ).scalars().all()
+    timeline = [
+        {
+            "event_type": event.event_type,
+            "label": _EVENT_LABELS.get(event.event_type, "Atualização do processo"),
+            "from_status": event.from_status,
+            "to_status": event.to_status,
+            "created_at": event.created_at,
+        }
+        for event in events
+    ]
+
+    signals = compute_signals(purchase.features_json or {})
+    return ReviewDetailResponse(
+        review_id=review.review_id,
+        protocol=review.protocol,
+        kind=review.kind,
+        reason=review.reason,
+        details=review.details,
+        status=review.status,
+        created_by=review.created_by,
+        created_at=review.created_at,
+        decision=review.decision,
+        decision_reason=review.decision_reason,
+        decided_by=_persona_display(review.decided_by),
+        decided_at=review.decided_at,
+        purchase={
+            "case_id": purchase.case_id,
+            "customer_display_name": _customer_display(purchase.customer_id),
+            "amount": {"value": _cents_to_str(purchase.amount_cents), "currency": purchase.currency},
+            "occurred_at": purchase.occurred_at,
+            "merchant_category": mcc_label(purchase.mcc),
+            "channel": purchase.channel,
+            "channel_label": _CHANNEL_LABELS.get(purchase.channel, "Canal não informado"),
+            "card_last4": purchase.card_last4,
+        },
+        analysis={
+            "score": purchase.analysis_score,
+            "score_source": purchase.analysis_score_source,
+            "model_version": purchase.analysis_model_version,
+        },
+        signals=[{"code": signal.code, "label": signal.label} for signal in signals],
+        associate_response=associate_response,
+        timeline=timeline,
+        simulation=True,
+    )
 
 
 @router.post(
@@ -160,6 +308,8 @@ def decide_review(
         session=session,
         review_id=review_id,
         decision=body.decision,
+        justification=body.justification,
         analyst_id=analista.persona_id,
     )
+    result["decided_by"] = analista.display_name
     return ReviewDecisionResponse(**result, simulation=True)
