@@ -1,19 +1,20 @@
-# Regras de documentação (docs/ e artefatos/)
+# Regras de documentação (docs/)
 
 ## Escopo
-Estas regras se aplicam a `docs/`, `artefatos/`, `README.md` da raiz e READMEs de pastas. Não mexa em `watson/` nem em código. `docs/design/` está fora do seu alcance de propósito; se uma tarefa exigir ler ou editar essa pasta, pare e avise.
+Estas regras se aplicam a `docs/`, `README.md` da raiz e READMEs de pastas. Não mexa em `watson/` nem em código. As referências históricas de design ficam em `docs/anexos/experiencia-do-usuario/processo_design/`; preserve sua identificação como histórico e siga o escopo solicitado pelo usuário.
 
 ## Fontes da verdade
-- Contrato da API: `docs/specs/contrato_api.md`. Não mude nome de campo, código de erro, status HTTP ou formato de resposta por conta própria. Se a spec estiver ambígua ou incompleta, pare e pergunte.
-- Produto e regras: `docs/plano_implementacao.md`. Em caso de conflito entre código existente e o plano, vale o plano.
-- Conteúdo das entregas D01–D13: `artefatos/documentacao/direcional_entregas.md`. Define estrutura, critério de conclusão e o que distingue aula, proposta interna e submissão.
+- Leitura principal: `docs/documentacao-do-projeto.md`. Atualize a história e a seção correspondente quando houver novas decisões ou resultados; use `docs/anexos/` para detalhes e fontes.
+- Contrato da API: `docs/anexos/sistema/specs/contrato-da-api.md`. Não mude nome de campo, código de erro, status HTTP ou formato de resposta por conta própria. Se a spec estiver ambígua ou incompleta, pare e pergunte.
+- Produto e regras: `docs/anexos/gestao/regras-do-produto.md`. Em caso de conflito entre código existente e o plano, vale o plano.
+- Conteúdo das entregas D01–D13: `docs/anexos/gestao/guia-das-entregas.md`. Define estrutura, critério de conclusão e o que distingue aula, proposta interna e submissão.
 - Em caso de conflito: o plano prevalece sobre o código; a spec prevalece sobre documentação antiga. Se ainda houver ambiguidade, pare e pergunte.
 
 ## Convenções de artefatos
 - Cada Dxx deve ter: ID, versão/data, responsável por função, estado e origem.
 - Estados distintos: revisão documental, teste automatizado, ensaio pela interface e validação com participantes. Não use um como substituto do outro.
 - Os IDs `FON/HIP/DEC` e os prefixos `P1` e `P4-T` estão preservados porque já são citados no histórico. Não indicam separação de pastas por pessoa.
-- Resultados reais vão para `artefatos/evidencias/` com versão, método e limite do experimento. Sem credenciais ou dados bancários identificáveis.
+- Resultados reais vão para `docs/anexos/evidencias/` com versão, método e limite do experimento. Sem credenciais ou dados bancários identificáveis.
 
 ## Proibições
 - Não criar falas, participantes, métricas de uso, capturas do Bob nem comprovantes de submissão.
@@ -25,6 +26,7 @@ Estas regras se aplicam a `docs/`, `artefatos/`, `README.md` da raiz e READMEs d
 
 ## Idioma e nomenclatura
 - Texto em português.
+- Nomes descritivos em português, com palavras separadas por hífen. IDs D01–D13 ficam nos metadados, não nos nomes dos arquivos.
 - Nomes de arquivos e pastas como já existem no repositório. Não renomeie sem pedido explícito.
 
 ## Forma de trabalhar

@@ -1,22 +1,24 @@
 # Watson
 
-Aplicação web de prevenção a fraudes em cartão do time Raiz (optativa IBM do Inteli). Aqui fica só o código; a documentação (design, dados e arquitetura) está em [`docs/`](../docs/).
+Aplicação web de prevenção a fraudes em cartão do time Raiz (optativa IBM do Inteli). Aqui fica só o código; a documentação (design, dados e arquitetura) está em [`docs/`](../docs).
 
 | Pasta | Papel |
 |---|---|
-| [frontend/](frontend/README.md) | Console da analista e app do associado (React, Vite, Carbon) |
+| [frontend/](frontend/README.md) | App do associado e revisão de exceções da analista (React, Vite, Carbon) |
 | [backend/](backend/README.md) | API, regras de negócio, agentes e acesso ao banco (Python, FastAPI) |
-| [infra/](infra/README.md) | Docker, deploy na IBM Cloud e CI |
+| [infra/](infra/README.md) | Docker local; diretórios históricos de deploy e CI |
 
 Documentação relacionada:
 
-- [Arquitetura](../docs/03_computacao/arquitetura/visao-geral.md) e [decisões](../docs/03_computacao/arquitetura/decisoes/)
-- [Design da interface](../docs/02_ux_design/processo_design/README.md)
-- [Modelo de dados](../docs/04_dados_e_modelo/dados/README.md)
+- [História e fluxo do projeto](../docs/documentacao-do-projeto.md).
+
+- [Arquitetura](../docs/anexos/sistema/arquitetura/visao-geral.md) e [decisões](../docs/anexos/sistema/arquitetura/decisoes)
+- [Design da interface](../docs/anexos/experiencia-do-usuario/processo_design/README.md)
+- [Modelo de dados](../docs/anexos/dados-e-modelo/dados/README.md)
 
 ## Rodar tudo
 
-Para o roteiro completo, incluindo preparação do `.env`, credenciais, percurso de demonstração e solução de problemas, consulte o [guia de uso](../docs/03_computacao/guia_de_uso.md).
+Para o roteiro completo, incluindo preparação do `.env`, credenciais, percurso de demonstração e solução de problemas, consulte o [guia de uso](../docs/anexos/sistema/como-usar-a-demonstracao.md).
 
 ```bash
 # a partir de watson/

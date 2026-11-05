@@ -2,24 +2,29 @@
 
 Projeto da optativa IBM do Inteli: confirmação assistida de compras pelo associado, com dados sintéticos e ações financeiras simuladas.
 
+## Objetivo do projeto
+
+Ajudar o associado do Sicredi a entender uma compra suspeita e decidir se reconhece e autoriza, não reconhece ou está em dúvida.
+
+O sistema apresenta a compra; o assistente de IA consulta os dados disponíveis para esclarecer dúvidas; o associado escolhe uma resposta; o sistema registra o resultado e encaminha exceções para uma pessoa analisar. A IA não autoriza compras pelo associado.
+
+Queremos verificar se essa ajuda melhora a compreensão do alerta e do próximo passo. O protótipo usa dados sintéticos e operações simuladas; a melhoria da experiência ainda precisa ser testada com pessoas.
+
 ## Comece aqui
 
-- **[Guia de uso da demonstração](docs/03_computacao/guia_de_uso.md):** preparação, Docker, credenciais, percurso associado–analista, reset e solução de problemas.
-- **[Documentação](docs/README.md):** índice por área e tabela das entregas D01–D13 com o estado de cada uma.
-- [O que falta concluir](docs/05_gestao/criterios_e_pendencias.md): revisões cruzadas, ensaio pela interface, pesquisa/piloto e pacote final.
-- [Como reproduzir o MVP](docs/03_computacao/D11_fluxo_mvp.md): preparação local, cenários e log dos 207 testes de backend aprovados em 04/11/2026.
-- [Código da aplicação](watson/README.md): frontend React + Carbon e backend FastAPI.
+1. **[Leia a documentação do projeto](docs/documentacao-do-projeto.md):** história, persona, decisões, custos de mercado, dados, construção e resultados.
+2. [Use a demonstração](docs/anexos/sistema/como-usar-a-demonstracao.md): instalação e passo a passo.
+3. [Consulte os anexos](docs/anexos/README.md): contratos, dados, evidências e planos históricos.
+4. [Veja o que falta concluir](docs/anexos/gestao/o-que-falta-concluir.md).
+
+Os arquivos `.md` são documentos de texto em Markdown. Clique no arquivo no GitHub para ler a versão formatada. `README.md` funciona como página inicial.
 
 ## Estrutura
 
 ```text
-docs/              toda a documentação, separada por área
-  01_negocios/       D01, D04, D05, D07, D08 e canvas de proposta de valor
-  02_ux_design/      D02, D03, D06, D12, D13, pesquisa e processo de design
-  03_computacao/     D09, D10, D11, arquitetura e contratos
-  04_dados_e_modelo/ análise, base balanceada, modelo e dados da aplicação
-  05_gestao/         plano, direcional, pendências, evidências/hipóteses e pacote IBM
-  06_evidencias/     logs e ambiente das execuções
+docs/
+  documentacao-do-projeto.md  explicação completa do projeto
+  anexos/                    fontes, detalhes técnicos e registros históricos
 watson/            código da aplicação e infraestrutura
 data/              orientações, dicionário e bases processadas
 notebooks/         análise, preparação e avaliação do modelo
@@ -29,4 +34,4 @@ contexto/          materiais do programa IBM
 bob_sessions/      evidências reais de uso do IBM Bob
 ```
 
-A consolidação documental não equivale a teste com usuários. Backend reproduzido; LLM externo real, ensaio independente pela interface e validação de experiência têm pendências registradas em [critérios e pendências](docs/05_gestao/criterios_e_pendencias.md).
+A consolidação documental não equivale a teste com usuários. Backend reproduzido; LLM externo real, ensaio independente pela interface e validação de experiência têm pendências registradas em [critérios e pendências](docs/anexos/gestao/o-que-falta-concluir.md).

@@ -1,0 +1,143 @@
+# D05 — Conceito da solução: confirmação assistida de compras
+
+**ID:** D05 · **Versão:** 0.2 · **Data:** 04/11/2026
+**Responsável:** Produto · **Estado:** rascunho revisado documentalmente; revisão cruzada pendente
+**Fontes:** registro de evidências, plano de implementação e direcional.
+
+**Revisor:** Pesquisa · **Estado:** rascunho
+
+---
+
+## Sumário
+
+- [1. Usuário e situação](#1-usuário-e-situação)
+- [2. Problema](#2-problema)
+- [3. Solução em uma frase](#3-solução-em-uma-frase)
+- [4. Capacidade nova](#4-capacidade-nova)
+- [5. Experiência em três momentos](#5-experiência-em-três-momentos)
+- [6. Papel do agente](#6-papel-do-agente)
+- [7. Limites](#7-limites)
+- [8. Dependências e hipóteses](#8-dependências-e-hipóteses)
+
+---
+
+## 1. Usuário e situação
+
+<p align="justify">&ensp;&ensp; <strong>Usuário:</strong> o associado do Sicredi que recebe uma solicitação de confirmação de uma compra sinalizada pelo sistema.</p>
+
+<p align="justify">&ensp;&ensp; <strong>Situação:</strong> o associado recebe uma notificação no app enquanto está em qualquer lugar — balcão, campo, madrugada. A compra tem valor real, mas o nome do estabelecimento pode ser irreconhecível. Ele precisa decidir se reconhece e autoriza, não reconhece ou está em dúvida — e saber o que acontece depois.</p>
+
+---
+
+## 2. Problema
+
+<p align="justify">&ensp;&ensp; Hipótese do cenário investigado: o associado pode não encontrar um canal que reconheça como confiável para entender a compra e registrar sua resposta. Canal incerto ou informação insuficiente podem provocar abandono, erro ou busca de atendimento. A existência e suficiência dos canais atuais da instituição não foram pesquisadas. (D01 §4–5; HIP-04; HIP-03)</p>
+
+---
+
+## 3. Solução em uma frase
+
+<p align="justify">&ensp;&ensp; Um assistente no app que apresenta a compra sinalizada, ajuda o associado a esclarecer dúvidas com o contexto disponível e permite registrar autorização, recusa ou dúvida — com revisão humana das exceções.</p>
+
+> Ponto de partida do plano (FON-01 §2). O modelo avalia sinais → a política define o tratamento → o agente consulta e explica → o associado responde explicitamente → o backend valida e registra.
+
+---
+
+## 4. Capacidade nova
+
+<p align="justify">&ensp;&ensp; <strong>O que o associado passa a conseguir:</strong> resolver a confirmação com clareza diretamente no app — sem ligar para a central — mesmo quando o nome do estabelecimento é ambíguo, porque o assistente apresenta o contexto disponível e informa o limite quando não há informação verificável.</p>
+
+<p align="justify">&ensp;&ensp; <strong>O que não muda:</strong> a resposta final é sempre do associado. O assistente não autoriza, não recusa e não informa dúvida por ele. Ações financeiras são simuladas.</p>
+
+---
+
+## 5. Experiência em três momentos
+
+### Momento 1 — Recebe a solicitação
+O associado abre o app e vê:
+
+- Compra: estabelecimento ou identificação disponível, valor, data e cartão parcialmente identificado.
+
+- Motivo do alerta: escrito com base nos sinais realmente disponíveis — sem inventar.
+
+- Pergunta: "Você reconhece e autoriza esta compra?"
+
+- Três respostas: "Reconheço e autorizo" · "Não reconheço" · "Estou em dúvida".
+
+- Ação separada: "Quero falar com alguém" — não é uma quarta resposta à compra.
+
+### Momento 2 — Entende ou pede ajuda
+**Cenário A — Reconhece imediatamente:** toca em "Reconheço e autorizo". Fluxo direto; sem agente.
+
+**Cenário B — Tem dúvida sobre o nome do estabelecimento:**
+> Associado: "Pode ser o nome da empresa que aparece na fatura?"
+> Assistente consulta o contexto disponível. Responde: "Não consigo confirmar o nome fantasia — tenho o código MCC 5411 e a região registrada. Os sinais disponíveis são: compra na madrugada, cartão não presente, primeiro uso do cartão. Se quiser, posso encaminhar para revisão."
+
+O assistente não inventa a identidade do estabelecimento (DEC-09, Pesquisa). O associado ainda pode responder com qualquer uma das três opções.
+
+**Cenário C — O agente não sabe responder:**
+O associado pergunta algo fora do contexto disponível. O assistente declara explicitamente o limite: "Não tenho essa informação disponível. Posso encaminhar para revisão ou você pode escolher uma das respostas acima." Nunca inventa uma resposta.
+
+### Momento 3 — Vê o resultado e o próximo passo
+Após qualquer resposta, o app mostra:
+
+- O que aconteceu com a **compra** (não com o cartão).
+
+- Status: liberada, recusada, em revisão ou expirada.
+
+- Próximo passo: o que o associado pode fazer agora.
+
+Exemplos de resultado:
+
+- `AUTHORIZE` → "Compra confirmada. Liberação registrada (simulação)."
+
+- `DENY` → "Compra recusada. Um analista vai avaliar o caso. Protocolo: REV-0042."
+
+- `UNSURE` → "Compra em revisão. Um analista vai avaliar."
+
+- Expirada → "O prazo para responder terminou. A compra não foi autorizada. Um analista pode revisar o caso."
+
+---
+
+## 6. Papel do agente
+
+<p align="justify">&ensp;&ensp; O agente consulta ferramentas para obter sinais, disponibilidade da avaliação, contexto da compra e status. Escolhe ferramentas e pode solicitar revisão; não decide a resposta à confirmação. A ferramenta atual não devolve o valor numérico do score. <strong>Explica</strong> com base apenas no que as ferramentas retornam. <strong>Informa o limite</strong> quando o contexto é insuficiente. <strong>Solicita revisão</strong> quando a dúvida não pode ser resolvida.</p>
+
+<p align="justify">&ensp;&ensp; O agente <strong>não pode:</strong> autorizar, recusar ou registrar dúvida em nome do associado; inventar identidade de estabelecimento; pressionar o associado a autorizar; pedir senha, PIN ou dados completos do cartão. (FON-P1-03 §4)</p>
+
+---
+
+## 7. Limites
+
+- Ações financeiras são simuladas. Nenhuma transação, bloqueio ou estorno real ocorre.
+
+- O modelo de risco é experimental: PR-AUC 0,146 no teste com dados sintéticos; meta 0,80 não atingida (FON-P1-02 §5).
+
+- Sem biometria e sem verificação de aparelho no MVP.
+
+- O agente depende de LLM externo; se falhar, o caminho de confirmação (três botões) continua funcionando.
+
+- Não há integração bancária real nem autenticação produtiva.
+
+- Dados de entrada são sintéticos.
+
+---
+
+## 8. Dependências e hipóteses
+
+| Dependência | Estado |
+|---|---|
+| Backend FastAPI + SQLite com rotas de confirmação | Implementado; testes atuais e log em D11 |
+| Frontend React + Carbon com três respostas e API | Implementado em SessionGate/AssociateApp/PurchaseDetail; ensaio humano pendente |
+| Agente Pydantic AI | Implementado; dependência principal declarada; padrão Groq; execução real depende de chave e registro |
+| Modelo RF serializado | Arquivo presente e carregamento implementado; limitações de avaliação em D09 |
+
+| Hipótese | Impacto se falsa |
+|---|---|
+| HIP-P1-05: texto fixo insuficiente para nome ambíguo | Justificativa de IA agêntica precisa de outro caso |
+| HIP-01: associado confunde recusa com bloqueio do cartão | Texto de resultado é a decisão de design mais urgente |
+
+---
+
+
+<p align="justify">&ensp;&ensp; <strong>Revisão necessária:</strong> Pesquisa confere conceito/cenários; registro central de aceite identifica o estado da revisão cruzada.</p>
