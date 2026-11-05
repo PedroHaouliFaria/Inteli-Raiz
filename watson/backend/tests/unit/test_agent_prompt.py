@@ -75,8 +75,34 @@ def test_prompt_no_internal_codes_in_response():
 
 
 def test_prompt_no_invented_buttons():
-    """Regra 13: não inventar botões ou passos; usar solicitar_revisao."""
+    """Regra 13 (TEC-01): descrever a tela real e proibir invenção de elementos."""
     prompt = _get_prompt()
+
+    # Deve citar a seção real da tela
+    assert "Prefiro falar com uma pessoa" in prompt, (
+        "Prompt deve citar a seção 'Prefiro falar com uma pessoa' da tela real"
+    )
+    assert "Solicitar revisão por analista" in prompt, (
+        "Prompt deve citar o botão real 'Solicitar revisão por analista'"
+    )
+
+    # Não deve mais conter a descrição errada
+    assert "apenas os três botões" not in prompt, (
+        "Prompt não deve dizer 'apenas os três botões' — a tela tem mais elementos"
+    )
+
+    # Não deve citar 'Solicitar revisão' (sem 'por analista') como exemplo de botão inventado
+    import re
+    # Procura ocorrências de "Solicitar revisão" que NÃO sejam "Solicitar revisão por analista"
+    invented_example = re.search(
+        r'"Solicitar revisão"(?! por analista)',
+        prompt,
+    )
+    assert invented_example is None, (
+        "Prompt não deve citar 'Solicitar revisão' como exemplo de botão inventado"
+    )
+
+    # Deve referenciar a ferramenta e proibir invenção
     assert "solicitar_revisao" in prompt, (
         "Prompt deve referenciar solicitar_revisao para revisão humana"
     )
