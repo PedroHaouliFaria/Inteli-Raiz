@@ -37,10 +37,11 @@ D01–D11 são as entregas nomeadas nas aulas; D12 e D13 apoiam prototipação e
 
 ## Por onde começar
 
-1. **Entender o projeto:** [D07 — ideia e pitch](01_negocios/D07_ideia.md) e [canvas de proposta de valor](01_negocios/canvas_proposta_de_valor.md).
-2. **Regras do produto:** [plano de implementação](05_gestao/plano_implementacao.md) §§1–3.
-3. **O que falta:** [critérios e pendências](05_gestao/criterios_e_pendencias.md).
-4. **Rodar o MVP:** [D11 — fluxo e reprodução](03_computacao/D11_fluxo_mvp.md).
+1. **Usar a demonstração:** [guia de uso](03_computacao/guia_de_uso.md), com instalação, credenciais, percurso completo, reset e solução de problemas.
+2. **Entender o projeto:** [D07 — ideia e pitch](01_negocios/D07_ideia.md) e [canvas de proposta de valor](01_negocios/canvas_proposta_de_valor.md).
+3. **Regras do produto:** [plano de implementação](05_gestao/plano_implementacao.md) §§1–3.
+4. **O que falta:** [critérios e pendências](05_gestao/criterios_e_pendencias.md).
+5. **Reproduzir tecnicamente o MVP:** [D11 — fluxo e evidências](03_computacao/D11_fluxo_mvp.md).
 
 ## Regras da documentação
 

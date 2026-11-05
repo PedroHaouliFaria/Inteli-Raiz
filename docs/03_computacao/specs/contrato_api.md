@@ -9,7 +9,7 @@
 
 **Dentro:** sessão do associado fictício, lista e detalhe de compras, status, resposta à confirmação, chat com o agente, pedido de revisão, lista mínima de exceções para o analista, saúde do serviço e endpoints de demonstração.
 
-**Fora do v1:** autenticação real, resolução de revisão pelo analista (só a lista), notificações push, streaming da resposta do chat, multi-idioma, ações financeiras reais.
+**Fora do v1:** integração com um provedor de identidade real, recuperação de senha, notificações push, streaming da resposta do chat, multi-idioma e ações financeiras reais. A analista pode resolver revisões apenas na simulação.
 
 ## 2. Convenções
 
@@ -21,7 +21,7 @@
 | Dinheiro | Objeto `{"value": "149.58", "currency": "BRL"}`. O valor é **string decimal** para não perder centavos em `float`. |
 | IDs | `case_id` = `T-<n>`, `challenge_id` = `CH-<n>`, `analysis_id` = `A-<n>-v<k>`, `review_id` = `REV-<n>`, protocolo = `RZ-<AAAAMMDD>-<n>`. O front trata todos como texto opaco. |
 | Simulação | Toda resposta que fala de compra traz `"simulation": true` (R11). |
-| Identidade | **Nunca** vem no corpo nem na URL. O backend lê o associado do cookie de sessão (§4). Um `customer_id` enviado pelo cliente é ignorado. |
+| Identidade | Depois do login, **nunca** vem no corpo nem na URL. O backend lê o associado do cookie de sessão (§4). `persona_id` e `customer_id` não são aceitos como credenciais do front. |
 | Compra de outra pessoa | Responde **404**, igual a uma compra que não existe. Não confirma que o ID existe (R05). |
 | Origem | Front e API na **mesma origem**: em desenvolvimento, o Vite do `watson/frontend` faz proxy de `/api` para o backend; em produção, o FastAPI serve o build estático. Assim o cookie funciona com `SameSite=Lax` e as rotas `/api` não dependem de CORS. Se o front ficar em outro domínio, isso vira decisão de PR nesta spec. |
 | Documentação viva | Os modelos Pydantic do backend carregam os exemplos desta spec (`json_schema_extra`), e o `/docs` do FastAPI mostra o mesmo contrato. |
@@ -90,7 +90,17 @@ RECEBIDA → EM_AVALIACAO → LIBERADA_SIMULACAO
 
 ## 4. Sessão
 
-Login fictício: o associado escolhe uma das pessoas fictícias e o servidor grava um cookie assinado (Starlette `SessionMiddleware` ou `itsdangerous`, com segredo em `SESSION_SECRET`). Cookie `raiz_session`, `HttpOnly`, `SameSite=Lax`, `Secure` em produção, validade de 8 h.
+Login por e-mail e senha fictícios, configurados apenas no ambiente (`MOCK_<PESSOA>_EMAIL` e `MOCK_<PESSOA>_PASSWORD`). O servidor nunca devolve a senha e grava um cookie assinado (Starlette `SessionMiddleware`, com segredo em `SESSION_SECRET`). Cookie `raiz_session`, `HttpOnly`, `SameSite=Lax`, `Secure` em produção, validade de 8 h. Isto simula uma tela de autenticação normal, mas não substitui um provedor de identidade de produção nem armazenamento de senha com hash.
+
+### Credenciais da demonstração
+
+| Usuário | Papel | E-mail | Senha |
+|---|---|---|---|
+| Ana Souza | Associado | `ana@raiz.demo` | `Ana@123` |
+| Bruno Lima | Associado | `bruno@raiz.demo` | `Bruno@123` |
+| Carla Reis | Analista | `carla@raiz.demo` | `Carla@123` |
+
+Essas credenciais são exclusivamente fictícias e devem permanecer sincronizadas com `watson/backend/.env` e `watson/backend/.env.example`. Elas não podem ser reutilizadas em nenhum ambiente real.
 
 ### `GET /api/session/personas`
 
@@ -112,7 +122,7 @@ Dois associados permitem testar acesso cruzado (R05). A analista existe só para
 ### `POST /api/session`
 
 ```json
-{"persona_id": "ana"}
+{"email": "ana@raiz.demo", "password": "Ana@123"}
 ```
 
 **200** + `Set-Cookie: raiz_session=...`
@@ -123,7 +133,7 @@ Dois associados permitem testar acesso cruzado (R05). A analista existe só para
 
 `demo_mode` repete o `DEMO_MODE` do servidor. Com `true`, o front mostra o botão de recomeçar a demonstração (§9).
 
-**400** `INVALID_REQUEST` se o `persona_id` não existe.
+**401** `AUTHENTICATION_FAILED` para e-mail inexistente ou senha incorreta, sempre com a mesma mensagem. O login antigo por `persona_id` fica desabilitado fora da suíte legada de testes.
 
 ### `GET /api/session`
 
@@ -491,7 +501,31 @@ Lista mínima de exceções (§4 do plano: "visão de exceções"). Só sessão 
 }
 ```
 
-Resolver a revisão fica fora do v1.
+### `POST /api/reviews/{review_id}/decision` (analista)
+
+Encerra uma revisão aberta e aplica uma decisão exclusivamente na simulação. Só sessão `ANALISTA`.
+
+```json
+{"decision": "AUTHORIZE"}
+```
+
+`decision` ∈ `AUTHORIZE`, `DENY`. A primeira leva a compra para `LIBERADA_SIMULACAO`; a segunda para `RECUSADA_SIMULACAO`. Em ambos os casos, a revisão passa para `FECHADA`, a versão da compra é incrementada e um evento `ANALYST_DECISION` é gravado.
+
+```json
+{
+  "review_id": "REV-12",
+  "case_id": "T-007",
+  "decision": "AUTHORIZE",
+  "review_status": "FECHADA",
+  "case_status": "LIBERADA_SIMULACAO",
+  "message": "Compra liberada na simulação e revisão encerrada.",
+  "simulation": true
+}
+```
+
+- **409** `REVIEW_ALREADY_CLOSED` se outra decisão já encerrou a revisão.
+- A fila de `GET /api/reviews` contém somente revisões abertas.
+- Nenhuma ação financeira, bloqueio ou autorização real é executada.
 
 ## 9. Saúde e demonstração
 

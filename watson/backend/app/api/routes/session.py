@@ -1,12 +1,13 @@
 """Endpoints de sessão (§4 do contrato).
 
 GET  /api/session/personas   — público, lista as personas fictícias
-POST /api/session             — login, grava cookie raiz_session
+POST /api/session             — login por e-mail/senha, grava cookie raiz_session
 GET  /api/session             — retorna persona da sessão atual ou 401
 DELETE /api/session           — logout, apaga o cookie
 """
 from __future__ import annotations
 
+import hmac
 from datetime import timedelta
 
 from fastapi import APIRouter, Request, Response
@@ -58,13 +59,35 @@ def create_session(
     request: Request,
     response: Response,
 ) -> SessionResponse:
-    """Cria a sessão para a persona informada e define o cookie raiz_session."""
-    persona = PERSONAS.get(body.persona_id)
+    """Valida e-mail/senha fictícios e define o cookie ``raiz_session``."""
+    from app.config import get_settings
+
+    settings = get_settings()
+    persona = None
+
+    # Compatibilidade opt-in usada apenas pela suíte de integração antiga.
+    if body.persona_id is not None and settings.allow_legacy_persona_login:
+        persona = PERSONAS.get(body.persona_id)
+    elif body.email is not None and body.password is not None:
+        credentials = {
+            settings.mock_ana_email.strip().casefold(): ("ana", settings.mock_ana_password),
+            settings.mock_bruno_email.strip().casefold(): ("bruno", settings.mock_bruno_password),
+            settings.mock_carla_email.strip().casefold(): ("carla", settings.mock_carla_password),
+        }
+        matched = credentials.get(body.email.strip().casefold())
+        expected_password = matched[1] if matched else "invalid-mock-password"
+        password_matches = hmac.compare_digest(
+            body.password.encode("utf-8"),
+            expected_password.encode("utf-8"),
+        )
+        if matched and password_matches:
+            persona = PERSONAS[matched[0]]
+
     if persona is None:
         raise ApiError(
-            status_code=400,
-            code="INVALID_REQUEST",
-            message=f"Persona '{body.persona_id}' não existe.",
+            status_code=401,
+            code="AUTHENTICATION_FAILED",
+            message="E-mail ou senha inválidos.",
         )
     # Starlette SessionMiddleware grava no cookie ao set
     request.session["persona_id"] = persona.persona_id

@@ -12,6 +12,7 @@ from app.api.schemas.purchases import PurchaseStatus
 ReviewKind = Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO"]
 ReviewStatus = Literal["ABERTA", "FECHADA"]
 ReviewCreatedBy = Literal["ASSOCIADO", "AGENTE", "SISTEMA"]
+ReviewDecision = Literal["AUTHORIZE", "DENY"]
 
 
 class ReviewOut(BaseModel):
@@ -104,4 +105,25 @@ class ReviewListResponse(BaseModel):
     }
 
     reviews: list[ReviewListItem]
+    simulation: SimulationTrue
+
+
+class ReviewDecisionRequest(BaseModel):
+    """Decisão da analista sobre uma revisão aberta."""
+
+    model_config = {"extra": "forbid"}
+    decision: ReviewDecision
+
+
+class ReviewDecisionResponse(BaseModel):
+    """Resultado da decisão simulada da analista."""
+
+    model_config = {"extra": "forbid"}
+
+    review_id: str
+    case_id: str
+    decision: ReviewDecision
+    review_status: Literal["FECHADA"]
+    case_status: PurchaseStatus
+    message: str
     simulation: SimulationTrue

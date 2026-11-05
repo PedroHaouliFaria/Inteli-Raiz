@@ -77,8 +77,11 @@ export const scoreTransaction = (features) => legacyRequest('/model-lab/score', 
 /** GET /api/session/personas — público, lista personas disponíveis */
 export const getPersonas = () => request('/api/session/personas');
 
-/** POST /api/session — cria sessão; devolve SessionResponse */
-export const login = (persona_id) => request('/api/session', { method: 'POST', body: { persona_id } });
+/** POST /api/session — autentica com credenciais fictícias e cria a sessão. */
+export const login = (email, password) => request('/api/session', {
+  method: 'POST',
+  body: { email, password },
+});
 
 /** GET /api/session — retorna sessão ativa ou lança ApiError 401 */
 export const getSession = () => request('/api/session');
@@ -130,6 +133,13 @@ export const postReview = (caseId, reason, details) =>
 
 /** GET /api/reviews — lista revisões abertas; requer sessão ANALISTA (§8 do contrato) */
 export const getReviews = () => request('/api/reviews');
+
+/** Analista encerra uma revisão liberando ou recusando a compra na simulação. */
+export const postReviewDecision = (reviewId, decision) =>
+  request(`/api/reviews/${encodeURIComponent(reviewId)}/decision`, {
+    method: 'POST',
+    body: { decision },
+  });
 
 // ── Demonstração (§9 do contrato) ────────────────────────────────────────────
 

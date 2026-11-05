@@ -5,6 +5,7 @@ import pytest
 os.environ["DATABASE_URL"] = "sqlite://"
 os.environ["AGENT_PROVIDER"] = "simulated"
 os.environ["SESSION_SECRET"] = "test-secret-for-session"
+os.environ["ALLOW_LEGACY_PERSONA_LOGIN"] = "true"
 
 
 @pytest.fixture(autouse=True)
