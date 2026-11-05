@@ -16,17 +16,21 @@ import {
   Button,
   InlineLoading,
   InlineNotification,
-  Tag,
   Tile,
   Stack,
 } from '@carbon/react';
 import { Warning, Information, CheckmarkFilled, CloseFilled, Time } from '@carbon/icons-react';
 import { ApiError, getPurchase, getPurchaseStatus, postConfirmationResponse } from '../../api/client.js';
-import { formatDate, formatMoney, isTerminal, statusMeta } from './utils.js';
+import { formatDate, formatMoney, isTerminal } from './utils.js';
+import { PurchaseStatusPanel } from './PurchaseStatus.jsx';
 import PurchaseChat from './PurchaseChat.jsx';
 import HumanReviewRequest from './HumanReviewRequest.jsx';
 
 const POLL_INTERVAL_MS = 5000;
+const STATUS_PANEL_REPLACES_RESULT = new Set([
+  'LIBERADA_AUTOMATICAMENTE',
+  'BLOQUEADA_PREVENTIVAMENTE',
+]);
 
 // ── Subcomponentes internos ───────────────────────────────────────────────────
 
@@ -37,15 +41,6 @@ function SimulationBadge() {
       <span className="cds--type-label-01">
         Esta é uma simulação. Os dados e ações desta tela são fictícios e não produzem efeito real.
       </span>
-    </div>
-  );
-}
-
-function StatusBadge({ status, statusLabel }) {
-  const meta = statusMeta(status);
-  return (
-    <div className="associate-status-row">
-      <Tag type={meta.tagType} size="md">{statusLabel}</Tag>
     </div>
   );
 }
@@ -384,17 +379,14 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
       <Stack gap={5}>
         <SimulationBadge />
 
-        <div className="associate-detail-header">
-          <div>
-            <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)' }}>
-              Compra {detail.case_id}
-            </p>
-            <StatusBadge status={detail.status} statusLabel={detail.status_label} />
-          </div>
-          {isWaiting && detail.confirmation?.expires_at && (
-            <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
-          )}
-        </div>
+        <p className="cds--type-label-01 associate-detail__case-id">Compra {detail.case_id}</p>
+        <PurchaseStatusPanel
+          status={detail.status}
+          label={detail.status_label}
+          aside={isWaiting && detail.confirmation?.expires_at
+            ? <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
+            : null}
+        />
 
         <PurchaseCard purchase={detail.purchase} />
 
@@ -406,7 +398,9 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
           <ResultCard result={actionResult} />
         )}
 
-        {detail.result && <ResultCard result={detail.result} />}
+        {detail.result && !STATUS_PANEL_REPLACES_RESULT.has(detail.status) && (
+          <ResultCard result={detail.result} />
+        )}
 
         {actionError && (
           <InlineNotification

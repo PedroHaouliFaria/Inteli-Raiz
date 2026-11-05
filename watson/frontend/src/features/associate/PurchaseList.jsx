@@ -6,8 +6,8 @@
  *   selectedId    — case_id selecionado atualmente
  *   onSelect(id)  — callback ao clicar em uma compra
  */
-import { Tag } from '@carbon/react';
-import { formatDate, formatMoney, statusMeta } from './utils.js';
+import { formatDate, formatMoney } from './utils.js';
+import { PurchaseStatusBadge } from './PurchaseStatus.jsx';
 
 export default function PurchaseList({ purchases, selectedId, onSelect }) {
   if (purchases.length === 0) {
@@ -21,7 +21,6 @@ export default function PurchaseList({ purchases, selectedId, onSelect }) {
   return (
     <ul className="associate-list" aria-label="Suas compras">
       {purchases.map((p) => {
-        const meta = statusMeta(p.status);
         const isSelected = p.case_id === selectedId;
         return (
           <li key={p.case_id} className={`associate-list__item${isSelected ? ' associate-list__item--active' : ''}`}>
@@ -37,7 +36,7 @@ export default function PurchaseList({ purchases, selectedId, onSelect }) {
               </div>
               <div className="associate-list__meta">
                 <span className="cds--type-label-01 associate-list__date">{formatDate(p.occurred_at)}</span>
-                <Tag size="sm" type={meta.tagType}>{p.status_label}</Tag>
+                <PurchaseStatusBadge status={p.status} label={p.status_label} />
               </div>
             </button>
           </li>
