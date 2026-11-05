@@ -4,6 +4,7 @@ import {
   Header, HeaderName, HeaderMenuButton, HeaderGlobalBar, HeaderGlobalAction, SkipToContent,
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
   Theme, Toggle, Button, ToastNotification, ProgressIndicator, ProgressStep, IconButton,
+  InlineNotification, Stack, Tile,
 } from '@carbon/react';
 import { Help, Renew, Mobile, Close, WatsonxAi, List, Column, Archive, UserMultiple, ChartLineData, Report, Chemistry } from '@carbon/icons-react';
 import { GlossaryProvider, GlossaryPanel, useGlossary } from '../components/Glossary';
@@ -173,15 +174,29 @@ function AppRouter() {
   if (session?.role === 'ANALISTA') {
     return <AnalystApp />;
   }
-  // Role desconhecido: mantém a Shell existente (legado)
+  // Um papel inesperado não deve ganhar acesso ao protótipo legado por fallback.
   return (
-    <WatsonProvider>
-      <GlossaryProvider>
-        <RailProvider>
-          <Shell />
-        </RailProvider>
-      </GlossaryProvider>
-    </WatsonProvider>
+    <Theme theme="g10">
+      <main
+        style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '2rem' }}
+        role="main"
+      >
+        <Tile style={{ width: '100%', maxWidth: '32rem' }}>
+          <Stack gap={5}>
+            <InlineNotification
+              kind="error"
+              title="Perfil sem acesso"
+              subtitle={`O papel “${session?.role ?? 'desconhecido'}” não está habilitado nesta demonstração.`}
+              hideCloseButton
+              lowContrast
+            />
+            <Button kind="secondary" onClick={session.endSession}>
+              Voltar ao login
+            </Button>
+          </Stack>
+        </Tile>
+      </main>
+    </Theme>
   );
 }
 

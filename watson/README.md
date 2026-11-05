@@ -10,11 +10,13 @@ Aplicação web de prevenção a fraudes em cartão do time Raiz (optativa IBM d
 
 Documentação relacionada:
 
-- [Arquitetura](../docs/arquitetura/visao-geral.md) e [decisões](../docs/arquitetura/decisoes/)
-- [Design da interface](../docs/design/README.md)
-- [Modelo de dados](../docs/dados/README.md)
+- [Arquitetura](../docs/03_computacao/arquitetura/visao-geral.md) e [decisões](../docs/03_computacao/arquitetura/decisoes/)
+- [Design da interface](../docs/02_ux_design/processo_design/README.md)
+- [Modelo de dados](../docs/04_dados_e_modelo/dados/README.md)
 
 ## Rodar tudo
+
+Para o roteiro completo, incluindo preparação do `.env`, credenciais, percurso de demonstração e solução de problemas, consulte o [guia de uso](../docs/03_computacao/guia_de_uso.md).
 
 ```bash
 # a partir de watson/

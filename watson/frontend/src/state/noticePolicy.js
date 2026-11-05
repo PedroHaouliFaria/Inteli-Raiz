@@ -1,4 +1,4 @@
-// Política do aviso de compra (docs/arquitetura/decisoes/0004). Espelha a do backend até a tela ler da API.
+// Política do aviso de compra (docs/03_computacao/arquitetura/decisoes/0004). Espelha a do backend até a tela ler da API.
 // "Fui eu" fechar o caso sozinho e o prazo de resposta ainda aguardam o time, por isso vêm do ambiente.
 const env = import.meta.env;
 

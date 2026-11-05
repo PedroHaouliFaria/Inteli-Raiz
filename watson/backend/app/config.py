@@ -4,8 +4,22 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _find_repo_root(config_file: Path) -> Path:
+    """Encontra a raiz dos artefatos sem depender da profundidade do arquivo.
+
+    No checkout, ``config.py`` fica em ``watson/backend/app``; na imagem Docker,
+    fica em ``/app/app`` e os caminhos são substituídos por variáveis de ambiente.
+    """
+    for parent in config_file.resolve().parents:
+        if (parent / "outputs" / "modelo_rf.joblib").exists() or (parent / "data" / "processed").is_dir():
+            return parent
+    # Fallback seguro para pacotes/containers sem os artefatos montados na mesma árvore.
+    parents = config_file.resolve().parents
+    return parents[1] if len(parents) > 1 else parents[0]
+
+
 # Raiz do repositório: o modelo fica em outputs/ e as bases em data/processed/, como no notebook 03.
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = _find_repo_root(Path(__file__))
 
 
 class Settings(BaseSettings):
@@ -19,6 +33,16 @@ class Settings(BaseSettings):
     session_secret: str
     # Cookie Secure só em produção; em dev (False) o cookie funciona em HTTP
     session_secure: bool = False
+    # Credenciais fictícias da demonstração. Em produção, substituir por um
+    # provedor de identidade e nunca manter senhas em texto puro.
+    mock_ana_email: str = "ana@raiz.demo"
+    mock_ana_password: str = "Ana@123"
+    mock_bruno_email: str = "bruno@raiz.demo"
+    mock_bruno_password: str = "Bruno@123"
+    mock_carla_email: str = "carla@raiz.demo"
+    mock_carla_password: str = "Carla@123"
+    # Compatibilidade exclusiva para os testes antigos da API.
+    allow_legacy_persona_login: bool = False
     watsonx_url: str = "https://us-south.ml.cloud.ibm.com"
     watsonx_api_key: str = ""
     watsonx_project_id: str = ""
@@ -31,7 +55,7 @@ class Settings(BaseSettings):
     notice_auto_close_on_it_was_me: bool = True
     notice_response_timeout_minutes: int = 10
 
-    # Tentativas simuladas de rajada (docs/dados/modelo-de-dados.md). Valores iniciais, ajustáveis pelo time.
+    # Tentativas simuladas de rajada (docs/04_dados_e_modelo/dados/linha-do-tempo.md). Valores iniciais, ajustáveis pelo time.
     burst_velocity_threshold: int = 10
     burst_max_attempts: int = 5
     burst_window_minutes: int = 15

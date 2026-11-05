@@ -161,3 +161,98 @@ def test_reviews_list_includes_analysis(client):
     assert "score" in analysis
     assert "score_source" in analysis
     assert "model_version" in analysis
+
+
+# ---------------------------------------------------------------------------
+# Decisão da analista — fecha revisão e muda o estado da compra
+# ---------------------------------------------------------------------------
+
+def _create_t007_review(client):
+    _login(client, "ana")
+    response = client.post("/api/purchases/T-007/review", json={"reason": "OUTRO"})
+    assert response.status_code == 201
+    review_id = response.json()["review_id"]
+    client.delete("/api/session")
+    _login(client, "carla")
+    return review_id
+
+
+@pytest.mark.parametrize(
+    ("decision", "expected_status"),
+    [
+        ("AUTHORIZE", "LIBERADA_SIMULACAO"),
+        ("DENY", "RECUSADA_SIMULACAO"),
+    ],
+)
+def test_analyst_decision_closes_review_and_updates_purchase(client, decision, expected_status):
+    review_id = _create_t007_review(client)
+
+    response = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": decision},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["review_status"] == "FECHADA"
+    assert body["case_status"] == expected_status
+    assert body["simulation"] is True
+
+    # A revisão fechada sai da fila aberta.
+    open_ids = {item["review_id"] for item in client.get("/api/reviews").json()["reviews"]}
+    assert review_id not in open_ids
+
+    # O associado vê o novo estado da compra.
+    client.delete("/api/session")
+    _login(client, "ana")
+    detail = client.get("/api/purchases/T-007").json()
+    assert detail["status"] == expected_status
+    assert detail["confirmation"]["allowed_responses"] == []
+
+
+def test_analyst_decision_records_audit_event(client):
+    review_id = _create_t007_review(client)
+    response = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": "AUTHORIZE"},
+    )
+    assert response.status_code == 200
+
+    from sqlalchemy import select
+    from sqlalchemy.orm import Session
+    from app.db.session import get_engine
+    from app.db.tables.purchases import Event, Purchase
+
+    with Session(get_engine()) as session:
+        purchase = session.execute(select(Purchase).where(Purchase.case_id == "T-007")).scalar_one()
+        event = session.execute(
+            select(Event).where(
+                Event.purchase_id == purchase.id,
+                Event.event_type == "ANALYST_DECISION",
+            )
+        ).scalar_one()
+        assert event.to_status == "LIBERADA_SIMULACAO"
+        assert event.payload["review_id"] == review_id
+        assert event.payload["analyst_id"] == "carla"
+
+
+def test_closed_review_cannot_be_decided_twice(client):
+    review_id = _create_t007_review(client)
+    first = client.post(f"/api/reviews/{review_id}/decision", json={"decision": "DENY"})
+    assert first.status_code == 200
+
+    second = client.post(f"/api/reviews/{review_id}/decision", json={"decision": "AUTHORIZE"})
+    assert second.status_code == 409
+    assert second.json()["error"]["code"] == "REVIEW_ALREADY_CLOSED"
+
+
+def test_associate_cannot_decide_review(client):
+    review_id = _create_t007_review(client)
+    client.delete("/api/session")
+    _login(client, "ana")
+
+    response = client.post(
+        f"/api/reviews/{review_id}/decision",
+        json={"decision": "AUTHORIZE"},
+    )
+    assert response.status_code == 403
+    assert response.json()["error"]["code"] == "FORBIDDEN_ROLE"

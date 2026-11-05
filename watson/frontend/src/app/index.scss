@@ -17,6 +17,63 @@ body {
   color-scheme: light;
 }
 
+// Acesso à demonstração: os perfis continuam vindo da API, mas a escolha é
+// explícita e explica o que cada papel consegue fazer.
+.session-login-card {
+  width: 100%;
+  max-width: 34rem;
+  padding: 2rem;
+}
+
+.session-persona-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .cds--radio-button-wrapper {
+    width: 100%;
+    min-height: 4.5rem;
+    align-items: flex-start;
+    padding: 0.875rem;
+    border: 1px solid var(--cds-border-subtle-01);
+    background: var(--cds-layer-01);
+  }
+
+  .cds--radio-button-wrapper:hover {
+    background: var(--cds-layer-hover-01);
+  }
+
+  .cds--radio-button__label {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
+
+.session-persona-option__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.session-persona-option__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.session-persona-option__description {
+  color: var(--cds-text-secondary);
+}
+
+@media (max-width: 42rem) {
+  .session-login-card {
+    padding: 1.25rem;
+  }
+}
+
 // O trilho da navegação lateral (3rem) aparece a partir do breakpoint lg do Carbon.
 @media (min-width: 66rem) {
   .watson-content { margin-left: 3rem; }
@@ -980,4 +1037,12 @@ body {
 .analyst-review-card__score-meta {
   color: var(--cds-text-helper);
   font-family: 'IBM Plex Mono', monospace;
+}
+
+.analyst-review-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cds-border-subtle-01);
 }

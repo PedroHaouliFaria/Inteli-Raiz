@@ -107,3 +107,80 @@ def _build_review_dict(review: Review, purchase: Purchase) -> dict:
             "Enquanto isso, você ainda pode responder se reconhece a compra."
         ),
     }
+
+
+_STATUS_BY_ANALYST_DECISION = {
+    "AUTHORIZE": "LIBERADA_SIMULACAO",
+    "DENY": "RECUSADA_SIMULACAO",
+}
+
+
+def resolve_review(
+    *,
+    session: Session,
+    review_id: str,
+    decision: str,
+    analyst_id: str,
+) -> dict:
+    """Fecha uma revisão e aplica a decisão simulada da analista atomicamente."""
+    from app.api.errors import ApiError
+    from app.db.tables.purchases import Event
+
+    if decision not in _STATUS_BY_ANALYST_DECISION:
+        raise ApiError(400, "INVALID_REQUEST", f"decision inválida: {decision!r}")
+
+    review = session.execute(
+        select(Review).where(Review.review_id == review_id).with_for_update()
+    ).scalar_one_or_none()
+    if review is None:
+        raise ApiError(404, "NOT_FOUND", "O recurso solicitado não foi encontrado.")
+    if review.status != "ABERTA":
+        raise ApiError(
+            409,
+            "REVIEW_ALREADY_CLOSED",
+            "Esta revisão já foi encerrada. Atualize a fila.",
+            {"review_id": review_id},
+        )
+
+    purchase = session.get(Purchase, review.purchase_id)
+    if purchase is None:
+        raise ApiError(404, "NOT_FOUND", "O recurso solicitado não foi encontrado.")
+
+    now = _now()
+    from_status = purchase.status
+    new_status = _STATUS_BY_ANALYST_DECISION[decision]
+
+    purchase.status = new_status
+    purchase.version += 1
+    purchase.updated_at = now
+    # Uma decisão encerra toda revisão aberta da mesma compra para não deixar
+    # pendências órfãs na fila.
+    for pending in purchase.reviews:
+        if pending.status == "ABERTA":
+            pending.status = "FECHADA"
+
+    session.add(
+        Event(
+            purchase_id=purchase.id,
+            event_type="ANALYST_DECISION",
+            from_status=from_status,
+            to_status=new_status,
+            payload={
+                "review_id": review.review_id,
+                "decision": decision,
+                "analyst_id": analyst_id,
+            },
+            created_at=now,
+        )
+    )
+    session.commit()
+
+    action = "liberada" if decision == "AUTHORIZE" else "recusada"
+    return {
+        "review_id": review.review_id,
+        "case_id": purchase.case_id,
+        "decision": decision,
+        "review_status": "FECHADA",
+        "case_status": new_status,
+        "message": f"Compra {action} na simulação e revisão encerrada.",
+    }

@@ -2,13 +2,14 @@
 import json
 import os
 import tempfile
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from app.db.tables import Base
-from app.db.tables.purchases import Purchase, Confirmation, Event
+from app.db.tables.purchases import Purchase, Confirmation, Event, Review
 from app.db.seed import run_seed
 
 
@@ -25,10 +26,10 @@ def tmp_session(tmp_path):
     engine.dispose()
 
 
-def test_seed_creates_three_purchases(tmp_session):
+def test_seed_creates_fifteen_purchases(tmp_session):
     run_seed(tmp_session)
     purchases = tmp_session.execute(select(Purchase)).scalars().all()
-    assert len(purchases) == 3
+    assert len(purchases) == 15
 
 
 def test_seed_is_idempotent(tmp_session):
@@ -36,13 +37,26 @@ def test_seed_is_idempotent(tmp_session):
     run_seed(tmp_session)
     run_seed(tmp_session)
     purchases = tmp_session.execute(select(Purchase)).scalars().all()
-    assert len(purchases) == 3
+    assert len(purchases) == 15
 
     confirmations = tmp_session.execute(select(Confirmation)).scalars().all()
-    assert len(confirmations) == 3
+    assert len(confirmations) == 15
 
     events = tmp_session.execute(select(Event)).scalars().all()
-    assert len(events) == 3  # um evento SEED por compra
+    assert len(events) == 15  # um evento SEED por compra
+
+    reviews = tmp_session.execute(select(Review)).scalars().all()
+    assert len(reviews) == 4  # revisões demonstrativas não são duplicadas
+
+
+def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
+    run_seed(tmp_session)
+    reviews = tmp_session.execute(select(Review)).scalars().all()
+    cases = {tmp_session.get(Purchase, review.purchase_id).case_id for review in reviews}
+
+    assert cases == {"T-003", "T-012", "T-016", "T-021"}
+    assert all(review.status == "ABERTA" for review in reviews)
+    assert all(review.created_by == "ASSOCIADO" for review in reviews)
 
 
 def test_seed_t007_amount_and_card(tmp_session):
@@ -79,11 +93,58 @@ def test_seed_purchases_status_aguardando(tmp_session):
 
 
 def test_seed_confirmations_have_ttl(tmp_session):
-    from datetime import UTC, datetime
     run_seed(tmp_session)
     now_naive = datetime.now(UTC).replace(tzinfo=None)
     for c in tmp_session.execute(select(Confirmation)).scalars().all():
         assert c.expires_at > now_naive
+
+
+def test_seed_refreshes_expired_unanswered_demo_confirmation(tmp_session):
+    run_seed(tmp_session, ttl_seconds=900)
+    purchase = tmp_session.execute(
+        select(Purchase).where(Purchase.case_id == "T-007")
+    ).scalar_one()
+    confirmation = tmp_session.execute(
+        select(Confirmation).where(Confirmation.purchase_id == purchase.id)
+    ).scalar_one()
+    confirmation.expires_at = datetime.now(UTC).replace(tzinfo=None) - timedelta(minutes=1)
+    purchase.status = "CONFIRMACAO_EXPIRADA"
+    previous_version = purchase.version
+    tmp_session.commit()
+
+    run_seed(tmp_session, ttl_seconds=3600)
+
+    tmp_session.refresh(purchase)
+    tmp_session.refresh(confirmation)
+    assert purchase.status == "AGUARDANDO_ASSOCIADO"
+    assert purchase.version == previous_version + 1
+    assert confirmation.expires_at > datetime.now(UTC).replace(tzinfo=None)
+    refresh_event = tmp_session.execute(
+        select(Event).where(
+            Event.purchase_id == purchase.id,
+            Event.event_type == "SEED_REFRESH",
+        )
+    ).scalar_one()
+    assert refresh_event.from_status == "CONFIRMACAO_EXPIRADA"
+
+
+def test_seed_does_not_reopen_answered_confirmation(tmp_session):
+    run_seed(tmp_session, ttl_seconds=900)
+    purchase = tmp_session.execute(
+        select(Purchase).where(Purchase.case_id == "T-007")
+    ).scalar_one()
+    confirmation = tmp_session.execute(
+        select(Confirmation).where(Confirmation.purchase_id == purchase.id)
+    ).scalar_one()
+    confirmation.expires_at = datetime.now(UTC).replace(tzinfo=None) - timedelta(minutes=1)
+    confirmation.answered_response = "AUTHORIZE"
+    purchase.status = "LIBERADA_SIMULACAO"
+    tmp_session.commit()
+
+    run_seed(tmp_session, ttl_seconds=3600)
+
+    tmp_session.refresh(purchase)
+    assert purchase.status == "LIBERADA_SIMULACAO"
 
 
 def test_purchases_json_no_forbidden_fields(tmp_path):

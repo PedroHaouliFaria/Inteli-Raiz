@@ -1,126 +1,53 @@
-# Documentação: Prevenção Inteligente a Fraudes (Sicredi)
+# Documentação — Confirmação assistida de compras (Sicredi)
 
-Documentação do projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026**, desenvolvido na optativa IBM do Inteli.
+Projeto da Trilha 4 do **IBM AI Experiential Learning Lab 2026**, na optativa IBM do Inteli. O associado confirma, recusa ou declara dúvida sobre uma compra sinalizada; um agente de IA ajuda com o contexto disponível e encaminha para revisão humana quando não sabe responder. Os dados são sintéticos e as ações financeiras são simuladas.
 
-## Análise de dados e modelo
+**Revisão:** 04/11/2026. Toda a documentação fica nesta pasta, separada por área. O código está em [watson/](../watson/README.md).
 
-| # | Documento | Conteúdo |
+## Áreas
+
+| Pasta | O que tem | Entregas |
 |---|---|---|
-| 01 | [Análise Exploratória](01_analise_exploratoria.md) | Linha de raciocínio, decisões e insights sobre os dados de transações |
-| 02 | [Base Balanceada](02_base_balanceada.md) | Construção das bases de treino/teste e as 7 features criadas a partir dos insights |
-| 03 | [Modelo](03_modelo.md) | Pipeline de pré-processamento, Random Forest, avaliação por PR-AUC e análise crítica dos resultados |
+| [01_negocios/](01_negocios/README.md) | Problema, alternativas, conceito, pitch e proposta de valor | D01, D04, D05, D07, D08 + canvas |
+| [02_ux_design/](02_ux_design/README.md) | Pesquisa, empatia, jornada, persona, protótipo e validação; processo de design (wireframes, mockups) | D02, D03, D06, D12, D13 |
+| [03_computacao/](03_computacao/README.md) | Estrutura da solução, arquitetura, contratos da API e fluxo do MVP | D09, D10, D11 |
+| [04_dados_e_modelo/](04_dados_e_modelo/README.md) | Análise exploratória, base balanceada, modelo de risco e dados da aplicação | — |
+| [05_gestao/](05_gestao/README.md) | Plano do produto, direcional das entregas, pendências, evidências/hipóteses, pacote final IBM e planejamento | — |
+| [06_evidencias/](06_evidencias/README.md) | Logs e ambiente das execuções | — |
 
-## Produto e implementação
+## Entregas D01–D13
 
-- [Plano revisado: confirmação de compras pelo associado](plano_implementacao.md) — produto, fluxo, regras, contratos, requisitos e testes.
-- [Direcional das entregas D01–D13](direcional_entregas.md) — estruturas, instruções, fontes, responsáveis e critérios de qualidade para as 13 entregas.
-- [Versão em PDF do plano — v2 de 23/10/2026](plano_implementacao.pdf) — a ampliação de 27/10 está apenas no Markdown acima.
-
-O sistema avalia a compra e decide o tratamento inicial; o associado autoriza, recusa ou informa dúvida, e o analista trata exceções. Ações financeiras são simuladas no MVP.
-
-## Especificações técnicas
-
-| Documento | Conteúdo |
-|---|---|
-| [Contrato da API JSON](specs/contrato_api.md) | Endpoints, estados, erros e exemplos de resposta |
-| [Spec: teste de integração Orchestrate → watsonx.ai](specs/teste_integracao_orchestrate_wml.md) | Como provar que o Orchestrate consegue chamar o modelo no watsonx.ai |
-
-## Planejamento
-
-| Documento | Conteúdo |
-|---|---|
-| [Backlog](planejamento/backlog.md) | Cards C01–C32 com responsáveis, dependências e critérios de aceite |
-| [Plano operacional](planejamento/plano_15_dias.md) | Sequência por etapas, divisão em quatro pessoas e critérios de passagem |
-| [Artefatos e materiais de contexto](planejamento/artefatos_materiais_contexto.md) | Mapa das entregas identificadas nos materiais IBM |
-
-## Arquitetura
-
-- [Visão geral](arquitetura/visao-geral.md) — camadas, árvore do repositório e regras.
-- Decisões de arquitetura (ADR):
-
-| # | Decisão | Status |
-|---|---|---|
-| [0001](arquitetura/decisoes/0001-backend-fastapi.md) | Backend em Python + FastAPI | incorporada ao plano |
-| [0002](arquitetura/decisoes/0002-banco-trocavel.md) | Banco trocável via SQLAlchemy; SQLite na demo | incorporada ao plano |
-| [0003](arquitetura/decisoes/0003-codigo-em-ingles.md) | Código e rotas em inglês | incorporada ao plano |
-| [0004](arquitetura/decisoes/0004-aviso-automatico-risco-medio.md) | Aviso automático no risco médio | **substituída** — política conservadora vigente |
-
-## Dados
-
-| Documento | Conteúdo |
-|---|---|
-| [Levantamento de dados](dados/levantamento-de-dados.md) | Cada dado ligado à necessidade de uma persona ou tela |
-| [Modelo de dados](dados/modelo-de-dados.md) | Diagrama relacional, entidades, atributos e decisões em aberto |
-| [Como os dados já foram usados](dados/como-os-dados-ja-foram-usados.md) | EDA, base balanceada, modelo RF e integração com o watsonx |
-| [Linha do tempo do cartão](dados/linha-do-tempo.md) | Se o case permite montar a linha do tempo de um cartão |
-| [Uso dos dados na aplicação](dados/uso-dos-dados-na-aplicacao.md) | Caminho do CSV do case até a tela |
-
-## Design
-
-Processo de Design Thinking em cinco etapas, dentro de [`design/`](design/):
-
-| Pasta | Conteúdo |
-|---|---|
-| [`00-descoberta/`](design/00-descoberta/README.md) | Personas, mapas de empatia, cenário as-is, Hills e POV, anti-persona |
-| [`01-wireframe/`](design/01-wireframe/README.md) | Três versões de wireframe (A, B, C) para app e console |
-| [`02-mockup/`](design/02-mockup/README.md) | Três versões de mockup |
-| [`03-prototipo/`](design/03-prototipo/README.md) | Fluxos de protótipo |
-| [`04-alta-fidelidade/`](design/04-alta-fidelidade/README.md) | Telas de alta fidelidade |
-| [`05-laboratorio-do-modelo/`](design/05-laboratorio-do-modelo/README.md) | Bancada, "e se" e explorador do modelo |
-| [`glossario.md`](design/glossario.md) | Termos do projeto |
-| [`agentes/arquitetura-de-agentes.md`](design/agentes/arquitetura-de-agentes.md) | Arquitetura de agentes |
-
-## Entregas por pessoa
-
-Cada pasta contém as entregas D01–D13 organizadas por responsável, com README de índice, registro de evidências/hipóteses e estado de cada documento.
-
-| Pasta | Responsável | Entregas | Estado |
+| ID | Entrega | Área | Estado e próximo aceite |
 |---|---|---|---|
-| [entregas/pessoa1/](entregas/pessoa1/README.md) | Pessoa 1 — Negócios, produto e narrativa | D01, D04, D05, D07, D08 | rascunho |
-| [entregas/pessoa2/](entregas/pessoa2/README.md) | Pessoa 2 — Pesquisa e compreensão do usuário | D02, D03, D06 | rascunho — pesquisa não executada |
-| [entregas/pessoa3/](entregas/pessoa3/README.md) | Pessoa 3 — Estrutura da solução e arquitetura | D09, D10 | rascunho |
-| [entregas/pessoa4/](entregas/pessoa4/README.md) | Pessoa 4 — Protótipo, fluxo e validação | D11, D12, D13 | D12 revisado; D11 bloqueado; D13 protocolo pronto |
+| [D01](01_negocios/D01_oportunidades.md) | Oportunidades, problema, evidências e HMW/POV | Negócios | Rascunho documental; Pesquisa revisa recorte e necessidades |
+| [D02](02_ux_design/D02_mapa_empatia.md) | Mapa de empatia | UX | Hipóteses rastreáveis; coletar observações reais |
+| [D03](02_ux_design/D03_cenario_atual.md) | Jornada e cenário atual | UX | Cenário hipotético; confirmar canais/processo com pesquisa ou domínio |
+| [D04](01_negocios/D04_priorizacao.md) | Alternativas e priorização | Negócios | Comparação revisada; discussão coletiva pendente |
+| [D05](01_negocios/D05_conceito_solucao.md) | Conceito da solução | Negócios | Conceito e limites revisados; revisão cruzada de Pesquisa |
+| [D06](02_ux_design/D06_persona_e_cenarios.md) | Protopersona e cenários atual/futuro | UX | Proposta rastreável; validar compreensão e contexto |
+| [D07](01_negocios/D07_ideia.md) | Ideia e pitch | Negócios | Roteiro pronto; testar explicação com alguém de fora |
+| [D08](01_negocios/D08_proposta_valor_ia.md) | Valor, necessidade de IA e viabilidade | Negócios | Cenários ilustrativos; faltam cotações e medidas reais |
+| [D09](03_computacao/D09_estrutura_solucao.md) | Estrutura e critérios de sucesso | Computação | Alinhado ao código; metas e coleta definidas para revisão |
+| [D10](03_computacao/D10_arquitetura.md) | Arquitetura, ferramentas e contratos | Computação | Rastro com LLM real e revisão cruzada pendentes |
+| [D11](03_computacao/D11_fluxo_mvp.md) | Fluxo e reprodução do MVP | Computação | Backend reproduzido (207 testes); ensaio pela interface pendente |
+| [D12](02_ux_design/D12_prototipo_experiencia.md) | Experiência e decisões de interface | UX | Teste visual, acessibilidade e compreensão pendentes |
+| [D13](02_ux_design/D13_validacao_melhorias.md) | Protocolo, resultados e reteste | UX | Protocolo pronto; sem participantes/resultados reais |
 
-## Estrutura completa de `docs/`
+D01–D11 são as entregas nomeadas nas aulas; D12 e D13 apoiam prototipação e validação. Não são 13 submissões obrigatórias separadas: o que se envia está no [pacote final IBM](05_gestao/pacote_final_ibm.md).
 
-```
-docs/
-├── 01_analise_exploratoria.md
-├── 02_base_balanceada.md
-├── 03_modelo.md
-├── plano_implementacao.md
-├── plano_implementacao.pdf
-├── direcional_entregas.md
-├── README.md                  ← este arquivo
-│
-├── arquitetura/               ← visão geral e decisões ADR
-│   ├── visao-geral.md
-│   └── decisoes/
-│
-├── assets/                    ← imagens dos documentos de dados/modelo
-│
-├── dados/                     ← modelo de dados, levantamento e uso na aplicação
-│
-├── design/                    ← Design Thinking: descoberta → alta fidelidade
-│   ├── 00-descoberta/
-│   ├── 01-wireframe/
-│   ├── 02-mockup/
-│   ├── 03-prototipo/
-│   ├── 04-alta-fidelidade/
-│   ├── 05-laboratorio-do-modelo/
-│   ├── agentes/
-│   ├── glossario.md
-│   └── skills/
-│
-├── entregas/                  ← entregas D01–D13 por pessoa
-│   ├── pessoa1/               ← D01, D04, D05, D07, D08
-│   ├── pessoa2/               ← D02, D03, D06
-│   ├── pessoa3/               ← D09, D10
-│   └── pessoa4/               ← D11, D12, D13
-│
-├── planejamento/              ← backlog, plano operacional e mapa de artefatos
-│
-└── specs/                     ← contrato da API e spec de integração
-```
+## Por onde começar
 
-> O CSV original (~290 MB) **não é versionado**. Para rodar os notebooks, coloque `case_transacoes_cartoes_sintetico_900k.csv` em `data/`. Para regerar as figuras: `python scripts/gerar_figuras_docs.py`.
+1. **Usar a demonstração:** [guia de uso](03_computacao/guia_de_uso.md), com instalação, credenciais, percurso completo, reset e solução de problemas.
+2. **Entender o projeto:** [D07 — ideia e pitch](01_negocios/D07_ideia.md) e [canvas de proposta de valor](01_negocios/canvas_proposta_de_valor.md).
+3. **Regras do produto:** [plano de implementação](05_gestao/plano_implementacao.md) §§1–3.
+4. **O que falta:** [critérios e pendências](05_gestao/criterios_e_pendencias.md).
+5. **Reproduzir tecnicamente o MVP:** [D11 — fluxo e evidências](03_computacao/D11_fluxo_mvp.md).
+
+## Regras da documentação
+
+- Cada entrega tem ID, versão/data, responsável por função, revisor, estado e fontes. Estados: **rascunho**, **em revisão**, **revisado**, **validado em teste**. Revisão documental não equivale a validação com usuários.
+- Toda afirmação sobre dor, comportamento ou valor aponta para um ID do [registro de evidências](05_gestao/evidencias_e_hipoteses.md) (FON, HIP, DEC, OBS, TST).
+- Não criar falas, participantes, métricas ou capturas do Bob. Evidências do IBM Bob ficam em [bob_sessions/](../bob_sessions/).
+- Documento novo entra na pasta da área a que pertence; o que for transversal (plano, direcional, pendências) fica em [05_gestao/](05_gestao/README.md).
+
+> O CSV original (~290 MB) não é versionado. Para os notebooks, coloque `case_transacoes_cartoes_sintetico_900k.csv` em `data/`. Para gerar as figuras da análise: `python scripts/gerar_figuras_docs.py`.

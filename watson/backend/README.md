@@ -6,10 +6,22 @@ API do Watson em Python + FastAPI: regras de negócio, agentes (watsonx.ai) e ac
 cd watson/backend
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,postgres,risk]" # use ".[dev,db2]" para Db2, ".[watsonx]" para o agente real; "risk" roda o modelo de risco local
-cp .env.example .env                  # sem .env, usa SQLite local e o agente simulado
+cp .env.example .env                  # troque SESSION_SECRET; sem DATABASE_URL, usa SQLite
 uvicorn app.main:app --reload         # http://localhost:8000/docs
 pytest
 ```
+
+O chat integrado usa `GROQ_API_KEY`. Sem a chave, as compras e confirmações continuam funcionando, mas o chat responde `503 AGENT_UNAVAILABLE`. `WATSONX_API_KEY` é usada apenas pelo provider Watsonx e pelo deployment opcional do modelo de risco.
+
+## Login da demonstração
+
+| Usuário | Perfil | E-mail | Senha |
+|---|---|---|---|
+| Ana Souza | Associado | `ana@raiz.demo` | `Ana@123` |
+| Bruno Lima | Associado | `bruno@raiz.demo` | `Bruno@123` |
+| Carla Reis | Analista | `carla@raiz.demo` | `Carla@123` |
+
+Os valores ficam em `.env` pelas variáveis `MOCK_<PESSOA>_EMAIL` e `MOCK_<PESSOA>_PASSWORD`; o `.env.example` contém os mesmos valores para facilitar a configuração. São credenciais fictícias e não devem ser usadas em produção.
 
 ## Pastas
 

@@ -1,8 +1,8 @@
 # Regras do backend (watson/backend)
 
 ## Fontes da verdade
-- Contrato da API: `docs/specs/contrato_api.md`. Não mude nome de campo, código de erro, status HTTP ou formato de resposta por conta própria. Se a spec estiver ambígua ou incompleta, pare e pergunte.
-- Produto e regras: `docs/plano_implementacao.md`, em especial §3, §5 e "Alinhamento com o Watson (28/10)". Quando o código existente do Watson discordar do plano, vale o plano.
+- Contrato da API: `docs/03_computacao/specs/contrato_api.md`. Não mude nome de campo, código de erro, status HTTP ou formato de resposta por conta própria. Se a spec estiver ambígua ou incompleta, pare e pergunte.
+- Produto e regras: `docs/05_gestao/plano_implementacao.md`, em especial §3, §5 e "Alinhamento com o Watson (28/10)". Quando o código existente do Watson discordar do plano, vale o plano.
 
 ## Stack e organização
 - Python 3.12, FastAPI, Pydantic v2, pydantic-settings, SQLAlchemy 2 sobre SQLite, pytest. Nada de dependência nova sem eu pedir.

@@ -13,3 +13,6 @@ __pycache__/
 
 # Banco SQLite local e arquivos auxiliares de execução
 watson/backend/watson.db*
+
+# Cache do Vite (frontend)
+watson/frontend/.vite/

@@ -1,0 +1,10 @@
+........................................................................ [ 34%]
+........................................................................ [ 69%]
+...............................................................          [100%]
+=============================== warnings summary ===============================
+tests/unit/test_avaliar_transacao_security.py::test_avaliar_transacao_does_not_return_score_fields
+  /Users/pedroelhaoulifaria/Projetos/IBM/Inteli-Raiz-isadora-review/watson/backend/tests/unit/test_avaliar_transacao_security.py:62: DeprecationWarning: There is no current event loop
+    result = asyncio.get_event_loop().run_until_complete(tool_fn(ctx))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+207 passed, 1 warning in 31.46s
