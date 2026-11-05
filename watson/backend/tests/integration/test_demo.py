@@ -282,7 +282,7 @@ def test_demo_reset_returns_204(client):
 
 
 def test_demo_reset_restores_all_seed_purchases_for_ana(client):
-    """Reset remove compras extras e restaura as oito fixtures da Ana."""
+    """Reset remove compras extras e restaura as fixtures ampliadas da Ana."""
     _login_ana(client)
     # Cria compra extra
     client.post("/api/demo/purchases", json={"fixture_id": "fraude_supermercado_madrugada"})
@@ -295,9 +295,21 @@ def test_demo_reset_restores_all_seed_purchases_for_ana(client):
     ids = [p["case_id"] for p in r2.json()["purchases"]]
     assert "T-007" in ids
     assert "T-003" in ids
-    # Não tem compras extras (só as oito fixtures da Ana no seed ampliado)
-    assert len(ids) == 8
+    # O seed contém as oito fixtures originais e dez compras extras de demonstração.
+    assert len(ids) == 18
     assert {"T-012", "T-015", "T-016", "T-019", "T-020", "T-023"}.issubset(ids)
+
+    statuses = {item["status"] for item in r2.json()["purchases"]}
+    assert {"AGUARDANDO_ASSOCIADO", "LIBERADA_SIMULACAO", "RECUSADA_SIMULACAO", "REVISAO_PENDENTE"} <= statuses
+
+
+def test_demo_reset_restores_ten_extra_purchases_for_bruno(client):
+    _login_bruno(client)
+    response = client.post("/api/demo/reset")
+    assert response.status_code == 204
+    purchases = client.get("/api/purchases").json()["purchases"]
+    assert len(purchases) == 17
+    assert {f"T-{number}" for number in range(201, 211)} <= {item["case_id"] for item in purchases}
 
 
 def test_demo_reset_requires_session(client):

@@ -26,10 +26,10 @@ def tmp_session(tmp_path):
     engine.dispose()
 
 
-def test_seed_creates_fifteen_purchases(tmp_session):
+def test_seed_creates_expanded_demo_volume(tmp_session):
     run_seed(tmp_session)
     purchases = tmp_session.execute(select(Purchase)).scalars().all()
-    assert len(purchases) == 15
+    assert len(purchases) == 35
 
 
 def test_seed_is_idempotent(tmp_session):
@@ -37,16 +37,16 @@ def test_seed_is_idempotent(tmp_session):
     run_seed(tmp_session)
     run_seed(tmp_session)
     purchases = tmp_session.execute(select(Purchase)).scalars().all()
-    assert len(purchases) == 15
+    assert len(purchases) == 35
 
     confirmations = tmp_session.execute(select(Confirmation)).scalars().all()
-    assert len(confirmations) == 15
+    assert len(confirmations) == 35
 
     events = tmp_session.execute(select(Event)).scalars().all()
-    assert len(events) == 15  # um evento SEED por compra
+    assert len(events) == 47  # 35 SEED + 12 estados fictícios pré-carregados
 
     reviews = tmp_session.execute(select(Review)).scalars().all()
-    assert len(reviews) == 4  # revisões demonstrativas não são duplicadas
+    assert len(reviews) == 8  # quatro originais e quatro extras, sem duplicação
 
 
 def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
@@ -54,7 +54,7 @@ def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
     reviews = tmp_session.execute(select(Review)).scalars().all()
     cases = {tmp_session.get(Purchase, review.purchase_id).case_id for review in reviews}
 
-    assert cases == {"T-003", "T-012", "T-016", "T-021"}
+    assert cases == {"T-003", "T-012", "T-016", "T-021", "T-109", "T-110", "T-209", "T-210"}
     assert all(review.status == "ABERTA" for review in reviews)
     assert all(review.created_by == "ASSOCIADO" for review in reviews)
 
@@ -85,11 +85,18 @@ def test_seed_t003_and_t011_have_no_signals(tmp_session):
         assert signals == [], f"{case_id} não deveria ter sinais"
 
 
-def test_seed_purchases_status_aguardando(tmp_session):
+def test_seed_purchases_have_demo_status_mix(tmp_session):
     run_seed(tmp_session)
-    for p in tmp_session.execute(select(Purchase)).scalars().all():
-        assert p.status == "AGUARDANDO_ASSOCIADO"
-        assert p.version == 1
+    purchases = tmp_session.execute(select(Purchase)).scalars().all()
+    counts = {}
+    for purchase in purchases:
+        counts[purchase.status] = counts.get(purchase.status, 0) + 1
+    assert counts == {
+        "AGUARDANDO_ASSOCIADO": 23,
+        "LIBERADA_SIMULACAO": 4,
+        "RECUSADA_SIMULACAO": 4,
+        "REVISAO_PENDENTE": 4,
+    }
 
 
 def test_seed_confirmations_have_ttl(tmp_session):

@@ -139,16 +139,6 @@ export default function AssociateApp() {
             >
               {session.display_name}
             </Tag>
-            {session.demo_mode && (
-              <DemoResetButton
-                onReset={() => {
-                  setSelectedId(null);
-                  setMobileDetailOpen(false);
-                  navigate('/associate/purchases', { replace: true });
-                  loadPurchases();
-                }}
-              />
-            )}
             <HeaderGlobalAction
               aria-label="Atualizar lista de compras"
               onClick={loadPurchases}
@@ -179,6 +169,19 @@ export default function AssociateApp() {
             <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginTop: '0.25rem' }}>
               Simulação — Inteli Raiz
             </p>
+            {session.demo_mode && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <DemoResetButton
+                  variant="button"
+                  onReset={() => {
+                    setSelectedId(null);
+                    setMobileDetailOpen(false);
+                    navigate('/associate/purchases', { replace: true });
+                    loadPurchases();
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {listLoading && (

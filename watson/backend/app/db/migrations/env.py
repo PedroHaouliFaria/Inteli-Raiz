@@ -18,8 +18,11 @@ def _get_url() -> str:
         x_args = dict(kv.split("=", 1) for kv in x_args if "=" in kv)
     if x_args.get("db_url"):
         return x_args["db_url"]
-    from app.db.session import get_engine
-    return str(get_engine().url)
+    # Não converta ``Engine.url`` para string aqui: o SQLAlchemy mascara a
+    # senha como ``***`` por segurança, e essa versão mascarada deixa de ser
+    # uma URL utilizável pelo segundo engine criado abaixo.
+    from app.config import get_settings
+    return get_settings().database_url
 
 
 def run_migrations_offline() -> None:

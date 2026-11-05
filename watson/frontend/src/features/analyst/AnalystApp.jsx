@@ -257,9 +257,6 @@ export default function AnalystApp({ mode = 'open' }) {
             >
               {session.display_name}
             </Tag>
-            {session.demo_mode && (
-              <DemoResetButton onReset={loadReviews} />
-            )}
             <HeaderGlobalAction
               aria-label="Atualizar lista de revisões"
               onClick={loadReviews}
@@ -309,6 +306,11 @@ export default function AnalystApp({ mode = 'open' }) {
             >
               Simulação — Inteli Raiz · decisões registradas com auditoria
             </p>
+            {session.demo_mode && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <DemoResetButton variant="button" onReset={loadReviews} />
+              </div>
+            )}
           </div>
           {/* Aviso de simulação visível */}
           <div className="analyst-simulation-badge" role="note" aria-label="Aviso de simulação">

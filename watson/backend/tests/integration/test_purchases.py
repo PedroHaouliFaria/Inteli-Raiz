@@ -48,9 +48,10 @@ def test_ana_list_contains_seed_cases_in_recent_first_order(client):
     data = r.json()
     assert data["simulation"] is True
     ids = [p["case_id"] for p in data["purchases"]]
-    assert len(ids) == 8
+    assert len(ids) == 18
     assert ids[:3] == ["T-012", "T-015", "T-016"]
     assert {"T-007", "T-003", "T-023"}.issubset(ids)
+    assert {f"T-{case_id}" for case_id in range(101, 111)}.issubset(ids)
 
 
 def test_bruno_list_contains_seed_cases(client):
@@ -58,9 +59,10 @@ def test_bruno_list_contains_seed_cases(client):
     r = client.get("/api/purchases")
     assert r.status_code == 200
     ids = [p["case_id"] for p in r.json()["purchases"]]
-    assert len(ids) == 7
+    assert len(ids) == 17
     assert ids[:3] == ["T-013", "T-014", "T-017"]
     assert "T-011" in ids
+    assert {f"T-{case_id}" for case_id in range(201, 211)}.issubset(ids)
 
 
 def test_purchases_list_without_session_401(client):
@@ -245,5 +247,5 @@ def test_r10_second_app_sees_same_data_no_re_seed(db_path, monkeypatch):
         ids2 = [p["case_id"] for p in r2.json()["purchases"]]
 
     assert ids1 == ids2
-    assert len(ids1) == 8
+    assert len(ids1) == 18
     assert {"T-007", "T-003", "T-023"}.issubset(ids1)
