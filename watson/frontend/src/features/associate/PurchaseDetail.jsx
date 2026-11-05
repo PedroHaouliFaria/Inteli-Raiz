@@ -23,7 +23,6 @@ import { Warning, Information, CheckmarkFilled, CloseFilled, Time } from '@carbo
 import { ApiError, getPurchase, getPurchaseStatus, postConfirmationResponse } from '../../api/client.js';
 import { formatDate, formatMoney, isTerminal } from './utils.js';
 import { PurchaseStatusPanel } from './PurchaseStatus.jsx';
-import PurchaseChat from './PurchaseChat.jsx';
 import HumanReviewRequest from './HumanReviewRequest.jsx';
 
 const POLL_INTERVAL_MS = 5000;
@@ -435,15 +434,6 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
 
         {/* ── Separador visual ─────────────────────────────────────────────── */}
         <hr className="associate-detail__divider" aria-hidden />
-
-        {/* ── Chat com o assistente ────────────────────────────────────────── */}
-        <PurchaseChat
-          caseId={caseId}
-          onReviewProtocol={() => {
-            loadDetail();
-            onPurchaseChanged?.();
-          }}
-        />
 
         {/* ── Revisão por analista ─────────────────────────────────────────── */}
         <HumanReviewRequest

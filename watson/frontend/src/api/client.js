@@ -117,6 +117,15 @@ export const postChatMessage = (caseId, message) =>
     body: { message },
   });
 
+// ── Copiloto global do associado ────────────────────────────────────────────
+
+export const getCopilotStatus = () => request('/api/copilot');
+
+export const postCopilotMessage = (message) => request('/api/copilot/chat', {
+  method: 'POST',
+  body: { message },
+});
+
 // ── Revisão (§8 do contrato) ──────────────────────────────────────────────────
 
 /**

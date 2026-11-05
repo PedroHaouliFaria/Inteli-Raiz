@@ -5,9 +5,10 @@
  *   - Header com nome da pessoa e botão de sair (via SessionGate)
  *   - Lista de compras reais (GET /api/purchases)
  *   - Detalhe da compra selecionada (PurchaseDetail)
+ *   - Copiloto global da pessoa, independente da compra selecionada
  *
  * Não usa o estado mockado de src/state/store.jsx.
- * Não renderiza biometria, aparelho trocado, bloqueio de cartão ou chat.
+ * Não renderiza biometria, aparelho trocado ou bloqueio de cartão.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -22,13 +23,14 @@ import {
   Tag,
   Theme,
 } from '@carbon/react';
-import { ArrowLeft, Renew, Logout } from '@carbon/icons-react';
+import { ArrowLeft, Renew, Logout, WatsonxAi } from '@carbon/icons-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ApiError, getPurchases } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import PurchaseList from './PurchaseList.jsx';
 import PurchaseDetail from './PurchaseDetail.jsx';
 import DemoResetButton from './DemoResetButton.jsx';
+import AssociateCopilot from './AssociateCopilot.jsx';
 
 export default function AssociateApp() {
   const session = useSession();
@@ -42,6 +44,9 @@ export default function AssociateApp() {
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(caseId));
   const [routeNotFound, setRouteNotFound] = useState(false);
+  const [copilotOpen, setCopilotOpen] = useState(() => (
+    typeof window === 'undefined' || window.matchMedia('(min-width: 64.01rem)').matches
+  ));
 
   const detailRef = useRef(null);
   const caseIdRef = useRef(caseId);
@@ -140,6 +145,13 @@ export default function AssociateApp() {
               {session.display_name}
             </Tag>
             <HeaderGlobalAction
+              aria-label={copilotOpen ? 'Fechar copiloto' : 'Abrir copiloto'}
+              isActive={copilotOpen}
+              onClick={() => setCopilotOpen((current) => !current)}
+            >
+              <WatsonxAi size={20} />
+            </HeaderGlobalAction>
+            <HeaderGlobalAction
               aria-label="Atualizar lista de compras"
               onClick={loadPurchases}
               disabled={listLoading}
@@ -159,7 +171,7 @@ export default function AssociateApp() {
       </Theme>
 
       <main
-        className={`associate-app${mobileDetailOpen ? ' associate-app--detail-open' : ''}`}
+        className={`associate-app${mobileDetailOpen ? ' associate-app--detail-open' : ''}${copilotOpen ? ' associate-app--copilot-open' : ''}`}
         aria-label="Suas compras para confirmação"
       >
         {/* Coluna esquerda: lista */}
@@ -270,6 +282,14 @@ export default function AssociateApp() {
             )
           )}
         </div>
+
+        {copilotOpen && (
+          <AssociateCopilot
+            selectedCaseId={selectedId}
+            onClose={() => setCopilotOpen(false)}
+            onAction={loadPurchases}
+          />
+        )}
       </main>
     </Theme>
   );

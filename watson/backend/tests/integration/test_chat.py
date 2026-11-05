@@ -117,6 +117,128 @@ def test_get_chat_agent_available_false_without_key(client):
     assert r.json()["agent_available"] is False
 
 
+def test_copilot_status_is_global_and_lists_capabilities(client):
+    _login(client, "ana")
+    response = client.get("/api/copilot")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert "Ana" in body["greeting"]
+    assert len(body["capabilities"]) == 4
+    assert body["agent_available"] is False
+    assert body["simulation"] is True
+
+
+def test_analyst_cannot_access_associate_copilot(client):
+    _login(client, "carla")
+    assert client.get("/api/copilot").status_code == 403
+    assert client.post("/api/copilot/chat", json={"message": "Olá"}).status_code == 403
+
+
+def test_copilot_uses_report_tool(db_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("GROQ_API_KEY", "fake-key-for-test")
+
+    from app.config import get_settings
+    from app.db.session import get_engine
+    get_settings.cache_clear()
+    get_engine.cache_clear()
+
+    from app.main import create_app
+    from pydantic_ai.models.function import FunctionModel, ModelResponse, TextPart, ToolCallPart
+    from app.domain.copilot import copilot_agent
+
+    def report_model(messages, info):
+        has_tool_return = any(
+            hasattr(message, "parts") and any(
+                getattr(part, "part_kind", None) == "tool-return" for part in message.parts
+            )
+            for message in messages
+        )
+        if has_tool_return:
+            return ModelResponse(parts=[TextPart(content="Seu resumo foi gerado com dados atuais.")])
+        return ModelResponse(parts=[ToolCallPart(tool_name="gerar_relatorio", args={})])
+
+    with TestClient(create_app(), raise_server_exceptions=True) as test_client:
+        _login(test_client, "ana")
+        with copilot_agent.override(model=FunctionModel(report_model)):
+            response = test_client.post(
+                "/api/copilot/chat",
+                json={"message": "Gere um resumo das minhas compras."},
+            )
+
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["tools_used"] == ["gerar_relatorio"]
+    assert body["action_taken"] is False
+    assert "resumo" in body["content"].lower()
+
+
+def test_copilot_has_no_tool_to_authorize_or_deny():
+    from app.domain.copilot import copilot_agent
+
+    tool_names = set(copilot_agent._function_toolset.tools.keys())
+    assert tool_names == {
+        "listar_compras",
+        "consultar_compra",
+        "gerar_relatorio",
+        "solicitar_revisao",
+    }
+
+
+def test_copilot_can_request_review_for_owned_purchase(db_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
+    monkeypatch.setenv("GROQ_API_KEY", "fake-key-for-test")
+
+    from app.config import get_settings
+    from app.db.session import get_engine
+    get_settings.cache_clear()
+    get_engine.cache_clear()
+
+    from app.main import create_app
+    from pydantic_ai.models.function import FunctionModel, ModelResponse, TextPart, ToolCallPart
+    from app.domain.copilot import copilot_agent
+
+    def review_model(messages, info):
+        has_tool_return = any(
+            hasattr(message, "parts") and any(
+                getattr(part, "part_kind", None) == "tool-return" for part in message.parts
+            )
+            for message in messages
+        )
+        if has_tool_return:
+            return ModelResponse(parts=[TextPart(content="Solicitei a revisão da compra T-007.")])
+        return ModelResponse(parts=[ToolCallPart(
+            tool_name="solicitar_revisao",
+            args={
+                "case_id": "T-007",
+                "reason": "NAO_RECONHECE_ESTABELECIMENTO",
+                "details": "Solicitação feita pelo copiloto.",
+            },
+        )])
+
+    app = create_app()
+    with TestClient(app, raise_server_exceptions=True) as test_client:
+        _login(test_client, "ana")
+        with copilot_agent.override(model=FunctionModel(review_model)):
+            response = test_client.post(
+                "/api/copilot/chat",
+                json={"message": "Peça revisão da compra T-007."},
+            )
+        assert response.status_code == 200, response.text
+        assert response.json()["action_taken"] is True
+        assert response.json()["tools_used"] == ["solicitar_revisao"]
+
+        test_client.delete("/api/session")
+        _login(test_client, "carla")
+        reviews = test_client.get("/api/reviews").json()["reviews"]
+        assert any(
+            review["case_id"] == "T-007" and review["created_by"] == "AGENTE"
+            for review in reviews
+        )
+
+
 # ---------------------------------------------------------------------------
 # R08: FunctionModel chama consultar_compra; status inalterado
 # ---------------------------------------------------------------------------
@@ -324,7 +446,7 @@ def test_r09_after_llm_503_confirmation_still_works(db_path, monkeypatch):
             headers={"Idempotency-Key": str(uuid.uuid4())},
         )
     assert r_confirm.status_code == 200, r_confirm.text
-    assert r_confirm.json()["status"] == "REVISAO_PENDENTE"
+    assert r_confirm.json()["status"] == "LIBERADA_SIMULACAO"
 
 
 # ---------------------------------------------------------------------------
