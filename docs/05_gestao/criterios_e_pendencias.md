@@ -45,7 +45,7 @@ Responsabilidade por função organiza o trabalho; confirmar os nomes com a equi
 
 | ID | Pendência | Prioridade e responsável | Critério de encerramento |
 |---|---|---|---|
-| TEC-01 | Prompt atual afirma que a tela só tem botões e chat, mas HumanReviewRequest existe | Antes de encerrar D12/D13; autor do agente + frontend | Alinhar prompt à UI, preservar proibição de autorizar e testar interação real. Nesta revisão foi identificado, sem alterar aplicação. |
+| TEC-01 | Prompt atual afirma que a tela só tem botões e chat, mas HumanReviewRequest existe | Antes de encerrar D12/D13; autor do agente + frontend | Alinhar prompt à UI, preservar proibição de autorizar e testar interação real. **05/11:** regra 13 reescrita no Bob para citar "Prefiro falar com uma pessoa" / "Solicitar revisão por analista"; teste de unidade cobre o texto; suíte 220 passed. Falta o teste com LLM real (depende de TEC-04). |
 | TEC-02 | Preparar condição A sem chat com os mesmos dados e revisão | Antes de comparação A/B; Integração | Versão/forma de ocultar chat documentadas; nenhuma vantagem de informação entre condições |
 | TEC-03 | Reprodutibilidade/avaliação do modelo | Antes de alegar desempenho; Dados | Corte, manifesto 28 features, madrugada/nulos, baseline/velocidade e limiar documentados; holdout novo se necessário |
 | TEC-04 | Ambiente com LLM real e persistência de deploy | Antes da demonstração; Arquitetura | Chave configurada fora do Git, rastro real, volume durável e acesso testado |
