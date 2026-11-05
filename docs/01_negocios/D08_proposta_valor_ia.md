@@ -8,6 +8,17 @@
 
 ---
 
+## Sumário
+
+- [1. Tabela da proposta de valor](#1-tabela-da-proposta-de-valor)
+- [2. Por que IA agêntica e qual arquétipo](#2-por-que-ia-agêntica-e-qual-arquétipo)
+- [3. Posicionamento nos eixos (interpretação candidata)](#3-posicionamento-nos-eixos-interpretação-candidata)
+- [4. Premissas de viabilidade](#4-premissas-de-viabilidade)
+- [5. Métricas do protótipo × efeitos operacionais](#5-métricas-do-protótipo--efeitos-operacionais)
+- [6. Este documento será atualizado após D13](#6-este-documento-será-atualizado-após-d13)
+
+---
+
 ## 1. Tabela da proposta de valor
 
 | Parte | Conteúdo |
@@ -37,7 +48,7 @@
 | Responder perguntas livres sobre os dados disponíveis | Sem conversa; textos e FAQ podem cobrir dúvidas previstas | Conversa e escolha de ferramentas; utilidade a testar |
 | Encaminhar para revisão | Ação separada | Ação separada ou ferramenta do agente |
 
-**Justificativa como hipótese (HIP-P1-05):** a conversa pode ajudar a interpretar contexto e limites melhor que a mesma interface sem chat. Isso precisa ser observado em D13; não é capacidade comprovadamente superior por ter LLM. Se A funcionar tão bem, manter A como baseline e rever a necessidade da camada conversacional. Sinais são características descritivas, não causas comprovadas do score.
+<p align="justify">&ensp;&ensp; <strong>Justificativa como hipótese (HIP-P1-05):</strong> a conversa pode ajudar a interpretar contexto e limites melhor que a mesma interface sem chat. Isso precisa ser observado em D13; não é capacidade comprovadamente superior por ter LLM. Se A funcionar tão bem, manter A como baseline e rever a necessidade da camada conversacional. Sinais são características descritivas, não causas comprovadas do score.</p>
 
 ### Arquétipos candidatos (DEC-P1-04)
 
@@ -55,9 +66,9 @@
 | **Decidir** | Qual ferramenta consultar para a dúvida específica; quando informar o limite (contexto insuficiente); quando solicitar revisão (dúvida irresolvível) |
 | **Fazer** | Chamar ferramentas autorizadas; retornar explicação baseada nos dados; nunca chamar `responder_confirmacao` — essa operação é exclusiva do controle da interface humana |
 
-**Dúvida fora do contexto:** se o associado fizer uma pergunta que nenhuma ferramenta resolve, o agente declara o limite explicitamente e mantém o caminho de revisão. Nunca inventa.
+<p align="justify">&ensp;&ensp; <strong>Dúvida fora do contexto:</strong> se o associado fizer uma pergunta que nenhuma ferramenta resolve, o agente declara o limite explicitamente e mantém o caminho de revisão. Nunca inventa.</p>
 
-**RAG e múltiplos agentes:** não entram nesta versão — sem necessidade demonstrada para o escopo atual.
+<p align="justify">&ensp;&ensp; <strong>RAG e múltiplos agentes:</strong> não entram nesta versão — sem necessidade demonstrada para o escopo atual.</p>
 
 ---
 
@@ -72,7 +83,7 @@
 
 ## 4. Premissas de viabilidade
 
-**HIP-REV-01 — cenários ilustrativos, não medições ou previsão da Sicredi.** São escolhas de planejamento para tornar a conta reproduzível sem inventar dados operacionais. Substituir pelos volumes observados e cotações antes de decidir adoção.
+<p align="justify">&ensp;&ensp; <strong>HIP-REV-01 — cenários ilustrativos, não medições ou previsão da Sicredi.</strong> São escolhas de planejamento para tornar a conta reproduzível sem inventar dados operacionais. Substituir pelos volumes observados e cotações antes de decidir adoção.</p>
 
 | Premissa | Base ilustrativa | Conservador ilustrativo | Fonte / como substituir |
 |---|---|---|---|
@@ -83,13 +94,12 @@
 | Fração encaminhada para revisão | 10% | 30% | Hipótese; medir revisões / confirmações |
 | Minutos por revisão humana | 5 | 10 | Hipótese; medir atendimento |
 
-Sejam **Ci/Co** preços por milhão de tokens de entrada/saída do modelo escolhido, **H** custo humano por hora e **I** infraestrutura mensal, todos na mesma moeda. Não foi consultada cotação comercial nesta revisão; não há alegação de custo zero nem valor público sem fonte.
+<p align="justify">&ensp;&ensp; Sejam <strong>Ci/Co</strong> preços por milhão de tokens de entrada/saída do modelo escolhido, <strong>H</strong> custo humano por hora e <strong>I</strong> infraestrutura mensal, todos na mesma moeda. Não foi consultada cotação comercial nesta revisão; não há alegação de custo zero nem valor público sem fonte.</p>
 
 - Base: 600 chamadas; 900.000 tokens de entrada e 150.000 de saída; 100 revisões × 5 min = 8,33 h. Total ilustrativo = `0,9 × Ci + 0,15 × Co + 8,33 × H + I`.
-
 - Conservador: 4.000 chamadas; 6.000.000 tokens de entrada e 1.000.000 de saída; 300 revisões × 10 min = 50 h. Total ilustrativo = `6 × Ci + 1 × Co + 50 × H + I`.
 
-Para produzir valor monetário faltam Ci/Co, H e I, com modelo, URL/fonte, moeda, data, limites de quota e responsável pela cotação. Produto consolida; Arquitetura mede uso de tokens/infra; Pesquisa mede esforço. Economia eventual requer baseline de esforço realmente evitado, não só quantidade de transações sinalizadas.
+<p align="justify">&ensp;&ensp; Para produzir valor monetário faltam Ci/Co, H e I, com modelo, URL/fonte, moeda, data, limites de quota e responsável pela cotação. Produto consolida; Arquitetura mede uso de tokens/infra; Pesquisa mede esforço. Economia eventual requer baseline de esforço realmente evitado, não só quantidade de transações sinalizadas.</p>
 
 ## 5. Métricas do protótipo × efeitos operacionais
 
@@ -102,7 +112,7 @@ Para produzir valor monetário faltam Ci/Co, H e I, com modelo, URL/fonte, moeda
 | Redução de perdas por fraude | Não demonstrada | Exige fraude confirmada e medição operacional |
 | Desempenho do modelo em produção | Não demonstrado | Resultado sintético exploratório não prova eficácia real |
 
-**Separação obrigatória (DEC-P1-03):** resultados do piloto (3–5 pessoas) não comprovam efeito operacional. Valor das transações sinalizadas ≠ perdas evitadas. Esta versão apresenta hipóteses mensuráveis, não resultados.
+<p align="justify">&ensp;&ensp; <strong>Separação obrigatória (DEC-P1-03):</strong> resultados do piloto (3–5 pessoas) não comprovam efeito operacional. Valor das transações sinalizadas ≠ perdas evitadas. Esta versão apresenta hipóteses mensuráveis, não resultados.</p>
 
 ---
 

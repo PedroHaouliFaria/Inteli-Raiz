@@ -1,60 +1,95 @@
-# Canvas de Proposta de Valor — Confirmação assistida de compras
+# Canvas de Proposta de Valor
 
-**ID:** apoio a D08 · **Versão:** 0.2 · **Data:** 04/11/2026\
-**Responsável:** Produto · **Revisor:** Arquitetura · **Estado:** rascunho — nenhuma hipótese validada com usuários reais; todo conteúdo baseia-se em documentação interna e hipóteses registradas\
-**Origem:** [D01](D01_oportunidades.md), [D02](../02_ux_design/D02_mapa_empatia.md), [D04](D04_priorizacao.md), [D05](D05_conceito_solucao.md), [D06](../02_ux_design/D06_persona_e_cenarios.md), [D08](D08_proposta_valor_ia.md), [registro de evidências](../05_gestao/evidencias_e_hipoteses.md) e [plano](../05_gestao/plano_implementacao.md)
+**ID:** D07  
+**Versão:** 0.1 · 03/11/2026  
+**Responsável:** Pessoa 1  
+**Revisores:** Pessoas 2, 3, 4  
+**Estado:** rascunho — nenhuma hipótese validada com usuários reais; todo conteúdo baseia-se em documentação interna e hipóteses registradas  
+**Origem:** D01 (oportunidades), D02 (mapa de empatia), D04 (priorização), D05 (conceito), D06 (persona e cenários), D08 (proposta de valor), evidencias_e_hipoteses.md (P1 e P2), plano_implementacao.md
 
-> Este canvas não é uma entrega própria das aulas: ele organiza, no formato de Osterwalder, o encaixe entre o associado e a solução, e alimenta a proposta de valor de [D08](D08_proposta_valor_ia.md). Se divergirem, vale o D08.
+---
+
+## Sumário
+
+- [1. Introdução](#1-introdução)
+- [2. Template — Canvas de Proposta de Valor](#2-template--canvas-de-proposta-de-valor)
+- [3. Segmento de clientes](#3-segmento-de-clientes)
+- [4. Perfil do cliente](#4-perfil-do-cliente)
+  - [4.1. Tarefas que o associado quer realizar](#41-tarefas-que-o-associado-quer-realizar)
+  - [4.2. Dores](#42-dores)
+  - [4.3. Ganhos esperados](#43-ganhos-esperados)
+- [5. Mapa de valor](#5-mapa-de-valor)
+  - [5.1. Produtos e serviços](#51-produtos-e-serviços)
+  - [5.2. Aliviadores de dor](#52-aliviadores-de-dor)
+  - [5.3. Criadores de ganho](#53-criadores-de-ganho)
+- [6. Encaixe (Fit)](#6-encaixe-fit)
+- [7. Proposta de valor em uma frase](#7-proposta-de-valor-em-uma-frase)
+- [8. Valor para a instituição](#8-valor-para-a-instituição)
+- [9. Boas práticas já incorporadas](#9-boas-práticas-já-incorporadas)
+- [10. Hipóteses prioritárias a validar](#10-hipóteses-prioritárias-a-validar)
+- [Rastreabilidade de fontes](#rastreabilidade-de-fontes)
 
 ---
 
 ## 1. Introdução
 
-Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tarefas do associado diante de uma compra sinalizada) e o **mapa de valor** da solução proposta (aliviadores, criadores de ganho e produtos/serviços). O segmento é restrito ao associado que recebe um alerta e precisa confirmar ou contestar a compra — o analista de fraudes aparece apenas onde a jornada do associado depende de revisão de exceções.
+<p align="justify">&ensp;&ensp; Este canvas mapeia o encaixe entre o <strong>perfil do cliente</strong> (dores, ganhos e tarefas do associado diante de uma compra sinalizada) e o <strong>mapa de valor</strong> da solução proposta (aliviadores, criadores de ganho e produtos/serviços). O segmento é restrito ao associado que recebe um alerta e precisa confirmar ou contestar a compra — o analista de fraudes aparece apenas onde a jornada do associado depende de revisão de exceções.</p>
+
+<p align="justify">&ensp;&ensp; A metodologia do Value Proposition Canvas (Osterwalder et al., 2014) estrutura o raciocínio em dois blocos complementares: o <strong>Perfil do Cliente</strong>, que parte do ponto de vista de quem usa, e o <strong>Mapa de Valor</strong>, que descreve como a solução cria valor em resposta. O encaixe (fit) ocorre quando os aliviadores de dor e os criadores de ganho respondem diretamente às dores e ganhos identificados — e é exatamente esse alinhamento que este documento busca registrar e validar.</p>
 
 > **Marcação de estado:** as hipóteses listadas não foram verificadas com usuários reais. Cada item cita o ID de evidência ou hipótese que o sustenta.
 
 ---
 
-## 2. Diagrama — estrutura do canvas
+## 2. Template — Canvas de Proposta de Valor
+
+<p align="justify">&ensp;&ensp; O template abaixo representa a estrutura canônica do Value Proposition Canvas. O lado esquerdo — o <strong>Mapa de Valor</strong> — descreve o que a solução entrega, como ela alivia dores e como ela cria ganhos. O lado direito — o <strong>Perfil do Cliente</strong> — descreve o que o associado precisa fazer (tarefas), o que o bloqueia ou frustra (dores) e o que ele valoriza como resultado positivo (ganhos).</p>
 
 ```
-┌─────────────────────────────────┬──────────────────────────────────────────┐
-│         MAPA DE VALOR           │           PERFIL DO CLIENTE               │
-│                                 │                                           │
-│  ┌───────────────────────────┐  │  ┌────────────────────────────────────┐   │
-│  │   Produtos e serviços     │  │  │         Tarefas do cliente         │   │
-│  │  (o que a solução faz)    │  │  │     (o que o associado quer fazer) │   │
-│  └───────────────────────────┘  │  └────────────────────────────────────┘   │
-│                                 │                                           │
-│  ┌───────────────────────────┐  │  ┌────────────────────────────────────┐   │
-│  │   Aliviadores de dor      │  │  │         Dores                      │   │
-│  │  (como resolve os bloqueios)│ │  │    (o que bloqueia ou irrita)      │   │
-│  └───────────────────────────┘  │  └────────────────────────────────────┘   │
-│                                 │                                           │
-│  ┌───────────────────────────┐  │  ┌────────────────────────────────────┐   │
-│  │   Criadores de ganho      │  │  │         Ganhos esperados           │   │
-│  │  (como amplifica o valor) │  │  │    (o que o associado valoriza)    │   │
-│  └───────────────────────────┘  │  └────────────────────────────────────┘   │
-│                                 │                                           │
-└─────────────────────────────────┴──────────────────────────────────────────┘
+┌────────────────────────────────────────┬────────────────────────────────────────┐
+│            MAPA DE VALOR               │          PERFIL DO CLIENTE             │
+│                                        │                                        │
+│  ╔══════════════════════════════════╗  │  ╔══════════════════════════════════╗  │
+│  ║      Produtos e serviços         ║  │  ║      Tarefas do cliente          ║  │
+│  ║  O que a solução entrega —       ║  │  ║  O que o associado precisa       ║  │
+│  ║  funcionalidades e entregas      ║  │  ║  realizar (Jobs to be Done)      ║  │
+│  ╚══════════════════════════════════╝  │  ╚══════════════════════════════════╝  │
+│                                        │                                        │
+│  ╔══════════════════════════════════╗  │  ╔══════════════════════════════════╗  │
+│  ║      Aliviadores de dor          ║  │  ║      Dores                       ║  │
+│  ║  Como a solução resolve          ║  │  ║  O que bloqueia, irrita ou       ║  │
+│  ║  os bloqueios e frustrações      ║  │  ║  impede o associado              ║  │
+│  ╚══════════════════════════════════╝  │  ╚══════════════════════════════════╝  │
+│                                        │                                        │
+│  ╔══════════════════════════════════╗  │  ╔══════════════════════════════════╗  │
+│  ║      Criadores de ganho          ║  │  ║      Ganhos esperados            ║  │
+│  ║  Como a solução amplifica        ║  │  ║  O que o associado valoriza      ║  │
+│  ║  o valor percebido               ║  │  ║  como resultado positivo         ║  │
+│  ╚══════════════════════════════════╝  │  ╚══════════════════════════════════╝  │
+│                                        │                                        │
+│           ◄─── ENCAIXE (FIT) ───►      │                                        │
+└────────────────────────────────────────┴────────────────────────────────────────┘
 ```
+
+<p align="justify">&ensp;&ensp; O encaixe ocorre quando os <strong>aliviadores</strong> respondem às <strong>dores</strong> e os <strong>criadores de ganho</strong> respondem aos <strong>ganhos esperados</strong>. A seção 6 mapeia explicitamente cada par. Elementos sem encaixe identificado sinalizam lacunas de proposta de valor ou itens a validar.</p>
 
 ---
 
 ## 3. Segmento de clientes
 
-**Quem:** Associado de cooperativa de crédito que recebe, de forma inesperada, um alerta no aplicativo sobre uma compra sinalizada e precisa confirmar, contestar ou pedir ajuda — sem ligar para ninguém.
+<p align="justify">&ensp;&ensp; <strong>Quem:</strong> associado de cooperativa de crédito que recebe, de forma inesperada, um alerta no aplicativo sobre uma compra sinalizada e precisa confirmar, contestar ou pedir ajuda — sem precisar ligar para ninguém.</p>
 
-**Referência:** protopersona Valdir (D06 §1); FON-04; FON-P1-01 p.6.
+<p align="justify">&ensp;&ensp; <strong>Referência:</strong> protopersona Valdir (D06 §1); FON-04; FON-P1-01 p.6.</p>
 
-**Fora do escopo deste canvas:** analista de fraudes, mesa de análise, detecção em tempo real, bloqueio automático de cartão (DEC-P1-01).
+<p align="justify">&ensp;&ensp; <strong>Fora do escopo deste canvas:</strong> analista de fraudes, mesa de análise, detecção em tempo real, bloqueio automático de cartão (DEC-P1-01).</p>
 
 ---
 
 ## 4. Perfil do cliente
 
-### 4.1 Tarefas que o associado quer realizar
+### 4.1. Tarefas que o associado quer realizar
+
+<p align="justify">&ensp;&ensp; As tarefas abaixo descrevem o que o associado precisa concluir na situação de confirmação de compra sinalizada — independentemente de como a solução funciona. São ordenadas pela sequência natural da jornada.</p>
 
 | # | Tarefa | Fonte |
 |---|---|---|
@@ -63,7 +98,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 | T3 | Pedir ajuda de um atendente sem perder a janela de resposta | HIP-07; DEC-05 |
 | T4 | Saber o que aconteceu depois de responder (desfecho) | HIP-09 |
 
-### 4.2 Dores (ordenadas por impacto estimado)
+### 4.2. Dores
+
+<p align="justify">&ensp;&ensp; As dores estão ordenadas por impacto estimado. As marcadas com ⭐ são as que, se não resolvidas, inviabilizam completamente o uso da solução.</p>
 
 | # | Dor | Fonte | Notas |
 |---|---|---|---|
@@ -73,7 +110,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 | D4 | Não sabe se pode responder à compra depois de pedir ajuda — teme perder a janela | HIP-02; DEC-05 | Risco de abandono do fluxo ao perceber que o prazo corre |
 | D5 | Não recebe retorno claro do desfecho — não sabe se a compra foi liberada ou o cartão bloqueado | HIP-09; HIP-01 | Incerteza pós-resposta gera nova ligação para a central |
 
-### 4.3 Ganhos esperados (ordenados por importância)
+### 4.3. Ganhos esperados
+
+<p align="justify">&ensp;&ensp; Os ganhos estão ordenados por importância percebida. Os marcados com ⭐ são os mais valorizados e representam o diferencial central da proposta.</p>
 
 | # | Ganho | Fonte | Notas |
 |---|---|---|---|
@@ -86,7 +125,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 
 ## 5. Mapa de valor
 
-### 5.1 Produtos e serviços
+### 5.1. Produtos e serviços
+
+<p align="justify">&ensp;&ensp; Os produtos e serviços listados abaixo descrevem o que a solução efetivamente entrega. A distinção entre texto fixo e componente de IA é importante: S1, S2, S4 e S5 funcionam sem o agente conversacional; S3 é o diferencial de IA — ativado apenas quando o associado tem dúvida contextual sobre o estabelecimento (HIP-P1-05).</p>
 
 | # | O que a solução entrega | Tipo | Fonte |
 |---|---|---|---|
@@ -96,9 +137,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 | S4 | Tela de desfecho com status da compra (não do cartão), estado e próximo passo | Texto fixo | HIP-09; R02 |
 | S5 | Ação separada "Quero falar com alguém" que abre revisão sem registrar resposta e sem encerrar o prazo | Texto fixo | DEC-05; R08 |
 
-> **Distinção importante:** S1, S2, S4 e S5 são fluxo de texto fixo e funcionam sem o agente. S3 é o diferencial de IA — ativado apenas quando o associado tem dúvida contextual sobre o estabelecimento (HIP-P1-05).
+### 5.2. Aliviadores de dor
 
-### 5.2 Aliviadores de dor
+<p align="justify">&ensp;&ensp; Cada aliviador está vinculado à dor correspondente do perfil do cliente. A coluna "Como" descreve o mecanismo concreto pelo qual o alívio ocorre.</p>
 
 | Dor aliviada | Aliviador | Como | Fonte |
 |---|---|---|---|
@@ -108,7 +149,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 | D4 — perder a janela ao pedir ajuda | A4: Status da confirmação permanece visível ao pedir atendimento: "Sua compra ainda aguarda uma resposta (válida até [horário])" | Separação visual de dois caminhos (DEC-05) | HIP-02; R08 |
 | D5 — desfecho invisível | A5: Tela de resultado com status e próximo passo após qualquer resposta | Retorno imediato pós-interação | HIP-09; R02 |
 
-### 5.3 Criadores de ganho
+### 5.3. Criadores de ganho
+
+<p align="justify">&ensp;&ensp; Cada criador de ganho está vinculado ao ganho esperado correspondente. Os criadores amplificam o valor percebido além de simplesmente eliminar dores.</p>
 
 | Ganho criado | Criador | Como | Fonte |
 |---|---|---|---|
@@ -119,7 +162,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 
 ---
 
-## 6. Encaixe
+## 6. Encaixe (Fit)
+
+<p align="justify">&ensp;&ensp; A tabela abaixo mapeia explicitamente cada elemento do perfil do cliente ao elemento correspondente do mapa de valor. O encaixe é classificado por tipo: informação antes da ação, decisão informada, caminho paralelo ou retorno pós-interação.</p>
 
 | Elemento do perfil | Elemento do mapa de valor | Tipo de encaixe |
 |---|---|---|
@@ -143,15 +188,17 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 
 ## 8. Valor para a instituição
 
-**Hipótese de valor organizacional (HIP-P1-03):** redução de contatos de atendimento gerados por dúvidas sobre compras sinalizadas — o associado resolve no app sem ligar.
+<p align="justify">&ensp;&ensp; <strong>Hipótese de valor organizacional (HIP-P1-03):</strong> redução de contatos de atendimento gerados por dúvidas sobre compras sinalizadas — o associado resolve no app sem ligar.</p>
 
-**O que não se afirma aqui:** redução direta de perdas por fraude, eliminação de casos para a analista ou melhoria de detecção. O canal de confirmação não é equivalente a um sistema de antifraude (DEC-P1-03).
+<p align="justify">&ensp;&ensp; <strong>O que não se afirma aqui:</strong> redução direta de perdas por fraude, eliminação de casos para a analista ou melhoria de detecção. O canal de confirmação não é equivalente a um sistema de antifraude (DEC-P1-03).</p>
 
-**Como verificar:** comparar volume de contatos de atendimento em casos com e sem resolução autônoma no piloto; não extrapolar para perdas financeiras (HIP-P1-03).
+<p align="justify">&ensp;&ensp; <strong>Como verificar:</strong> comparar volume de contatos de atendimento em casos com e sem resolução autônoma no piloto; não extrapolar para perdas financeiras (HIP-P1-03).</p>
 
 ---
 
 ## 9. Boas práticas já incorporadas
+
+<p align="justify">&ensp;&ensp; As práticas abaixo foram incorporadas ao design da solução como resultado das hipóteses e decisões registradas. Cada uma tem um ID de decisão rastreável.</p>
 
 1. **Separação de caminhos:** "responder à compra" e "pedir atendimento" são ações distintas e paralelas — o segundo não encerra o primeiro (DEC-05).
 2. **Declaração de limite do agente:** quando o nome do estabelecimento não é verificável, o agente diz explicitamente o que não sabe antes de apresentar os botões — não inventa (DEC-09).
@@ -161,6 +208,8 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 ---
 
 ## 10. Hipóteses prioritárias a validar
+
+<p align="justify">&ensp;&ensp; As hipóteses abaixo representam os pontos de maior risco de desalinhamento entre a proposta de valor e o comportamento real do associado. As marcadas com ⭐ devem ser testadas antes de qualquer decisão de evolução do produto.</p>
 
 | Prioridade | Hipótese | ID | Como testar |
 |---|---|---|---|
@@ -173,7 +222,9 @@ Este canvas mapeia o encaixe entre o **perfil do cliente** (dores, ganhos e tare
 
 ## Rastreabilidade de fontes
 
-| ID usado | Onde está |
-|---|---|
-| FON, HIP e DEC (incluindo os prefixos P1) | [Registro único de evidências e hipóteses](../05_gestao/evidencias_e_hipoteses.md) |
-| R02, R03, R08, R11 | [D09 — Estrutura da solução](../03_computacao/D09_estrutura_solucao.md) e [matriz de cenários](../03_computacao/matriz_cenarios_e_evidencias.md) |
+| ID usado | Tipo | Localização |
+|---|---|---|
+| FON-01 a FON-12; HIP-01 a HIP-09; DEC-01 a DEC-09 | P2 | `docs/entregas/pessoa2/evidencias_e_hipoteses.md` |
+| FON-P1-01 a FON-P1-05; HIP-P1-01 a HIP-P1-05; DEC-P1-01 a DEC-P1-04 | P1 | `docs/entregas/pessoa1/evidencias_e_hipoteses_p1.md` |
+| DEC-04 a DEC-09 | P2 | `docs/entregas/pessoa2/evidencias_e_hipoteses.md` |
+| R02, R03, R08, R11 | Requisitos P3 | `docs/entregas/pessoa3/D09_estrutura_solucao.md` |

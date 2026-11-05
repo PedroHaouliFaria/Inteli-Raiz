@@ -12,6 +12,17 @@
 
 ---
 
+## Sumário
+
+- [1. Delimitação do episódio](#1-delimitação-do-episódio)
+- [2. Jornada principal — cenário hipotético](#2-jornada-principal--cenário-hipotético)
+- [3. Diagrama simplificado](#3-diagrama-simplificado)
+- [4. Ponto de ruptura prioritário](#4-ponto-de-ruptura-prioritário)
+- [5. Lacunas — o que só entrevista ou fonte de domínio pode confirmar](#5-lacunas--o-que-só-entrevista-ou-fonte-de-domínio-pode-confirmar)
+- [6. Relação com o cenário futuro proposto](#6-relação-com-o-cenário-futuro-proposto)
+
+---
+
 ## 1. Delimitação do episódio
 
 | Elemento | Descrição |
@@ -70,13 +81,13 @@ Tenta entender a compra no app/fatura             Ignora / não age
 
 ## 4. Ponto de ruptura prioritário
 
-**Etapa 2/3 — O associado não tem canal direto confiável para entender e resolver uma compra ambígua.**
+<p align="justify">&ensp;&ensp; <strong>Etapa 2/3 — O associado não tem canal direto confiável para entender e resolver uma compra ambígua.</strong></p>
 
-Justificativa (hipotética): a situação mais frequente não é necessariamente o bloqueio no balcão, mas a dificuldade de entender o que aconteceu, reconhecer a compra e decidir o que fazer — num canal que o associado não consegue distinguir de uma tentativa de golpe. Essa fricção pode ocorrer independentemente de a compra ser bloqueada: ela existe sempre que o canal de comunicação é incerto (HIP-04) ou a informação da compra é insuficiente para reconhecimento (HIP-03). FON-06 registra o bloqueio no balcão como etapa 3 do cenário as-is do Leonardo; ele é aqui tratado como **uma das possíveis consequências** da ruptura principal, não a ruptura em si.
+<p align="justify">&ensp;&ensp; Justificativa (hipotética): a situação mais frequente não é necessariamente o bloqueio no balcão, mas a dificuldade de entender o que aconteceu, reconhecer a compra e decidir o que fazer — num canal que o associado não consegue distinguir de uma tentativa de golpe. Essa fricção pode ocorrer independentemente de a compra ser bloqueada: ela existe sempre que o canal de comunicação é incerto (HIP-04) ou a informação da compra é insuficiente para reconhecimento (HIP-03). FON-06 registra o bloqueio no balcão como etapa 3 do cenário as-is do Leonardo; ele é aqui tratado como <strong>uma das possíveis consequências</strong> da ruptura principal, não a ruptura em si.</p>
 
-**Bloqueio no balcão como ramificação hipotética:** pode ocorrer quando o sistema aciona um bloqueio antes de o associado ser contactado. É uma consequência grave quando acontece (FON-04: frustração do Valdir), mas confirmar se é o desfecho padrão ou uma exceção depende de pesquisa ou informação do domínio (ver Lacuna 1 abaixo).
+<p align="justify">&ensp;&ensp; <strong>Bloqueio no balcão como ramificação hipotética:</strong> pode ocorrer quando o sistema aciona um bloqueio antes de o associado ser contactado. É uma consequência grave quando acontece (FON-04: frustração do Valdir), mas confirmar se é o desfecho padrão ou uma exceção depende de pesquisa ou informação do domínio (ver Lacuna 1 abaixo).</p>
 
-**O que poderia mudar essa prioridade:** descobrir, em pesquisa, que o associado raramente tenta reconhecer a compra por conta própria e age apenas quando já impactado. Nesse caso, o evento de impacto (recusa no balcão ou cobrança inesperada) voltaria a ser o ponto de entrada mais relevante para o design.
+<p align="justify">&ensp;&ensp; <strong>O que poderia mudar essa prioridade:</strong> descobrir, em pesquisa, que o associado raramente tenta reconhecer a compra por conta própria e age apenas quando já impactado. Nesse caso, o evento de impacto (recusa no balcão ou cobrança inesperada) voltaria a ser o ponto de entrada mais relevante para o design.</p>
 
 ---
 
@@ -94,8 +105,8 @@ Justificativa (hipotética): a situação mais frequente não é necessariamente
 
 ## 6. Relação com o cenário futuro proposto
 
-O cenário atual (hipotético) apresenta como principal problema a ausência de um canal de confirmação direta que o associado reconheça como legítimo, com informação suficiente para decidir e retorno claro sobre o desfecho. O cenário futuro proposto (documentado em D06) endereça especificamente esse ponto: a confirmação acontece no app autenticado, com três opções explícitas, ajuda contextual e status pós-resposta.
+<p align="justify">&ensp;&ensp; O cenário atual (hipotético) apresenta como principal problema a ausência de um canal de confirmação direta que o associado reconheça como legítimo, com informação suficiente para decidir e retorno claro sobre o desfecho. O cenário futuro proposto (documentado em D06) endereça especificamente esse ponto: a confirmação acontece no app autenticado, com três opções explícitas, ajuda contextual e status pós-resposta.</p>
 
-**O que o cenário futuro não muda (limites do MVP):** o bloqueio automático, o novo cartão e o estorno real não são escopo do produto. O cenário futuro não promete ausência de fraude ou de bloqueio; propõe um caminho de resposta explícita antes de qualquer ação automática, dentro de uma política experimental.
+<p align="justify">&ensp;&ensp; <strong>O que o cenário futuro não muda (limites do MVP):</strong> o bloqueio automático, o novo cartão e o estorno real não são escopo do produto. O cenário futuro não promete ausência de fraude ou de bloqueio; propõe um caminho de resposta explícita antes de qualquer ação automática, dentro de uma política experimental.</p>
 
-O atual e o futuro são descritos com base na mesma situação-problema (compra sinalizada cujo contexto não é imediatamente reconhecido) para permitir comparação. A comparação está em D06.
+<p align="justify">&ensp;&ensp; O atual e o futuro são descritos com base na mesma situação-problema (compra sinalizada cujo contexto não é imediatamente reconhecido) para permitir comparação. A comparação está em D06.</p>

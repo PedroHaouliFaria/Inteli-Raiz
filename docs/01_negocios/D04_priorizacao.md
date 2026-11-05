@@ -9,6 +9,18 @@
 
 ---
 
+## Sumário
+
+- [1. HMW de partida](#1-hmw-de-partida)
+- [2. Registro de ideias — sementes para a discussão](#2-registro-de-ideias--sementes-para-a-discussão)
+- [3. Discussão em grupo — roteiro pendente](#3-discussão-em-grupo--roteiro-pendente)
+- [4. Alternativas comparáveis](#4-alternativas-comparáveis)
+- [5. Premissa frágil e experimento inversor](#5-premissa-frágil-e-experimento-inversor)
+- [6. O que foi descartado e por quê](#6-o-que-foi-descartado-e-por-quê)
+- [7. Matriz de rastreabilidade (contribuição D04)](#7-matriz-de-rastreabilidade-contribuição-d04)
+
+---
+
 > **Nota sobre o processo:** o direcional §D04 orienta que cada integrante proponha ideias individualmente antes da discussão em grupo. Esse brainstorming **não foi executado** nesta versão — a seção 3 ("Discussão em grupo") está como roteiro a facilitar. A análise abaixo usa como ponto de partida a direção já escolhida no plano vigente (FON-01 §2) e a registra como **revisão da decisão**, conforme o direcional orienta quando a discussão ocorre após a escolha.
 
 ---
@@ -53,7 +65,7 @@
 
 ## 4. Alternativas comparáveis
 
-Revisão documental da escolha já feita no plano. A equipe ainda precisa discutir as alternativas; não houve brainstorming coletivo nem teste comparativo nesta revisão. “Ter IA” não recebe pontuação de qualidade. As três opções usam os mesmos detalhes, sinais calculados, consequências das respostas e opção de revisão.
+<p align="justify">&ensp;&ensp; Revisão documental da escolha já feita no plano. A equipe ainda precisa discutir as alternativas; não houve brainstorming coletivo nem teste comparativo nesta revisão. "Ter IA" não recebe pontuação de qualidade. As três opções usam os mesmos detalhes, sinais calculados, consequências das respostas e opção de revisão.</p>
 
 | Critério | A — Interface sem conversa | B — Mesma interface com agente | C — Atendimento humano como caminho principal |
 |---|---|---|---|
@@ -65,17 +77,17 @@ Revisão documental da escolha já feita no plano. A equipe ainda precisa discut
 | Risco | Texto insuficiente para dúvida não prevista | Resposta incorreta, contexto insuficiente, latência e custo | Fila/espera e repetição de contexto |
 | Decisão provisória | Base obrigatória e baseline competitivo | Camada opcional selecionada para investigar HIP-P1-05 | Manter revisão humana para exceções, sem construir central de atendimento |
 
-**DEC-P1-02 revisada:** manter A como núcleo e B como experimento de ajuda contextual. B só demonstra vantagem se melhorar compreensão/conclusão sem aumentar decisões equivocadas em D13, com as mesmas informações em A/B. A aderência ao tema IA do desafio é um critério de escopo separado; não prova utilidade nem torna A incapaz de atender o usuário.
+<p align="justify">&ensp;&ensp; <strong>DEC-P1-02 revisada:</strong> manter A como núcleo e B como experimento de ajuda contextual. B só demonstra vantagem se melhorar compreensão/conclusão sem aumentar decisões equivocadas em D13, com as mesmas informações em A/B. A aderência ao tema IA do desafio é um critério de escopo separado; não prova utilidade nem torna A incapaz de atender o usuário.</p>
 
-Nome ambíguo permanece sem identificação verificável em A, B e C quando ninguém dispõe de fonte adicional. O agente pode comunicar melhor o limite; não pode resolver a ausência de informação inventando um nome.
+<p align="justify">&ensp;&ensp; Nome ambíguo permanece sem identificação verificável em A, B e C quando ninguém dispõe de fonte adicional. O agente pode comunicar melhor o limite; não pode resolver a ausência de informação inventando um nome.</p>
 
 ## 5. Premissa frágil e experimento inversor
 
-**Premissa frágil da direção B (HIP-P1-05):** o agente demonstra valor real no piloto — o associado chega a uma decisão melhor quando usa a ajuda contextual do que quando usa apenas os três botões.
+<p align="justify">&ensp;&ensp; <strong>Premissa frágil da direção B (HIP-P1-05):</strong> o agente demonstra valor real no piloto — o associado chega a uma decisão melhor quando usa a ajuda contextual do que quando usa apenas os três botões.</p>
 
-**Experimento que poderia inverter a escolha:** no piloto de D13, alternar fluxo básico (A) × fluxo com agente (B) com casos equivalentes. Se as contagens e observações do piloto não mostrarem vantagem consistente em compreensão e decisão correta, a necessidade de IA agêntica precisa ser justificada por outro cenário.
+<p align="justify">&ensp;&ensp; <strong>Experimento que poderia inverter a escolha:</strong> no piloto de D13, alternar fluxo básico (A) × fluxo com agente (B) com casos equivalentes. Se as contagens e observações do piloto não mostrarem vantagem consistente em compreensão e decisão correta, a necessidade de IA agêntica precisa ser justificada por outro cenário.</p>
 
-**Alternativa que assumiria se B fosse invertido:** A (texto fixo) como entrega principal, com o agente como funcionalidade opcional a ser testada em versão futura.
+<p align="justify">&ensp;&ensp; <strong>Alternativa que assumiria se B fosse invertido:</strong> A (texto fixo) como entrega principal, com o agente como funcionalidade opcional a ser testada em versão futura.</p>
 
 ---
 
