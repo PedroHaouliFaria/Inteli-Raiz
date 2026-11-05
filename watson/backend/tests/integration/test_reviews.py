@@ -147,6 +147,39 @@ def test_get_reviews_unauthenticated_401(client):
     assert r.status_code == 401
 
 
+def test_analyst_flow_lists_all_purchases_and_status_summary(client):
+    _login(client, "carla")
+    response = client.get("/api/analyst/purchases")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["simulation"] is True
+    assert body["total"] == 35
+    assert len(body["purchases"]) == 35
+    assert {customer["customer_id"] for customer in body["customers"]} == {"C-ANA", "C-BRUNO"}
+    assert sum(body["status_counts"].values()) == 35
+    assert all("status_label" in purchase for purchase in body["purchases"])
+
+
+def test_analyst_flow_filters_by_customer_and_status(client):
+    _login(client, "carla")
+    response = client.get(
+        "/api/analyst/purchases?customer_id=C-ANA&status=BLOQUEADA_PREVENTIVAMENTE"
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["total"] > 0
+    assert sum(body["status_counts"].values()) == 18
+    assert all(item["customer_id"] == "C-ANA" for item in body["purchases"])
+    assert all(item["status"] == "BLOQUEADA_PREVENTIVAMENTE" for item in body["purchases"])
+
+
+def test_associate_cannot_read_analyst_flow(client):
+    _login(client, "ana")
+    response = client.get("/api/analyst/purchases")
+    assert response.status_code == 403
+    assert response.json()["error"]["code"] == "FORBIDDEN_ROLE"
+
+
 def test_reviews_list_includes_analysis(client):
     """GET /api/reviews traz analysis com score (pode ser null se modelo não disponível)."""
     # Cria revisão via DENY (abre PROTECAO)

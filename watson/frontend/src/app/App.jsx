@@ -183,6 +183,7 @@ function AppRouter() {
       <Routes>
         <Route path="/analyst/reviews/open" element={<AnalystApp mode="open" />} />
         <Route path="/analyst/reviews/history" element={<AnalystApp mode="history" />} />
+        <Route path="/analyst/purchases" element={<AnalystApp mode="flow" />} />
         <Route path="/analyst/reviews/:reviewId" element={<AnalystReviewDetail />} />
         <Route path="*" element={<Navigate to="/analyst/reviews/open" replace />} />
       </Routes>

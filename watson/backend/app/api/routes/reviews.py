@@ -17,6 +17,9 @@ from sqlalchemy.orm import Session
 from app.api.deps import AnalistaUser, AssociadoUser
 from app.api.errors import ApiError
 from app.api.schemas.reviews import (
+    AnalystFlowCustomer,
+    AnalystFlowPurchase,
+    AnalystFlowResponse,
     AnalysisSummary,
     ReviewDecisionRequest,
     ReviewDecisionResponse,
@@ -31,6 +34,7 @@ from app.db.tables.purchases import Confirmation, Event, Purchase, Review
 from app.domain.personas import PERSONAS
 from app.domain.reviews import create_or_get_review
 from app.domain.signals.rules import compute_signals, mcc_label
+from app.domain.cases.purchases import _STATUS_LABELS
 
 router = APIRouter(tags=["reviews"])
 
@@ -212,6 +216,85 @@ def list_reviews(
     )
 
 
+@router.get("/api/analyst/purchases", response_model=AnalystFlowResponse)
+def list_analyst_purchase_flow(
+    analista: AnalistaUser,
+    session: Session = Depends(get_session),
+    customer_id: str | None = Query(None),
+    status: str | None = Query(None),
+):
+    """Lista todas as compras para acompanhamento, sem misturá-las à fila.
+
+    A fila de pendências continua vindo exclusivamente de ``/api/reviews``.
+    Esta rota é somente leitura e permite à analista acompanhar o fluxo por
+    associado e estado atual.
+    """
+    all_purchases = session.execute(
+        select(Purchase).order_by(Purchase.occurred_at.desc(), Purchase.id.desc())
+    ).scalars().all()
+
+    customer_totals: dict[str, int] = {}
+    for purchase in all_purchases:
+        customer_totals[purchase.customer_id] = customer_totals.get(purchase.customer_id, 0) + 1
+
+    summary_purchases = [
+        purchase
+        for purchase in all_purchases
+        if customer_id is None or purchase.customer_id == customer_id
+    ]
+    status_counts: dict[str, int] = {}
+    for purchase in summary_purchases:
+        status_counts[purchase.status] = status_counts.get(purchase.status, 0) + 1
+
+    filtered = [
+        purchase
+        for purchase in all_purchases
+        if (customer_id is None or purchase.customer_id == customer_id)
+        and (status is None or purchase.status == status)
+    ]
+
+    items: list[AnalystFlowPurchase] = []
+    for purchase in filtered:
+        latest_review = session.execute(
+            select(Review)
+            .where(Review.purchase_id == purchase.id)
+            .order_by(Review.id.desc())
+        ).scalars().first()
+        items.append(
+            AnalystFlowPurchase(
+                case_id=purchase.case_id,
+                customer_id=purchase.customer_id,
+                customer_display_name=_customer_display(purchase.customer_id),
+                merchant_display=f"{mcc_label(purchase.mcc)} (nome não disponível)",
+                amount={"value": _cents_to_str(purchase.amount_cents), "currency": purchase.currency},
+                occurred_at=purchase.occurred_at,
+                status=purchase.status,
+                status_label=_STATUS_LABELS.get(purchase.status, purchase.status),
+                review_protocol=latest_review.protocol if latest_review else None,
+                review_status=latest_review.status if latest_review else None,
+            )
+        )
+
+    customers = [
+        AnalystFlowCustomer(
+            customer_id=identifier,
+            display_name=_customer_display(identifier),
+            purchase_count=count,
+        )
+        for identifier, count in sorted(
+            customer_totals.items(),
+            key=lambda item: _customer_display(item[0]),
+        )
+    ]
+    return AnalystFlowResponse(
+        purchases=items,
+        customers=customers,
+        status_counts=status_counts,
+        total=len(filtered),
+        simulation=True,
+    )
+
+
 @router.get("/api/reviews/{review_id}", response_model=ReviewDetailResponse)
 def get_review(
     review_id: str,
@@ -274,6 +357,8 @@ def get_review(
             "customer_display_name": _customer_display(purchase.customer_id),
             "amount": {"value": _cents_to_str(purchase.amount_cents), "currency": purchase.currency},
             "occurred_at": purchase.occurred_at,
+            "status": purchase.status,
+            "status_label": _STATUS_LABELS.get(purchase.status, purchase.status),
             "merchant_category": mcc_label(purchase.mcc),
             "channel": purchase.channel,
             "channel_label": _CHANNEL_LABELS.get(purchase.channel, "Canal não informado"),

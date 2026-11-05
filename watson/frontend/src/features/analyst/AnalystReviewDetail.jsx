@@ -19,6 +19,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ApiError, getReview, postReviewDecision } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import { formatDate, formatMoney } from '../associate/utils.js';
+import { PurchaseStatusBadge } from '../associate/PurchaseStatus.jsx';
 
 const DECISION_LABEL = {
   AUTHORIZE: 'Autorizar compra',
@@ -190,6 +191,12 @@ export default function AnalystReviewDetail() {
                 <Definition label="Caso">{review.purchase.case_id}</Definition>
                 <Definition label="Valor">{formatMoney(review.purchase.amount)}</Definition>
                 <Definition label="Data da compra">{formatDate(review.purchase.occurred_at)}</Definition>
+                <Definition label="Status da compra">
+                  <PurchaseStatusBadge
+                    status={review.purchase.status}
+                    label={review.purchase.status_label}
+                  />
+                </Definition>
                 <Definition label="Categoria">{review.purchase.merchant_category}</Definition>
                 <Definition label="Canal">{review.purchase.channel_label}</Definition>
                 <Definition label="Cartão">Final {review.purchase.card_last4}</Definition>

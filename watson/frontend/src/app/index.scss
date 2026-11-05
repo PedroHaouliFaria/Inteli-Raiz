@@ -1093,6 +1093,102 @@ body {
   border-bottom: 1px solid var(--cds-border-subtle-01);
 }
 
+.analyst-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.analyst-flow-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(14rem, 20rem));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analyst-flow-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 55rem) {
+    grid-template-columns: repeat(2, minmax(9rem, 1fr));
+  }
+
+  @media (max-width: 30rem) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analyst-flow-summary__tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 3px solid var(--cds-border-subtle-01);
+}
+
+.analyst-flow-summary__tile--success { border-top-color: var(--cds-support-success); }
+.analyst-flow-summary__tile--danger { border-top-color: var(--cds-support-error); }
+.analyst-flow-summary__tile--review { border-top-color: var(--cds-support-info); }
+
+.analyst-flow-customers {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.analyst-flow-customer {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+
+.analyst-flow-customer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+
+.analyst-flow-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+}
+
+.analyst-flow-item {
+  min-width: 0;
+  padding: 1rem;
+  border-right: 1px solid var(--cds-border-subtle-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+
+.analyst-flow-item__main,
+.analyst-flow-item__meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.analyst-flow-item__meta {
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  color: var(--cds-text-helper);
+}
+
+.analyst-flow-item__case {
+  color: var(--cds-text-helper);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
 .analyst-simulation-badge {
   display: flex;
   align-items: center;

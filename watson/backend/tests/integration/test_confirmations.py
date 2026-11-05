@@ -79,7 +79,7 @@ def test_hybrid_policy_allows_contesting_auto_release(db_path, monkeypatch):
         assert response.json()["review_protocol"] is not None
 
 
-def test_hybrid_policy_high_risk_recognition_waits_for_analyst(db_path, monkeypatch):
+def test_hybrid_policy_high_risk_recognition_releases_without_review(db_path, monkeypatch):
     app = _make_app(db_path, monkeypatch, hybrid_policy=True)
     with TestClient(app, raise_server_exceptions=True) as c:
         _login(c, "ana")
@@ -92,8 +92,8 @@ def test_hybrid_policy_high_risk_recognition_waits_for_analyst(db_path, monkeypa
             headers={"Idempotency-Key": str(uuid.uuid4())},
         )
         assert response.status_code == 200
-        assert response.json()["status"] == "REVISAO_PENDENTE"
-        assert response.json()["review_protocol"] is not None
+        assert response.json()["status"] == "LIBERADA_SIMULACAO"
+        assert response.json()["review_protocol"] is None
 
 
 # ---------------------------------------------------------------------------

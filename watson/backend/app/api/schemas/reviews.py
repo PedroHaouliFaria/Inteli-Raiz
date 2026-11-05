@@ -124,6 +124,43 @@ class ReviewListResponse(BaseModel):
     simulation: SimulationTrue
 
 
+class AnalystFlowCustomer(BaseModel):
+    model_config = {"extra": "forbid"}
+
+    customer_id: str
+    display_name: str
+    purchase_count: int
+
+
+class AnalystFlowPurchase(BaseModel):
+    """Compra sanitizada para acompanhamento do fluxo pela analista."""
+
+    model_config = {"extra": "forbid"}
+
+    case_id: str
+    customer_id: str
+    customer_display_name: str
+    merchant_display: str
+    amount: Money
+    occurred_at: UtcDatetime
+    status: PurchaseStatus
+    status_label: str
+    review_protocol: str | None
+    review_status: ReviewStatus | None
+
+
+class AnalystFlowResponse(BaseModel):
+    """GET /api/analyst/purchases — visão operacional de todas as compras."""
+
+    model_config = {"extra": "forbid"}
+
+    purchases: list[AnalystFlowPurchase]
+    customers: list[AnalystFlowCustomer]
+    status_counts: dict[str, int]
+    total: int
+    simulation: SimulationTrue
+
+
 class ReviewDecisionRequest(BaseModel):
     """Decisão da analista sobre uma revisão aberta."""
 
@@ -161,6 +198,8 @@ class ReviewPurchaseDetail(BaseModel):
     customer_display_name: str
     amount: Money
     occurred_at: UtcDatetime
+    status: PurchaseStatus
+    status_label: str
     merchant_category: str
     channel: str
     channel_label: str

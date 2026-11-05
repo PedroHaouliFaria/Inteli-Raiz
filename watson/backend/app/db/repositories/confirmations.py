@@ -215,12 +215,9 @@ class ConfirmationRepository:
         elif response == "UNSURE":
             new_status = "REVISAO_PENDENTE"
             review_kind = "DUVIDA"
-        elif from_status == "BLOQUEADA_PREVENTIVAMENTE":
-            # Mesmo reconhecida, uma compra de alto risco continua bloqueada
-            # até a decisão humana final.
-            new_status = "REVISAO_PENDENTE"
-            review_kind = "RISCO_ALTO"
         else:
+            # A avaliação automática define o estado inicial, mas o associado
+            # pode reconhecer a compra e liberá-la sem criar trabalho manual.
             new_status = "LIBERADA_SIMULACAO"
             review_kind = None
 
@@ -245,7 +242,7 @@ class ConfirmationRepository:
         )
         self._session.add(event)
 
-        # Revisão para contestação, dúvida ou reconhecimento de alto risco.
+        # Revisão somente quando o associado contesta ou informa dúvida.
         review: Review | None = None
         if review_kind is not None:
             # Reaproveita uma revisão aberta para não duplicar a fila.
@@ -260,7 +257,7 @@ class ConfirmationRepository:
                     kind=review_kind,
                     reason="OUTRO" if response != "DENY" else "NAO_RECONHECE_ESTABELECIMENTO",
                     status="ABERTA",
-                    created_by="SISTEMA",
+                    created_by="ASSOCIADO",
                     created_at=answered_at,
                 )
                 self._session.add(review)

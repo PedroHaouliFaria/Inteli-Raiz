@@ -140,6 +140,15 @@ export const getReviews = ({ status = 'ABERTA', decision, from, to, page = 1, pa
   return request(`/api/reviews?${params.toString()}`);
 };
 
+/** GET /api/analyst/purchases — acompanhamento de todas as compras. */
+export const getAnalystPurchaseFlow = ({ customerId, status } = {}) => {
+  const params = new URLSearchParams();
+  if (customerId) params.set('customer_id', customerId);
+  if (status) params.set('status', status);
+  const query = params.toString();
+  return request(`/api/analyst/purchases${query ? `?${query}` : ''}`);
+};
+
 /** GET /api/reviews/{review_id} — detalhe sanitizado para decisão da analista. */
 export const getReview = (reviewId) =>
   request(`/api/reviews/${encodeURIComponent(reviewId)}`);
