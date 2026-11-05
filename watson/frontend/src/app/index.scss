@@ -619,7 +619,7 @@ body {
   display: flex;
   flex-direction: column;
 
-  // Em telas estreitas a sidebar se torna parte do fluxo
+  // Em telas estreitas a sidebar ocupa largura total
   @media (max-width: 48rem) {
     flex: 0 0 100%;
     width: 100%;
@@ -645,6 +645,32 @@ body {
 
   @media (max-width: 48rem) {
     padding: 1rem;
+    // No celular a página rola normalmente; o detalhe não fica preso em overflow interno
+    flex: none;
+    overflow: visible;
+  }
+}
+
+// Botão "Voltar para a lista": visível apenas no celular
+.associate-back-button {
+  display: none;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 48rem) {
+    display: inline-flex;
+  }
+}
+
+// No celular: mostra lista OU detalhe, nunca os dois ao mesmo tempo
+@media (max-width: 48rem) {
+  // Sem a classe modificadora → exibe a lista, esconde o detalhe
+  .associate-app:not(.associate-app--detail-open) {
+    .associate-content { display: none; }
+  }
+
+  // Com a classe modificadora → exibe o detalhe, esconde a lista
+  .associate-app--detail-open {
+    .associate-sidebar { display: none; }
   }
 }
 

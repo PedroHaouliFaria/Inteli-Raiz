@@ -9,7 +9,7 @@
  * Não usa o estado mockado de src/state/store.jsx.
  * Não renderiza biometria, aparelho trocado, bloqueio de cartão ou chat.
  */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Button,
   Header,
@@ -22,7 +22,7 @@ import {
   Tag,
   Theme,
 } from '@carbon/react';
-import { Renew, Logout } from '@carbon/icons-react';
+import { ArrowLeft, Renew, Logout } from '@carbon/icons-react';
 import { ApiError, getPurchases } from '../../api/client.js';
 import { useSession } from '../session/SessionGate.jsx';
 import PurchaseList from './PurchaseList.jsx';
@@ -37,6 +37,12 @@ export default function AssociateApp() {
   const [listError, setListError] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+
+  const detailRef = useRef(null);
+  // Rastreia se o painel de detalhe já foi aberto ao menos uma vez,
+  // para não roubar foco no carregamento inicial da página.
+  const detailEverOpenedRef = useRef(false);
 
   const loadPurchases = useCallback(async () => {
     setListLoading(true);
@@ -44,22 +50,44 @@ export default function AssociateApp() {
     try {
       const data = await getPurchases();
       setPurchases(data.purchases);
-      // Seleciona automaticamente a primeira compra ao carregar
-      if (data.purchases.length > 0 && !selectedId) {
-        setSelectedId(data.purchases[0].case_id);
-      }
+      // Mantém a compra selecionada entre recarregamentos.
+      // Se a seleção atual não existir mais na lista nova, cai para a primeira.
+      setSelectedId((atual) => {
+        const ids = data.purchases.map((p) => p.case_id);
+        if (atual && ids.includes(atual)) return atual;
+        return data.purchases[0]?.case_id ?? null;
+      });
     } catch (err) {
       setListError(err instanceof ApiError ? err.message : 'Erro de rede ao carregar compras.');
     } finally {
       setListLoading(false);
     }
-  // selectedId intencionalmente omitido: queremos só no mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     loadPurchases();
   }, [loadPurchases]);
+
+  // Quando o detalhe abre no celular: rola para o topo e leva foco ao painel.
+  useEffect(() => {
+    if (!mobileDetailOpen) return;
+    window.scrollTo(0, 0);
+    detailRef.current?.focus({ preventScroll: true });
+  }, [mobileDetailOpen, selectedId]);
+
+  // Quando o detalhe fecha no celular: devolve foco ao item ativo na lista.
+  useEffect(() => {
+    if (mobileDetailOpen) {
+      detailEverOpenedRef.current = true;
+      return;
+    }
+    if (!detailEverOpenedRef.current) return; // primeiro carregamento, sem ação
+    const btn = document.querySelector('.associate-list__item--active button');
+    if (btn) {
+      btn.focus({ preventScroll: true });
+      btn.scrollIntoView({ block: 'center' });
+    }
+  }, [mobileDetailOpen]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -89,6 +117,7 @@ export default function AssociateApp() {
               <DemoResetButton
                 onReset={() => {
                   setSelectedId(null);
+                  setMobileDetailOpen(false);
                   loadPurchases();
                 }}
               />
@@ -112,7 +141,10 @@ export default function AssociateApp() {
         </Header>
       </Theme>
 
-      <main className="associate-app" aria-label="Suas compras para confirmação">
+      <main
+        className={`associate-app${mobileDetailOpen ? ' associate-app--detail-open' : ''}`}
+        aria-label="Suas compras para confirmação"
+      >
         {/* Coluna esquerda: lista */}
         <aside className="associate-sidebar" aria-label="Lista de compras">
           <div className="associate-sidebar__header">
@@ -147,13 +179,29 @@ export default function AssociateApp() {
             <PurchaseList
               purchases={purchases}
               selectedId={selectedId}
-              onSelect={(id) => setSelectedId(id)}
+              onSelect={(id) => {
+                setSelectedId(id);
+                setMobileDetailOpen(true);
+              }}
             />
           )}
         </aside>
 
         {/* Coluna direita: detalhe */}
         <div className="associate-content">
+          {/* Botão de voltar visível apenas no celular */}
+          <Button
+            kind="ghost"
+            size="sm"
+            renderIcon={ArrowLeft}
+            className="associate-back-button"
+            onClick={() => setMobileDetailOpen(false)}
+          >
+            Voltar para a lista
+          </Button>
+          {/* Âncora de foco ao abrir o detalhe no celular */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+          <span ref={detailRef} tabIndex={-1} style={{ outline: 'none' }} />
           {selectedId ? (
             <PurchaseDetail
               key={selectedId}
