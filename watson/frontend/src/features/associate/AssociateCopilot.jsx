@@ -21,12 +21,48 @@ function nowId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function inlineMarkdown(text) {
+  return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) => (
+    part.startsWith('**') && part.endsWith('**')
+      ? <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>
+      : part
+  ));
+}
+
+function MarkdownText({ content }) {
+  const blocks = [];
+  let bullets = [];
+  const flushBullets = () => {
+    if (bullets.length === 0) return;
+    blocks.push(
+      <ul key={`list-${blocks.length}`}>
+        {bullets.map((line, index) => <li key={`${line}-${index}`}>{inlineMarkdown(line)}</li>)}
+      </ul>,
+    );
+    bullets = [];
+  };
+
+  content.split('\n').forEach((rawLine) => {
+    const line = rawLine.trim();
+    if (line.startsWith('- ')) {
+      bullets.push(line.slice(2));
+      return;
+    }
+    flushBullets();
+    if (line) {
+      blocks.push(<p key={`paragraph-${blocks.length}`}>{inlineMarkdown(line)}</p>);
+    }
+  });
+  flushBullets();
+  return <div className="associate-copilot__content">{blocks}</div>;
+}
+
 function Message({ message }) {
   const isUser = message.role === 'user';
   return (
     <article className={`associate-copilot__message associate-copilot__message--${isUser ? 'user' : 'assistant'}`}>
       <span className="cds--type-label-01">{isUser ? 'Você' : 'Copiloto Raiz'}</span>
-      <p className="cds--type-body-01">{message.content}</p>
+      <MarkdownText content={message.content} />
       {!isUser && message.tools?.length > 0 && (
         <div className="associate-copilot__tool-events" aria-label="Ferramentas utilizadas">
           {message.tools.map((tool) => (

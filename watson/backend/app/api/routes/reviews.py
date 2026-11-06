@@ -154,7 +154,10 @@ def list_reviews(
 
     Associado recebe 403 FORBIDDEN_ROLE.
     """
-    filters = [Review.status == status]
+    # A fila e o histórico operacional mostram somente revisões solicitadas
+    # pelo associado, diretamente ou por meio do agente. Revisões internas
+    # criadas pelo sistema continuam disponíveis no fluxo geral de compras.
+    filters = [Review.status == status, Review.created_by != "SISTEMA"]
     if decision is not None:
         filters.append(Review.decision == decision)
 

@@ -156,7 +156,7 @@ def test_copilot_uses_report_tool(db_path, monkeypatch):
             for message in messages
         )
         if has_tool_return:
-            return ModelResponse(parts=[TextPart(content="Seu resumo foi gerado com dados atuais.")])
+            return ModelResponse(parts=[TextPart(content="**Resumo**\n\n- Dados atuais.\n]}")])
         return ModelResponse(parts=[ToolCallPart(tool_name="gerar_relatorio", args={})])
 
     with TestClient(create_app(), raise_server_exceptions=True) as test_client:
@@ -172,6 +172,14 @@ def test_copilot_uses_report_tool(db_path, monkeypatch):
     assert body["tools_used"] == ["gerar_relatorio"]
     assert body["action_taken"] is False
     assert "resumo" in body["content"].lower()
+    assert body["content"] == "**Resumo**\n\n- Dados atuais."
+
+
+def test_copilot_normalizes_json_text_envelope():
+    from app.api.routes.copilot import _normalize_copilot_content
+
+    raw = '{"content":"Relatório pronto.","tools_used":["gerar_relatorio"]}'
+    assert _normalize_copilot_content(raw) == "Relatório pronto."
 
 
 def test_copilot_has_no_tool_to_authorize_or_deny():

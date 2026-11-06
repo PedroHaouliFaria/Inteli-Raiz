@@ -134,6 +134,17 @@ def test_analista_can_list_reviews(client):
     assert "score" in rev["analysis"]
 
 
+def test_analyst_queue_excludes_system_created_reviews(client):
+    """A fila operacional contém apenas revisões pedidas pelo associado/agente."""
+    _login(client, "carla")
+    response = client.get("/api/reviews?status=ABERTA&page_size=100")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["reviews"]
+    assert all(review["created_by"] != "SISTEMA" for review in body["reviews"])
+    assert body["total"] == len(body["reviews"])
+
+
 def test_associado_403_on_get_reviews(client):
     """Associado não pode chamar GET /api/reviews → 403 FORBIDDEN_ROLE."""
     _login(client, "ana")

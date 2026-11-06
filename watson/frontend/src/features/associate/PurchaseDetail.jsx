@@ -170,15 +170,27 @@ function ExpiryCountdown({ expiresAt }) {
 
   if (secondsLeft === null) return null;
 
-  const minutes = Math.floor(secondsLeft / 60);
+  const days = Math.floor(secondsLeft / 86400);
+  const hours = Math.floor((secondsLeft % 86400) / 3600);
+  const minutes = Math.floor((secondsLeft % 3600) / 60);
   const secs = secondsLeft % 60;
+  const visualTime = days > 0
+    ? `${days}d ${hours}h ${minutes}min`
+    : hours > 0
+      ? `${hours}h ${minutes}min`
+      : `${minutes}m ${String(secs).padStart(2, '0')}s`;
+  const accessibleTime = days > 0
+    ? `${days} dias, ${hours} horas e ${minutes} minutos`
+    : hours > 0
+      ? `${hours} horas e ${minutes} minutos`
+      : `${minutes} minutos e ${secs} segundos`;
 
   return (
-    <div className="associate-expiry" role="timer" aria-live="off" aria-label={`Tempo restante: ${minutes} minutos e ${secs} segundos`}>
+    <div className="associate-expiry" role="timer" aria-live="off" aria-label={`Tempo restante: ${accessibleTime}`}>
       <Time size={16} aria-hidden />
       <span className="cds--type-label-01">
         {secondsLeft > 0
-          ? `Prazo para responder: ${minutes}m ${String(secs).padStart(2, '0')}s`
+          ? `Prazo para responder: ${visualTime}`
           : 'Prazo encerrado'}
       </span>
     </div>

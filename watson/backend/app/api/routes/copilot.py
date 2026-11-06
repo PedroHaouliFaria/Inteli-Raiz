@@ -1,6 +1,7 @@
 """Copiloto global do associado, independente de uma compra selecionada."""
 from __future__ import annotations
 
+import json
 import logging
 import re
 
@@ -14,6 +15,35 @@ from app.db.session import get_engine
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/copilot", tags=["copilot"])
 _HTML_RE = re.compile(r"<[^>]+>")
+
+
+def _normalize_copilot_content(raw: str) -> str:
+    """Extrai texto útil e remove delimitadores estruturais vazados pelo modelo."""
+    content = raw.strip()
+
+    # Alguns modelos devolvem um envelope JSON mesmo quando a saída esperada é
+    # texto. Aceitamos os nomes mais comuns sem expor o envelope na interface.
+    candidate = content
+    if candidate.startswith("```json") and candidate.endswith("```"):
+        candidate = candidate[7:-3].strip()
+    if candidate.startswith("{"):
+        try:
+            payload = json.loads(candidate)
+        except (json.JSONDecodeError, TypeError):
+            payload = None
+        if isinstance(payload, dict):
+            for key in ("content", "message", "reply", "response"):
+                if isinstance(payload.get(key), str):
+                    content = payload[key].strip()
+                    break
+
+    # Evita artefatos como "]}" no fim de uma resposta Markdown. Só remove
+    # fechamentos realmente desbalanceados, preservando pontuação legítima.
+    for opening, closing in (("{", "}"), ("[", "]")):
+        while content.endswith(closing) and content.count(closing) > content.count(opening):
+            content = content[:-1].rstrip()
+
+    return content
 
 
 def _configured() -> bool:
@@ -78,7 +108,7 @@ def post_copilot_chat(
         ) from exc
 
     return CopilotReplyResponse(
-        content=result.output,
+        content=_normalize_copilot_content(result.output),
         tools_used=tools_used,
         action_taken="solicitar_revisao" in tools_used,
         simulation=True,

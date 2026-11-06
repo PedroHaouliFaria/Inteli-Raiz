@@ -32,6 +32,13 @@ const RESPONSE_LABEL = {
   UNSURE: 'Informou dúvida',
 };
 
+const REASON_LABEL = {
+  NAO_RECONHECE_ESTABELECIMENTO: 'Não reconhece o estabelecimento',
+  VALOR_DIFERENTE: 'Valor diferente do esperado',
+  DUVIDA_PROCESSO: 'Dúvida sobre o processo',
+  OUTRO: 'Outro',
+};
+
 function Definition({ label, children }) {
   return (
     <div className="analyst-review-card__field">
@@ -56,6 +63,10 @@ export default function AnalystReviewDetail() {
   const [decisionError, setDecisionError] = useState(null);
   const [notice, setNotice] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const returnTo = location.state?.returnTo ?? '/analyst/reviews/open';
+  const returnLabel = returnTo.startsWith('/analyst/reviews/history')
+    ? 'Voltar para histórico'
+    : 'Voltar para pendentes';
 
   const loadReview = useCallback(async () => {
     setLoading(true);
@@ -143,10 +154,10 @@ export default function AnalystReviewDetail() {
           kind="ghost"
           size="sm"
           renderIcon={ArrowLeft}
-          onClick={() => navigate(location.state?.returnTo ?? '/analyst/reviews/open')}
+          onClick={() => navigate(returnTo)}
           style={{ marginBottom: '1rem' }}
         >
-          Voltar para pendentes
+          {returnLabel}
         </Button>
 
         {loading && <InlineLoading description="Carregando revisão…" status="active" />}
@@ -173,7 +184,11 @@ export default function AnalystReviewDetail() {
             <div className="analyst-page-header">
               <div>
                 <h1 className="cds--type-heading-04">{review.protocol}</h1>
-                <p className="cds--type-body-01">Detalhe disponível antes da decisão.</p>
+                <p className="cds--type-body-01">
+                  {review.status === 'ABERTA'
+                    ? 'Detalhe disponível antes da decisão.'
+                    : 'Decisão registrada e disponível para consulta.'}
+                </p>
               </div>
               <Tag type={review.status === 'ABERTA' ? 'blue' : 'gray'}>
                 {review.status === 'ABERTA' ? 'Pendente' : 'Encerrada'}
@@ -200,7 +215,9 @@ export default function AnalystReviewDetail() {
                 <Definition label="Categoria">{review.purchase.merchant_category}</Definition>
                 <Definition label="Canal">{review.purchase.channel_label}</Definition>
                 <Definition label="Cartão">Final {review.purchase.card_last4}</Definition>
-                <Definition label="Motivo da revisão">{review.reason}</Definition>
+                <Definition label="Motivo da revisão">
+                  {REASON_LABEL[review.reason] ?? review.reason}
+                </Definition>
                 <Definition label="Detalhes informados">{review.details}</Definition>
                 <Definition label="Aberta em">{formatDate(review.created_at)}</Definition>
               </dl>

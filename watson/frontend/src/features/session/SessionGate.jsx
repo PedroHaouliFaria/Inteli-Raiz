@@ -14,7 +14,7 @@
  *   - Sem biometria, bloqueio ou novos comportamentos de produto.
  *   - Sem dependências novas — usa apenas React e @carbon/react já instalados.
  */
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   Button,
   InlineLoading,
@@ -31,6 +31,7 @@ import { ApiError, getSession, login, logout } from '../../api/client.js';
 // ── Contexto de sessão ────────────────────────────────────────────────────────
 
 const SessionContext = createContext(null);
+const SESSION_CHANNEL = 'raiz-session';
 
 /** Hook: retorna a sessão ativa ({ persona_id, display_name, role, simulation }). */
 export function useSession() {
@@ -205,17 +206,19 @@ export default function SessionGate({ children }) {
   const [status, setStatus] = useState('loading');
   const [session, setSession] = useState(null);
   const [checkError, setCheckError] = useState(null);
+  const sessionChannelRef = useRef(null);
 
-  const checkSession = useCallback(() => {
-    setStatus('loading');
+  const checkSession = useCallback(({ silent = false } = {}) => {
+    if (!silent) setStatus('loading');
     setCheckError(null);
-    getSession()
+    return getSession()
       .then((data) => {
         setSession(data);
         setStatus('authenticated');
       })
       .catch((err) => {
         if (err instanceof ApiError && err.status === 401) {
+          setSession(null);
           setStatus('unauthenticated');
         } else {
           setCheckError(
@@ -232,15 +235,44 @@ export default function SessionGate({ children }) {
     checkSession();
   }, [checkSession]);
 
+  useEffect(() => {
+    const handleFocus = () => checkSession({ silent: true });
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') handleFocus();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    if ('BroadcastChannel' in window) {
+      const channel = new BroadcastChannel(SESSION_CHANNEL);
+      channel.addEventListener('message', handleFocus);
+      sessionChannelRef.current = channel;
+    }
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      sessionChannelRef.current?.close();
+      sessionChannelRef.current = null;
+    };
+  }, [checkSession]);
+
+  const notifySessionChange = useCallback(() => {
+    sessionChannelRef.current?.postMessage('changed');
+  }, []);
+
   const handleLoginSuccess = useCallback((sessionData) => {
     setSession(sessionData);
     setStatus('authenticated');
-  }, []);
+    notifySessionChange();
+  }, [notifySessionChange]);
 
   const handleLogout = useCallback(() => {
     setSession(null);
     setStatus('unauthenticated');
-  }, []);
+    notifySessionChange();
+  }, [notifySessionChange]);
 
   const endSession = useCallback(async () => {
     try {

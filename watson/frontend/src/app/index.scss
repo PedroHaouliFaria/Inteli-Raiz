@@ -756,6 +756,20 @@ body {
   }
 }
 
+.associate-copilot__content {
+  display: grid;
+  gap: 0.375rem;
+
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+}
+
 .associate-copilot__message--user {
   align-self: flex-end;
   background: #e8f0ff;

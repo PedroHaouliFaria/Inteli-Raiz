@@ -204,12 +204,16 @@ const FLOW_STATUS_OPTIONS = [
 ];
 
 function FlowSummary({ data }) {
+  const visibleStatusCounts = data.purchases.reduce((counts, purchase) => {
+    counts[purchase.status] = (counts[purchase.status] ?? 0) + 1;
+    return counts;
+  }, {});
   const count = (...statuses) => statuses.reduce(
-    (total, status) => total + (data.status_counts[status] ?? 0),
+    (total, status) => total + (visibleStatusCounts[status] ?? 0),
     0,
   );
   const summaries = [
-    ['Todas as compras', Object.values(data.status_counts).reduce((a, b) => a + b, 0), 'neutral'],
+    ['Compras exibidas', data.total, 'neutral'],
     ['Aprovadas', count('LIBERADA_AUTOMATICAMENTE', 'LIBERADA_SIMULACAO'), 'success'],
     ['Rejeitadas', count('RECUSADA_SIMULACAO'), 'danger'],
     ['Em análise', count('CONTESTACAO_ABERTA', 'REVISAO_PENDENTE'), 'review'],
