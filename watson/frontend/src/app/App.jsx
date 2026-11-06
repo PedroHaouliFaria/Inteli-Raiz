@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   Header, HeaderName, HeaderMenuButton, HeaderGlobalBar, HeaderGlobalAction, SkipToContent,
   SideNav, SideNavItems, SideNavLink, SideNavDivider,
@@ -20,6 +20,7 @@ import ModelLabPage from '../features/model-lab/ModelLabPage';
 import SessionGate, { useSession } from '../features/session/SessionGate.jsx';
 import AssociateApp from '../features/associate/AssociateApp.jsx';
 import AnalystApp from '../features/analyst/AnalystApp.jsx';
+import AnalystReviewDetail from '../features/analyst/AnalystReviewDetail.jsx';
 
 // Alta fidelidade do protótipo 3 (ponta a ponta) com os chips do protótipo 2. Escolha do Leo (26/10/2026):
 // produto: o celular do associado abre num painel quando o Watson envia um aviso (variação 2);
@@ -169,10 +170,25 @@ function Shell() {
 function AppRouter() {
   const session = useSession();
   if (session?.role === 'ASSOCIADO') {
-    return <AssociateApp />;
+    return (
+      <Routes>
+        <Route path="/associate/purchases" element={<AssociateApp />} />
+        <Route path="/associate/purchases/:caseId" element={<AssociateApp />} />
+        <Route path="*" element={<Navigate to="/associate/purchases" replace />} />
+      </Routes>
+    );
   }
   if (session?.role === 'ANALISTA') {
-    return <AnalystApp />;
+    return (
+      <Routes>
+        <Route path="/analyst/reviews/open" element={<AnalystApp mode="open" />} />
+        <Route path="/analyst/reviews/history" element={<AnalystApp mode="history" />} />
+        <Route path="/analyst/purchases" element={<AnalystApp mode="flow" />} />
+        <Route path="/analyst/dashboard" element={<AnalystApp mode="dashboard" />} />
+        <Route path="/analyst/reviews/:reviewId" element={<AnalystReviewDetail />} />
+        <Route path="*" element={<Navigate to="/analyst/reviews/open" replace />} />
+      </Routes>
+    );
   }
   // Um papel inesperado não deve ganhar acesso ao protótipo legado por fallback.
   return (

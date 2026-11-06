@@ -1,7 +1,7 @@
 """Seed inicial do banco de dados (§11 do contrato).
 
-Cria cada compra em AGUARDANDO_ASSOCIADO (ou REVISAO_PENDENTE em falha),
-a confirmação com prazo de agora + CONFIRMATION_TTL_SECONDS e um evento SEED.
+Classifica cada compra pela política híbrida de risco (ou envia para revisão
+em caso de falha), cria a confirmação e registra um evento SEED.
 Fixtures com ``seed_review`` também garantem uma revisão demonstrativa idempotente,
 inclusive quando a compra já existe em um volume persistente.
 
@@ -11,6 +11,7 @@ Fixtures com case_id=null são ignoradas pelo seed — entram só pela demo.
 """
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import pathlib
@@ -30,6 +31,58 @@ FIXTURES_PATH = pathlib.Path(__file__).resolve().parents[1] / "fixtures" / "purc
 def _load_fixtures() -> list[dict]:
     with open(FIXTURES_PATH, encoding="utf-8") as fh:
         return json.load(fh)
+
+
+_EXTRA_SEED_STATUSES = (
+    "AGUARDANDO_ASSOCIADO",
+    "AGUARDANDO_ASSOCIADO",
+    "AGUARDANDO_ASSOCIADO",
+    "AGUARDANDO_ASSOCIADO",
+    "LIBERADA_AUTOMATICAMENTE",
+    "LIBERADA_AUTOMATICAMENTE",
+    "CONTESTACAO_ABERTA",
+    "CONTESTACAO_ABERTA",
+    "REVISAO_PENDENTE",
+    "REVISAO_PENDENTE",
+)
+
+
+def _expanded_seed_fixtures(fixtures: list[dict]) -> list[dict]:
+    """Acrescenta dez compras determinísticas por associado para a demonstração.
+
+    As cópias usam apenas dados sintéticos já presentes nas fixtures. Estados
+    encerrados representam respostas fictícias pré-carregadas, nunca decisões da IA.
+    """
+    expanded = list(fixtures)
+    for owner, number_base in (("C-ANA", 100), ("C-BRUNO", 200)):
+        templates = [item for item in fixtures if item.get("case_id") and item["owner"] == owner]
+        for index, status in enumerate(_EXTRA_SEED_STATUSES, start=1):
+            item = copy.deepcopy(templates[(index - 1) % len(templates)])
+            number = number_base + index
+            item["fixture_id"] = f"volume_demo_{owner.lower().replace('-', '_')}_{index:02d}"
+            item["case_id"] = f"T-{number}"
+            item["challenge_id"] = f"CH-{number}"
+            item["card_id"] = f"CARD_SYN_DEMO_{number:04d}"
+            item["seed_status"] = status
+            item.pop("seed_review", None)
+            occurred_at = datetime.fromisoformat(item["occurred_at"].replace("Z", "+00:00"))
+            item["occurred_at"] = (occurred_at - timedelta(days=index)).isoformat().replace("+00:00", "Z")
+            if status in {"REVISAO_PENDENTE", "CONTESTACAO_ABERTA"}:
+                item["seed_review"] = {
+                    "reason": (
+                        "NAO_RECONHECE_ESTABELECIMENTO"
+                        if status == "CONTESTACAO_ABERTA"
+                        else "DUVIDA_PROCESSO"
+                    ),
+                    "details": (
+                        "Contestação fictícia pré-carregada para a demonstração."
+                        if status == "CONTESTACAO_ABERTA"
+                        else "Revisão fictícia pré-carregada para a demonstração."
+                    ),
+                    "created_by": "ASSOCIADO",
+                }
+            expanded.append(item)
+    return expanded
 
 
 def _refresh_expired_seed_confirmation(
@@ -78,7 +131,13 @@ def _refresh_expired_seed_confirmation(
     )
 
 
-def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = None) -> None:
+def run_seed(
+    session: Session,
+    ttl_seconds: int = 900,
+    model_path: str | None = None,
+    auto_release_threshold: float = 0.20,
+    preventive_block_threshold: float = 0.817,
+) -> None:
     """Cria as fixtures iniciais se o banco estiver vazio. Idempotente.
 
     Fixtures com case_id=null são puladas (só entram via demo).
@@ -87,7 +146,7 @@ def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = 
         from app.config import get_settings
         model_path = get_settings().risk_model_path
 
-    fixtures = _load_fixtures()
+    fixtures = _expanded_seed_fixtures(_load_fixtures())
     for fixture in fixtures:
         # Pula fixtures sem case_id fixo (só demo, ex.: falha_modelo)
         if not fixture.get("case_id"):
@@ -98,7 +157,7 @@ def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = 
             select(Purchase).where(Purchase.case_id == fixture["case_id"])
         ).scalar_one_or_none()
         if existing is None:
-            purchase, _, _ = receive_and_evaluate_purchase(
+            purchase, confirmation, _ = receive_and_evaluate_purchase(
                 session=session,
                 fixture=fixture,
                 customer_id=fixture["owner"],
@@ -107,7 +166,32 @@ def run_seed(session: Session, ttl_seconds: int = 900, model_path: str | None = 
                 case_id=fixture["case_id"],
                 challenge_id=fixture["challenge_id"],
                 is_seed=True,
+                auto_release_threshold=auto_release_threshold,
+                preventive_block_threshold=preventive_block_threshold,
             )
+            seed_status = fixture.get("seed_status")
+            if seed_status and seed_status != purchase.status:
+                now = datetime.now(UTC).replace(tzinfo=None)
+                previous_status = purchase.status
+                purchase.status = seed_status
+                purchase.version += 1
+                purchase.updated_at = now
+                if confirmation is not None and seed_status in {"CONTESTACAO_ABERTA", "REVISAO_PENDENTE"}:
+                    confirmation.answered_response = {
+                        "CONTESTACAO_ABERTA": "DENY",
+                        "REVISAO_PENDENTE": "UNSURE",
+                    }[seed_status]
+                    confirmation.answered_at = now
+                session.add(
+                    Event(
+                        purchase_id=purchase.id,
+                        event_type="SEED_STATE",
+                        from_status=previous_status,
+                        to_status=seed_status,
+                        payload={"source": "demo_fixture"},
+                        created_at=now,
+                    )
+                )
         else:
             purchase = existing
             _refresh_expired_seed_confirmation(

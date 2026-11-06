@@ -16,17 +16,20 @@ import {
   Button,
   InlineLoading,
   InlineNotification,
-  Tag,
   Tile,
   Stack,
 } from '@carbon/react';
 import { Warning, Information, CheckmarkFilled, CloseFilled, Time } from '@carbon/icons-react';
 import { ApiError, getPurchase, getPurchaseStatus, postConfirmationResponse } from '../../api/client.js';
-import { formatDate, formatMoney, isTerminal, statusMeta } from './utils.js';
-import PurchaseChat from './PurchaseChat.jsx';
+import { formatDate, formatMoney, isTerminal } from './utils.js';
+import { PurchaseStatusPanel } from './PurchaseStatus.jsx';
 import HumanReviewRequest from './HumanReviewRequest.jsx';
 
 const POLL_INTERVAL_MS = 5000;
+const STATUS_PANEL_REPLACES_RESULT = new Set([
+  'LIBERADA_AUTOMATICAMENTE',
+  'BLOQUEADA_PREVENTIVAMENTE',
+]);
 
 // ── Subcomponentes internos ───────────────────────────────────────────────────
 
@@ -37,15 +40,6 @@ function SimulationBadge() {
       <span className="cds--type-label-01">
         Esta é uma simulação. Os dados e ações desta tela são fictícios e não produzem efeito real.
       </span>
-    </div>
-  );
-}
-
-function StatusBadge({ status, statusLabel }) {
-  const meta = statusMeta(status);
-  return (
-    <div className="associate-status-row">
-      <Tag type={meta.tagType} size="md">{statusLabel}</Tag>
     </div>
   );
 }
@@ -151,6 +145,7 @@ function ReviewCard({ review }) {
           {review.kind === 'PROTECAO' && 'Revisão de proteção aberta. O cartão não foi bloqueado.'}
           {review.kind === 'DUVIDA' && 'Revisão de dúvida aberta. Um analista vai revisar este caso.'}
           {review.kind === 'FALHA_AVALIACAO' && 'O sistema não conseguiu avaliar esta compra. Um analista vai revisar.'}
+          {review.kind === 'RISCO_ALTO' && 'O reconhecimento foi encaminhado para validação por causa do risco alto.'}
         </p>
       </Stack>
     </Tile>
@@ -175,15 +170,27 @@ function ExpiryCountdown({ expiresAt }) {
 
   if (secondsLeft === null) return null;
 
-  const minutes = Math.floor(secondsLeft / 60);
+  const days = Math.floor(secondsLeft / 86400);
+  const hours = Math.floor((secondsLeft % 86400) / 3600);
+  const minutes = Math.floor((secondsLeft % 3600) / 60);
   const secs = secondsLeft % 60;
+  const visualTime = days > 0
+    ? `${days}d ${hours}h ${minutes}min`
+    : hours > 0
+      ? `${hours}h ${minutes}min`
+      : `${minutes}m ${String(secs).padStart(2, '0')}s`;
+  const accessibleTime = days > 0
+    ? `${days} dias, ${hours} horas e ${minutes} minutos`
+    : hours > 0
+      ? `${hours} horas e ${minutes} minutos`
+      : `${minutes} minutos e ${secs} segundos`;
 
   return (
-    <div className="associate-expiry" role="timer" aria-live="off" aria-label={`Tempo restante: ${minutes} minutos e ${secs} segundos`}>
+    <div className="associate-expiry" role="timer" aria-live="off" aria-label={`Tempo restante: ${accessibleTime}`}>
       <Time size={16} aria-hidden />
       <span className="cds--type-label-01">
         {secondsLeft > 0
-          ? `Prazo para responder: ${minutes}m ${String(secs).padStart(2, '0')}s`
+          ? `Prazo para responder: ${visualTime}`
           : 'Prazo encerrado'}
       </span>
     </div>
@@ -274,10 +281,10 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
     loadDetail();
   }, [caseId, loadDetail]);
 
-  // Polling a cada 5 s enquanto AGUARDANDO_ASSOCIADO
+  // Polling enquanto o associado ainda pode responder ou contestar.
   useEffect(() => {
     if (!detail) return;
-    if (detail.status !== 'AGUARDANDO_ASSOCIADO') return;
+    if (!['AGUARDANDO_ASSOCIADO', 'LIBERADA_AUTOMATICAMENTE', 'BLOQUEADA_PREVENTIVAMENTE'].includes(detail.status)) return;
 
     const id = setInterval(async () => {
       try {
@@ -383,17 +390,14 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
       <Stack gap={5}>
         <SimulationBadge />
 
-        <div className="associate-detail-header">
-          <div>
-            <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)' }}>
-              Compra {detail.case_id}
-            </p>
-            <StatusBadge status={detail.status} statusLabel={detail.status_label} />
-          </div>
-          {isWaiting && detail.confirmation?.expires_at && (
-            <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
-          )}
-        </div>
+        <p className="cds--type-label-01 associate-detail__case-id">Compra {detail.case_id}</p>
+        <PurchaseStatusPanel
+          status={detail.status}
+          label={detail.status_label}
+          aside={isWaiting && detail.confirmation?.expires_at
+            ? <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
+            : null}
+        />
 
         <PurchaseCard purchase={detail.purchase} />
 
@@ -405,7 +409,9 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
           <ResultCard result={actionResult} />
         )}
 
-        {detail.result && <ResultCard result={detail.result} />}
+        {detail.result && !STATUS_PANEL_REPLACES_RESULT.has(detail.status) && (
+          <ResultCard result={detail.result} />
+        )}
 
         {actionError && (
           <InlineNotification
@@ -429,7 +435,7 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
           submitting={submitting}
         />
 
-        {detail.status !== 'AGUARDANDO_ASSOCIADO' && detail.confirmation?.answered && (
+        {detail.confirmation?.allowed_responses.length === 0 && detail.confirmation?.answered && (
           <Tile>
             <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginBottom: '0.25rem' }}>
               Resposta registrada em
@@ -440,15 +446,6 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
 
         {/* ── Separador visual ─────────────────────────────────────────────── */}
         <hr className="associate-detail__divider" aria-hidden />
-
-        {/* ── Chat com o assistente ────────────────────────────────────────── */}
-        <PurchaseChat
-          caseId={caseId}
-          onReviewProtocol={() => {
-            loadDetail();
-            onPurchaseChanged?.();
-          }}
-        />
 
         {/* ── Revisão por analista ─────────────────────────────────────────── */}
         <HumanReviewRequest

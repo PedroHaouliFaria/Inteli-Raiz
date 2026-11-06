@@ -31,19 +31,59 @@ export function formatDate(iso) {
   }
 }
 
-/** Metadados visuais por status (rótulos e tipo de tag Carbon). */
+/** Metadados visuais e de orientação por status. */
 const STATUS_META = {
-  RECEBIDA:              { tagType: 'gray',    terminal: false },
-  EM_AVALIACAO:          { tagType: 'blue',    terminal: false },
-  AGUARDANDO_ASSOCIADO:  { tagType: 'magenta', terminal: false },
-  LIBERADA_SIMULACAO:    { tagType: 'green',   terminal: true  },
-  RECUSADA_SIMULACAO:    { tagType: 'red',     terminal: true  },
-  REVISAO_PENDENTE:      { tagType: 'warm-gray', terminal: true },
-  CONFIRMACAO_EXPIRADA:  { tagType: 'cool-gray', terminal: true },
+  RECEBIDA: {
+    tagType: 'gray', tone: 'neutral', icon: 'info', shortLabel: 'Recebida', terminal: false,
+    description: 'A compra foi recebida e será avaliada.', nextStep: 'aguarde a avaliação',
+  },
+  EM_AVALIACAO: {
+    tagType: 'blue', tone: 'info', icon: 'time', shortLabel: 'Em avaliação', terminal: false,
+    description: 'O modelo está avaliando os sinais disponíveis.', nextStep: 'aguarde o resultado',
+  },
+  AGUARDANDO_ASSOCIADO: {
+    tagType: 'magenta', tone: 'attention', icon: 'time', shortLabel: 'Responder', terminal: false,
+    description: 'Precisamos saber se você reconhece esta compra.', nextStep: 'responda antes do prazo',
+  },
+  LIBERADA_AUTOMATICAMENTE: {
+    tagType: 'green', tone: 'success', icon: 'check', shortLabel: 'Liberada automática', terminal: false,
+    description: 'A compra foi liberada automaticamente por apresentar baixo risco.',
+    nextStep: 'conteste caso não reconheça',
+  },
+  BLOQUEADA_PREVENTIVAMENTE: {
+    tagType: 'red', tone: 'danger', icon: 'warning', shortLabel: 'Bloqueada', terminal: false,
+    description: 'A compra foi bloqueada preventivamente por apresentar risco alto.',
+    nextStep: 'informe se reconhece a compra',
+  },
+  CONTESTACAO_ABERTA: {
+    tagType: 'purple', tone: 'review', icon: 'warning', shortLabel: 'Contestação aberta', terminal: true,
+    description: 'Você informou que não reconhece a compra. A analista fará a decisão final.',
+    nextStep: 'acompanhe a análise',
+  },
+  LIBERADA_SIMULACAO: {
+    tagType: 'green', tone: 'success', icon: 'check', shortLabel: 'Liberada', terminal: true,
+    description: 'A compra foi liberada na simulação.', nextStep: null,
+  },
+  RECUSADA_SIMULACAO: {
+    tagType: 'red', tone: 'danger', icon: 'close', shortLabel: 'Recusada', terminal: true,
+    description: 'A compra foi recusada após a análise.', nextStep: null,
+  },
+  REVISAO_PENDENTE: {
+    tagType: 'warm-gray', tone: 'review', icon: 'time', shortLabel: 'Em revisão', terminal: true,
+    description: 'A compra está aguardando a decisão de uma analista.', nextStep: 'acompanhe a análise',
+  },
+  CONFIRMACAO_EXPIRADA: {
+    tagType: 'cool-gray', tone: 'neutral', icon: 'time', shortLabel: 'Prazo encerrado', terminal: true,
+    description: 'O prazo de confirmação terminou e a compra não foi autorizada.',
+    nextStep: 'solicite revisão se reconhecer a compra',
+  },
 };
 
 export function statusMeta(status) {
-  return STATUS_META[status] ?? { tagType: 'gray', terminal: false };
+  return STATUS_META[status] ?? {
+    tagType: 'gray', tone: 'neutral', icon: 'info', shortLabel: status,
+    description: 'Consulte os detalhes desta compra.', nextStep: null, terminal: false,
+  };
 }
 
 export function isTerminal(status) {

@@ -77,6 +77,9 @@ class Settings(BaseSettings):
     risk_data_dir: str = str(REPO_ROOT / "data" / "processed")
     risk_watsonx_deployment_id: str = ""
     # Limiar F2 do notebook 03: a partir dele o modelo considera a transação fraude.
+    # Política híbrida: baixo risco é liberado automaticamente, a faixa
+    # intermediária pede confirmação e alto risco é bloqueado preventivamente.
+    risk_auto_release_threshold: float = 0.20
     risk_decision_threshold: float = 0.817
 
     # Endpoints de demonstração (§9): só registrados com DEMO_MODE=true

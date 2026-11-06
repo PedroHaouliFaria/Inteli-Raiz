@@ -35,6 +35,9 @@ _STATUS_LABELS: dict[str, str] = {
     "RECEBIDA": "Compra recebida",
     "EM_AVALIACAO": "Em avaliação",
     "AGUARDANDO_ASSOCIADO": "Aguardando sua resposta",
+    "LIBERADA_AUTOMATICAMENTE": "Liberada automaticamente (simulação)",
+    "BLOQUEADA_PREVENTIVAMENTE": "Bloqueada preventivamente (simulação)",
+    "CONTESTACAO_ABERTA": "Contestação em análise",
     "LIBERADA_SIMULACAO": "Compra liberada (simulação)",
     "RECUSADA_SIMULACAO": "Compra recusada (simulação)",
     "REVISAO_PENDENTE": "Em revisão por um analista",
@@ -120,6 +123,7 @@ def resolve_review(
     session: Session,
     review_id: str,
     decision: str,
+    justification: str,
     analyst_id: str,
 ) -> dict:
     """Fecha uma revisão e aplica a decisão simulada da analista atomicamente."""
@@ -128,6 +132,13 @@ def resolve_review(
 
     if decision not in _STATUS_BY_ANALYST_DECISION:
         raise ApiError(400, "INVALID_REQUEST", f"decision inválida: {decision!r}")
+    justification = justification.strip()
+    if not 10 <= len(justification) <= 500:
+        raise ApiError(
+            400,
+            "INVALID_REQUEST",
+            "A justificativa deve conter entre 10 e 500 caracteres.",
+        )
 
     review = session.execute(
         select(Review).where(Review.review_id == review_id).with_for_update()
@@ -158,6 +169,10 @@ def resolve_review(
     for pending in purchase.reviews:
         if pending.status == "ABERTA":
             pending.status = "FECHADA"
+            pending.decision = decision
+            pending.decision_reason = justification
+            pending.decided_by = analyst_id
+            pending.decided_at = now
 
     session.add(
         Event(
@@ -168,6 +183,7 @@ def resolve_review(
             payload={
                 "review_id": review.review_id,
                 "decision": decision,
+                "justification": justification,
                 "analyst_id": analyst_id,
             },
             created_at=now,
@@ -180,6 +196,9 @@ def resolve_review(
         "review_id": review.review_id,
         "case_id": purchase.case_id,
         "decision": decision,
+        "justification": justification,
+        "decided_by": analyst_id,
+        "decided_at": now,
         "review_status": "FECHADA",
         "case_status": new_status,
         "message": f"Compra {action} na simulação e revisão encerrada.",

@@ -2,7 +2,7 @@
 
 Cobre:
 - DEMO_MODE=false → 404 em todas as rotas /api/demo/*
-- R01: POST /api/demo/purchases com fraude_supermercado_madrugada → 201, AGUARDANDO_ASSOCIADO,
+- R01: POST /api/demo/purchases com fraude_supermercado_madrugada → 201, BLOQUEADA_PREVENTIVAMENTE,
        challenge_id novo (não CH-007), e após DENY o score ≈ 0.9917 aparece em GET /api/reviews
 - R09: falha_modelo → REVISAO_PENDENTE + FALHA_AVALIACAO + score null + warning SCORE_UNAVAILABLE
 - R09: modelo indisponível em fixture normal → mesmo comportamento
@@ -89,16 +89,16 @@ def test_demo_reset_without_demo_mode_returns_404(client_no_demo):
 
 
 # ---------------------------------------------------------------------------
-# R01: fraude_supermercado_madrugada → 201, AGUARDANDO_ASSOCIADO, challenge_id novo
+# R01: fraude_supermercado_madrugada → bloqueio preventivo, challenge_id novo
 # ---------------------------------------------------------------------------
 
-def test_r01_demo_purchases_fraude_returns_201_aguardando(client):
-    """R01: POST /api/demo/purchases com fraude_supermercado_madrugada devolve 201, AGUARDANDO_ASSOCIADO."""
+def test_r01_demo_purchases_fraude_returns_201_bloqueada(client):
+    """R01: score alto bloqueia preventivamente a compra demonstrativa."""
     _login_ana(client)
     r = client.post("/api/demo/purchases", json={"fixture_id": "fraude_supermercado_madrugada"})
     assert r.status_code == 201, r.text
     data = r.json()
-    assert data["status"] == "AGUARDANDO_ASSOCIADO"
+    assert data["status"] == "BLOQUEADA_PREVENTIVAMENTE"
     assert data["simulation"] is True
 
 
@@ -282,7 +282,7 @@ def test_demo_reset_returns_204(client):
 
 
 def test_demo_reset_restores_all_seed_purchases_for_ana(client):
-    """Reset remove compras extras e restaura as oito fixtures da Ana."""
+    """Reset remove compras extras e restaura as fixtures ampliadas da Ana."""
     _login_ana(client)
     # Cria compra extra
     client.post("/api/demo/purchases", json={"fixture_id": "fraude_supermercado_madrugada"})
@@ -295,9 +295,27 @@ def test_demo_reset_restores_all_seed_purchases_for_ana(client):
     ids = [p["case_id"] for p in r2.json()["purchases"]]
     assert "T-007" in ids
     assert "T-003" in ids
-    # Não tem compras extras (só as oito fixtures da Ana no seed ampliado)
-    assert len(ids) == 8
+    # O seed contém as oito fixtures originais e dez compras extras de demonstração.
+    assert len(ids) == 18
     assert {"T-012", "T-015", "T-016", "T-019", "T-020", "T-023"}.issubset(ids)
+
+    statuses = {item["status"] for item in r2.json()["purchases"]}
+    assert {
+        "AGUARDANDO_ASSOCIADO",
+        "LIBERADA_AUTOMATICAMENTE",
+        "BLOQUEADA_PREVENTIVAMENTE",
+        "CONTESTACAO_ABERTA",
+        "REVISAO_PENDENTE",
+    } <= statuses
+
+
+def test_demo_reset_restores_ten_extra_purchases_for_bruno(client):
+    _login_bruno(client)
+    response = client.post("/api/demo/reset")
+    assert response.status_code == 204
+    purchases = client.get("/api/purchases").json()["purchases"]
+    assert len(purchases) == 17
+    assert {f"T-{number}" for number in range(201, 211)} <= {item["case_id"] for item in purchases}
 
 
 def test_demo_reset_requires_session(client):

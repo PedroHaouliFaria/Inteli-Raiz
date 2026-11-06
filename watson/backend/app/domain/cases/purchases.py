@@ -19,6 +19,9 @@ _STATUS_LABELS: dict[str, str] = {
     "RECEBIDA": "Compra recebida",
     "EM_AVALIACAO": "Em avaliação",
     "AGUARDANDO_ASSOCIADO": "Aguardando sua resposta",
+    "LIBERADA_AUTOMATICAMENTE": "Liberada automaticamente (simulação)",
+    "BLOQUEADA_PREVENTIVAMENTE": "Bloqueada preventivamente (simulação)",
+    "CONTESTACAO_ABERTA": "Contestação em análise",
     "LIBERADA_SIMULACAO": "Compra liberada (simulação)",
     "RECUSADA_SIMULACAO": "Compra recusada (simulação)",
     "REVISAO_PENDENTE": "Em revisão por um analista",
@@ -53,6 +56,16 @@ _ALLOWED_RESPONSES = [
     {"response": "UNSURE", "label": "Estou em dúvida"},
 ]
 
+_CONTEST_RESPONSE = [
+    {"response": "DENY", "label": "Não reconheço esta compra"},
+]
+
+_BLOCKED_RESPONSES = [
+    {"response": "AUTHORIZE", "label": "Reconheço esta compra"},
+    {"response": "DENY", "label": "Não reconheço esta compra"},
+    {"response": "UNSURE", "label": "Estou em dúvida"},
+]
+
 # Textos de result por estado terminal
 _RESULT_BY_RESPONSE = {
     "AUTHORIZE": {
@@ -64,10 +77,10 @@ _RESULT_BY_RESPONSE = {
         "next_steps": [],
     },
     "DENY": {
-        "title": "Compra recusada na simulação",
+        "title": "Contestação aberta",
         "description": (
             "Registramos que você não reconhece esta compra. "
-            "Um analista vai revisar o caso. O cartão não foi bloqueado."
+            "Um analista vai revisar o caso antes da decisão final."
         ),
         # next_steps será montado dinamicamente com o protocolo
     },
@@ -169,6 +182,37 @@ def _build_review_summary(review: Review | None) -> dict | None:
 
 def _build_result(purchase: Purchase, review: Review | None) -> dict | None:
     """Monta o bloco result para estados terminais."""
+    if purchase.status == "LIBERADA_AUTOMATICAMENTE":
+        return {
+            "title": "Compra liberada automaticamente na simulação",
+            "description": (
+                "O modelo classificou esta compra como baixo risco. "
+                "Se você não a reconhecer, abra uma contestação."
+            ),
+            "next_steps": ["Você ainda pode informar que não reconhece esta compra."],
+        }
+
+    if purchase.status == "BLOQUEADA_PREVENTIVAMENTE":
+        return {
+            "title": "Compra bloqueada preventivamente",
+            "description": (
+                "O modelo identificou risco alto. Informe se reconhece a compra; "
+                "a decisão final será registrada por uma analista."
+            ),
+            "next_steps": ["Responda se reconhece esta compra."],
+        }
+
+    if purchase.status == "CONTESTACAO_ABERTA":
+        protocol = review.protocol if review else None
+        next_steps = ["Aguarde a decisão da analista."]
+        if protocol:
+            next_steps.insert(0, f"Guarde o protocolo {protocol}.")
+        return {
+            "title": _RESULT_BY_RESPONSE["DENY"]["title"],
+            "description": _RESULT_BY_RESPONSE["DENY"]["description"],
+            "next_steps": next_steps,
+        }
+
     if purchase.status == "LIBERADA_SIMULACAO":
         return {**_RESULT_BY_RESPONSE["AUTHORIZE"], "next_steps": []}
 
@@ -194,6 +238,15 @@ def _build_result(purchase: Purchase, review: Review | None) -> dict | None:
                 f"Guarde o protocolo {protocol}.",
                 "Um analista vai analisar e entrar em contato.",
             ]
+        if review and review.kind == "RISCO_ALTO":
+            return {
+                "title": "Reconhecimento enviado para validação",
+                "description": (
+                    "Você informou que reconhece a compra, mas o risco alto exige "
+                    "a confirmação final de uma analista."
+                ),
+                "next_steps": next_steps,
+            }
         return {
             "title": _RESULT_BY_RESPONSE["UNSURE"]["title"],
             "description": _RESULT_BY_RESPONSE["UNSURE"]["description"],
@@ -287,7 +340,18 @@ def build_purchase_detail(
 
     # confirmation block
     if confirmation is not None:
-        allowed = _ALLOWED_RESPONSES if purchase.status == "AGUARDANDO_ASSOCIADO" else []
+        if purchase.status == "AGUARDANDO_ASSOCIADO":
+            allowed = _ALLOWED_RESPONSES
+            question = "Você reconhece e autoriza esta compra?"
+        elif purchase.status == "LIBERADA_AUTOMATICAMENTE":
+            allowed = _CONTEST_RESPONSE
+            question = "Você reconhece esta compra liberada automaticamente?"
+        elif purchase.status == "BLOQUEADA_PREVENTIVAMENTE":
+            allowed = _BLOCKED_RESPONSES
+            question = "Você reconhece esta compra bloqueada preventivamente?"
+        else:
+            allowed = []
+            question = "Você reconhece esta compra?"
         answered = None
         if confirmation.answered_response is not None and confirmation.answered_at is not None:
             answered = {
@@ -296,7 +360,7 @@ def build_purchase_detail(
             }
         confirmation_block = {
             "challenge_id": confirmation.challenge_id,
-            "question": "Você reconhece e autoriza esta compra?",
+            "question": question,
             "allowed_responses": allowed,
             "expires_at": _as_utc_naive(confirmation.expires_at),
             "answered": answered,
@@ -319,7 +383,7 @@ def build_purchase_detail(
         "confirmation": confirmation_block,
         "review": review_summary,
         "result": result,
-        "policy_version": "confirmacao-v2",
+        "policy_version": "risco-hibrido-v1",
     }
 
 
@@ -350,6 +414,10 @@ def build_purchase_status(
     allowed_responses: list[str] = []
     if purchase.status == "AGUARDANDO_ASSOCIADO":
         allowed_responses = ["AUTHORIZE", "DENY", "UNSURE"]
+    elif purchase.status == "LIBERADA_AUTOMATICAMENTE":
+        allowed_responses = ["DENY"]
+    elif purchase.status == "BLOQUEADA_PREVENTIVAMENTE":
+        allowed_responses = ["AUTHORIZE", "DENY", "UNSURE"]
 
     # review_protocol
     open_review = _get_open_review(purchase)
@@ -362,6 +430,10 @@ def build_purchase_status(
             "Responda se reconhece a compra antes do prazo.",
             'Se tiver dúvida, pergunte no chat ou escolha "Estou em dúvida".',
         ]
+    elif purchase.status == "LIBERADA_AUTOMATICAMENTE":
+        next_steps = ["Se não reconhecer a compra, abra uma contestação."]
+    elif purchase.status == "BLOQUEADA_PREVENTIVAMENTE":
+        next_steps = ["Informe se reconhece a compra para encaminhar a análise."]
     elif purchase.status == "CONFIRMACAO_EXPIRADA":
         next_steps = [
             "A compra não foi autorizada.",
@@ -369,7 +441,7 @@ def build_purchase_status(
         ]
     elif purchase.status == "LIBERADA_SIMULACAO":
         next_steps = []
-    elif purchase.status in ("RECUSADA_SIMULACAO", "REVISAO_PENDENTE"):
+    elif purchase.status in ("RECUSADA_SIMULACAO", "REVISAO_PENDENTE", "CONTESTACAO_ABERTA"):
         if review_protocol:
             next_steps = [f"Protocolo de revisão: {review_protocol}."]
         else:

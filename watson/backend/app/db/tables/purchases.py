@@ -106,6 +106,10 @@ class Review(Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="ABERTA")
     created_by: Mapped[str] = mapped_column(String(20), nullable=False)  # ASSOCIADO, AGENTE, SISTEMA
     details: Mapped[str | None] = mapped_column(Text, nullable=True)
+    decision: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    decision_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    decided_by: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC).replace(tzinfo=None)
     )

@@ -91,6 +91,7 @@ Todos os anexos existentes estão relacionados abaixo. Imagens e canvas sustenta
 - [reproducao-e-testes-do-fluxo.md](sistema/reproducao-e-testes-do-fluxo.md)
 - [requisitos-da-solucao.md](sistema/requisitos-da-solucao.md)
 - [specs/contrato-da-api.md](sistema/specs/contrato-da-api.md)
+- [specs/evolucao-front-app-associado-analista.md](sistema/specs/evolucao-front-app-associado-analista.md)
 - [specs/teste-historico-watsonx.md](sistema/specs/teste-historico-watsonx.md)
 
 ### Dados e modelo

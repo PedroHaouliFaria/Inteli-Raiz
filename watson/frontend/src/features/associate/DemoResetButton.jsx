@@ -8,6 +8,7 @@
  */
 import { useState } from 'react';
 import {
+  Button,
   HeaderGlobalAction,
   InlineNotification,
   Modal,
@@ -15,7 +16,7 @@ import {
 import { Restart } from '@carbon/icons-react';
 import { ApiError, resetDemo } from '../../api/client.js';
 
-export default function DemoResetButton({ onReset }) {
+export default function DemoResetButton({ onReset, variant = 'header' }) {
   const [open, setOpen] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resetError, setResetError] = useState(null);
@@ -45,13 +46,19 @@ export default function DemoResetButton({ onReset }) {
 
   return (
     <>
-      <HeaderGlobalAction
-        aria-label="Recomeçar demonstração"
-        onClick={handleOpen}
-        tooltipAlignment="end"
-      >
-        <Restart size={20} />
-      </HeaderGlobalAction>
+      {variant === 'button' ? (
+        <Button kind="ghost" size="sm" renderIcon={Restart} onClick={handleOpen}>
+          Restaurar dados da demonstração
+        </Button>
+      ) : (
+        <HeaderGlobalAction
+          aria-label="Recomeçar demonstração"
+          onClick={handleOpen}
+          tooltipAlignment="end"
+        >
+          <Restart size={20} />
+        </HeaderGlobalAction>
+      )}
 
       <Modal
         open={open}
@@ -65,8 +72,9 @@ export default function DemoResetButton({ onReset }) {
         onSecondarySubmit={handleClose}
       >
         <p>
-          Isso apaga as respostas, conversas e revisões desta demonstração e recria as
-          compras com prazo novo. Continuar?
+          Isso apaga respostas, conversas, decisões e revisões da base fictícia
+          compartilhada e restaura todas as compras iniciais com prazo novo. A mudança
+          afeta Ana, Bruno e a fila da analista. Continuar?
         </p>
         {resetError && (
           <div style={{ marginTop: '1rem' }}>

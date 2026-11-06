@@ -14,6 +14,9 @@ PurchaseStatus = Literal[
     "RECEBIDA",
     "EM_AVALIACAO",
     "AGUARDANDO_ASSOCIADO",
+    "LIBERADA_AUTOMATICAMENTE",
+    "BLOQUEADA_PREVENTIVAMENTE",
+    "CONTESTACAO_ABERTA",
     "LIBERADA_SIMULACAO",
     "RECUSADA_SIMULACAO",
     "REVISAO_PENDENTE",
@@ -98,7 +101,7 @@ class ReviewSummary(BaseModel):
     model_config = {"extra": "forbid"}
     review_id: str
     protocol: str
-    kind: Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO"]
+    kind: Literal["DUVIDA", "PROTECAO", "FALHA_AVALIACAO", "RISCO_ALTO"]
     status: Literal["ABERTA", "FECHADA"]
 
 
