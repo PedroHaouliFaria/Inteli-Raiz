@@ -1,0 +1,30 @@
+# Blueprint do Render: publica a demonstração do Raiz num único serviço web.
+# Passo a passo em watson/infra/README.md (seção "Publicar no Render").
+services:
+  - type: web
+    name: raiz
+    runtime: docker
+    plan: free
+    dockerfilePath: ./watson/infra/docker/app.Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      # Assina o cookie de sessão; o Render gera um valor aleatório.
+      - key: SESSION_SECRET
+        generateValue: true
+      # O site é servido em HTTPS: cookie só trafega com Secure.
+      - key: SESSION_SECURE
+        value: "true"
+      # Mostra "Restaurar dados da demonstração" e libera /api/demo/reset.
+      - key: DEMO_MODE
+        value: "true"
+      # 30 dias para responder, como no Docker local.
+      - key: CONFIRMATION_TTL_SECONDS
+        value: "2592000"
+      - key: AGENT_PROVIDER
+        value: simulated
+      - key: RISK_MODEL_PROVIDER
+        value: local
+      # Chat/copiloto. Preenchida no painel do Render; nunca no repositório.
+      - key: GROQ_API_KEY
+        sync: false
