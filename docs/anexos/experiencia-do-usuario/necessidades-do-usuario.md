@@ -16,9 +16,10 @@
 
 - [1. Situação delimitada](#1-situação-delimitada)
 - [2. Mapa principal](#2-mapa-principal)
-- [3. Lacunas de pesquisa](#3-lacunas-de-pesquisa)
-- [4. Implicações de design](#4-implicações-de-design)
-- [5. Hipóteses priorizadas](#5-hipóteses-priorizadas)
+- [3. Tabela de notas](#3-tabela-de-notas)
+- [4. Síntese: necessidades e tensões](#4-síntese-necessidades-e-tensões)
+- [5. Implicações para o design](#5-implicações-para-o-design)
+- [6. O que ainda precisa de pesquisa](#6-o-que-ainda-precisa-de-pesquisa)
 
 ---
 

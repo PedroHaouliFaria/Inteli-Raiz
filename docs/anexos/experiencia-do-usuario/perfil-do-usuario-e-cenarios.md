@@ -17,8 +17,9 @@
 - [1. Persona principal — Valdir (protopersona do associado)](#1-persona-principal--valdir-protopersona-do-associado)
 - [2. Ator secundário — Camila (analista, exceções)](#2-ator-secundário--camila-analista-exceções)
 - [3. Episódio de comparação: compra sinalizada com nome de estabelecimento ambíguo](#3-episódio-de-comparação-compra-sinalizada-com-nome-de-estabelecimento-ambíguo)
-- [4. Cenários estendidos](#4-cenários-estendidos)
-- [5. Hipóteses dos cenários](#5-hipóteses-dos-cenários)
+- [4. Seis cenários do produto](#4-seis-cenários-do-produto)
+- [5. Implicações de design e rastreabilidade](#5-implicações-de-design-e-rastreabilidade)
+- [6. O que precisa de pesquisa antes de fechar a persona e os cenários](#6-o-que-precisa-de-pesquisa-antes-de-fechar-a-persona-e-os-cenários)
 
 ---
 

@@ -11,8 +11,11 @@ Aprovada pelo Leo em 27/10/2026. O código fica em `watson/`, a documentação p
 3. **Domínio** (`watson/backend/app/domain`): as regras do negócio, sem FastAPI nem SQL.
 4. **Agentes, risco e dados** (`app/agents`, `app/risk`, `app/db`): o domínio usa cada um por uma interface.
 5. **Serviços de fora**: Groq no chat atual, com modelo de risco local. O deploy watsonx.ai e as opções de Db2 ficam identificados como históricos; não são dependências presumidas do fluxo integrado.
+6. **Publicação**: desde 08/11 a aplicação roda no Render como um único container (Nginx + FastAPI + modelo), descrito em [watson/infra](../../../../watson/infra/README.md#publicar-no-render).
 
 ## Árvore
+
+A árvore abaixo detalha o código. O mapa de todas as pastas do repositório (notebooks, dados, Bob, vídeo) está no [README da raiz](../../../../README.md#como-navegar-pelo-repositório).
 
 ```
 (raiz do repositório)
@@ -47,7 +50,7 @@ Aprovada pelo Leo em 27/10/2026. O código fica em `watson/`, a documentação p
     │   │   ├── db/                ← tables, repositories, session, types, migrations (Alembic)
     │   │   └── simulation/
     │   └── tests/                 ← unit, integration
-    └── infra/                     ← docker-compose, docker/, ibm-cloud/, ci/
+    └── infra/                     ← docker-compose, docker/ (inclui app.Dockerfile da publicação), ibm-cloud/, ci/
 ```
 
 As pastas `data/`, `notebooks/`, `scripts/` e `outputs/` do time de dados (branch `develop`) continuam na raiz, sem mudança.

@@ -1,0 +1,15 @@
+# Contexto do build de watson/infra/docker/app.Dockerfile (feito a partir da raiz).
+# Lista do que entra; todo o resto fica de fora.
+*
+!watson/frontend
+!watson/backend/pyproject.toml
+!watson/backend/alembic.ini
+!watson/backend/app
+!watson/infra/docker
+!outputs/modelo_rf.joblib
+!data/processed
+
+watson/frontend/node_modules
+watson/frontend/dist
+watson/frontend/.vite
+**/__pycache__

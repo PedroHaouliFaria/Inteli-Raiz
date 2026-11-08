@@ -56,6 +56,14 @@ Responsabilidade por função organiza o trabalho; confirmar os nomes com a equi
 
 Cada item exige versão, evidência e revisor distinto. Teste automatizado de backend não substitui UI ou participante real. D02/D03/D06 podem permanecer hipóteses documentais com limites explícitos; não chamar isso de pesquisa validada. Um piloto pequeno mostra problemas/sinais, sem generalizar para todos os associados ou para perdas financeiras reais.
 
+## Atualização de 08/11/2026
+
+| ID | Situação em 08/11 | O que ainda falta |
+|---|---|---|
+| TEC-04 | Aplicação publicada em <https://raiz-jq28.onrender.com>, com a chave do LLM configurada no painel do Render, fora do Git. Um teste pela API recebeu resposta real do copiloto. | Rastro completo de uma interação real (ferramentas e estado antes/depois). O banco publicado é SQLite dentro do container e volta ao estado inicial a cada reinício, o que atende a demonstração, mas não é volume durável. |
+| FIN-01 | URL publicada e testada sem login; vídeo em [demonstracao/](../../../demonstracao/README.md); declarações em versão para revisão em [entrega final IBM](entrega-final-ibm.md). | Revisão cruzada das três peças por outra pessoa e versão final das declarações. |
+| FIN-02 | Relatórios das sessões no Bob dos cinco integrantes em [bob_sessions/](../../../bob_sessions/), com ID de tarefa, custo e revisão humana. | Conferir regras da plataforma e guardar o comprovante de envio. |
+
 ## Atualização documental de 05/11/2026
 
 A [documentação principal](../../documentacao-do-projeto.md) reúne o percurso e incorpora orçamento com referências de mercado. Consulta de preços e cálculo não encerram D08: consumo, esforço, retorno, validação com usuários e revisão cruzada continuam pendentes. Não houve nova execução de backend nesta atualização.
