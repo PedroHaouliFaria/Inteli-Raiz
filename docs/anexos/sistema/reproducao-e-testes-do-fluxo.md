@@ -44,7 +44,7 @@ npm ci
 npm run dev
 ```
 
-Abrir `http://localhost:5173`. O proxy de Vite encaminha `/api` ao backend. Escolher Ana ou Bruno na sessão fictícia; Carla é analista. A rotina de demonstração pode ser reiniciada pelo botão com DEMO_MODE=true, em banco de demo. Esse reset apaga dados de demonstração; salvar as evidências antes de utilizá-lo.
+Abrir `http://localhost:5173`. O proxy de Vite encaminha `/api` ao backend. Entrar com o e-mail e a senha fictícios de Ana ou Bruno; Carla é analista (logins no [guia de uso](como-usar-a-demonstracao.md#4-entrar)). A versão publicada em <https://raiz-jq28.onrender.com> serve para o mesmo percurso sem instalação. A rotina de demonstração pode ser reiniciada por **Restaurar dados da demonstração** com DEMO_MODE=true, em banco de demo. Esse reset apaga dados de demonstração; salvar as evidências antes de utilizá-lo.
 
 ## 3. Percurso reproduzível
 

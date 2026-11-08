@@ -35,6 +35,8 @@ A demonstração publicada roda num único serviço: `docker/app.Dockerfile` jun
 
 No plano gratuito, o serviço "dorme" após 15 minutos sem acesso e leva cerca de 1 minuto para acordar. Abra o link um pouco antes de apresentar.
 
+**Publicação atual (08/11/2026):** <https://raiz-jq28.onrender.com>, serviço `raiz` na conta Render da Isadora, região Virginia (US East), plano Free, criado pela opção B a partir da branch `infra/deploy-render`. Depois do merge na `develop`, troque a branch em **Settings → Build & Deploy → Branch**.
+
 ### Opção A: Blueprint (quem tem acesso de administrador ao repositório no GitHub)
 
 1. Em <https://dashboard.render.com>, **New → Blueprint** e escolha este repositório.

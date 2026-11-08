@@ -639,7 +639,7 @@ Existem só com `DEMO_MODE=true`. Servem para o vídeo e para outra pessoa repro
 
 **`POST /api/demo/reset`**: apaga compras, respostas, conversas e revisões e recarrega as fixtures iniciais. **204**.
 
-As confirmações do seed vencem `CONFIRMATION_TTL_SECONDS` depois que o servidor sobe (15 min por padrão). Num ambiente hospedado elas já estão vencidas quando alguém abre o link. Por isso, com `demo_mode: true` na sessão, o cabeçalho das duas telas (associado e analista) tem o botão **Recomeçar demonstração**. Ele pede confirmação na própria tela, chama o reset e recarrega a lista. Sem `DEMO_MODE`, o botão não aparece.
+As confirmações do seed vencem `CONFIRMATION_TTL_SECONDS` depois que o servidor sobe (15 min por padrão). Num ambiente hospedado elas já estão vencidas quando alguém abre o link. Por isso, com `demo_mode: true` na sessão, as duas telas (associado e analista) têm a opção **Restaurar dados da demonstração**. Ela pede confirmação na própria tela, chama o reset e recarrega a lista. Sem `DEMO_MODE`, a opção não aparece. O Docker local e a versão publicada definem `CONFIRMATION_TTL_SECONDS=2592000` (30 dias), para as confirmações não vencerem entre apresentações.
 
 ## 10. Agente: ferramentas e dependências
 

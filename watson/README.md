@@ -1,12 +1,14 @@
 # Watson
 
-Aplicação web de prevenção a fraudes em cartão do time Raiz (optativa IBM do Inteli). Aqui fica só o código; a documentação (design, dados e arquitetura) está em [`docs/`](../docs).
+Aplicação web de prevenção a fraudes em cartão do time Raiz (optativa IBM do Inteli). Aqui fica só o código; a documentação (design, dados e arquitetura) está em [`docs/`](../docs) e o mapa do repositório inteiro no [README da raiz](../README.md#como-navegar-pelo-repositório).
+
+**Versão publicada:** <https://raiz-jq28.onrender.com> (logins no [guia de uso](../docs/anexos/sistema/como-usar-a-demonstracao.md#4-entrar)).
 
 | Pasta | Papel |
 |---|---|
 | [frontend/](frontend/README.md) | App do associado e revisão de exceções da analista (React, Vite, Carbon) |
 | [backend/](backend/README.md) | API, regras de negócio, agentes e acesso ao banco (Python, FastAPI) |
-| [infra/](infra/README.md) | Docker local; diretórios históricos de deploy e CI |
+| [infra/](infra/README.md) | Docker Compose local, imagem única da publicação no Render; diretórios históricos de deploy IBM Cloud e CI |
 
 Documentação relacionada:
 

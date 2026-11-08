@@ -10,6 +10,8 @@ Como a solução funciona por dentro: componentes, agente, contratos, testes e r
 | [Arquitetura e limites de autonomia](arquitetura-do-sistema.md) | Quais componentes, ferramentas do agente, contratos e falhas? |
 | [Fluxo do MVP](reproducao-e-testes-do-fluxo.md) | Como rodar e reproduzir o fluxo ponta a ponta? |
 | [Matriz de cenários e evidências](cenarios-e-evidencias-de-teste.md) | Qual teste cobre cada requisito e qual o limite da evidência? |
+| [Guia de uso da demonstração](como-usar-a-demonstracao.md) | Como acessar a versão publicada ou rodar localmente, com logins e percurso? |
+| [Publicação no Render](../../../watson/infra/README.md#publicar-no-render) | Como a aplicação foi colocada no ar e como atualizar? |
 
 ## Arquitetura e especificações
 

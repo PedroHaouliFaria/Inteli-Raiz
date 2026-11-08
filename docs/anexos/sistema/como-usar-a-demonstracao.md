@@ -2,6 +2,16 @@
 
 Este é o caminho mais curto para executar e demonstrar o Inteli Raiz do início ao fim.
 
+## Versão publicada (sem instalar nada)
+
+A aplicação está no ar em <https://raiz-jq28.onrender.com>. Use os logins da [seção 4](#4-entrar) e o [percurso principal](#5-percurso-principal).
+
+- No plano gratuito do Render, o servidor "dorme" após 15 minutos sem acesso e leva cerca de 1 minuto para acordar. Abra o link um pouco antes de apresentar.
+- Todos os visitantes compartilham a mesma base de demonstração. Os dados voltam ao estado inicial quando o servidor reinicia ou quando alguém usa **Restaurar dados da demonstração**.
+- Como a publicação é configurada: [infraestrutura](../../../watson/infra/README.md#publicar-no-render).
+
+Para rodar no seu computador, siga as seções 1 a 3.
+
 ## 1. Pré-requisitos
 
 - Git.
@@ -42,6 +52,8 @@ Espere os serviços `db`, `backend` e `frontend` aparecerem como `healthy`.
 - Aplicação: <http://localhost:8080>
 - API e documentação interativa: <http://localhost:8000/docs>
 
+Sem Docker, siga os READMEs do [backend](../../../watson/backend/README.md) e do [frontend](../../../watson/frontend/README.md). Dois cuidados: use Python 3.12 ou 3.13 no backend (o scikit-learn 1.6.1 do modelo não instala no 3.14) e defina `CONFIRMATION_TTL_SECONDS=2592000` no `backend/.env`; sem isso, o prazo padrão de 15 minutos faz as compras expirarem durante a demonstração.
+
 ## 4. Entrar
 
 | Usuário | Papel | E-mail | Senha |
@@ -55,13 +67,15 @@ São credenciais exclusivamente fictícias. Não as reutilize em outros sistemas
 ## 5. Percurso principal
 
 1. Entre como Ana ou Bruno.
-2. Abra uma compra com status **Aguardando sua resposta**.
-3. Confira valor, data, categoria, cartão parcial e sinais apresentados.
-4. Use o chat se a chave da Groq estiver configurada.
-5. Escolha **Estou em dúvida** ou solicite uma revisão humana.
+2. Na lista **Suas compras**, abra uma compra com status **Aguardando sua resposta**. Compras **Bloqueadas** também aceitam resposta.
+3. Confira valor, data, categoria, cartão parcial e os motivos do alerta.
+4. Abra o copiloto pelo ícone no cabeçalho, se a chave da Groq estiver configurada.
+5. Escolha **Estou em dúvida** ou, em **Prefiro falar com uma pessoa**, solicite uma revisão por analista.
 6. Saia e entre como Carla.
-7. Na fila de revisões, localize o caso e escolha **Liberar compra** ou **Recusar compra**.
+7. Na aba **Pendentes**, abra o caso, escreva uma justificativa (10 a 500 caracteres) e escolha **Autorizar compra** ou **Recusar compra**.
 8. Saia, volte ao associado e atualize a lista para conferir o novo status.
+
+Para manter as duas contas abertas ao mesmo tempo, entre com a analista numa janela anônima: o login fica guardado no navegador, então duas abas da mesma janela usam a mesma conta.
 
 Esse percurso demonstra a cadeia completa: interface → API → banco → revisão humana → decisão → atualização para o associado.
 
@@ -70,11 +84,11 @@ Esse percurso demonstra a cadeia completa: interface → API → banco → revis
 - **Autorizar:** o associado escolhe que reconhece a compra; o status vira `LIBERADA_SIMULACAO`.
 - **Recusar:** o associado informa que não reconhece a compra; o status vira `RECUSADA_SIMULACAO` e o caso ganha revisão de proteção.
 - **Isolamento:** Ana e Bruno veem apenas as próprias compras.
-- **Analista:** Carla acessa revisões abertas e o score interno do modelo; associados não acessam essa fila.
+- **Analista:** Carla acessa revisões abertas e o score interno do modelo; associados não acessam essa fila. As abas **Histórico**, **Fluxo atual** e **Dados** mostram revisões encerradas, a situação de todas as compras e indicadores da base.
 
 ## 7. Recomeçar a demonstração
 
-Com `DEMO_MODE=true`, o cabeçalho mostra **Recomeçar demonstração**. O botão apaga respostas, conversas e revisões da demonstração e recarrega as fixtures com prazo novo.
+Com `DEMO_MODE=true`, a coluna **Suas compras** do associado e a tela da analista mostram **Restaurar dados da demonstração**. A opção apaga respostas, conversas e revisões da demonstração e recarrega as fixtures com prazo novo.
 
 Use o reset somente em dados fictícios. Todos os usuários compartilham a mesma base local, portanto o reset afeta a demonstração inteira.
 
@@ -96,7 +110,11 @@ docker compose -f infra/docker-compose.yml up -d
 
 ### Todos os casos aparecem com prazo encerrado
 
-Use **Recomeçar demonstração**. O Docker local configura prazo de 30 dias para as confirmações fictícias.
+Use **Restaurar dados da demonstração**. O Docker local e a versão publicada configuram prazo de 30 dias para as confirmações fictícias. Fora do Docker, defina `CONFIRMATION_TTL_SECONDS=2592000` no `backend/.env` e reinicie o backend.
+
+### O backend não sobe: `malformed database schema`
+
+O arquivo SQLite local (`watson/backend/watson.db`) foi corrompido, em geral porque os arquivos auxiliares `watson.db-wal` e `watson.db-shm` foram apagados ou alterados. Pare o backend, renomeie ou apague os três arquivos `watson.db*` e suba de novo: o backend recria o banco e carrega os dados da demonstração.
 
 ### O chat está indisponível
 
@@ -123,4 +141,4 @@ docker compose -f infra/docker-compose.yml up -d --force-recreate backend fronte
 - [Arquitetura](arquitetura/visao-geral.md)
 - [Contrato da API](specs/contrato-da-api.md)
 - [Dados usados pela aplicação](../dados-e-modelo/dados/uso-dos-dados-na-aplicacao.md)
-- [Infraestrutura Docker](../../../watson/infra/README.md)
+- [Infraestrutura Docker e publicação no Render](../../../watson/infra/README.md)

@@ -16,12 +16,16 @@ A [documentação principal](../documentacao-do-projeto.md) explica a história 
 
 ## Outros materiais do repositório
 
-- [Código da aplicação](../../watson/README.md).
+O [README da raiz](../../README.md#como-navegar-pelo-repositório) traz o mapa completo do repositório. Atalhos:
+
+- [Código da aplicação](../../watson/README.md) e [infraestrutura e publicação](../../watson/infra/README.md).
 - [Notebooks de análise e modelo](../../notebooks/).
 - [Dados e orientações do case](../../data/).
+- [Agente e ferramenta de teste do watsonx Orchestrate](../../agente/).
+- [Vídeo de demonstração](../../demonstracao/README.md).
 - [Materiais de aula e guia IBM](../../contexto/).
-- [Sessões registradas em bob_sessions](../../bob_sessions/).
-- Roteiros pessoais de pesquisa e validação em `bob_sessions/pedro_faria/`: planejamento local, não coleta executada; ainda não versionados nesta revisão.
+- [Relatórios das sessões no IBM Bob](../../bob_sessions/) e [regras do projeto para o Bob](../../.bob/rules/).
+- Roteiros de pesquisa e validação preparados para o Bob em `bob_sessions/pedro_faria/`: planejamento, não coleta executada.
 
 ## Inventário completo
 

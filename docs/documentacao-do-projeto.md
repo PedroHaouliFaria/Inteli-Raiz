@@ -1,7 +1,9 @@
 # Inteli-Raiz — Documentação do projeto
 
 **Confirmação assistida de compras para associados do Sicredi**
-Versão 1.0 · Consolidação em 05/11/2026 · Estado: documentação para revisão da equipe.
+Versão 1.1 · Atualizada em 08/11/2026 (consolidação original em 05/11/2026) · Estado: documentação para revisão da equipe.
+
+**Acesse:** [aplicação publicada](https://raiz-jq28.onrender.com) · [vídeo de demonstração](../demonstracao/README.md) · [mapa do repositório](../README.md#como-navegar-pelo-repositório) · [tecnologias](tecnologias.md) · [guia de uso e logins](anexos/sistema/como-usar-a-demonstracao.md)
 
 ## O projeto em uma página
 
@@ -11,7 +13,7 @@ O objetivo é verificar se a conversa contextual melhora a compreensão do alert
 
 A construção reuniu análise de dados, um classificador de risco, regras de decisão, backend, interface e agente. O projeto começou com uma proposta centrada na analista e passou a priorizar o associado. Esta documentação explica essa evolução e os motivos registrados para as escolhas.
 
-**Situação disponível:** há código de API, interface e agente; existe log de 207 testes de backend aprovados em 04/11/2026, na versão `f741a35`. Esses testes usam modelos controlados. Na integração de 05/11 foram executados 86 testes de sessão, confirmação, revisão e reset, aprovados em 64,16 s na base `9d54d1a`; não houve ensaio pelo navegador, treino ou teste com usuários. A documentação foi integrada à `develop` `9d54d1a` em 05/11/2026, preservando a reformulação do canvas e dos textos da Isadora (PR #24). A consolidação documental continua como alteração local, sem novo commit; o log de 04/11 se refere ao código `f741a35`, é distinto do subconjunto de 86 testes executado nesta integração.
+**Situação disponível:** há código de API, interface e agente; existe log de 207 testes de backend aprovados em 04/11/2026, na versão `f741a35`. Esses testes usam modelos controlados. Na integração de 05/11 foram executados 86 testes de sessão, confirmação, revisão e reset, aprovados em 64,16 s na base `9d54d1a`; não houve ensaio pelo navegador, treino ou teste com usuários. A documentação foi integrada à `develop` em 05/11/2026 (PR #25), preservando a reformulação do canvas e dos textos da Isadora (PR #24); o log de 04/11 se refere ao código `f741a35` e é distinto do subconjunto de 86 testes executado nesta integração. Em 08/11 a aplicação foi publicada em <https://raiz-jq28.onrender.com>; um teste pela API confirmou login, lista de compras, fila da analista, modelo de risco carregado e uma resposta real do copiloto com o LLM configurado.
 
 **Custo de referência:** para 1.000 confirmações/mês, o cenário base prevê cerca de **R$ 159/mês de hospedagem, backup e IA**. Incluindo tempo humano de revisão, manutenção e uma licença Bob, o custo alocado chega a **R$ 986/mês**. São cálculos com preços públicos e hipóteses de consumo, detalhados na seção 5; não são faturas da equipe.
 
@@ -31,7 +33,7 @@ A construção reuniu análise de dados, um classificador de risco, regras de de
 10. [Testes, resultados e pendências](#validacao)
 11. [Entrega final e fontes](#entrega)
 
-Os [anexos](anexos/README.md) preservam documentos de origem, contratos, instruções de execução, imagens, registros e planos históricos. Os códigos D01–D13 identificam as entregas do curso. Aqui eles aparecem na correspondência ao final, sem interromper a história.
+Os [anexos](anexos/README.md) preservam documentos de origem, contratos, instruções de execução, imagens, registros e planos históricos. Os códigos D01–D13 identificam as entregas do curso. Aqui eles aparecem na correspondência ao final, sem interromper a história. Para localizar código, notebooks, dados e relatórios do Bob, use o [mapa do repositório](../README.md#como-navegar-pelo-repositório).
 
 <a id="contexto"></a>
 ## 1. Contexto e desafio
@@ -233,7 +235,10 @@ A sequência abaixo foi reconstruída a partir de versões do Git e registros da
 | 28–29/10 | Pacotes documentais de pesquisa, estrutura/arquitetura, protótipo, fluxo e validação | `8a7aefc`, `466a4fc`, D09/D10 e registro comum de fontes |
 | 03–04/11 | Integração de interface/API, correção do lock do banco durante chat e reset da demonstração; consolidação dos documentos | `ccb95f1`, `5e54b77`, `effc6df`; [revisão de 04/11](anexos/gestao/revisao-da-documentacao-2026-11-04.md) |
 | 04/11 | Execução documentada de 207 testes de backend, com ambiente e hash do modelo | [Log](anexos/evidencias/2026-11-04/pytest.log), código `f741a35` |
-| 05/11 | Consolidação contínua, cotações financeiras e integração à develop `9d54d1a`, incluindo o canvas da Isadora | Alterações locais desta consolidação, ainda sem commit; PR #24 preservado nos anexos |
+| 05/11 | Consolidação contínua, cotações financeiras e integração à develop, incluindo o canvas da Isadora; prompt do agente alinhado ao pedido de revisão (TEC-01) | PRs #24, #25 e #27 |
+| 05–06/11 | Evolução das telas: triagem automática de risco com bloqueio preventivo, contestações, justificativa obrigatória e histórico da analista, rotas por perfil, painel de dados da analista e copiloto global do associado | PRs #28 e #29 |
+| 06/11 | Relatórios das sessões no IBM Bob de todos os integrantes | PRs #26 e #30; pasta [bob_sessions](../bob_sessions/) |
+| 07–08/11 | Vídeo de demonstração, imagem única para publicação e aplicação no ar no Render | `30a5fb2`, `0b659b8`; [vídeo](../demonstracao/README.md) e [infraestrutura](../watson/infra/README.md#publicar-no-render) |
 
 ### Como o trabalho foi dividido
 
@@ -259,11 +264,12 @@ Os planos recuperados ficam identificados como históricos. Eles permitem entend
 |---|---|---|
 | Interface | React + Carbon em `watson/frontend/` | Sessão fictícia, compra, respostas, chat, revisão e resultado |
 | API | FastAPI em `watson/backend/` | Valida acesso, prazos, versões, repetição e operações |
-| Banco | SQLAlchemy; SQLite no padrão local, PostgreSQL no Compose | Preserva compra, confirmação, revisão, mensagens, eventos e chaves idempotentes |
+| Banco | SQLAlchemy; SQLite no padrão local e na versão publicada, PostgreSQL no Compose | Preserva compra, confirmação, revisão, mensagens, eventos e chaves idempotentes |
 | Classificador | Random Forest/scikit-learn, `outputs/modelo_rf.joblib` | Calcula indicador de risco local |
 | Política | Código determinístico de intake/confirmação | Avaliação disponível solicita confirmação; falha encaminha à revisão |
-| Agente | Pydantic AI, padrão Groq `openai/gpt-oss-120b` | Consulta contexto e solicita revisão; depende de chave para uso real |
-| IBM Bob | Ferramenta de desenvolvimento | Apoia tarefas da equipe, com sessões em `bob_sessions/` |
+| Agente | Pydantic AI, padrão Groq `openai/gpt-oss-120b`; chat na compra e copiloto global do associado | Consulta contexto e solicita revisão; depende de chave para uso real |
+| Publicação | Render, imagem única em `watson/infra/docker/app.Dockerfile` e `render.yaml` | Serve interface, API e modelo na mesma origem; o SQLite volta ao estado inicial a cada reinício |
+| IBM Bob | Ferramenta de desenvolvimento | Apoia tarefas da equipe, com relatórios em `bob_sessions/` e regras em `.bob/rules/` |
 
 ```mermaid
 flowchart TD
@@ -290,12 +296,12 @@ O banco reúne seis tabelas centrais: compras, confirmações, revisões, evento
 
 Os requisitos incluem avaliação com origem/versão, compra correta, três respostas, expiração, isolamento de usuários, idempotência, explicação fiel, ajuda contextual, erro explícito, persistência, transparência sobre simulação e reprodução por outra pessoa.
 
-**Detalhes técnicos:** [requisitos](anexos/sistema/requisitos-da-solucao.md), [arquitetura](anexos/sistema/arquitetura-do-sistema.md), [modelo de dados](anexos/dados-e-modelo/dados/modelo-de-dados.md), [contrato da API](anexos/sistema/specs/contrato-da-api.md) e [código](../watson/README.md).
+**Detalhes técnicos:** [tecnologias usadas](tecnologias.md), [requisitos](anexos/sistema/requisitos-da-solucao.md), [arquitetura](anexos/sistema/arquitetura-do-sistema.md), [modelo de dados](anexos/dados-e-modelo/dados/modelo-de-dados.md), [contrato da API](anexos/sistema/specs/contrato-da-api.md) e [código](../watson/README.md).
 
 <a id="fluxo"></a>
 ## 9. Experiência e fluxo final
 
-O percurso integrado começa na escolha de uma sessão fictícia, segue para lista e detalhe da compra e apresenta resposta explícita, ajuda e resultado. O console antigo permanece como legado visual; seus desenhos não representam o percurso atual de aceite.
+O percurso integrado começa no login com e-mail e senha fictícios, segue para lista e detalhe da compra e apresenta resposta explícita, ajuda e resultado. O console antigo permanece como legado visual; seus desenhos não representam o percurso atual de aceite.
 
 | Etapa | Experiência proposta | Resultado esperado |
 |---|---|---|
@@ -334,11 +340,11 @@ A suíte registrada cobre confirmação, prazo, isolamento, idempotência/concor
 ### Próximos passos de validação
 
 1. Outro integrante percorre a interface e salva versão, resultado, capturas e estado persistido dos casos críticos.
-2. Configurar o LLM real e registrar ferramentas, resposta e estado antes/depois, sem credenciais. O prompt ainda descreve apenas botões e chat, embora exista pedido de revisão na interface; o desalinhamento TEC-01 exige correção pelos autores.
+2. Registrar ferramentas, resposta e estado antes/depois com o LLM real, sem credenciais. O LLM já está configurado na versão publicada e o prompt passou a descrever o pedido de revisão (TEC-01, PR #27); falta o rastro completo de uma interação real.
 3. Conferir manifesto de 28 features, tratamento de madrugada/nulos, classes e corte temporal; reconciliar referências antigas e preservar um novo holdout quando necessário.
 4. Preparar A/B com informações idênticas e aplicar o piloto. Medir conclusão sem ajuda, compreensão, erros, tempo e intervenção do moderador. Corrigir os problemas e repetir os cenários afetados.
 5. Medir tokens, ciclos de ferramentas, tempo de atendimento, memória/carga da aplicação e horas de manutenção. Substituir hipóteses financeiras por observações.
-6. Fazer revisão cruzada e preparar URL funcional, vídeo e declarações coerentes com a versão demonstrada.
+6. Fazer revisão cruzada da URL publicada, do vídeo e das declarações, conferindo que descrevem a versão demonstrada.
 
 Cada resultado precisa de versão, método, contagens e limite. Uma autorização equivocada num cenário controlado é achado crítico, não uma tolerância automática. Um piloto pequeno não representa todos os associados.
 
@@ -349,7 +355,7 @@ Cada resultado precisa de versão, método, contagens e limite. Uma autorizaçã
 
 A documentação reúne o percurso de desenvolvimento e serve de base para a narrativa final. O pacote descrito no guia IBM reúne vídeo de três minutos, declaração do problema/solução com link funcional, declaração tecnológica e relatórios reais das sessões Bob. O checkpoint e os campos vigentes precisam ser conferidos pelo líder na plataforma. Os documentos de apoio D01–D13 não são treze submissões obrigatórias separadas.
 
-O roteiro de vídeo e as declarações existem como minutas. Não há, nesta consolidação, comprovante de submissão, vídeo final ou URL pública validada. [Entrega final IBM](anexos/gestao/entrega-final-ibm.md) mantém o checklist.
+Em 08/11 o pacote ganhou suas peças principais: a [aplicação publicada](https://raiz-jq28.onrender.com), o [vídeo de demonstração](../demonstracao/README.md) e as declarações de problema/solução e de tecnologia em versão para revisão. Ainda não há comprovante de submissão nem revisão cruzada dessas peças. [Entrega final IBM](anexos/gestao/entrega-final-ibm.md) mantém os textos e o checklist.
 
 ### Correspondência das entregas com esta história
 
@@ -371,6 +377,6 @@ O roteiro de vídeo e as declarações existem como minutas. Não há, nesta con
 
 O [índice dos anexos](anexos/README.md) lista todos os arquivos de apoio por assunto, incluindo imagens e registros de execução. Contratos, roteiros e resultados detalhados continuam disponíveis para auditoria, sem exigir sua leitura para entender o projeto.
 
-Os documentos FON/HIP/DEC permanecem com seus IDs no [registro de fontes e hipóteses](anexos/gestao/fontes-e-hipoteses.md). Fontes de mercado e premissas estão na seção 5 e no JSON financeiro. Planos históricos indicam o commit original. Sessões pessoais ficam em [bob_sessions](../bob_sessions/); sua existência não prova por si só a execução ou autoria de todas as tarefas descritas. Os arquivos locais `bob_sessions/pedro_faria/session_1.md` e `session_2.md` contêm roteiros de trabalho de pesquisa e validação; ainda não estão versionados e não devem ser apresentados como coleta com participantes.
+Os documentos FON/HIP/DEC permanecem com seus IDs no [registro de fontes e hipóteses](anexos/gestao/fontes-e-hipoteses.md). Fontes de mercado e premissas estão na seção 5 e no JSON financeiro. Planos históricos indicam o commit original. Sessões pessoais ficam em [bob_sessions](../bob_sessions/); sua existência não prova por si só a execução ou autoria de todas as tarefas descritas. Os arquivos `bob_sessions/pedro_faria/session_1.md` e `session_2.md` contêm roteiros de trabalho de pesquisa e validação preparados para o Bob; não devem ser apresentados como coleta com participantes.
 
 Esta é a referência principal para leitura do projeto. O contrato da API continua normativo para detalhes HTTP; regras, resultados e histórico conservam suas versões nos anexos. Novas decisões devem atualizar esta história e apontar para sua evidência, preservando o que era hipótese e o que foi verificado.

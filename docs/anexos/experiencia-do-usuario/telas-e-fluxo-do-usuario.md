@@ -1,6 +1,6 @@
 # D12 — Protótipo da experiência e decisões de interface
 
-**ID:** D12 · **Versão:** 0.3 · **Data:** 04/11/2026\
+**ID:** D12 · **Versão:** 0.4 · **Data:** 08/11/2026 (telas novas de 05–06/11 incluídas)\
 **Responsável:** Integração e validação; Leonardo na implementação frontend · **Revisor previsto:** Pesquisa\
 **Estado:** revisão documental atualizada; aplicação integrada no código; teste de compreensão/acessibilidade pendente.\
 **Base:** develop `f741a35`; [D06](perfil-do-usuario-e-cenarios.md), [D09](../sistema/requisitos-da-solucao.md) e componentes em `watson/frontend/src/features/`.\
@@ -8,9 +8,9 @@
 
 ## 1. Acesso e percurso
 
-Executar [D11](../sistema/reproducao-e-testes-do-fluxo.md) e abrir localhost:5173. O fluxo atual começa em SessionGate e escolhe AssociateApp ou AnalystApp pelo papel fictício. A interface antiga MemberPhone/reducer permanece no repositório como legado visual; suas observações de 28/10 não descrevem o fluxo integrado atual.
+Abrir a [versão publicada](https://raiz-jq28.onrender.com) ou executar [D11](../sistema/reproducao-e-testes-do-fluxo.md) e abrir localhost:5173. O fluxo atual começa em SessionGate, com login por e-mail e senha fictícios, e escolhe AssociateApp ou AnalystApp pelo papel. A interface antiga MemberPhone/reducer permanece no repositório como legado visual; suas observações de 28/10 não descrevem o fluxo integrado atual.
 
-Percurso: sessão fictícia → lista → detalhe da compra → resposta explícita → resultado. Chat e pedido de atendimento ficam disponíveis como ajuda; revisão não substitui a resposta nem prorroga prazo. Os desenhos anteriores em [docs/design](processo_design/README.md) são referências visuais, não prova de integração.
+Percurso: login fictício → lista → detalhe da compra → resposta explícita → resultado. Chat e pedido de atendimento ficam disponíveis como ajuda; revisão não substitui a resposta nem prorroga prazo. Os desenhos anteriores em [docs/design](processo_design/README.md) são referências visuais, não prova de integração.
 
 ## 2. Telas e estados inspecionados no código
 
@@ -24,6 +24,9 @@ Percurso: sessão fictícia → lista → detalhe da compra → resposta explíc
 | Pedido de atendimento | HumanReviewRequest e endpoint review | HIP-02: protocolo, confirmação continua válida até o prazo | Compreensão da diferença entre pedir ajuda e UNSURE |
 | Resultado | ResultCard/ReviewCard com objetos retornados pelo backend | HIP-09: estado e próximo passo; DENY não significa cartão bloqueado | Recarga, tela pequena e leitura sem explicação |
 | Prazo/expiração | ExpiryCountdown, polling e resposta do servidor | R04: contagem visual é apoio; servidor decide validade | Relógio divergente, expiração durante interação |
+| Bloqueio preventivo | Status BLOQUEADA_PREVENTIVAMENTE com respostas próprias ("Reconheço esta compra", "Não reconheço esta compra", "Estou em dúvida") | Triagem automática de risco: a compra de risco alto fica bloqueada até a resposta | Entendimento de que o bloqueio é da compra, não do cartão |
+| Copiloto do associado | AssociateCopilot, aberto pelo ícone do cabeçalho; GET/POST /api/copilot | Ajuda para todas as compras: pesquisar, explicar, resumir e pedir revisão; não responde à confirmação | Resposta com LLM real e limites percebidos |
+| Telas da analista | AnalystApp com abas Pendentes, Histórico, Fluxo atual e Dados; AnalystReviewDetail; AnalystDashboard | Exceções com score interno; justificativa obrigatória (10 a 500 caracteres) e histórico consultável | Clareza da fila e do registro da decisão |
 
 ## 3. Textos e consequências a preservar
 
@@ -41,7 +44,7 @@ Percurso: sessão fictícia → lista → detalhe da compra → resposta explíc
 
 - Sem contexto: explicitar a lacuna; sinais são características da compra, não causas comprovadas do score.
 
-A regra do produto e o caminho de revisão estão definidos. O prompt do agente ainda afirma que a tela tem apenas botões e chat, embora HumanReviewRequest exista; registrar esse desalinhamento na pendência TEC-01 antes de encerrar a experiência. Esta revisão documental não alterou o prompt da aplicação.
+A regra do produto e o caminho de revisão estão definidos. Em 05/11 o prompt do agente passou a citar "Prefiro falar com uma pessoa" e "Solicitar revisão por analista" (pendência TEC-01, PR #27); falta testar essa orientação numa interação real com o LLM.
 
 ## 4. Decisões ligadas à pesquisa
 

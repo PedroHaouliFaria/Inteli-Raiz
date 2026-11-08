@@ -2,9 +2,11 @@
 
 API do Watson em Python + FastAPI: confirmação de compras, revisão humana, agente de chat Pydantic AI/Groq e persistência via SQLAlchemy.
 
+Use Python 3.12 ou 3.13. O extra `risk` fixa o scikit-learn 1.6.1 (a versão do treino do modelo), que não tem pacote pronto para o Python 3.14; nessa versão a instalação tenta compilar e falha.
+
 ```bash
 cd watson/backend
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate   # no Windows: py -3.12 -m venv .venv e .venv\Scripts\activate
 pip install -e ".[dev,risk]"          # adicione postgres ao extra se configurar PostgreSQL
 cp .env.example .env                  # troque SESSION_SECRET; sem DATABASE_URL, usa SQLite
 uvicorn app.main:app --reload         # http://localhost:8000/docs
