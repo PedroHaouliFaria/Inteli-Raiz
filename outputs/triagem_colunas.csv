@@ -1,0 +1,298 @@
+coluna,grupo,decisao,motivo,pct_nulo,n_unicos,dtype
+acceptor_add_contact_info,estabelecimento,remover_pii,dado pessoal / contato,0.7611125,37,str
+acceptor_certificate_number,estabelecimento,remover_pii,dado pessoal / contato,0.7613875,38178,str
+acceptor_city,estabelecimento,manter,"categórica, lift 1.0 (n.s.), 3% nulo",0.02994375,240,str
+acceptor_country_code,estabelecimento,remover_constante,sem variação,0.07955,1,str
+acceptor_cust_service_phone,estabelecimento,remover_pii,dado pessoal / contato,0.75958125,9878,str
+acceptor_dba_name,estabelecimento,remover_pii,dado pessoal / contato,0.0798875,6470,str
+acceptor_email,estabelecimento,remover_pii,dado pessoal / contato,0.08035625,6441,str
+acceptor_id,estabelecimento,id_agregacao,identificador,0.00921875,6610,str
+acceptor_latitude,estabelecimento,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.76050625,38284,float64
+acceptor_longitude,estabelecimento,remover_ruido,"76% nulo, AUC 0.54, lift 1.0 (n.s.)",0.75888125,38556,float64
+acceptor_mastercard_risk,estabelecimento,remover_ruido,"76% nulo, AUC 0.56, lift 1.0 (n.s.)",0.76194375,10788,float64
+acceptor_name,estabelecimento,remover_pii,dado pessoal / contato,0.08125625,6454,str
+acceptor_open_date,estabelecimento,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.75926875,38498,str
+acceptor_phone,estabelecimento,remover_pii,dado pessoal / contato,0.0801125,6214,str
+acceptor_phone_val_code,estabelecimento,remover_pii,dado pessoal / contato,0.76124375,9898,str
+acceptor_region,estabelecimento,manter,"categórica, lift 1.4 (n.s.), 8% nulo",0.080225,12,str
+acceptor_risk,estabelecimento,manter,"numérica, AUC 0.92, 8% nulo",0.07916875,85,float64
+acceptor_risky_flag,estabelecimento,remover_ruido,"76% nulo, AUC 0.54, lift 1.0 (n.s.)",0.7598875,10869,float64
+acceptor_street_addr,estabelecimento,remover_pii,dado pessoal / contato,0.76201875,37,str
+acceptor_tax_number,estabelecimento,remover_pii,dado pessoal / contato,0.76033125,38347,str
+acceptor_url,estabelecimento,remover_pii,dado pessoal / contato,0.75965,37,str
+acceptor_visa_risk,estabelecimento,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76054375,10954,float64
+acceptor_zip,estabelecimento,remover_pii,dado pessoal / contato,0.7604125,37,str
+account_associated_cards,conta,remover_ruido,"76% nulo, AUC 0.58, lift 5.0 (n.s.)",0.75989375,25,float64
+account_available_credit,conta,manter,"numérica, AUC 0.54, 8% nulo",0.0779125,133681,float64
+account_balance,conta,manter,"numérica, AUC 0.53, 8% nulo",0.08014375,141291,float64
+account_bic,conta,remover_ruido,"76% nulo, AUC 0.56, lift 5.0 (n.s.)",0.7613,25,float64
+account_branch,conta,remover_ruido,"76% nulo, AUC 0.50, lift 2.8 (n.s.)",0.7605,25,float64
+account_cash_advance_balance,conta,manter,"numérica, AUC 0.61, 76% nulo",0.75945,10903,float64
+account_credit_limit,conta,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.75939375,10847,float64
+account_currency,conta,remover_constante,sem variação,0.08056875,1,str
+account_debt_balance,conta,remover_ruido,"76% nulo, AUC 0.53, lift 1.0 (n.s.)",0.7597375,10934,float64
+account_debt_payment_method,conta,remover_ruido,"76% nulo, AUC 0.52, lift 3.0 (n.s.)",0.7607625,25,float64
+account_digital_signature,conta,remover_pii,dado pessoal / contato,0.76075,25,float64
+account_iban,conta,remover_pii,dado pessoal / contato,0.75856875,25,float64
+account_id,conta,id_agregacao,identificador,0.08029375,31938,str
+account_last_activity,conta,remover_ruido,"76% nulo, AUC 0.55, lift 2.2 (n.s.)",0.7589125,25,float64
+account_last_payment_amount,conta,remover_ruido,"76% nulo, AUC 0.53, lift 1.0 (n.s.)",0.7613125,10800,float64
+account_last_payment_date,conta,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76084375,38239,str
+account_limits,conta,remover_ruido,"76% nulo, AUC 0.56, lift 1.0 (n.s.)",0.7596,10910,float64
+account_number_of_cards,conta,remover_ruido,"76% nulo, AUC 0.56, lift 1.5 (n.s.)",0.7583625,25,float64
+account_open_date,conta,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.758375,38638,str
+account_otb_limit,conta,remover_ruido,"76% nulo, AUC 0.56, lift 1.0 (n.s.)",0.7614125,10933,float64
+account_pw_change_flag,conta,remover_ruido,"76% nulo, AUC 0.54, lift 2.2 (n.s.)",0.7572625,25,float64
+account_rewards_used_count,conta,remover_ruido,"76% nulo, AUC 0.52, lift 2.2 (n.s.)",0.7616125,25,float64
+account_status,conta,remover_ruido,"76% nulo, AUC 0.53, lift 3.6 (n.s.)",0.75918125,25,float64
+account_type,conta,remover_ruido,"76% nulo, AUC 0.53, lift 2.7 (n.s.)",0.75938125,25,float64
+acquirer_id,evento/modelo,id_agregacao,identificador,0.757675,38772,str
+acquirer_number,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76025625,38359,str
+acquirer_seq_number,evento/modelo,remover_ruido,"76% nulo, AUC 0.53, lift 2.2 (n.s.)",0.7603375,25,float64
+action_code,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7602375,37,str
+add_wallet_onboarding,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.76084375,37,str
+alert_id,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.759625,38460,str
+allow_contactless,evento/modelo,manter,"numérica, AUC 0.50, 8% nulo",0.0791,2,object
+allow_crossborder,evento/modelo,manter,"numérica, AUC 0.52, 8% nulo",0.08081875,2,object
+allow_ecommerce,evento/modelo,manter,"numérica, AUC 0.51, 8% nulo",0.08129375,2,object
+allow_magstripe,evento/modelo,remover_ruido,"76% nulo, AUC 0.51, lift 1.1 (n.s.)",0.7602875,2,object
+allow_wallet,evento/modelo,remover_ruido,"76% nulo, AUC 0.53, lift 1.1 (n.s.)",0.7599375,2,object
+allow_withdraw,evento/modelo,remover_ruido,"76% nulo, AUC 0.56, lift 1.2 (n.s.)",0.75914375,2,object
+amount,transação,manter,"numérica, AUC 0.89, 0% nulo",0.00374375,24057,float64
+amount_fees,transação,manter,"numérica, AUC 0.79, 8% nulo",0.078525,1615,float64
+application_transaction_counte,evento/modelo,remover_ruido,"76% nulo, AUC 0.55, lift 3.0 (n.s.)",0.7616,25,float64
+approval_code,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.758825,37,str
+atc1,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.75905,37,str
+atc2,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76000625,37,str
+auth_agent_id,evento/modelo,id_agregacao,identificador,0.75975625,38439,str
+auth_type,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.75928125,37,str
+avs_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 5.4 (n.s.)",0.75826875,37,str
+business_app_transfer_purpose,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 5.1 (n.s.)",0.7581875,37,str
+capture_date,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.75939375,38477,str
+card_available_balance,cartão,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.7607625,10854,float64
+card_bin,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.7603875,37,str
+card_brand,cartão,manter,"categórica, lift 1.1 (n.s.), 8% nulo",0.0785375,3,str
+card_category,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.75665625,37,str
+card_country_code,cartão,remover_constante,sem variação,0.080175,1,str
+card_credit_limit,cartão,manter,"numérica, AUC 0.51, 8% nulo",0.0802,133471,float64
+card_credit_score,cartão,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.7586375,10985,float64
+card_days_to_expire,cartão,remover_ruido,"76% nulo, AUC 0.57, lift 4.2 (n.s.)",0.76065,25,float64
+card_effective_date,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7602,38347,str
+card_expected_payments_frequen,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.76094375,37,str
+card_expiration_date,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7576,38761,str
+card_first_activation_date,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7586375,38590,str
+card_format,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.7598875,37,str
+card_id,cartão,id_agregacao,identificador,0.0041,56772,str
+card_id_not_blacklisted_nor_wh,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7604875,38322,str
+card_issued_date,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7594625,38457,str
+card_issuer,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 5.2 (n.s.)",0.7601625,37,str
+card_last4,cartão,remover_pii,dado pessoal / contato,0.07844375,10000,float64
+card_number_of_cardholders,cartão,remover_ruido,"76% nulo, AUC 0.57, lift 3.6 (n.s.)",0.76035,25,float64
+card_pan,cartão,remover_pii,dado pessoal / contato,0.079375,54706,str
+card_presence_flag,cartão,manter,"categórica, lift 2.3 (signif.), 0% nulo",0.0,2,str
+card_program,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76008125,37,str
+card_seq_number,cartão,remover_ruido,"76% nulo, AUC 0.57, lift 3.5 (n.s.)",0.76,25,float64
+card_status,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 5.5 (n.s.)",0.761425,37,str
+card_transaction_amount_limit,cartão,remover_ruido,"76% nulo, AUC 0.55, lift 1.0 (n.s.)",0.75864375,10924,float64
+card_type,cartão,manter,"categórica, lift 2.1 (signif.), 8% nulo",0.0810875,2,str
+card_ver_data,cartão,remover_ruido,"76% nulo, AUC 0.50, lift 4.4 (n.s.)",0.76086875,37,str
+cardholder_add_id,cliente,id_agregacao,identificador,0.759925,38412,str
+cardholder_add_id_type,cliente,remover_pii,dado pessoal / contato,0.760175,38372,str
+cardholder_authentication_veri,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 4.4 (n.s.)",0.76213125,37,str
+cardholder_bill_amount,cliente,remover_ruido,"76% nulo, AUC 0.55, lift 1.0 (n.s.)",0.76315625,10857,float64
+cardholder_bill_conv_rate,cliente,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.7617125,10788,float64
+cardholder_bill_currency_code,cliente,remover_constante,sem variação,0.759775,1,str
+cardholder_bill_street_addr,cliente,remover_pii,dado pessoal / contato,0.75935625,37,str
+cardholder_bill_zip,cliente,remover_pii,dado pessoal / contato,0.76065,37,str
+cardholder_certificate_number,cliente,remover_pii,dado pessoal / contato,0.75789375,38737,str
+cardholder_compress_bill_addr,cliente,remover_pii,dado pessoal / contato,0.7596125,37,str
+cardholder_name,cliente,remover_pii,dado pessoal / contato,0.08015,31906,str
+cardholder_presence_indicator,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76058125,37,str
+cardholder_verification_rule,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 6.2 (n.s.)",0.75953125,37,str
+cardid_count_1m,cartão,nivel_B_pre_calculada,velocidade/distância pronta,0.080675,29,float64
+company_id,evento/modelo,id_agregacao,identificador,0.75884375,38585,str
+cp_card_prev_term_dist_1h,evento/modelo,nivel_B_pre_calculada,velocidade/distância pronta,0.0804,9042,float64
+cp_card_term_vel_1h,evento/modelo,nivel_B_pre_calculada,velocidade/distância pronta,0.0797125,64,float64
+currency_code,evento/modelo,remover_constante,sem variação,0.07988125,1,str
+currency_unit,evento/modelo,remover_constante,sem variação,0.761675,1,str
+customer_accounts,cliente,remover_ruido,"76% nulo, AUC 0.57, lift 2.9 (n.s.)",0.75958125,25,float64
+customer_cards,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76015625,37,str
+customer_citizen_id_number,cliente,remover_pii,dado pessoal / contato,0.08020625,31946,str
+customer_city,cliente,manter,"categórica, lift 1.0 (n.s.), 4% nulo",0.0397625,480,str
+customer_country_code,cliente,remover_constante,sem variação,0.07888125,1,str
+customer_country_code_change_f,cliente,remover_ruido,"76% nulo, AUC 0.52, lift 3.0 (n.s.)",0.761225,25,float64
+customer_currency,cliente,remover_constante,sem variação,0.0789125,1,str
+customer_dob,cliente,remover_pii,dado pessoal / contato,0.76103125,37,str
+customer_driver_license,cliente,remover_pii,dado pessoal / contato,0.759475,37,str
+customer_email,cliente,remover_pii,dado pessoal / contato,0.08116875,31945,str
+customer_email_change_flag,cliente,remover_pii,dado pessoal / contato,0.7592125,2,object
+customer_id,cliente,id_agregacao,identificador,0.0061875,33037,str
+customer_kyc_lvl,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.759925,37,str
+customer_name,cliente,remover_pii,dado pessoal / contato,0.08006875,31927,str
+customer_number_of_accounts,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.7611625,25,float64
+customer_number_of_cards,cliente,remover_ruido,"76% nulo, AUC 0.53, lift 2.9 (n.s.)",0.76005625,25,float64
+customer_occupation,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.76145625,37,str
+customer_occupation_status,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 4.4 (n.s.)",0.76076875,37,str
+customer_passport_number,cliente,remover_pii,dado pessoal / contato,0.75851875,38637,str
+customer_phone,cliente,remover_pii,dado pessoal / contato,0.08003125,9994,str
+customer_phone_change_flag,cliente,remover_pii,dado pessoal / contato,0.75778125,2,object
+customer_phone_val_code,cliente,remover_pii,dado pessoal / contato,0.7587375,9911,str
+customer_region,cliente,manter,"categórica, lift 1.5 (n.s.), 8% nulo",0.08038125,12,str
+customer_registration_date,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.75825,38660,str
+customer_risk_rating,cliente,manter,"categórica, lift 1.1 (n.s.), 8% nulo",0.08045625,3,str
+customer_segment,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 5.4 (n.s.)",0.75959375,37,str
+customer_ssn,cliente,remover_pii,dado pessoal / contato,0.75951875,37,str
+customer_street_addr,cliente,remover_pii,dado pessoal / contato,0.75935625,37,str
+customer_tax_number,cliente,remover_pii,dado pessoal / contato,0.07983125,31909,str
+customer_total_balance,cliente,manter,"numérica, AUC 0.61, 76% nulo",0.760525,10760,float64
+customer_total_credit_limit,cliente,remover_ruido,"76% nulo, AUC 0.55, lift 1.0 (n.s.)",0.759975,10819,float64
+customer_zip,cliente,remover_pii,dado pessoal / contato,0.75935,37,str
+cvv2_presence_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.2 (n.s.)",0.75906875,37,str
+cvv2_present_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.2 (n.s.)",0.76190625,37,str
+cvv_val_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.75795,37,str
+decision,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.0801375,2,str
+destination_id,evento/modelo,id_agregacao,identificador,0.7615125,38158,str
+device_fingerprint,dispositivo/terminal,id_agregacao,identificador,0.05553125,91883,str
+device_id,dispositivo/terminal,id_agregacao,identificador,0.02483125,80816,str
+device_ip,dispositivo/terminal,remover_pii,dado pessoal / contato,0.76033125,37,str
+device_ip_country_code,dispositivo/terminal,remover_vazamento,informação pós-evento / 100% fraude,0.0,3,str
+device_ip_latitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.75924375,38495,float64
+device_ip_longitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.51, lift 1.0 (n.s.)",0.7608875,38242,float64
+device_language,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 4.2 (n.s.)",0.7607875,37,str
+digital_wallet_token,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76010625,38383,str
+digital_wallet_token_assurance,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7609875,38242,str
+digital_wallet_token_requester,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7600875,38386,str
+digital_wallet_token_type,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.75768125,38771,str
+digital_wallet_tokenized_trans,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76035625,38343,str
+digitalwallettoken_count_3m,evento/modelo,nivel_B_pre_calculada,velocidade/distância pronta,0.0799125,90,float64
+dispute_end_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75994375,38373,str
+dispute_feedback_notes,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7594,37,str
+dispute_notes,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75975625,37,str
+dispute_reason,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75885625,37,str
+dispute_refunded,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76014375,2,object
+dispute_start_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7585375,38616,str
+dispute_submitted_by,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7621625,37,str
+dt_partition,evento/modelo,manter,"categórica, lift 1.0 (n.s.), 8% nulo",0.07979375,365,str
+event_external_id,evento/modelo,id_agregacao,identificador,0.0,160000,str
+event_occurred_at,evento/modelo,manter,"categórica, lift 1.0 (n.s.), 0% nulo",0.00194375,159269,str
+event_occurred_at_as_long,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7594375,38473,str
+event_received_at,evento/modelo,manter,"categórica, lift 1.0 (n.s.), 8% nulo",0.07990625,146874,str
+event_type,evento/modelo,manter,"categórica, lift 1.1 (n.s.), 8% nulo",0.07993125,2,str
+f3ds_secure_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.760275,37,str
+f3ds_secure_protocol_version,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 5.3 (n.s.)",0.75934375,37,str
+fdz_exposed_schema_diffb,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76143125,37,str
+fdz_feedbacks,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76036875,37,str
+fdz_partition_index,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75960625,37,str
+fdz_timestamp,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75925,38490,str
+fdz_triggered_actions,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.759525,37,str
+fdz_uuid,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.0818125,146910,str
+feedback_label,alvo,alvo,variável alvo,0.0,2,bool
+first_recurring_payment,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.75953125,37,str
+forwarding_institution_id,evento/modelo,id_agregacao,identificador,0.7601,38384,str
+fraud,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7591625,2,object
+fraud_score,evento/modelo,baseline_externo,score de outro modelo,0.01178125,697,float64
+info_type,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.75989375,37,str
+lifecycle_id,evento/modelo,id_agregacao,identificador,0.75986875,38421,str
+lifecycle_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.1 (n.s.)",0.758525,37,str
+lifecycle_seq_number,evento/modelo,remover_ruido,"76% nulo, AUC 0.53, lift 4.4 (n.s.)",0.761525,25,float64
+lifecycle_token,evento/modelo,id_agregacao,identificador,0.7598,38432,str
+lists_state,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76015625,37,str
+local_datetime,evento/modelo,manter,"categórica, lift 1.0 (n.s.), 8% nulo",0.07960625,146903,str
+login_session_id,evento/modelo,id_agregacao,identificador,0.761275,38196,str
+malware_flag,evento/modelo,remover_ruido,"76% nulo, AUC 0.52, lift 1.1 (n.s.)",0.7615625,2,object
+malware_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.76035625,37,str
+mc_fraud_score,evento/modelo,baseline_externo,score de outro modelo,0.0793,691,float64
+mc_merchant_fraud_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.51, lift 1.0 (n.s.)",0.75995,2,object
+mcc,evento/modelo,manter,"numérica, AUC 0.54, 1% nulo",0.0101,10,float64
+mcc_cardbin_cntdist_cardexpdat,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.759425,37,str
+merchant_initiated,evento/modelo,remover_ruido,"76% nulo, AUC 0.55, lift 1.6 (n.s.)",0.758925,2,object
+mti,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.1 (n.s.)",0.75874375,37,str
+oob_comm_type,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76008125,37,str
+oob_end_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76078125,38255,str
+oob_feedback_notes,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75986875,37,str
+oob_notes,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76055,37,str
+oob_response_type,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75916875,37,str
+oob_start_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.76,38371,str
+original_amount_data,evento/modelo,remover_ruido,"76% nulo, AUC 0.57, lift 1.0 (n.s.)",0.7609875,10950,float64
+original_rec_amount_data,evento/modelo,remover_ruido,"76% nulo, AUC 0.53, lift 1.0 (n.s.)",0.7609875,10856,float64
+originator_id,evento/modelo,id_agregacao,identificador,0.75964375,38457,str
+p2p_account,evento/modelo,remover_ruido,"76% nulo, AUC 0.54, lift 2.9 (n.s.)",0.7605625,25,float64
+p2p_address,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.76116875,37,str
+p2p_city,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7590625,250,str
+p2p_country,evento/modelo,remover_ruido,"76% nulo, AUC 0.51, lift 2.2 (n.s.)",0.761275,25,float64
+p2p_id,evento/modelo,id_agregacao,identificador,0.75930625,38511,str
+p2p_name,evento/modelo,remover_pii,dado pessoal / contato,0.760175,37,str
+p2p_source_funds,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 5.1 (n.s.)",0.758925,37,str
+p2p_state,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.2 (n.s.)",0.75815625,37,str
+pos_acceptor_disp_data_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.7592625,37,str
+pos_acceptor_rec_data_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.7618,37,str
+pos_approval_code_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76105625,37,str
+pos_card_capture_cap,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 4.0 (n.s.)",0.76081875,37,str
+pos_card_read_method,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.7599125,37,str
+pos_cardholder_disp_data_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.75903125,37,str
+pos_cardholder_rec_data_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.7612625,37,str
+pos_cardholder_ver_cap,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.7584125,37,str
+pos_cardholder_ver_method,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 4.1 (n.s.)",0.7614625,37,str
+pos_environment,dispositivo/terminal,manter,"categórica, lift 2.6 (signif.), 1% nulo",0.0079375,2,str
+pos_icc_data_len,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76020625,37,str
+pos_pin_len_cap,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 5.6 (n.s.)",0.76005625,37,str
+pos_read_cap,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 4.3 (n.s.)",0.75921875,37,str
+proxy_flag,evento/modelo,remover_ruido,"76% nulo, AUC 0.52, lift 1.3 (n.s.)",0.76138125,2,object
+reason_code,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75785,37,str
+receiving_institution_id,evento/modelo,id_agregacao,identificador,0.76075,38280,str
+retrieval_reference_number,evento/modelo,id_agregacao,identificador,0.76114375,38217,str
+sca_required,evento/modelo,remover_ruido,"76% nulo, AUC 0.51, lift 1.1 (n.s.)",0.76025,2,object
+secure_3d_indicator,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.2 (n.s.)",0.75858125,37,str
+secure_3d_protocol_version,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.0 (n.s.)",0.75891875,37,str
+secure_3d_val_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 6.3 (n.s.)",0.75955625,37,str
+secure_3d_val_status,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.75961875,37,str
+segment_channel_type,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.1 (n.s.)",0.7588,37,str
+service_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.1 (n.s.)",0.7582625,37,str
+session_id,evento/modelo,id_agregacao,identificador,0.75871875,38605,str
+terminal_city,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.7587375,250,str
+terminal_id,dispositivo/terminal,id_agregacao,identificador,0.08025625,17996,str
+terminal_ip,dispositivo/terminal,remover_pii,dado pessoal / contato,0.75955,37,str
+terminal_ip_city,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76006875,250,str
+terminal_ip_country_code,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 2.3 (n.s.)",0.75885,25,float64
+terminal_ip_latitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.53, lift 1.0 (n.s.)",0.759925,38374,float64
+terminal_ip_longitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.58, lift 1.0 (n.s.)",0.76065625,38276,float64
+terminal_ip_region,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.76099375,12,str
+terminal_ip_zip,dispositivo/terminal,remover_pii,dado pessoal / contato,0.7603625,37,str
+terminal_latitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.52, lift 1.0 (n.s.)",0.76031875,38317,float64
+terminal_longitude,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.53, lift 1.0 (n.s.)",0.76025,38327,float64
+terminal_poc_flag,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.51, lift 1.4 (n.s.)",0.7590625,2,object
+terminal_region,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 1.6 (n.s.)",0.76106875,12,str
+terminal_street_addr,dispositivo/terminal,remover_pii,dado pessoal / contato,0.757475,37,str
+terminal_timezone,dispositivo/terminal,remover_ruido,"76% nulo, AUC 0.50, lift 2.2 (n.s.)",0.7598375,37,str
+terminal_zip,dispositivo/terminal,remover_pii,dado pessoal / contato,0.75816875,37,str
+timestamp1,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 1.0 (n.s.)",0.76244375,37988,str
+transaction_category_code,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 4.4 (n.s.)",0.75925,37,str
+transaction_seq_counter,evento/modelo,remover_ruido,"76% nulo, AUC 0.52, lift 3.6 (n.s.)",0.7595625,25,float64
+transaction_status,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.08065625,2,str
+transmission_datetime,evento/modelo,manter,"categórica, lift 1.0 (n.s.), 8% nulo",0.07836875,147115,str
+transstain,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76139375,37,str
+trusted_acceptor,evento/modelo,remover_ruido,"76% nulo, AUC 0.51, lift 1.2 (n.s.)",0.76105,2,object
+trx_to_rec_conv_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.7615875,38125,str
+ttc,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 3.3 (n.s.)",0.76115625,37,str
+tvr,evento/modelo,remover_ruido,"76% nulo, AUC 0.50, lift 5.3 (n.s.)",0.75889375,37,str
+visa_fraud_score,evento/modelo,baseline_externo,score de outro modelo,0.0790125,682,float64
+xid,evento/modelo,id_agregacao,identificador,0.76024375,38361,str
+account_bank_branch_id,conta,remover_ruido,"76% nulo, AUC 0.52, lift 3.6 (n.s.)",0.75963125,25,float64
+account_bank_name,conta,remover_pii,dado pessoal / contato,0.758375,25,float64
+account_core,conta,remover_ruido,"76% nulo, AUC 0.51, lift 3.5 (n.s.)",0.75886875,25,float64
+account_flag_adquirencia_activ,conta,manter,"numérica, AUC 0.62, 76% nulo",0.760875,25,float64
+account_open_mode,conta,remover_ruido,"76% nulo, AUC 0.53, lift 1.4 (n.s.)",0.75968125,25,float64
+account_ownership_type,conta,remover_ruido,"76% nulo, AUC 0.51, lift 3.5 (n.s.)",0.759925,25,float64
+account_segment,conta,remover_ruido,"76% nulo, AUC 0.58, lift 2.9 (n.s.)",0.75909375,25,float64
+account_subsegment,conta,remover_ruido,"76% nulo, AUC 0.54, lift 2.1 (n.s.)",0.75818125,25,float64
+account_trx_bank_acc_number,conta,remover_ruido,"76% nulo, AUC 0.52, lift 3.7 (n.s.)",0.76023125,25,float64
+arn,evento/modelo,id_agregacao,identificador,0.76015,38376,str
+cardholder_id_number,cliente,remover_pii,dado pessoal / contato,0.75895,38568,str
+customer_onboarding_score,cliente,remover_ruido,"76% nulo, AUC 0.57, lift 1.0 (n.s.)",0.7600625,10918,float64
+customer_presumed_income,cliente,manter,"numérica, AUC 0.51, 8% nulo",0.0807375,128615,float64
+customer_reported_income,cliente,manter,"numérica, AUC 0.50, 8% nulo",0.0798875,129217,float64
+customer_username,cliente,remover_pii,dado pessoal / contato,0.75885,38584,str
+event_treatment_date,evento/modelo,remover_vazamento,informação pós-evento / 100% fraude,0.75961875,38437,str
+customer_gender,cliente,remover_ruido,"76% nulo, AUC 0.50, lift 3.2 (n.s.)",0.76099375,37,str
+tipo_transacao,transação,manter,"categórica, lift 2.1 (signif.), 0% nulo",0.0,2,str
+modalidade_transacao,transação,manter,"categórica, lift 2.6 (signif.), 0% nulo",0.0,2,str

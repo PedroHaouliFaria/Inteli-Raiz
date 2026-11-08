@@ -1,0 +1,180 @@
+"""Testes do seed de banco e das fixtures (§11 do contrato)."""
+import json
+import os
+import tempfile
+from datetime import UTC, datetime, timedelta
+
+import pytest
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker
+
+from app.db.tables import Base
+from app.db.tables.purchases import Purchase, Confirmation, Event, Review
+from app.db.seed import run_seed
+
+
+@pytest.fixture()
+def tmp_session(tmp_path):
+    """Sessão SQLite em tmp_path para os testes de seed."""
+    db_path = tmp_path / "test.db"
+    engine = create_engine(f"sqlite:///{db_path}")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    yield session
+    session.close()
+    engine.dispose()
+
+
+def test_seed_creates_expanded_demo_volume(tmp_session):
+    run_seed(tmp_session)
+    purchases = tmp_session.execute(select(Purchase)).scalars().all()
+    assert len(purchases) == 35
+
+
+def test_seed_is_idempotent(tmp_session):
+    """Rodar o seed duas vezes não duplica nada."""
+    run_seed(tmp_session)
+    run_seed(tmp_session)
+    purchases = tmp_session.execute(select(Purchase)).scalars().all()
+    assert len(purchases) == 35
+
+    confirmations = tmp_session.execute(select(Confirmation)).scalars().all()
+    assert len(confirmations) == 35
+
+    events = tmp_session.execute(select(Event)).scalars().all()
+    assert len(events) == 53  # 35 SEED + 18 estados demonstrativos pré-carregados
+
+    reviews = tmp_session.execute(select(Review)).scalars().all()
+    assert len(reviews) == 12  # quatro originais, quatro contestações e quatro dúvidas extras
+
+
+def test_seed_creates_demo_review_for_analyst_queue(tmp_session):
+    run_seed(tmp_session)
+    reviews = tmp_session.execute(select(Review)).scalars().all()
+    cases = {tmp_session.get(Purchase, review.purchase_id).case_id for review in reviews}
+
+    assert cases == {
+        "T-003", "T-012", "T-016", "T-021",
+        "T-107", "T-108", "T-109", "T-110",
+        "T-207", "T-208", "T-209", "T-210",
+    }
+    assert all(review.status == "ABERTA" for review in reviews)
+    assert all(review.created_by == "ASSOCIADO" for review in reviews)
+
+
+def test_seed_t007_amount_and_card(tmp_session):
+    """T-007 tem amount_cents=14958, card_last4='2938' e os três sinais."""
+    run_seed(tmp_session)
+    purchase = tmp_session.execute(
+        select(Purchase).where(Purchase.case_id == "T-007")
+    ).scalar_one()
+    assert purchase.amount_cents == 14958
+    assert purchase.card_last4 == "2938"
+    # sinais ficam em features_json
+    features = purchase.features_json
+    signals_from_features = _signals_from_features(features)
+    codes = [s["code"] for s in signals_from_features]
+    assert codes == ["CARTAO_NAO_PRESENTE", "MADRUGADA", "PRIMEIRA_COMPRA_CARTAO"]
+
+
+def test_seed_t003_and_t011_have_no_signals(tmp_session):
+    from app.domain.signals.rules import compute_signals
+    run_seed(tmp_session)
+    for case_id in ("T-003", "T-011"):
+        purchase = tmp_session.execute(
+            select(Purchase).where(Purchase.case_id == case_id)
+        ).scalar_one()
+        signals = compute_signals(purchase.features_json)
+        assert signals == [], f"{case_id} não deveria ter sinais"
+
+
+def test_seed_purchases_have_demo_status_mix(tmp_session):
+    run_seed(tmp_session)
+    purchases = tmp_session.execute(select(Purchase)).scalars().all()
+    counts = {}
+    for purchase in purchases:
+        counts[purchase.status] = counts.get(purchase.status, 0) + 1
+    assert counts == {
+        "AGUARDANDO_ASSOCIADO": 8,
+        "LIBERADA_AUTOMATICAMENTE": 13,
+        "BLOQUEADA_PREVENTIVAMENTE": 6,
+        "CONTESTACAO_ABERTA": 4,
+        "REVISAO_PENDENTE": 4,
+    }
+
+
+def test_seed_confirmations_have_ttl(tmp_session):
+    run_seed(tmp_session)
+    now_naive = datetime.now(UTC).replace(tzinfo=None)
+    for c in tmp_session.execute(select(Confirmation)).scalars().all():
+        assert c.expires_at > now_naive
+
+
+def test_seed_refreshes_expired_unanswered_demo_confirmation(tmp_session):
+    run_seed(tmp_session, ttl_seconds=900)
+    purchase = tmp_session.execute(
+        select(Purchase).where(Purchase.case_id == "T-007")
+    ).scalar_one()
+    confirmation = tmp_session.execute(
+        select(Confirmation).where(Confirmation.purchase_id == purchase.id)
+    ).scalar_one()
+    confirmation.expires_at = datetime.now(UTC).replace(tzinfo=None) - timedelta(minutes=1)
+    purchase.status = "CONFIRMACAO_EXPIRADA"
+    previous_version = purchase.version
+    tmp_session.commit()
+
+    run_seed(tmp_session, ttl_seconds=3600)
+
+    tmp_session.refresh(purchase)
+    tmp_session.refresh(confirmation)
+    assert purchase.status == "AGUARDANDO_ASSOCIADO"
+    assert purchase.version == previous_version + 1
+    assert confirmation.expires_at > datetime.now(UTC).replace(tzinfo=None)
+    refresh_event = tmp_session.execute(
+        select(Event).where(
+            Event.purchase_id == purchase.id,
+            Event.event_type == "SEED_REFRESH",
+        )
+    ).scalar_one()
+    assert refresh_event.from_status == "CONFIRMACAO_EXPIRADA"
+
+
+def test_seed_does_not_reopen_answered_confirmation(tmp_session):
+    run_seed(tmp_session, ttl_seconds=900)
+    purchase = tmp_session.execute(
+        select(Purchase).where(Purchase.case_id == "T-007")
+    ).scalar_one()
+    confirmation = tmp_session.execute(
+        select(Confirmation).where(Confirmation.purchase_id == purchase.id)
+    ).scalar_one()
+    confirmation.expires_at = datetime.now(UTC).replace(tzinfo=None) - timedelta(minutes=1)
+    confirmation.answered_response = "AUTHORIZE"
+    purchase.status = "LIBERADA_SIMULACAO"
+    tmp_session.commit()
+
+    run_seed(tmp_session, ttl_seconds=3600)
+
+    tmp_session.refresh(purchase)
+    assert purchase.status == "LIBERADA_SIMULACAO"
+
+
+def test_purchases_json_no_forbidden_fields(tmp_path):
+    """O purchases.json não tem feedback_label, customer_id nem 'CUST_SYN'."""
+    fixtures_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "app", "fixtures", "purchases.json"
+    )
+    if not os.path.exists(fixtures_path):
+        pytest.skip("purchases.json ainda não gerado")
+    with open(fixtures_path) as f:
+        content = f.read()
+    assert "feedback_label" not in content
+    assert "customer_id" not in content
+    assert "CUST_SYN" not in content
+
+
+def _signals_from_features(features: dict) -> list:
+    """Extrai sinais computados das features para verificação."""
+    from app.domain.signals.rules import compute_signals
+    return [{"code": s.code, "label": s.label, "source": s.source}
+            for s in compute_signals(features)]

@@ -1,0 +1,8 @@
+# O Bob roda no Windows sobre o repositório do WSL: força LF em tudo que é texto.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.joblib binary
+*.pdf binary
+*.xlsx binary
+*.mp4 binary

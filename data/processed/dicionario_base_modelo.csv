@@ -1,0 +1,36 @@
+coluna,tipo,grupo
+tipo_transacao,feature,contexto da compra
+modalidade_transacao,feature,contexto da compra
+card_presence_flag,feature,contexto da compra
+card_type,feature,contexto da compra
+card_brand,feature,contexto da compra
+mcc,feature,contexto da compra
+amount,feature,valor
+amount_fees,feature,valor
+acceptor_risk,feature,estabelecimento
+acceptor_region,feature,estabelecimento
+customer_risk_rating,feature,associado
+customer_presumed_income,feature,associado
+customer_reported_income,feature,associado
+customer_region,feature,associado
+account_available_credit,feature,associado
+account_balance,feature,associado
+card_credit_limit,feature,associado
+cardid_count_1m,feature,velocidade/distância (pré-calculadas)
+cp_card_term_vel_1h,feature,velocidade/distância (pré-calculadas)
+cp_card_prev_term_dist_1h,feature,velocidade/distância (pré-calculadas)
+digitalwallettoken_count_3m,feature,velocidade/distância (pré-calculadas)
+hora,feature,criada no notebook 02
+dia_semana,feature,criada no notebook 02
+madrugada,feature,criada no notebook 02
+cnp_credito,feature,criada no notebook 02
+valor_vs_media_cartao,feature,criada no notebook 02
+primeira_compra_cartao,feature,criada no notebook 02
+valor_vs_limite,feature,criada no notebook 02
+fraud_score,baseline (não usar como feature),score externo
+visa_fraud_score,baseline (não usar como feature),score externo
+mc_fraud_score,baseline (não usar como feature),score externo
+event_external_id,identificador (não usar como feature),id
+card_id,identificador (não usar como feature),id
+customer_id,identificador (não usar como feature),id
+feedback_label,alvo,alvo
