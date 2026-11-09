@@ -10,7 +10,7 @@
  * Não usa o estado mockado de src/state/store.jsx.
  * Não renderiza biometria, aparelho trocado ou bloqueio de cartão.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   Header,
@@ -19,6 +19,9 @@ import {
   HeaderName,
   InlineLoading,
   InlineNotification,
+  Search,
+  Select,
+  SelectItem,
   SkipToContent,
   Tag,
   Theme,
@@ -31,6 +34,7 @@ import PurchaseList from './PurchaseList.jsx';
 import PurchaseDetail from './PurchaseDetail.jsx';
 import DemoResetButton from './DemoResetButton.jsx';
 import AssociateCopilot from './AssociateCopilot.jsx';
+import { statusMeta } from './utils.js';
 
 export default function AssociateApp() {
   const session = useSession();
@@ -40,20 +44,35 @@ export default function AssociateApp() {
   const [purchases, setPurchases] = useState(null);
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(caseId));
   const [routeNotFound, setRouteNotFound] = useState(false);
+  const [merchantFilter, setMerchantFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [copilotOpen, setCopilotOpen] = useState(() => (
-    typeof window === 'undefined' || window.matchMedia('(min-width: 64.01rem)').matches
+    typeof window === 'undefined' || window.matchMedia('(min-width: 55.01rem)').matches
   ));
 
   const detailRef = useRef(null);
-  const caseIdRef = useRef(caseId);
-  caseIdRef.current = caseId;
-  // Rastreia se o painel de detalhe já foi aberto ao menos uma vez,
-  // para não roubar foco no carregamento inicial da página.
-  const detailEverOpenedRef = useRef(false);
+
+  const statusOptions = useMemo(() => {
+    const options = new Map();
+    (purchases ?? []).forEach((purchase) => {
+      options.set(purchase.status, statusMeta(purchase.status).shortLabel);
+    });
+    return [...options.entries()];
+  }, [purchases]);
+
+  const filteredPurchases = useMemo(() => {
+    const normalizedMerchant = merchantFilter.trim().toLocaleLowerCase('pt-BR');
+    return (purchases ?? []).filter((purchase) => {
+      const matchesMerchant = !normalizedMerchant
+        || purchase.merchant_display.toLocaleLowerCase('pt-BR').includes(normalizedMerchant);
+      const matchesStatus = !statusFilter || purchase.status === statusFilter;
+      return matchesMerchant && matchesStatus;
+    });
+  }, [merchantFilter, purchases, statusFilter]);
+
+  const filtersActive = merchantFilter.trim() !== '' || statusFilter !== '';
 
   const loadPurchases = useCallback(async () => {
     setListLoading(true);
@@ -61,17 +80,6 @@ export default function AssociateApp() {
     try {
       const data = await getPurchases();
       setPurchases(data.purchases);
-      // Mantém a compra selecionada entre recarregamentos.
-      // Se a seleção atual não existir mais na lista nova, cai para a primeira.
-      setSelectedId((atual) => {
-        const ids = data.purchases.map((p) => p.case_id);
-        const requestedCaseId = caseIdRef.current;
-        if (requestedCaseId) {
-          return ids.includes(requestedCaseId) ? requestedCaseId : null;
-        }
-        if (atual && ids.includes(atual)) return atual;
-        return data.purchases[0]?.case_id ?? null;
-      });
     } catch (err) {
       setListError(err instanceof ApiError ? err.message : 'Erro de rede ao carregar compras.');
     } finally {
@@ -89,36 +97,19 @@ export default function AssociateApp() {
     if (purchases === null) return;
     if (!caseId) {
       setRouteNotFound(false);
-      setMobileDetailOpen(false);
       return;
     }
 
     const authorized = purchases.some((purchase) => purchase.case_id === caseId);
     setRouteNotFound(!authorized);
-    setSelectedId(authorized ? caseId : null);
-    setMobileDetailOpen(true);
   }, [caseId, purchases]);
 
-  // Quando o detalhe abre no celular: rola para o topo e leva foco ao painel.
+  // Ao abrir uma compra, rola para o topo e leva foco ao conteúdo novo.
   useEffect(() => {
-    if (!mobileDetailOpen) return;
+    if (!caseId) return;
     window.scrollTo(0, 0);
     detailRef.current?.focus({ preventScroll: true });
-  }, [mobileDetailOpen, selectedId]);
-
-  // Quando o detalhe fecha no celular: devolve foco ao item ativo na lista.
-  useEffect(() => {
-    if (mobileDetailOpen) {
-      detailEverOpenedRef.current = true;
-      return;
-    }
-    if (!detailEverOpenedRef.current) return; // primeiro carregamento, sem ação
-    const btn = document.querySelector('.associate-list__item--active button');
-    if (btn) {
-      btn.focus({ preventScroll: true });
-      btn.scrollIntoView({ block: 'center' });
-    }
-  }, [mobileDetailOpen]);
+  }, [caseId]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -171,39 +162,86 @@ export default function AssociateApp() {
       </Theme>
 
       <main
-        className={`associate-app${mobileDetailOpen ? ' associate-app--detail-open' : ''}${copilotOpen ? ' associate-app--copilot-open' : ''}`}
+        className={`associate-app${caseId ? ' associate-app--detail-open' : ''}${copilotOpen ? ' associate-app--copilot-open' : ''}`}
         aria-label="Suas compras para confirmação"
       >
-        {/* Coluna esquerda: lista */}
-        <aside className="associate-sidebar" aria-label="Lista de compras">
-          <div className="associate-sidebar__header">
-            <h1 className="cds--type-heading-compact-02">Suas compras</h1>
-            <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginTop: '0.25rem' }}>
-              Simulação — Inteli Raiz
-            </p>
-            {session.demo_mode && (
-              <div style={{ marginTop: '0.75rem' }}>
-                <DemoResetButton
-                  variant="button"
-                  onReset={() => {
-                    setSelectedId(null);
-                    setMobileDetailOpen(false);
-                    navigate('/associate/purchases', { replace: true });
-                    loadPurchases();
-                  }}
-                />
+        <div className="associate-workspace">
+          {!caseId && (
+            <section className="associate-overview" aria-labelledby="associate-purchases-title">
+              <div className="associate-overview__header">
+                <div>
+                  <p className="cds--type-label-01 associate-overview__eyebrow">Visão geral</p>
+                  <h1 id="associate-purchases-title" className="cds--type-heading-04">Suas compras</h1>
+                  <p className="cds--type-body-compact-01 associate-overview__description">
+                    Acompanhe suas transações e abra uma compra quando quiser conferir os detalhes.
+                  </p>
+                </div>
+                <span className="cds--type-label-01 associate-overview__count">
+                  {filtersActive
+                    ? `${filteredPurchases.length} de ${purchases?.length ?? 0}`
+                    : (purchases?.length ?? 0)}{' '}
+                  {filteredPurchases.length === 1 ? 'compra' : 'compras'}
+                </span>
               </div>
-            )}
-          </div>
+              {session.demo_mode && (
+                <div className="associate-overview__demo">
+                  <DemoResetButton
+                    variant="button"
+                    onReset={() => {
+                      setMerchantFilter('');
+                      setStatusFilter('');
+                      navigate('/associate/purchases', { replace: true });
+                      loadPurchases();
+                    }}
+                  />
+                </div>
+              )}
+
+              {!listLoading && !listError && purchases !== null && purchases.length > 0 && (
+                <div className="associate-filters" aria-label="Filtros das compras">
+                  <Search
+                    id="associate-merchant-filter"
+                    size="lg"
+                    labelText="Buscar por estabelecimento"
+                    placeholder="Buscar estabelecimento"
+                    value={merchantFilter}
+                    onChange={(event) => setMerchantFilter(event.target.value)}
+                  />
+                  <Select
+                    id="associate-status-filter"
+                    labelText="Status da compra"
+                    value={statusFilter}
+                    onChange={(event) => setStatusFilter(event.target.value)}
+                  >
+                    <SelectItem value="" text="Todos os status" />
+                    {statusOptions.map(([value, label]) => (
+                      <SelectItem key={value} value={value} text={label} />
+                    ))}
+                  </Select>
+                  {filtersActive && (
+                    <Button
+                      kind="ghost"
+                      size="sm"
+                      className="associate-filters__reset"
+                      onClick={() => {
+                        setMerchantFilter('');
+                        setStatusFilter('');
+                      }}
+                    >
+                      Limpar filtros
+                    </Button>
+                  )}
+                </div>
+              )}
 
           {listLoading && (
-            <div style={{ padding: '1rem' }} role="status" aria-live="polite">
+            <div className="associate-overview__feedback" role="status" aria-live="polite">
               <InlineLoading description="Carregando…" status="active" />
             </div>
           )}
 
           {listError && (
-            <div style={{ padding: '1rem' }}>
+            <div className="associate-overview__feedback">
               <InlineNotification
                 kind="error"
                 title="Erro ao carregar compras"
@@ -219,73 +257,62 @@ export default function AssociateApp() {
 
           {!listLoading && !listError && purchases !== null && (
             <PurchaseList
-              purchases={purchases}
-              selectedId={selectedId}
+              purchases={filteredPurchases}
+              emptyMessage={filtersActive
+                ? 'Nenhuma compra encontrada para estes filtros.'
+                : 'Nenhuma compra encontrada para esta sessão.'}
               onSelect={(id) => {
-                setSelectedId(id);
                 setRouteNotFound(false);
-                setMobileDetailOpen(true);
                 navigate(`/associate/purchases/${encodeURIComponent(id)}`);
               }}
             />
           )}
-        </aside>
+            </section>
+          )}
 
-        {/* Coluna direita: detalhe */}
-        <div className="associate-content">
-          {/* Botão de voltar visível apenas no celular */}
-          <Button
-            kind="ghost"
-            size="sm"
-            renderIcon={ArrowLeft}
-            className="associate-back-button"
-            onClick={() => {
-              setMobileDetailOpen(false);
-              navigate('/associate/purchases');
-            }}
-          >
-            Voltar para a lista
-          </Button>
-          {/* Âncora de foco ao abrir o detalhe no celular */}
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-          <span ref={detailRef} tabIndex={-1} style={{ outline: 'none' }} />
-          {routeNotFound ? (
-            <div className="associate-empty-state" role="status">
-              <h1 className="cds--type-heading-compact-02">Compra não encontrada</h1>
-              <p className="cds--type-body-01" style={{ marginTop: '0.5rem' }}>
-                Esta compra não está disponível para a sessão atual.
-              </p>
+          {caseId && (
+            <div className="associate-content">
               <Button
                 kind="ghost"
                 size="sm"
-                style={{ marginTop: '0.5rem' }}
-                onClick={() => navigate('/associate/purchases', { replace: true })}
+                renderIcon={ArrowLeft}
+                className="associate-back-button"
+                onClick={() => navigate('/associate/purchases')}
               >
                 Voltar para suas compras
               </Button>
+              {/* Âncora de foco ao abrir o detalhe */}
+              {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+              <span ref={detailRef} tabIndex={-1} style={{ outline: 'none' }} />
+              {routeNotFound ? (
+                <div className="associate-empty-state" role="status">
+                  <h1 className="cds--type-heading-compact-02">Compra não encontrada</h1>
+                  <p className="cds--type-body-01" style={{ marginTop: '0.5rem' }}>
+                    Esta compra não está disponível para a sessão atual.
+                  </p>
+                  <Button
+                    kind="ghost"
+                    size="sm"
+                    style={{ marginTop: '0.5rem' }}
+                    onClick={() => navigate('/associate/purchases', { replace: true })}
+                  >
+                    Voltar para suas compras
+                  </Button>
+                </div>
+              ) : (
+                <PurchaseDetail
+                  key={caseId}
+                  caseId={caseId}
+                  onPurchaseChanged={loadPurchases}
+                />
+              )}
             </div>
-          ) : selectedId ? (
-            <PurchaseDetail
-              key={selectedId}
-              caseId={selectedId}
-              onPurchaseChanged={loadPurchases}
-            />
-          ) : (
-            !listLoading && (
-              <div className="associate-empty-state" role="status">
-                <p className="cds--type-body-01">
-                  {purchases?.length === 0
-                    ? 'Não há compras para revisar no momento.'
-                    : 'Selecione uma compra na lista para ver os detalhes.'}
-                </p>
-              </div>
-            )
           )}
         </div>
 
         {copilotOpen && (
           <AssociateCopilot
-            selectedCaseId={selectedId}
+            selectedCaseId={routeNotFound ? null : caseId}
             onClose={() => setCopilotOpen(false)}
             onAction={loadPurchases}
           />

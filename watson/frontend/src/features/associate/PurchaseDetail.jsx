@@ -16,7 +16,6 @@ import {
   Button,
   InlineLoading,
   InlineNotification,
-  Tile,
   Stack,
 } from '@carbon/react';
 import { Warning, Information, CheckmarkFilled, CloseFilled, Time } from '@carbon/icons-react';
@@ -46,10 +45,9 @@ function SimulationBadge() {
 
 function PurchaseCard({ purchase }) {
   return (
-    <Tile>
-      <Stack gap={4}>
+    <section className="associate-purchase-summary" aria-label="Dados da compra">
         <div>
-          <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginBottom: '0.25rem' }}>
+          <p className="cds--type-label-01 associate-purchase-summary__label">
             Estabelecimento
           </p>
           <p className="cds--type-heading-compact-02">{purchase.merchant_display}</p>
@@ -79,19 +77,20 @@ function PurchaseCard({ purchase }) {
             </p>
           </div>
         </div>
-      </Stack>
-    </Tile>
+    </section>
   );
 }
 
 function AlertCard({ alert }) {
   if (!alert) return null;
   return (
-    <Tile>
-      <Stack gap={3}>
+    <section className="associate-detail-section associate-detail-section--alert" aria-labelledby="purchase-alert-title">
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
           <Warning size={20} aria-hidden style={{ flexShrink: 0, marginTop: '0.125rem', color: 'var(--cds-support-warning)' }} />
-          <p className="cds--type-body-02">{alert.headline}</p>
+          <div>
+            <h2 id="purchase-alert-title" className="cds--type-heading-compact-01">Por que pedimos sua atenção</h2>
+            <p className="cds--type-body-01 associate-detail-section__lead">{alert.headline}</p>
+          </div>
         </div>
         {alert.signals.length > 0 && (
           <ul className="associate-signals" aria-label="Motivos do alerta">
@@ -105,16 +104,14 @@ function AlertCard({ alert }) {
         <p className="cds--type-helper-text-01" style={{ color: 'var(--cds-text-helper)' }}>
           {alert.disclaimer}
         </p>
-      </Stack>
-    </Tile>
+    </section>
   );
 }
 
 function ResultCard({ result }) {
   if (!result) return null;
   return (
-    <Tile>
-      <Stack gap={3}>
+    <section className="associate-detail-section" aria-label="Resultado da compra">
         <p className="cds--type-heading-compact-02">{result.title}</p>
         <p className="cds--type-body-01">{result.description}</p>
         {result.next_steps.length > 0 && (
@@ -125,16 +122,14 @@ function ResultCard({ result }) {
             ))}
           </ul>
         )}
-      </Stack>
-    </Tile>
+    </section>
   );
 }
 
 function ReviewCard({ review }) {
   if (!review) return null;
   return (
-    <Tile>
-      <Stack gap={2}>
+    <section className="associate-detail-section" aria-label="Revisão em andamento">
         <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)' }}>
           Revisão em andamento
         </p>
@@ -147,8 +142,7 @@ function ReviewCard({ review }) {
           {review.kind === 'FALHA_AVALIACAO' && 'O sistema não conseguiu avaliar esta compra. Um analista vai revisar.'}
           {review.kind === 'RISCO_ALTO' && 'O reconhecimento foi encaminhado para validação por causa do risco alto.'}
         </p>
-      </Stack>
-    </Tile>
+    </section>
   );
 }
 
@@ -390,16 +384,17 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
       <Stack gap={5}>
         <SimulationBadge />
 
-        <p className="cds--type-label-01 associate-detail__case-id">Compra {detail.case_id}</p>
-        <PurchaseStatusPanel
-          status={detail.status}
-          label={detail.status_label}
-          aside={isWaiting && detail.confirmation?.expires_at
-            ? <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
-            : null}
-        />
-
-        <PurchaseCard purchase={detail.purchase} />
+        <div className="associate-detail__hero">
+          <p className="cds--type-label-01 associate-detail__case-id">Compra {detail.case_id}</p>
+          <PurchaseStatusPanel
+            status={detail.status}
+            label={detail.status_label}
+            aside={isWaiting && detail.confirmation?.expires_at
+              ? <ExpiryCountdown expiresAt={detail.confirmation.expires_at} />
+              : null}
+          />
+          <PurchaseCard purchase={detail.purchase} />
+        </div>
 
         <AlertCard alert={detail.alert} />
 
@@ -436,12 +431,12 @@ export default function PurchaseDetail({ caseId, onPurchaseChanged }) {
         />
 
         {detail.confirmation?.allowed_responses.length === 0 && detail.confirmation?.answered && (
-          <Tile>
+          <section className="associate-detail-section">
             <p className="cds--type-label-01" style={{ color: 'var(--cds-text-helper)', marginBottom: '0.25rem' }}>
               Resposta registrada em
             </p>
             <p className="cds--type-body-compact-01">{formatDate(detail.confirmation.answered.answered_at)}</p>
-          </Tile>
+          </section>
         )}
 
         {/* ── Separador visual ─────────────────────────────────────────────── */}
