@@ -599,55 +599,71 @@ body {
 // Fluxo do associado (AssociateApp, PurchaseList, PurchaseDetail)
 // ---------------------------------------------------------------------------
 
-// Layout principal: sidebar fixa + área de conteúdo scrollável
+// Layout principal: área de trabalho + copiloto lateral.
 .associate-app {
   display: flex;
   min-height: calc(100vh - 3rem);
   margin-top: 3rem; // altura do Header Carbon
-
-  @media (max-width: 48rem) {
-    flex-direction: column;
-  }
 }
 
-.associate-sidebar {
-  flex: 0 0 22rem;
-  width: 22rem;
-  border-right: 1px solid var(--cds-border-subtle-01);
-  background: var(--cds-layer-01);
-  overflow-y: auto;
+.associate-workspace {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.associate-overview {
+  width: 100%;
+  padding: 2rem;
+
+  @media (max-width: 48rem) { padding: 1rem; }
+}
+
+.associate-overview__header {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
 
-  // Em telas estreitas a sidebar ocupa largura total
-  @media (max-width: 48rem) {
-    flex: 0 0 100%;
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--cds-border-subtle-01);
+.associate-overview__eyebrow,
+.associate-overview__description,
+.associate-overview__count { color: var(--cds-text-helper); }
+.associate-overview__description { margin-top: 0.5rem; }
+.associate-overview__count { flex: 0 0 auto; }
+.associate-overview__demo { margin: -0.5rem 0 1.5rem; }
+.associate-overview__feedback { padding: 1rem 0; }
+
+.associate-filters {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) minmax(14rem, 20rem);
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr;
   }
 }
 
-.associate-sidebar__header {
-  padding: 1.25rem 1rem 0.75rem;
-  border-bottom: 1px solid var(--cds-border-subtle-01);
-  position: sticky;
-  top: 0;
-  background: var(--cds-layer-01);
-  z-index: 1;
+.associate-filters__reset {
+  grid-column: 1 / -1;
+  width: max-content;
+  margin-top: -0.5rem;
+}
+
+@media (max-width: 32rem) {
+  .associate-overview__header { align-items: flex-start; flex-direction: column; }
 }
 
 .associate-content {
-  flex: 1 1 0;
-  min-width: 0;
-  overflow-y: auto;
-  padding: 1.5rem;
+  width: 100%;
+  padding: 1.5rem 2rem 3rem;
 
   @media (max-width: 48rem) {
     padding: 1rem;
-    // No celular a página rola normalmente; o detalhe não fica preso em overflow interno
-    flex: none;
-    overflow: visible;
   }
 }
 
@@ -666,7 +682,9 @@ body {
   box-shadow: -0.25rem 0 1rem rgb(0 0 0 / 8%);
   z-index: 3;
 
-  @media (max-width: 64rem) {
+  // Em celulares e tablets estreitos vira drawer. Acima disso, permanece como
+  // coluna real e a grade recalcula automaticamente a quantidade de cartões.
+  @media (max-width: 55rem) {
     position: fixed;
     right: 0;
     bottom: 0;
@@ -808,27 +826,8 @@ body {
   }
 }
 
-// Botão "Voltar para a lista": visível apenas no celular
 .associate-back-button {
-  display: none;
-  margin-bottom: 0.5rem;
-
-  @media (max-width: 48rem) {
-    display: inline-flex;
-  }
-}
-
-// No celular: mostra lista OU detalhe, nunca os dois ao mesmo tempo
-@media (max-width: 48rem) {
-  // Sem a classe modificadora → exibe a lista, esconde o detalhe
-  .associate-app:not(.associate-app--detail-open) {
-    .associate-content { display: none; }
-  }
-
-  // Com a classe modificadora → exibe o detalhe, esconde a lista
-  .associate-app--detail-open {
-    .associate-sidebar { display: none; }
-  }
+  margin-bottom: 1rem;
 }
 
 .associate-empty-state {
@@ -839,8 +838,11 @@ body {
   color: var(--cds-text-secondary);
 }
 
-// Lista de compras
-.associate-list {
+// Grade de compras na página inicial.
+.associate-purchase-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+  gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -851,62 +853,64 @@ body {
   color: var(--cds-text-secondary);
 }
 
-.associate-list__item {
+.associate-purchase-card {
+  min-width: 0;
+
   button {
-    display: block;
+    display: flex;
+    min-height: 13rem;
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 0;
-    border-bottom: 1px solid var(--cds-border-subtle-01);
-    background: transparent;
+    height: 100%;
+    flex-direction: column;
+    padding: 1rem;
+    border: 1px solid var(--cds-border-subtle-01);
+    border-top: 3px solid var(--cds-border-interactive);
+    background: var(--cds-layer-01);
     color: var(--cds-text-primary);
     text-align: left;
     cursor: pointer;
     font: inherit;
+    transition: background 110ms, border-color 110ms, transform 110ms;
 
-    &:hover { background: var(--cds-layer-hover-01); }
+    &:hover {
+      background: var(--cds-layer-hover-01);
+      border-color: var(--cds-border-strong-01);
+      transform: translateY(-2px);
+    }
     &:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
   }
 }
 
-.associate-list__item--active button {
-  background: var(--cds-layer-selected-01);
-  border-left: 3px solid var(--cds-interactive);
-  padding-left: calc(1rem - 3px);
-
-  &:hover { background: var(--cds-layer-selected-hover-01); }
-}
-
-.associate-list__main {
+.associate-purchase-card__top,
+.associate-purchase-card__footer {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.375rem;
+  gap: 0.75rem;
+  width: 100%;
 }
 
-.associate-list__merchant {
-  flex: 1;
-  min-width: 0;
+.associate-purchase-card__case,
+.associate-purchase-card__date { color: var(--cds-text-helper); }
+.associate-purchase-card__arrow { flex: 0 0 auto; color: var(--cds-icon-secondary); }
+
+.associate-purchase-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.associate-purchase-card__merchant {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.associate-list__amount {
-  flex-shrink: 0;
-}
-
-.associate-list__meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.associate-list__date {
-  color: var(--cds-text-helper);
-}
+.associate-purchase-card__amount { overflow-wrap: anywhere; }
+.associate-purchase-card__footer { flex-wrap: wrap; }
 
 // Status compacto da lista: rótulos curtos evitam truncamento e ícone não
 // depende apenas da cor para comunicar o estado.
@@ -960,7 +964,8 @@ body {
 
 // Detalhe da compra
 .associate-detail {
-  max-width: 48rem;
+  max-width: 64rem;
+  margin: 0 auto;
 }
 
 .associate-detail-loading,
@@ -970,7 +975,44 @@ body {
 
 .associate-detail__case-id {
   color: var(--cds-text-helper);
-  margin-bottom: -0.5rem;
+  padding: 1rem 1rem 0;
+}
+
+.associate-detail__hero {
+  border: 1px solid var(--cds-border-subtle-01);
+  background: var(--cds-layer-01);
+
+  .purchase-status-panel {
+    border-right: 0;
+    border-left-width: 4px;
+    border-top: 0;
+  }
+}
+
+.associate-purchase-summary {
+  padding: 1rem;
+  border-top: 1px solid var(--cds-border-subtle-01);
+}
+
+.associate-purchase-summary__label {
+  color: var(--cds-text-helper);
+  margin-bottom: 0.25rem;
+}
+
+.associate-detail-section {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--cds-border-subtle-01);
+}
+
+.associate-detail-section--alert {
+  border-top: 3px solid var(--cds-support-warning);
+}
+
+.associate-detail-section__lead {
+  margin-top: 0.375rem;
+  color: var(--cds-text-secondary);
 }
 
 // Painel principal de status no detalhe.
