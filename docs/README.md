@@ -8,7 +8,6 @@
 | Saber quais tecnologias usamos, para que servem e onde estão | [Tecnologias do Raiz](tecnologias.md) |
 | Navegar pelo repositório inteiro (código, dados, notebooks, Bob) | [README da raiz](../README.md#como-navegar-pelo-repositório) |
 | Usar a aplicação publicada | <https://raiz-jq28.onrender.com>, com os logins do [guia de uso](anexos/sistema/como-usar-a-demonstracao.md#4-entrar) |
-| Assistir à demonstração | [Vídeo](../demonstracao/README.md) |
 | Ver custos, fontes e contas | [Viabilidade financeira](documentacao-do-projeto.md#financeiro) |
 | Instalar e usar a demonstração no computador | [Guia de uso](anexos/sistema/como-usar-a-demonstracao.md) |
 | Consultar documentos técnicos e registros originais | [Índice dos anexos](anexos/README.md) |

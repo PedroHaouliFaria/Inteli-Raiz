@@ -3,7 +3,7 @@
 **Confirmação assistida de compras para associados do Sicredi**
 Versão 1.1 · Atualizada em 08/11/2026 (consolidação original em 05/11/2026) · Estado: documentação para revisão da equipe.
 
-**Acesse:** [aplicação publicada](https://raiz-jq28.onrender.com) · [vídeo de demonstração](../demonstracao/README.md) · [mapa do repositório](../README.md#como-navegar-pelo-repositório) · [tecnologias](tecnologias.md) · [guia de uso e logins](anexos/sistema/como-usar-a-demonstracao.md)
+**Acesse:** [aplicação publicada](https://raiz-jq28.onrender.com) · [mapa do repositório](../README.md#como-navegar-pelo-repositório) · [tecnologias](tecnologias.md) · [guia de uso e logins](anexos/sistema/como-usar-a-demonstracao.md)
 
 ## O projeto em uma página
 
@@ -238,7 +238,7 @@ A sequência abaixo foi reconstruída a partir de versões do Git e registros da
 | 05/11 | Consolidação contínua, cotações financeiras e integração à develop, incluindo o canvas da Isadora; prompt do agente alinhado ao pedido de revisão (TEC-01) | PRs #24, #25 e #27 |
 | 05–06/11 | Evolução das telas: triagem automática de risco com bloqueio preventivo, contestações, justificativa obrigatória e histórico da analista, rotas por perfil, painel de dados da analista e copiloto global do associado | PRs #28 e #29 |
 | 06/11 | Relatórios das sessões no IBM Bob de todos os integrantes | PRs #26 e #30; pasta [bob_sessions](../bob_sessions/) |
-| 07–08/11 | Vídeo de demonstração, imagem única para publicação e aplicação no ar no Render | `30a5fb2`, `0b659b8`; [vídeo](../demonstracao/README.md) e [infraestrutura](../watson/infra/README.md#publicar-no-render) |
+| 07–08/11 | Imagem única para publicação e aplicação no ar no Render | `30a5fb2`, `0b659b8`; [infraestrutura](../watson/infra/README.md#publicar-no-render) |
 
 ### Como o trabalho foi dividido
 
@@ -344,7 +344,7 @@ A suíte registrada cobre confirmação, prazo, isolamento, idempotência/concor
 3. Conferir manifesto de 28 features, tratamento de madrugada/nulos, classes e corte temporal; reconciliar referências antigas e preservar um novo holdout quando necessário.
 4. Preparar A/B com informações idênticas e aplicar o piloto. Medir conclusão sem ajuda, compreensão, erros, tempo e intervenção do moderador. Corrigir os problemas e repetir os cenários afetados.
 5. Medir tokens, ciclos de ferramentas, tempo de atendimento, memória/carga da aplicação e horas de manutenção. Substituir hipóteses financeiras por observações.
-6. Fazer revisão cruzada da URL publicada, do vídeo e das declarações, conferindo que descrevem a versão demonstrada.
+6. Fazer revisão cruzada da URL publicada e das declarações, conferindo que descrevem a versão demonstrada.
 
 Cada resultado precisa de versão, método, contagens e limite. Uma autorização equivocada num cenário controlado é achado crítico, não uma tolerância automática. Um piloto pequeno não representa todos os associados.
 
@@ -355,7 +355,7 @@ Cada resultado precisa de versão, método, contagens e limite. Uma autorizaçã
 
 A documentação reúne o percurso de desenvolvimento e serve de base para a narrativa final. O pacote descrito no guia IBM reúne vídeo de três minutos, declaração do problema/solução com link funcional, declaração tecnológica e relatórios reais das sessões Bob. O checkpoint e os campos vigentes precisam ser conferidos pelo líder na plataforma. Os documentos de apoio D01–D13 não são treze submissões obrigatórias separadas.
 
-Em 08/11 o pacote ganhou suas peças principais: a [aplicação publicada](https://raiz-jq28.onrender.com), o [vídeo de demonstração](../demonstracao/README.md) e as declarações de problema/solução e de tecnologia em versão para revisão. Ainda não há comprovante de submissão nem revisão cruzada dessas peças. [Entrega final IBM](anexos/gestao/entrega-final-ibm.md) mantém os textos e o checklist.
+Em 08/11 o pacote ganhou suas peças principais: a [aplicação publicada](https://raiz-jq28.onrender.com) e as declarações de problema/solução e de tecnologia em versão para revisão. Ainda não há comprovante de submissão nem revisão cruzada dessas peças. [Entrega final IBM](anexos/gestao/entrega-final-ibm.md) mantém os textos e o checklist.
 
 ### Correspondência das entregas com esta história
 

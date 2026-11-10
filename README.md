@@ -7,7 +7,6 @@
 | O que | Onde |
 |---|---|
 | Aplicação publicada | <https://raiz-jq28.onrender.com> (no primeiro acesso, o servidor pode levar até 1 minuto para acordar) |
-| Vídeo de demonstração | [demonstracao/](demonstracao/README.md), com o arquivo e o link do Google Drive |
 | Documentação completa | [docs/documentacao-do-projeto.md](docs/documentacao-do-projeto.md) |
 | Tecnologias usadas | [docs/tecnologias.md](docs/tecnologias.md) |
 | Passo a passo da demonstração | [Guia de uso](docs/anexos/sistema/como-usar-a-demonstracao.md) |
@@ -67,7 +66,6 @@ Inteli-Raiz/
 ├── outputs/               ← modelo treinado (modelo_rf.joblib) e triagem de colunas
 ├── scripts/               ← publicar o modelo no watsonx.ai, calcular custos e gerar figuras da documentação
 ├── agente/                ← agente e ferramenta de teste do watsonx Orchestrate (ADK)
-├── demonstracao/          ← vídeo de demonstração da plataforma
 ├── bob_sessions/          ← relatórios das sessões no IBM Bob, uma pasta por integrante
 ├── contexto/              ← materiais do programa IBM (desafio, guia e aulas, em PDF)
 └── .bob/rules/            ← regras que orientam o Bob no backend e na documentação

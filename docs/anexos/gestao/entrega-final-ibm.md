@@ -6,7 +6,6 @@
 | Peça | Onde está | Situação |
 |---|---|---|
 | Aplicação publicada (link funcional) | <https://raiz-jq28.onrender.com> | No ar desde 08/11; abre sem login de terceiros |
-| Vídeo de demonstração | [demonstracao/](../../../demonstracao/README.md), com arquivo e link do Google Drive | Gravado; o link do Drive abre sem login |
 | Declaração de problema e solução | Seção 1 abaixo | Versão para revisão, com 478 palavras (limite: 500) |
 | Declaração tecnológica | Seção 2 abaixo | Versão para revisão |
 | Relatórios do IBM Bob | [bob_sessions/](../../../bob_sessions/) | Cinco integrantes com relatórios |
@@ -59,23 +58,8 @@ No teste de 27/10, chamando o endpoint `/predictions`, o caso de fraude recebeu 
 
 Fontes: [relatórios do Bob](../../../bob_sessions/), [regras do Bob](../../../.bob/rules/), [teste do watsonx.ai](../sistema/specs/teste-historico-watsonx.md), [script de publicação](../../../scripts/deploy_watsonx.py) e [agente do Orchestrate](../../../agente/).
 
-## 3. Roteiro de vídeo — 3 minutos
+## 3. Checklist de submissão
 
-O vídeo foi gravado e está em [demonstracao/](../../../demonstracao/README.md). O roteiro abaixo é o planejamento original.
-
-| Tempo | Conteúdo | Evidência a exibir |
-|---|---|---|
-| 0:00–0:25 | Problema, associado e hipótese de valor | Fricção de D01, com limite da pesquisa |
-| 0:25–0:45 | Solução, simulação e limites | Login fictício e compra identificada |
-| 0:45–1:40 | Percurso integrado e resposta explícita | UI, resultado, protocolo e recarga |
-| 1:40–2:15 | Dúvida contextual e limite do agente | Ferramentas e resposta real sem inventar estabelecimento |
-| 2:15–2:40 | Exceção/falha e persistência | Revisão/expiração, sem autorização presumida |
-| 2:40–3:00 | Tecnologia, validação disponível e próximos limites | Log/teste e resultado de piloto somente se executado |
-
-## 4. Checklist de submissão
-
-- [x] Vídeo de três minutos gravado e acessível sem login.
-- [ ] Vídeo conferido por outra pessoa contra a versão publicada.
 - [x] Link funcional publicado e aberto sem login em 08/11.
 - [ ] Declaração problema/solução revisada pelo time.
 - [ ] Declaração tecnológica revisada pelo time.
