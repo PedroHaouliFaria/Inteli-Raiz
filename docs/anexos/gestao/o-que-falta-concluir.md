@@ -49,7 +49,7 @@ Responsabilidade por função organiza o trabalho; confirmar os nomes com a equi
 | TEC-02 | Preparar condição A sem chat com os mesmos dados e revisão | Antes de comparação A/B; Integração | Versão/forma de ocultar chat documentadas; nenhuma vantagem de informação entre condições |
 | TEC-03 | Reprodutibilidade/avaliação do modelo | Antes de alegar desempenho; Dados | Corte, manifesto 28 features, madrugada/nulos, baseline/velocidade e limiar documentados; holdout novo se necessário |
 | TEC-04 | Ambiente com LLM real e persistência de deploy | Antes da demonstração; Arquitetura | Chave configurada fora do Git, rastro real, volume durável e acesso testado |
-| FIN-01 | Vídeo, URL funcional e versão final das declarações | Antes da submissão; Produto/Integração | Pacote final completo e acesso conferido por outra pessoa |
+| FIN-01 | URL funcional e versão final das declarações | Antes da submissão; Produto/Integração | Pacote final completo e acesso conferido por outra pessoa |
 | FIN-02 | Evidências individuais do IBM Bob e regras da plataforma | Antes da submissão; cada integrante/líder cadastrado | Índice de sessões reais, arquivos existentes e comprovante de envio |
 
 ## 4. Regras de encerramento
@@ -61,7 +61,7 @@ Cada item exige versão, evidência e revisor distinto. Teste automatizado de ba
 | ID | Situação em 08/11 | O que ainda falta |
 |---|---|---|
 | TEC-04 | Aplicação publicada em <https://raiz-jq28.onrender.com>, com a chave do LLM configurada no painel do Render, fora do Git. Um teste pela API recebeu resposta real do copiloto. | Rastro completo de uma interação real (ferramentas e estado antes/depois). O banco publicado é SQLite dentro do container e volta ao estado inicial a cada reinício, o que atende a demonstração, mas não é volume durável. |
-| FIN-01 | URL publicada e testada sem login; vídeo em [demonstracao/](../../../demonstracao/README.md); declarações em versão para revisão em [entrega final IBM](entrega-final-ibm.md). | Revisão cruzada das três peças por outra pessoa e versão final das declarações. |
+| FIN-01 | URL publicada e testada sem login; declarações em versão para revisão em [entrega final IBM](entrega-final-ibm.md). | Revisão cruzada das peças por outra pessoa e versão final das declarações. |
 | FIN-02 | Relatórios das sessões no Bob dos cinco integrantes em [bob_sessions/](../../../bob_sessions/), com ID de tarefa, custo e revisão humana. | Conferir regras da plataforma e guardar o comprovante de envio. |
 
 ## Atualização documental de 05/11/2026
