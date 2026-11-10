@@ -48,9 +48,7 @@ export default function AssociateApp() {
   const [routeNotFound, setRouteNotFound] = useState(false);
   const [merchantFilter, setMerchantFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [copilotOpen, setCopilotOpen] = useState(() => (
-    typeof window === 'undefined' || window.matchMedia('(min-width: 55.01rem)').matches
-  ));
+  const [copilotOpen, setCopilotOpen] = useState(false);
 
   const detailRef = useRef(null);
 
