@@ -13,6 +13,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path}/test.db")
     monkeypatch.setenv("SESSION_SECRET", "test-secret-for-session")
     monkeypatch.setenv("ALLOW_LEGACY_PERSONA_LOGIN", "false")
+    monkeypatch.setenv("DEMO_MODE", "false")
 
     # Reinicializa get_settings e get_engine para o SQLite do teste
     from app.config import get_settings

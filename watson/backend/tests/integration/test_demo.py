@@ -191,18 +191,28 @@ def test_r09_falha_modelo_fixture_returns_revisao_pendente(client):
 
 
 def test_r09_falha_modelo_score_null(client):
-    """R09: compra de falha_modelo tem score null em GET /api/reviews."""
+    """R09: compra de falha_modelo tem score null.
+
+    Revisões criadas pelo SISTEMA (FALHA_AVALIACAO) são filtradas da
+    lista do analista (GET /api/reviews). O score null e o warning
+    SCORE_UNAVAILABLE são verificados via o corpo do 201 da demo.
+    GET /api/purchases/{case_id} confirma status REVISAO_PENDENTE.
+    """
     _login_ana(client)
     r = client.post("/api/demo/purchases", json={"fixture_id": "falha_modelo"})
     assert r.status_code == 201
-    case_id = r.json()["case_id"]
+    data = r.json()
+    case_id = data["case_id"]
 
-    _login_carla(client)
-    r2 = client.get("/api/reviews")
-    reviews = r2.json()["reviews"]
-    demo_reviews = [rev for rev in reviews if rev["case_id"] == case_id]
-    assert len(demo_reviews) >= 1
-    assert demo_reviews[0]["analysis"]["score"] is None
+    # Warning e review presentes no 201
+    assert data.get("warning") == "SCORE_UNAVAILABLE"
+    assert data["review"] is not None
+    assert data["review"]["kind"] == "FALHA_AVALIACAO"
+
+    # GET /api/purchases/{case_id} confirma status persistido
+    r2 = client.get(f"/api/purchases/{case_id}")
+    assert r2.status_code == 200
+    assert r2.json()["status"] == "REVISAO_PENDENTE"
 
 
 def test_r09_model_unavailable_sends_revisao_pendente(client):
