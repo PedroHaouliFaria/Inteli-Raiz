@@ -1,8 +1,8 @@
 # D10 — Arquitetura técnica e limites de autonomia
 
-**ID:** D10 · **Versão:** 0.2 · **Data:** 04/11/2026\
+**ID:** D10 · **Versão:** 0.3 · **Data:** 10/11/2026 (atualizado; base original 04/11/2026)\
 **Responsável:** Arquitetura · **Revisor previsto:** Integração e validação\
-**Estado:** revisado documentalmente contra develop `f741a35`; evidências de API em D11; LLM real e ensaio UI pendentes.\
+**Estado:** revisado documentalmente contra develop `f741a35`; atualizado com copiloto do associado e nova interface da analista (PRs #28/#29); evidências de API em D11; LLM real e ensaio UI pendentes.\
 **Fontes:** [D09](requisitos-da-solucao.md), [contrato JSON](specs/contrato-da-api.md), [código backend](../../../watson/backend/app), [cliente HTTP](../../../watson/frontend/src/api/client.js).\
 **Decisão sustentada:** um agente com ferramentas e política externa, sem poder de resposta à confirmação.
 
@@ -20,9 +20,11 @@ flowchart TD
     T --> DB
     UI -->|resposta explícita e chave idempotente| H[Endpoint humano de confirmação]
     H --> DB
+    UI -->|copiloto global| C[Agente copiloto: app/domain/copilot/]
+    C --> DB
 ```
 
-Padrão escolhido: um agente com quatro ferramentas é suficiente para consultar o contexto de uma compra e abrir revisão. Política, autorização e transição ficam no backend. Alternativas RAG e múltiplos agentes não têm necessidade demonstrada neste recorte. Bob é ferramenta de desenvolvimento; watsonx.ai tem um teste histórico documentado e caminhos opcionais de risco, sem ser pressuposto do chat Groq atual.
+Padrão escolhido: um agente com quatro ferramentas é suficiente para consultar o contexto de uma compra e abrir revisão. A partir dos PRs #28/#29 foi adicionado um segundo agente — o copiloto global do associado — com ferramentas próprias (ver seção 3a). Política, autorização e transição ficam no backend. Alternativas RAG e múltiplos agentes não têm necessidade demonstrada neste recorte. Bob é ferramenta de desenvolvimento; watsonx.ai tem um teste histórico documentado e caminhos opcionais de risco, sem ser pressuposto do chat Groq atual.
 
 ## 2. Sequência da compra até a resposta
 
@@ -56,7 +58,7 @@ sequenceDiagram
 
 Chamadas ao LLM não mantêm a sessão de banco aberta. As ferramentas recebem o Engine e abrem sessões curtas (#18); o teste de lock cobre o agente de teste, não latência de provedor real.
 
-## 3. Ficha do agente
+## 3. Ficha do agente — chat da compra
 
 | Campo | Regra |
 |---|---|
@@ -67,6 +69,18 @@ Chamadas ao LLM não mantêm a sessão de banco aberta. As ferramentas recebem o
 | Instruções | Não inventar estabelecimento ou efeito financeiro; não pedir senha/PIN/cartão completo; sinais não provam causa do score; respostas em português. |
 | Autonomia | Pode abrir revisão; não dispõe de ferramenta para AUTHORIZE/DENY/UNSURE. Ajuda não encerra confirmação válida nem estende prazo. |
 | Falha | Chat pode retornar 503; resposta explícita válida continua disponível. Sem chave não há evidência de LLM real. |
+
+## 3a. Ficha do copiloto do associado (PRs #28/#29)
+
+O copiloto é um segundo agente Pydantic AI acessível pelo ícone no cabeçalho da interface do associado. Ele responde perguntas sobre qualquer compra da sessão, ao contrário do chat da compra que é contextualizado a uma compra específica.
+
+| Campo | Regra |
+|---|---|
+| Objetivo | Responder perguntas gerais do associado sobre suas compras e status, sem pressionar uma decisão. |
+| Implementação/configuração | `app/domain/copilot/`; mesma configuração de LLM (`LLM_MODEL`, `GROQ_API_KEY`). |
+| Ferramentas | `listar_compras`, `consultar_compra`, `gerar_relatorio`, `solicitar_revisao`. |
+| Autonomia | Pode listar compras e abrir revisão; não autoriza, recusa nem registra dúvida em nome do associado. Identidade injetada pelo backend. |
+| Falha | Mesmo comportamento do chat: retorna indisponível sem impedir o fluxo de confirmação. |
 
 ## 4. Ferramentas implementadas
 
@@ -80,6 +94,7 @@ Versão de referência de todas: código `f741a35`, `app/domain/agent/__init__.p
 | solicitar_revisao | reason, details opcional | Revisão/protocolo, estado da compra e mensagem | Motivo inválido é normalizado para OUTRO; criada por AGENTE; compra não encontrada retorna erro; não responde à confirmação. |
 
 > **Alinhamento de 05/11/2026:** login por e-mail/senha fictícios e decisão da analista conferidos no código; sem nova execução de backend nesta atualização.
+> **Atualização de 10/11/2026 (PRs #28/#29):** copiloto do associado adicionado (seção 3a); interface da analista expandida com abas Pendentes, Histórico, Fluxo atual e Dados, e justificativa obrigatória nas decisões. Esses componentes não estavam presentes na base `f741a35` e não têm cobertura de teste documentada separadamente.
 
 ## 5. Contratos HTTP
 

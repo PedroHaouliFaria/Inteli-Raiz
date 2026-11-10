@@ -144,7 +144,7 @@ Números principais (base sintética, recorte local):
 - O modelo usa 28 variáveis. A PR-AUC foi 1,000 com quatro variáveis de velocidade pré-calculadas e 0,146 sem elas, uma dependência que a [avaliação](anexos/dados-e-modelo/avaliacao-do-modelo.md) discute.
 
 Como o score é usado na aplicação:
-- **Triagem automática:** score até 0,20 libera a compra automaticamente; a partir de 0,817 (limiar F2 do notebook 03) a compra fica bloqueada preventivamente até a resposta; entre os dois, pede confirmação ao associado.
+- **Triagem automática (política experimental, PRs #28/#29):** o código atual implementa três faixas — score ≤ 0,20 libera automaticamente na simulação; score ≥ 0,817 (limiar F2 do notebook 03) bloqueia preventivamente até a resposta; entre os dois, pede confirmação ao associado. A [política conservadora documentada nas regras do produto](anexos/gestao/regras-do-produto.md) define que, sem evidência validada para liberação automática, todos os casos avaliados devem ir à confirmação. As três faixas são uma extensão experimental; antes de apresentar como comportamento definitivo, conferir se estão habilitadas no deploy e reconciliar com as regras do produto.
 - **Falha do modelo:** a compra vai direto para revisão humana. Nenhum score é inventado.
 - **Fatores explicáveis:** para cada variável, o backend mede quanto o score cai se ela voltar ao valor típico de uma compra legítima. É um cálculo do projeto, não uma explicação nativa do Random Forest.
 - **Associado não vê o score:** ele vê sinais descritivos, como "Feita de madrugada" e "Primeira compra registrada com este cartão". A analista vê o score interno.

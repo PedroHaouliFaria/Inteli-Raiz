@@ -9,6 +9,7 @@
 
 > **Consolidação de 04/11/2026:** conteúdo documental/hipotético preservado; revisão cruzada pendente. Fontes com hash referem-se àquela versão. Registro comum em [evidências e hipóteses](../gestao/fontes-e-hipoteses.md).
 > **Decisão sustentada:** comparar o mesmo episódio atual/futuro com três respostas, revisão e expiração.
+> **Nota sobre nomes:** Valdir (associado) e Camila (analista) são as **personas de design** deste documento — construções hipotéticas para orientar decisões de experiência. Ana Souza, Bruno Lima e Carla Reis são as **identidades fictícias de demonstração** usadas nos logins da aplicação (ver [guia de uso](../sistema/como-usar-a-demonstracao.md)). Os dois conjuntos de nomes têm propósitos distintos e não devem ser confundidos.
 
 ---
 

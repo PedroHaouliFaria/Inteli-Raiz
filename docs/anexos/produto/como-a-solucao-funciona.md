@@ -99,11 +99,15 @@ Exemplos de resultado:
 
 ---
 
-## 6. Papel do agente
+## 6. Agentes de IA
 
-<p align="justify">&ensp;&ensp; O agente consulta ferramentas para obter sinais, disponibilidade da avaliação, contexto da compra e status. Escolhe ferramentas e pode solicitar revisão; não decide a resposta à confirmação. A ferramenta atual não devolve o valor numérico do score. <strong>Explica</strong> com base apenas no que as ferramentas retornam. <strong>Informa o limite</strong> quando o contexto é insuficiente. <strong>Solicita revisão</strong> quando a dúvida não pode ser resolvida.</p>
+<p align="justify">&ensp;&ensp; A solução conta com dois agentes Pydantic AI, ambos usando o mesmo modelo de linguagem via Groq e sujeitos às mesmas restrições de autonomia.</p>
 
-<p align="justify">&ensp;&ensp; O agente <strong>não pode:</strong> autorizar, recusar ou registrar dúvida em nome do associado; inventar identidade de estabelecimento; pressionar o associado a autorizar; pedir senha, PIN ou dados completos do cartão. (FON-P1-03 §4)</p>
+**Chat da compra** (`app/domain/agent/`): consulta ferramentas para obter sinais, disponibilidade da avaliação, contexto da compra e status de uma compra específica. Escolhe ferramentas e pode solicitar revisão; não decide a resposta à confirmação. A ferramenta atual não devolve o valor numérico do score. **Explica** com base apenas no que as ferramentas retornam. **Informa o limite** quando o contexto é insuficiente. **Solicita revisão** quando a dúvida não pode ser resolvida.
+
+**Copiloto do associado** (`app/domain/copilot/`, adicionado nos PRs #28/#29): acessível pelo ícone no cabeçalho da interface. Responde perguntas sobre qualquer compra da sessão do associado. Ferramentas: `listar_compras`, `consultar_compra`, `gerar_relatorio` e `solicitar_revisao`.
+
+<p align="justify">&ensp;&ensp; Ambos os agentes <strong>não podem:</strong> autorizar, recusar ou registrar dúvida em nome do associado; inventar identidade de estabelecimento; pressionar o associado a autorizar; pedir senha, PIN ou dados completos do cartão. (FON-P1-03 §4)</p>
 
 ---
 
